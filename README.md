@@ -2,7 +2,7 @@
 
 "HOBL" (Hours Of Battery Life) is a test framework and set of test scenarios for the purpose of measuring power, perfromance, and thermal characteristics of Windows and macOS devices.
 
-[Introduction](docs\support\docs\HOBL.md)
+[Introduction](docs/support/docs/HOBL.md)
 
 # Security
 
