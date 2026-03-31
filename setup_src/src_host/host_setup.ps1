@@ -188,11 +188,13 @@ if ($ui) {
 
     # Download hobl ui zip file
     "-- Downloading HOBLweb" | log
-    $uiUrl = "https://github.com/microsoft/HOBL/releases/download/hobl_ui/hobl_ui_$hobl_ui_version.zip"
-    $uiZip = "c:\hoblweb.zip"
+    $uiUrl = "https://github.com/microsoft/HOBL/releases/download/hobl_ui/hobl_ui_$hobl_ui_version.tar"
+    $uiZip = "c:\hoblweb.tar"
     Invoke-WebRequest -Uri $uiUrl -OutFile $uiZip 2>&1 | log
     checkCmd($?)
-    Expand-Archive -Path $uiZip -DestinationPath "c:\hoblweb" -Force 2>&1 | log
+    "-- Unpacking HOBLweb" | log
+    mkdir c:\hoblweb
+    tar -xf $uiZip -C "c:\hoblweb" 2>&1 | log
     checkCmd($?)
     Remove-Item $uiZip 2>&1 | log
     checkCmd($?)
