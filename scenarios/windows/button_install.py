@@ -23,14 +23,16 @@ class ButtonInstall(core.app_scenario.Scenario):
     is_prep = True
 
     def runTest(self):
-        # Upload
-        self._upload('utilities\\proprietary\\button\\'  + self.dut_architecture + "\\*", self.dut_exec_path + "\\button")
-        # self._upload('utilities\\proprietary\\pwrtest\\'  + self.dut_architecture + "\\*", self.dut_exec_path + "\\pwrtest")
+        # Upload button files
+        self._upload('utilities\\proprietary\\button\\' + self.dut_architecture + "\\button.cat", self.dut_exec_path + "\\button")
+        self._upload('utilities\\proprietary\\button\\' + self.dut_architecture + "\\button.exe", self.dut_exec_path + "\\button")
+        self._upload('utilities\\proprietary\\button\\' + self.dut_architecture + "\\button.inf", self.dut_exec_path + "\\button")
+        self._upload('utilities\\proprietary\\button\\' + self.dut_architecture + "\\button.sys", self.dut_exec_path + "\\button")
 
         time.sleep(1)
-        # Remove any existing button
+        # Uninstall any existing button driver
         self._call(['cmd.exe' , ' /C "cd /D ' + self.dut_exec_path + '\\button & .\\button.exe -u"'], expected_exit_code="")
-        # Install this button
+        # Install this button driver
         self._call(['cmd.exe', ' /C "cd /D ' + self.dut_exec_path + '\\button & .\\button.exe -i"'])
         self.createPrepStatusControlFile()
 

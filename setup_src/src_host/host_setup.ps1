@@ -134,8 +134,10 @@ if ($framework) {
     if (-not (Test-Path "$PSScriptRoot\..\..\downloads\ffmpeg_win64")) {
         Invoke-WebRequest -Uri $ffmpegUrl -OutFile $ffmpegZip 2>&1 | log
         checkCmd($?)
+        sleep 1s # Wait a bit to ensure file is fully written before expanding
         Expand-Archive -Path $ffmpegZip -DestinationPath "$PSScriptRoot\..\..\downloads" -Force 2>&1 | log
         checkCmd($?)
+        sleep 2s # Wait a bit to ensure all file handles are released before moving/deleting
         Move-Item "$PSScriptRoot\..\..\downloads\ffmpeg-N-123073-g743df5ded9-win64-gpl" "$PSScriptRoot\..\..\downloads\ffmpeg_win64" -Force 2>&1 | log
         Remove-Item $ffmpegZip 2>&1 | log        
     }
