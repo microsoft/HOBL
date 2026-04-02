@@ -12,10 +12,10 @@
 name: "CodeQL Advanced"
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  # push:
+  #  branches: [ "main" ]
+  # pull_request:
+  #  branches: [ "main" ]
   schedule:
     - cron: '39 4 * * 3'
 
@@ -43,12 +43,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - language: c-cpp
-          build-mode: autobuild
-        - language: csharp
-          build-mode: none
-        - language: javascript-typescript
-          build-mode: none
+        # - language: c-cpp
+        #  build-mode: autobuild
+        # - language: csharp
+        #  build-mode: none
+        # - language: javascript-typescript
+        #  build-mode: none
         - language: python
           build-mode: none
         # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'rust', 'swift'
