@@ -1,0 +1,254 @@
+[
+    {
+        "author": "Jeff Wilder",
+        "capture_device": "Surface Laptop 8 15-in",
+        "children": [],
+        "create_date": "2025-02-28",
+        "description": "Outlook compose emails",
+        "enabled": true,
+        "id": "UN67LF",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "V2N136",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "PSECST00",
+        "name": "[short_typing]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Compose new mail",
+        "enabled": true,
+        "id": "UPWC04",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "New Email",
+        "enabled": true,
+        "file_name": [
+            "image_VKCEX4.png"
+        ],
+        "h": "0.168",
+        "id": "VKCEX4",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.165",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "VKCEX4",
+        "children": [],
+        "delay": "2",
+        "description": "New Email",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_VKCFCK.png"
+        ],
+        "id": "VKCFCK",
+        "match_threshold": "",
+        "primary": true,
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Recipient",
+        "enabled": true,
+        "id": "UPNEN8",
+        "text": "bogus@outlook.com",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1.5",
+        "description": "TAB-TAB-TAB",
+        "enabled": true,
+        "id": "V3V5XK",
+        "text": "\ue004\ue004\ue004",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Subject",
+        "enabled": true,
+        "id": "UPNME6",
+        "text": "Manarola\ue00dtrip!\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "15",
+                "description": "Body (short)",
+                "enabled": true,
+                "id": "UPTF4S",
+                "text": "We\ue00dare\ue00dthrilled\ue00dto\ue00dhave\ue00dyou\ue00djoin\ue00dus\ue00don\ue00dthis\ue00dunforgettable\ue00djourney\ue00dto\ue00dManarola!\nGet\ue00dready\ue00dfor\ue00dstunning\ue00dviews\ue00dand\ue00dlocal\ue00dflavors.\n",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "PSECST01",
+        "left_term": "[short_typing]",
+        "right_term": "1",
+        "type": "If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "122",
+                "description": "Body",
+                "enabled": true,
+                "id": "UPTF4X",
+                "text": "We\ue00dare\ue00dthrilled\ue00dto\ue00dhave\ue00dyou\ue00djoin\ue00dus\ue00don\ue00dthis\ue00dunforgettable\ue00djourney\ue00dto\ue00dManarola,\ue00dthe\ue00djewel\ue00dof\ue00dCinque\ue00dTerre!\n\n\ue009b\ue009What\ue00dto\ue00dExpect:\n\n\ue009\ue008l\ue008\ue009Stunning\ue00dViews:\ue00d\ue00d\ue009b\ue009Get\ue00dready\ue00dfor\ue00dthe\ue00dpastel-hued\ue00dhouses\ue00dclinging\ue00dto\ue00dcliffs,\ue00doverlooking\ue00dthe\ue00dazure\ue00dMediterranean\ue00dSea.\nSunset\ue00dMagic:\ue00d\ue00dDo\ue00dnot\ue00dmiss\ue00dthe\ue00dNessun\ue00dDorma\ue00d-\ue00dthe\ue00dperfect\ue00dspot\ue00dto\ue00dsip\ue00dwine\ue00dwhile\ue00dwatching\ue00dthe\ue00dsun\ue00ddip\ue00dbehind\ue00dthe\ue00dvineyards.\nExplore:\ue00d\ue00dWander\ue00dthe\ue00dcharming\ue00dstreets,\ue00dswim\ue00din\ue00dcrystal-clear\ue00dwaters,\ue00dand\ue00dhike\ue00dthe\ue00dscenic\ue00dtrails.\nLocal\ue00dFlavors:\ue00d\ue00dIndulge\ue00din\ue00dfresh\ue00dseafood,\ue00dpest,\ue00dand\ue00dgelato.\n\n\nFeel\ue00dfree\ue00dto\ue00dreach\ue00dout\ue00dif\ue00dyou\ue00dhave\ue00dany\ue00dquestions.\ue00d\ue00dBuon\ue00dviaggio!\n",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "PSECST02",
+        "type": "Else"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "PSECST03",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Paste Snip",
+        "enabled": true,
+        "id": "1J9KEJK",
+        "text": "\ue009v",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "Close message",
+        "enabled": true,
+        "file_name": [
+            "image_VJCU06.png"
+        ],
+        "h": "0.051",
+        "id": "VJCU06",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.094",
+        "x": "0.900",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "VJCU06",
+        "children": [],
+        "delay": "2",
+        "description": "Close message",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_VJCU7E.png"
+        ],
+        "id": "VJCU7E",
+        "match_threshold": "",
+        "primary": true,
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "Discard",
+        "enabled": true,
+        "file_name": [
+            "image_VJCVWH.png"
+        ],
+        "h": "0.192",
+        "id": "VJCVWH",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.246",
+        "x": "0.381",
+        "y": "0.420"
+    },
+    {
+        "capture_id": "VJCVWH",
+        "children": [],
+        "delay": "2",
+        "description": "Discard",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_VVXCYF.png"
+        ],
+        "id": "VVXCYF",
+        "match_threshold": "",
+        "primary": true,
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Compose new mail",
+        "enabled": true,
+        "id": "UPWATJ",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "V2N15P",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_outlook"
+            }
+        ],
+        "type": "Include"
+    }
+]
