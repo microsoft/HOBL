@@ -1357,13 +1357,35 @@
                 "type": "Include"
             },
             {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1H6JTLL",
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_run",
+                        "type": "Include"
+                    }
+                ],
+                "description": "Best-effort outlook run",
+                "enabled": true,
+                "id": "1H6JTLT",
+                "type": "Try"
+            },
+            {
                 "children": [],
-                "delay": "0",
+                "description": "Ignore outlook run failures",
+                "enabled": true,
+                "id": "1H6JTLE",
+                "type": "Except"
+            },
+            {
+                "children": [],
                 "description": "",
                 "enabled": true,
-                "id": "1H6JTLL",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_run",
-                "type": "Include"
+                "id": "1H6JTLX",
+                "type": "End Try"
             },
             {
                 "children": [],

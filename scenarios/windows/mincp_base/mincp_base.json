@@ -690,22 +690,44 @@
                 "type": "End If"
             },
             {
-                "children": [],
-                "delay": "0",
-                "description": "",
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "W4ESYUL",
+                        "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "W4ESYUM",
+                        "include_path": "scenarios\\windows\\_library\\misc\\perf_click_to_do",
+                        "type": "Include"
+                    }
+                ],
+                "description": "Best-effort search_taskbar + perf_click_to_do",
                 "enabled": true,
-                "id": "W4ESYUL",
-                "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
-                "type": "Include"
+                "id": "W4ESYUT",
+                "type": "Try"
             },
             {
                 "children": [],
-                "delay": "0",
+                "description": "Ignore search/click_to_do failures",
+                "enabled": true,
+                "id": "W4ESYUE",
+                "type": "Except"
+            },
+            {
+                "children": [],
                 "description": "",
                 "enabled": true,
-                "id": "W4ESYUM",
-                "include_path": "scenarios\\windows\\_library\\misc\\perf_click_to_do",
-                "type": "Include"
+                "id": "W4ESYUX",
+                "type": "End Try"
             },
             {
                 "children": [],

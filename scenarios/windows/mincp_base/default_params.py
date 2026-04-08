@@ -11,7 +11,7 @@ def run():
     Params.setDefault('mincp_base', 'background_teams', '1', desc='', valOptions=['0', '1'])
     Params.setDefault('mincp_base', 'background_onedrive_copy', '1', desc='', valOptions=['0', '1'])
     Params.setDefault('mincp_base', 'simple_office_launch', '0', desc='', valOptions=['1', '0'])
-    Params.setParam(None, 'short_typing', '1')
+    Params.setOverride('global', 'short_typing', '1')
     Params.setParam(None, 'web_replay_run', '1')
     Params.setParam(None, 'phase_reporting', '1')
     Params.setDefault('mincp_base', 'perf_run', '0', desc='', valOptions=['0', '1'])
