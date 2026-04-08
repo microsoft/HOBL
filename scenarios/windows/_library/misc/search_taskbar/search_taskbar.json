@@ -1,0 +1,129 @@
+[
+    {
+        "author": "sochowdhury",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-04-06",
+        "description": "Type-to-Search via taskbar search icon",
+        "enabled": true,
+        "id": "417XAUR",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "SE30I97",
+        "include_path": "scenarios\\windows\\_library\\misc\\capture_taskbar",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "6EKRYGP",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "2DCI17X",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "TypeToSearch"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "capture_id": "TYH95X",
+        "children": [],
+        "delay": "2",
+        "description": "Click search icon on taskbar",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1JNE7L0.png"
+        ],
+        "id": "GQD3V0O",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Wait for search to open",
+        "enabled": true,
+        "id": "Z1R47VN",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Type search query",
+        "enabled": true,
+        "id": "XIHW2EI",
+        "text": "notepad",
+        "type": "Type",
+        "typing_delay": "150"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "Wait for search results to render",
+        "enabled": true,
+        "id": "3R2BXGD",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Dismiss search",
+        "enabled": true,
+        "id": "EFUN894",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "Settle after search dismiss",
+        "enabled": true,
+        "id": "6LWHCE5",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "6L9WSAA",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "invalid"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "invalid"
+            }
+        ],
+        "type": "Include"
+    }
+]

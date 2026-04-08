@@ -342,53 +342,83 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1FXHRH8",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_open_file_explorer",
-                "type": "Include"
+                "id": "1FXHP7D",
+                "type": "Delay"
             },
             {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1FXHYE6",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1H6JPHH",
-                "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
-                "params": [
+                "children": [
                     {
-                        "name": "[app_name]",
-                        "val_options": "",
-                        "value": "[userprofile]\\onedrive\\abl_docs\\FamilyBudget.xlsx"
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1FXHRH8",
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_open_file_explorer",
+                        "type": "Include"
                     },
                     {
-                        "name": "[etw_event_tag]",
-                        "val_options": "",
-                        "value": "ExcelLaunch"
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1FXHYE6",
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run",
+                        "type": "Include"
                     },
                     {
-                        "name": "[app_open_delay]",
-                        "val_options": "",
-                        "value": "3"
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1H6JPHH",
+                        "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
+                        "params": [
+                            {
+                                "name": "[app_name]",
+                                "val_options": "",
+                                "value": "[userprofile]\\onedrive\\abl_docs\\FamilyBudget.xlsx"
+                            },
+                            {
+                                "name": "[etw_event_tag]",
+                                "val_options": "",
+                                "value": "ExcelLaunch"
+                            },
+                            {
+                                "name": "[app_open_delay]",
+                                "val_options": "",
+                                "value": "3"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1FXHU97",
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run",
+                        "type": "Include"
                     }
                 ],
-                "type": "Include"
+                "description": "Best-effort productivity open+run",
+                "enabled": true,
+                "id": "1FXHP7T",
+                "type": "Try"
             },
             {
                 "children": [],
-                "delay": "0",
+                "description": "Ignore productivity open/run failures",
+                "enabled": true,
+                "id": "1FXHP7E",
+                "type": "Except"
+            },
+            {
+                "children": [],
                 "description": "",
                 "enabled": true,
-                "id": "1FXHU97",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run",
-                "type": "Include"
+                "id": "1FXHP7X",
+                "type": "End Try"
             },
             {
                 "children": [],
@@ -773,7 +803,7 @@
         "eval_method": "in",
         "id": "1FUNWTF",
         "left_term": "productivity",
-        "right_term": "[enterprise_collab:mincp_workloads]",
+        "right_term": "[mincp_workloads]",
         "type": "If"
     },
     {
@@ -810,7 +840,7 @@
         "eval_method": "in",
         "id": "1HH4RJV",
         "left_term": "click_todo",
-        "right_term": "[enterprise_collab:mincp_workloads]",
+        "right_term": "[mincp_workloads]",
         "type": "If"
     },
     {
@@ -838,7 +868,7 @@
                 "eval_method": "not in",
                 "id": "1HJA7L7",
                 "left_term": "click_todo",
-                "right_term": "[enterprise_collab:mincp_workloads]",
+                "right_term": "[mincp_workloads]",
                 "type": "If"
             },
             {
@@ -1431,7 +1461,7 @@
         "eval_method": "in",
         "id": "1H6JT03",
         "left_term": "productivity",
-        "right_term": "[enterprise_collab:mincp_workloads]",
+        "right_term": "[mincp_workloads]",
         "type": "If"
     },
     {

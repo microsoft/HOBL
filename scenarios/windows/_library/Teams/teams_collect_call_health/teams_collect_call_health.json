@@ -45,136 +45,166 @@
     },
     {
         "children": [],
-        "delay": "1",
-        "description": "Call Options",
+        "delay": "0",
+        "description": "",
         "enabled": true,
-        "file_name": [
-            "image_195LA32.png"
+        "id": "195LA3D",
+        "type": "Delay"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "1",
+                "description": "Call Options",
+                "enabled": true,
+                "file_name": [
+                    "image_195LA32.png"
+                ],
+                "h": "0.413",
+                "id": "195LA32",
+                "recapture": false,
+                "type": "Capture",
+                "w": "0.628",
+                "x": "0.377",
+                "y": "0.000"
+            },
+            {
+                "capture_id": "195LA32",
+                "children": [],
+                "delay": "2",
+                "description": "Select More Option",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_195LA8Y.png"
+                ],
+                "id": "195LA8Y",
+                "match_threshold": "",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            },
+            {
+                "children": [],
+                "delay": "1",
+                "description": "More settings",
+                "enabled": true,
+                "file_name": [
+                    "image_195LN5R.png"
+                ],
+                "h": "0.573",
+                "id": "195LN5R",
+                "recapture": false,
+                "type": "Capture",
+                "w": "0.470",
+                "x": "0.530",
+                "y": "0.000"
+            },
+            {
+                "capture_id": "195LN5R",
+                "children": [],
+                "delay": "2",
+                "description": "Settings button",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_195LNFU.png"
+                ],
+                "id": "195LNFU",
+                "match_threshold": "",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Go to Call Health",
+                "enabled": true,
+                "id": "195LNP5",
+                "text": "\ue007",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            },
+            {
+                "children": [],
+                "delay": "1",
+                "description": "Call health",
+                "enabled": true,
+                "file_name": [
+                    "image_195MWYF.png"
+                ],
+                "h": "0.583",
+                "id": "195MWYF",
+                "recapture": false,
+                "type": "Capture",
+                "w": "0.401",
+                "x": "0.600",
+                "y": "0.001"
+            },
+            {
+                "capture_id": "195MWYF",
+                "children": [],
+                "delay": "2",
+                "description": "Call Health Opened",
+                "enabled": true,
+                "exception_on": "Never",
+                "file_name": [
+                    "image_195MX27.png"
+                ],
+                "h": "0.041",
+                "id": "195MX27",
+                "match_threshold": "",
+                "scale": "",
+                "type": "Check",
+                "w": "0.059",
+                "x": "0.754",
+                "y": "0.089"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Copy Call Health Information",
+                "enabled": true,
+                "id": "195LPLM",
+                "text": "\ue009ac",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "Parse Call Health",
+                "enabled": true,
+                "file_name": [
+                    "code_195LUPA.py"
+                ],
+                "id": "195LUPA",
+                "type": "Code"
+            }
         ],
-        "h": "0.413",
-        "id": "195LA32",
-        "recapture": false,
-        "type": "Capture",
-        "w": "0.628",
-        "x": "0.377",
-        "y": "0.000"
-    },
-    {
-        "capture_id": "195LA32",
-        "children": [],
-        "delay": "2",
-        "description": "Select More Option",
+        "description": "Best-effort call health collection",
         "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_195LA8Y.png"
-        ],
-        "id": "195LA8Y",
-        "match_threshold": "",
-        "primary": true,
-        "scale": "",
-        "type": "Click",
-        "x": "0.500",
-        "y": "0.500"
+        "id": "195LA3T",
+        "type": "Try"
     },
     {
         "children": [],
-        "delay": "1",
-        "description": "More settings",
+        "description": "Ignore call health collection failures",
         "enabled": true,
-        "file_name": [
-            "image_195LN5R.png"
-        ],
-        "h": "0.573",
-        "id": "195LN5R",
-        "recapture": false,
-        "type": "Capture",
-        "w": "0.470",
-        "x": "0.530",
-        "y": "0.000"
-    },
-    {
-        "capture_id": "195LN5R",
-        "children": [],
-        "delay": "2",
-        "description": "Settings button",
-        "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_195LNFU.png"
-        ],
-        "id": "195LNFU",
-        "match_threshold": "",
-        "primary": true,
-        "scale": "",
-        "type": "Click",
-        "x": "0.500",
-        "y": "0.500"
+        "id": "195LA3E",
+        "type": "Except"
     },
     {
         "children": [],
-        "delay": "2",
-        "description": "Go to Call Health",
+        "description": "",
         "enabled": true,
-        "id": "195LNP5",
-        "text": "\ue007",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "1",
-        "description": "Call health",
-        "enabled": true,
-        "file_name": [
-            "image_195MWYF.png"
-        ],
-        "h": "0.583",
-        "id": "195MWYF",
-        "recapture": false,
-        "type": "Capture",
-        "w": "0.401",
-        "x": "0.600",
-        "y": "0.001"
-    },
-    {
-        "capture_id": "195MWYF",
-        "children": [],
-        "delay": "2",
-        "description": "Call Health Opened",
-        "enabled": true,
-        "exception_on": "Never",
-        "file_name": [
-            "image_195MX27.png"
-        ],
-        "h": "0.041",
-        "id": "195MX27",
-        "match_threshold": "",
-        "scale": "",
-        "type": "Check",
-        "w": "0.059",
-        "x": "0.754",
-        "y": "0.089"
-    },
-    {
-        "children": [],
-        "delay": "2",
-        "description": "Copy Call Health Information",
-        "enabled": true,
-        "id": "195LPLM",
-        "text": "\ue009ac",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "Parse Call Health",
-        "enabled": true,
-        "file_name": [
-            "code_195LUPA.py"
-        ],
-        "id": "195LUPA",
-        "type": "Code"
+        "id": "195LA3X",
+        "type": "End Try"
     }
 ]

@@ -10,7 +10,7 @@ def run(scenario):
     module_folder = os.path.dirname(__file__)
     
     typing_delay = int(Params.get('global', 'typing_delay'))
-    size = 21
+    size = 11
     index = 0
     typing_str = ""
     with open(os.path.join(module_folder, "TestBookData.txt"), 'r') as myfile:

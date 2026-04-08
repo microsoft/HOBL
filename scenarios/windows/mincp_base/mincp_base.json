@@ -62,7 +62,7 @@
         "multiple": true,
         "name": "[mincp_workloads]",
         "type": "Set User Default",
-        "val_options": "live_captions,copilot_query,semantic_search,click_todo,studioeffect_blur,productivity",
+        "val_options": "live_captions,copilot_query,semantic_search,click_todo,studioeffect_blur,productivity,file_explorer,start_launch",
         "value": ""
     },
     {
@@ -105,9 +105,39 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1HM5PW0",
-                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\live_captions_setup",
-                        "type": "Include"
+                        "id": "1HM5LC9",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1HM5PW0",
+                                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\live_captions_setup",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "Best-effort live captions setup",
+                        "enabled": true,
+                        "id": "1HM5LC0",
+                        "type": "Try"
+                    },
+                    {
+                        "children": [],
+                        "description": "Ignore live captions setup failures",
+                        "enabled": true,
+                        "id": "1HM5LC1",
+                        "type": "Except"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "1HM5LC2",
+                        "type": "End Try"
                     }
                 ],
                 "description": "",
@@ -129,42 +159,12 @@
                 "children": [
                     {
                         "children": [],
-                        "delay": "0.0",
-                        "description": "",
-                        "enabled": true,
-                        "id": "1EUEJYP",
-                        "name": "[simple_office_launch]",
-                        "type": "Set",
-                        "value": "1"
-                    },
-                    {
-                        "children": [],
-                        "delay": "0.0",
-                        "description": "Upload Perf Files",
-                        "enabled": true,
-                        "file_name": [
-                            "code_1EN194J.py"
-                        ],
-                        "id": "1EN194J",
-                        "type": "Code"
-                    },
-                    {
-                        "children": [],
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1EN18UV",
-                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable",
+                        "id": "1JKRPHC",
+                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_setup",
                         "type": "Include"
-                    },
-                    {
-                        "children": [],
-                        "command": "cmd /c net stop DiagTrack && net start DiagTrack",
-                        "delay": "2",
-                        "description": "Restart DiagTrack",
-                        "enabled": true,
-                        "id": "1EPL382",
-                        "type": "Command"
                     }
                 ],
                 "description": "",
@@ -256,7 +256,7 @@
                         "id": "1FKC02P",
                         "name": "[teams:collect_MSTeams_Logs]",
                         "type": "Set",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "children": [],
@@ -290,9 +290,39 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1HH4P6V",
-                        "include_path": "scenarios\\windows\\_library\\misc\\click_to_do_setup",
-                        "type": "Include"
+                        "id": "1HH4P6D",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1HH4P6V",
+                                "include_path": "scenarios\\windows\\_library\\misc\\click_to_do_setup",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "Best-effort click_to_do setup",
+                        "enabled": true,
+                        "id": "1HH4P6T",
+                        "type": "Try"
+                    },
+                    {
+                        "children": [],
+                        "description": "Ignore click_to_do setup failures",
+                        "enabled": true,
+                        "id": "1HH4P6E",
+                        "type": "Except"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "1HH4P6X",
+                        "type": "End Try"
                     }
                 ],
                 "description": "",
@@ -346,9 +376,39 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1HEPHY1",
-                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
-                        "type": "Include"
+                        "id": "1HEPHY0",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1HEPHY1",
+                                "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "Best-effort prod setup",
+                        "enabled": true,
+                        "id": "1HEPHYT",
+                        "type": "Try"
+                    },
+                    {
+                        "children": [],
+                        "description": "Ignore prod setup failures",
+                        "enabled": true,
+                        "id": "1HEPHYE",
+                        "type": "Except"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "1HEPHYX",
+                        "type": "End Try"
                     }
                 ],
                 "description": "",
@@ -373,9 +433,39 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "19K4E5H",
-                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
-                        "type": "Include"
+                        "id": "19K4E5D",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "19K4E5H",
+                                "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "Best-effort prod setup for office launch",
+                        "enabled": true,
+                        "id": "19K4E5T",
+                        "type": "Try"
+                    },
+                    {
+                        "children": [],
+                        "description": "Ignore prod setup failures",
+                        "enabled": true,
+                        "id": "19K4E5E",
+                        "type": "Except"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "19K4E5X",
+                        "type": "End Try"
                     }
                 ],
                 "description": "",
@@ -400,9 +490,39 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1HH49JK",
-                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\semantic_search_setup",
-                        "type": "Include"
+                        "id": "1HH49JD",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1HH49JK",
+                                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\semantic_search_setup",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "Best-effort semantic search setup",
+                        "enabled": true,
+                        "id": "1HH49JT",
+                        "type": "Try"
+                    },
+                    {
+                        "children": [],
+                        "description": "Ignore semantic search setup failures",
+                        "enabled": true,
+                        "id": "1HH49JE",
+                        "type": "Except"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "1HH49JX",
+                        "type": "End Try"
                     }
                 ],
                 "description": "",
@@ -513,8 +633,15 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1A7H7A8",
+                "id": "1JKUTR7",
                 "include_path": "scenarios\\windows\\_library\\web\\web_check",
+                "params": [
+                    {
+                        "name": "[youtube_duration]",
+                        "val_options": "",
+                        "value": "90"
+                    }
+                ],
                 "type": "Include"
             },
             {
@@ -561,6 +688,24 @@
                 "enabled": true,
                 "id": "19MUFJC",
                 "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "W4ESYUL",
+                "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "W4ESYUM",
+                "include_path": "scenarios\\windows\\_library\\misc\\perf_click_to_do",
+                "type": "Include"
             },
             {
                 "children": [],
@@ -755,32 +900,12 @@
                     },
                     {
                         "children": [],
-                        "delay": "0.0",
-                        "description": "Delete Perf Files",
-                        "enabled": true,
-                        "file_name": [
-                            "code_1EN1A44.py"
-                        ],
-                        "id": "1EN1A44",
-                        "type": "Code"
-                    },
-                    {
-                        "children": [],
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1EN1A1W",
-                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable",
+                        "id": "1JKRPP9",
+                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_teardown",
                         "type": "Include"
-                    },
-                    {
-                        "children": [],
-                        "command": "cmd /c net stop DiagTrack && net start DiagTrack",
-                        "delay": "2",
-                        "description": "Restart DiagTrack",
-                        "enabled": true,
-                        "id": "1EPL51E",
-                        "type": "Command"
                     }
                 ],
                 "description": "",

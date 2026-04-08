@@ -1,32 +1,50 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+"""
+//--------------------------------------------------------------
+//
+// HOBL
+// Copyright(c) Microsoft Corporation
+// All rights reserved.
+//
+// MIT License
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files(the ""Software""),
+// to deal in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and / or sell copies
+// of the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions :
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS
+// OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+// OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+//--------------------------------------------------------------
+"""
 
-import core.app_scenario
-from core.parameters import Params
+import scenarios.app_scenario
+from parameters import Params
 import logging
 import os
-import time
 from . import default_params
 
 # Description:
 #   Automatically generated standard scenario.
 
-class MincpBase(core.app_scenario.Scenario):
+class PerfClickToDo(scenarios.app_scenario.Scenario):
     # Set default parameters:
     default_params.run()
-
-    module = __module__.split('.')[-1]
-
-    if Params.get(module, 'perf_run') == '1':
-        logging.info("Adding stress_utc tool for parsing perf metrics")
-        Params.setOverride("global", "tools", "+stress_utc")
-        Params.setOverride("stress_utc", "provider", "perf_utc.wprp")
 
     actions = None
 
     def setUp(self):
         # Load actions JSON.
-        actions_json = os.path.join(os.path.dirname(__file__), "mincp_base.json")
+        actions_json = os.path.join(os.path.dirname(__file__), "perf_click_to_do.json")
         self.actions = self.load_action_json(actions_json)
 
         # Execute Setup actions, if they exist
@@ -35,14 +53,14 @@ class MincpBase(core.app_scenario.Scenario):
             self.run_actions(setup_action["children"])
 
         # Call base class setUp() to dump config, call tool callbacks, and start measurment
-        core.app_scenario.Scenario.setUp(self)
+        scenarios.app_scenario.Scenario.setUp(self)
 
 
     def runTest(self):
         # Execute Run Test actions, if they exist
         runtest_action = self._find_next_type("Run Test", json=self.actions)
         if runtest_action is not None:
-            self.run_actions(runtest_action["children"], fail_on_error=False)
+            self.run_actions(runtest_action["children"])
             return
         
         # If no "Run Test", "Setup", or "Teardown" specified, then just execute the whole list
@@ -54,7 +72,7 @@ class MincpBase(core.app_scenario.Scenario):
 
     def tearDown(self):
         # Call base class tearDown() to stop measurment, copy back data from DUT, and call tool callbacks
-        core.app_scenario.Scenario.tearDown(self)
+        scenarios.app_scenario.Scenario.tearDown(self)
 
         # Execute Teardown actions, if they exist
         teardown_action = self._find_next_type("Teardown", json=self.actions)
