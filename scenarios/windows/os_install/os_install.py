@@ -217,7 +217,7 @@ class OsInstall(core.app_scenario.Scenario):
         time.sleep(120)
 
         # Uploading OS Install Resources to hobl_bin
-        self._upload("scenarios\\os_install_resources", self.dut_exec_path)
+        self._upload("scenarios\\windows\\os_install\\os_install_resources", self.dut_exec_path)
 
         # copy d:\bin\postdeploy\drivers folder to support folder if c:\support doesn't already exist
         if not self._check_remote_file_exists(r"c:\support"):
