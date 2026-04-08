@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 # Combined display settings tool
 
 from parameters import Params
@@ -38,8 +41,15 @@ class Tool(Scenario):
     Params.setDefault(module, 'brightness', '', desc="Brightness (e.g. 65, 65%, 150nits).")
     Params.setDefault(module, 'nits_map', '100nits:50% 150nits:65%', desc="Nits-to-slider mapping.")
 
-    # HOBL registry key for persisting initial state across scenario instances
-    REG_KEY_PATH = r"HKLM\SOFTWARE\HOBL"
+    # HOBL registry key base for persisting initial state across scenario instances
+    REG_KEY_BASE = r"HKLM\SOFTWARE\HOBL"
+
+    def _get_reg_key_path(self):
+        """Get the DUT-specific registry key path to avoid conflicts across DUTs."""
+        dut_name = Params.get('global', 'dut_name', log=False)
+        if dut_name:
+            return self.REG_KEY_BASE + "\\" + dut_name
+        return self.REG_KEY_BASE
 
     # CABC bidirectional mapping: name↔registry value
     CABC_MAP = {"off": "0", "always": "1", "onbatteryonly": "2",
@@ -61,16 +71,18 @@ class Tool(Scenario):
     SCHTASK_NAME = "HOBL_ACM_RegWrite"
 
     # =========================================================================
-    # State persistence helpers — read/write/delete from HKLM\SOFTWARE\HOBL
+    # State persistence helpers — read/write/delete from HKLM\SOFTWARE\HOBL\<dut_name>
     # =========================================================================
 
     def _save_state(self, name, value):
         """Save initial state to HOBL registry for later restoration."""
-        self._call(["cmd.exe", f'/C reg add "{self.REG_KEY_PATH}" /v "{name}" /t REG_SZ /d "{value}" /f'], expected_exit_code="")
+        reg_path = self._get_reg_key_path()
+        self._call(["cmd.exe", f'/C reg add "{reg_path}" /v "{name}" /t REG_SZ /d "{value}" /f'], expected_exit_code="")
 
     def _read_state(self, name):
         """Read saved state from HOBL registry. Returns string or None."""
-        result = self._call(["cmd.exe", f'/C reg query "{self.REG_KEY_PATH}" /v "{name}"'], expected_exit_code="")
+        reg_path = self._get_reg_key_path()
+        result = self._call(["cmd.exe", f'/C reg query "{reg_path}" /v "{name}"'], expected_exit_code="")
         if result and name in result:
             try:
                 return result.split("REG_SZ")[-1].strip().strip('"')
@@ -80,7 +92,8 @@ class Tool(Scenario):
 
     def _clear_state(self, name):
         """Delete saved state from HOBL registry."""
-        self._call(["cmd.exe", f'/C reg delete "{self.REG_KEY_PATH}" /v "{name}" /f'], expected_exit_code="")
+        reg_path = self._get_reg_key_path()
+        self._call(["cmd.exe", f'/C reg delete "{reg_path}" /v "{name}" /f'], expected_exit_code="")
 
     # =========================================================================
     # ALS (Adaptive Brightness) — powercfg
