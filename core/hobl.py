@@ -120,7 +120,7 @@ params.setDefault('global', 'hobl_external', '', desc="External HOBL directories
 params.setDefault('global', 'web_replay_run', '0')
 params.setDefault('global', 'web_replay_check_enable', '1')
 params.setDefault('global', 'web_replay_action', 'replay', desc="Behavior of Web Replay.", valOptions=["record", "replay", "bulk_record", "bulk_replay", "netlog"])
-params.setDefault('global', 'web_replay_recording', 'web_archive_2025-07-22')
+params.setDefault('global', 'web_replay_recording', 'web_archive_2026-04-08')
 params.setDefault('global', 'web_replay_rand_ports', '1')
 params.setDefault('global', 'web_replay_http_port', '9080')
 params.setDefault('global', 'web_replay_https_port', '9081')

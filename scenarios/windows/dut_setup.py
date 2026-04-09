@@ -252,14 +252,9 @@ class DutSetup(core.app_scenario.Scenario):
         if not os.path.exists(usb_hobl_bin + "\\remote"):
             os.makedirs(usb_hobl_bin + "\\remote")
 
-        shutil.copytree(f"{source_path}\\utilities\\proprietary\\remote\\x64", f"{usb_hobl_bin}\\remote\\x64")
-        shutil.copytree(f"{source_path}\\utilities\\proprietary\\remote\\arm64", f"{usb_hobl_bin}\\remote\\arm64")
-        shutil.copy(f"{source_path}\\utilities\\proprietary\\remote\\wallpaper.png", f"{usb_hobl_bin}\\remote\\wallpaper.png")
-
-        # Copy usa.txt for copilot scenario to usb drive
-        logging.debug("Source: " + source_path + "\\utilities\\open_source\\usa.txt")
-        logging.debug("Dest  : " + usb_hobl_bin + "\\usa.txt")
-        shutil.copy(source_path + "\\utilities\\open_source\\usa.txt", usb_hobl_bin + "\\usa.txt")
+        shutil.copytree(f"{source_path}\\utilities\\third_party\\remote\\x64", f"{usb_hobl_bin}\\remote\\x64")
+        shutil.copytree(f"{source_path}\\utilities\\third_party\\remote\\arm64", f"{usb_hobl_bin}\\remote\\arm64")
+        shutil.copy(f"{source_path}\\utilities\\third_party\\remote\\wallpaper.png", f"{usb_hobl_bin}\\remote\\wallpaper.png")
 
         # Open connect_wifi_task.cmd file on drive and pre-pend variables
         f = open(source_path + "\\utilities\\open_source\\connect_wifi_task.cmd")
@@ -291,7 +286,7 @@ class DutSetup(core.app_scenario.Scenario):
         shutil.copy(source_path + r"\setup_src\src_dut_win\schedule_connect_wifi.ps1", usb_hobl_bin + r"\schedule_connect_wifi.ps1")
 
         # Copy tee.exe to usb drive
-        shutil.copy(f"{source_path}\\utilities\\third_party\\tee.exe", f"{usb_hobl_bin}\\tee.exe")
+        shutil.copy(f"{source_path}\\utilities\\third_party\\tee\\tee.exe", f"{usb_hobl_bin}\\tee.exe")
 
         # Copy dut_setup.cmd to usb drive
         logging.debug("Source: " + source_path + "\\setup_src\\src_dut_win\\dut_setup.cmd")

@@ -45,7 +45,7 @@ internal sealed class DesktopDuplicationCapturer : IDisposable
             using var output1 = output.QueryInterfaceOrNull<IDXGIOutput1>()
                 ?? throw new InvalidOperationException("Failed to query IDXGIOutput1.");
 
-            _duplication = output1.DuplicateOutput(_device);
+            // _duplication = output1.DuplicateOutput(_device);
         }
     }
 

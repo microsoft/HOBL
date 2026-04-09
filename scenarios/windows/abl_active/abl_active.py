@@ -8,12 +8,12 @@ import time
 import os
 from . import default_params
 
-# Description:
-#   Automatically generated standard scenario.
 
 class AblActive(core.app_scenario.Scenario):
     # Set default parameters:
     default_params.run()
+
+    prep_scenarios = ["edge_install", "web_prep", "office_install", "onedrive_prep", "productivity_prep"]
 
     actions = None
 
