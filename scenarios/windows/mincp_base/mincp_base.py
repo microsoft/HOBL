@@ -32,7 +32,7 @@ class MincpBase(core.app_scenario.Scenario):
         # Execute Setup actions, if they exist
         setup_action = self._find_next_type("Setup", json=self.actions)
         if setup_action is not None:
-            self.run_actions(setup_action["children"])
+            self.run_actions(setup_action["children"], fail_on_error=False)
 
         # Call base class setUp() to dump config, call tool callbacks, and start measurment
         core.app_scenario.Scenario.setUp(self)

@@ -259,13 +259,28 @@
                         "value": "1"
                     },
                     {
-                        "children": [],
-                        "delay": "0",
-                        "description": "",
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "19K4CEU",
+                                "include_path": "scenarios\\windows\\_library\\Teams\\teams_setup",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "Try teams_setup",
                         "enabled": true,
-                        "id": "19K4CEU",
-                        "include_path": "scenarios\\windows\\_library\\Teams\\teams_setup",
-                        "type": "Include"
+                        "id": "1KTEAMS",
+                        "type": "Try"
+                    },
+                    {
+                        "children": [],
+                        "description": "Except teams_setup",
+                        "enabled": true,
+                        "id": "1KTEAMX",
+                        "type": "Except"
                     }
                 ],
                 "description": "",
