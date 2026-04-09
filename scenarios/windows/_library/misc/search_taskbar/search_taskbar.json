@@ -48,12 +48,30 @@
         "children": [],
         "delay": "2",
         "description": "Click search icon on taskbar",
-        "enabled": true,
+        "enabled": false,
         "exception_on": "No match",
         "file_name": [
             "image_1JNE7L0.png"
         ],
         "id": "GQD3V0O",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "capture_id": "1K072P9",
+        "children": [],
+        "delay": "1",
+        "description": "search icon new",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1K0735X.png"
+        ],
+        "id": "1K0735X",
         "match_threshold": "",
         "primary": true,
         "scale": "",
