@@ -41,5 +41,15 @@
         "type": "Click",
         "x": "0.500",
         "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Dismiss save dialog - click No",
+        "enabled": true,
+        "id": "UTA5NO",
+        "text": "\ue00an",
+        "type": "Type",
+        "typing_delay": "100"
     }
 ]

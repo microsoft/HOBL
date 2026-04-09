@@ -5956,5 +5956,96 @@
         <final id="_cancel" />
       </scxml>
     </scenario>
+    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{4d2294eb-435a-430a-9f60-6c86a57b9f3e}" scenarioname="PT_9459__TIP_ Search Activation _direct via Search entryp_4d2294" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="_TIP_ Search Activation _direct via Search entrypoint on Taskbar or Win _ S_" ptdurationfield="durationMs" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Windows.Health.TestInProduction.TestResult">
+          <etwtrigger>
+            <provider>{50109fbd-6d85-5815-731e-c907eca1607b}</provider>
+            <keywords>0x2</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value />
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename />
+            <valuetype>REG_NONE</valuetype>
+            <value />
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match13547testCaseIde_134903294">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Windows.Health.TestInProduction.TestResult</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>testCaseId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>34903294</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match13547completionKinde_11">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Windows.Health.TestInProduction.TestResult</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>completionKind</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>1</value>
+          </singletriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
+        <state id="_start">
+          <transition event="Microsoft.Windows.Health.TestInProduction.TestResult" target="_complete" name="T1">
+            <filter strict="false">match13547testCaseIde_134903294</filter>
+            <filter strict="false">match13547completionKinde_11</filter>
+          </transition>
+        </state>
+        <final id="_complete" />
+        <final id="_cancel" />
+      </scxml>
+    </scenario>
   </scenarios>
 </diagrules>

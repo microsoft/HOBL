@@ -1,0 +1,27 @@
+[
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "",
+        "enabled": true,
+        "file_name": [
+            "image_1K06L53.png"
+        ],
+        "h": "1",
+        "id": "1K06L53",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1",
+        "x": "0",
+        "y": "0"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1K06MTL",
+        "include_path": "scenarios\\windows\\_library\\misc\\click_studio_effects",
+        "type": "Include"
+    }
+]
