@@ -705,6 +705,15 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
+                        "id": "1K080RA",
+                        "include_path": "scenarios\\windows\\_library\\misc\\open_file_explorer",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
                         "id": "W4ESYUM",
                         "include_path": "scenarios\\windows\\_library\\misc\\perf_click_to_do",
                         "type": "Include"
