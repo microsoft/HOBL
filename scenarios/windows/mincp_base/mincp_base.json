@@ -714,7 +714,29 @@
                         "id": "W4ESYUL",
                         "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
                         "type": "Include"
-                    },
+                    }
+                ],
+                "description": "Best-effort search_taskbar",
+                "enabled": true,
+                "id": "W4ESYUT",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore search_taskbar failure",
+                "enabled": true,
+                "id": "W4ESYUE",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "W4ESYUX",
+                "type": "End Try"
+            },
+            {
+                "children": [
                     {
                         "children": [],
                         "delay": "0",
@@ -726,6 +748,154 @@
                     },
                     {
                         "children": [],
+                        "delay": "3",
+                        "description": "Close File Explorer",
+                        "enabled": true,
+                        "id": "1KPFE01",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "0"
+                    }
+                ],
+                "description": "Best-effort open_file_explorer",
+                "enabled": true,
+                "id": "1KPFE0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore open_file_explorer failure",
+                "enabled": true,
+                "id": "1KPFE0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1KPFE0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1KPST0I",
+                        "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
+                        "params": [
+                            {
+                                "name": "[app_name]",
+                                "val_options": "",
+                                "value": "Settings"
+                            },
+                            {
+                                "name": "[etw_event_tag]",
+                                "val_options": "",
+                                "value": "SettingsLaunch"
+                            },
+                            {
+                                "name": "[app_open_delay]",
+                                "val_options": "",
+                                "value": "5"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Close Settings",
+                        "enabled": true,
+                        "id": "1KPST01",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "0"
+                    }
+                ],
+                "description": "Best-effort Settings launch",
+                "enabled": true,
+                "id": "1KPST0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Settings launch failure",
+                "enabled": true,
+                "id": "1KPST0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1KPST0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1KPSN0I",
+                        "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
+                        "params": [
+                            {
+                                "name": "[app_name]",
+                                "val_options": "",
+                                "value": "Snipping Tool"
+                            },
+                            {
+                                "name": "[etw_event_tag]",
+                                "val_options": "",
+                                "value": "SnippingToolLaunch"
+                            },
+                            {
+                                "name": "[app_open_delay]",
+                                "val_options": "",
+                                "value": "3"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Close Snipping Tool",
+                        "enabled": true,
+                        "id": "1KPSN01",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "0"
+                    }
+                ],
+                "description": "Best-effort Snipping Tool launch",
+                "enabled": true,
+                "id": "1KPSN0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Snipping Tool launch failure",
+                "enabled": true,
+                "id": "1KPSN0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1KPSN0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
                         "delay": "0",
                         "description": "",
                         "enabled": true,
@@ -734,23 +904,23 @@
                         "type": "Include"
                     }
                 ],
-                "description": "Best-effort search_taskbar + perf_click_to_do",
+                "description": "Best-effort perf_click_to_do",
                 "enabled": true,
-                "id": "W4ESYUT",
+                "id": "1KPCTDT",
                 "type": "Try"
             },
             {
                 "children": [],
-                "description": "Ignore search/click_to_do failures",
+                "description": "Ignore perf_click_to_do failure",
                 "enabled": true,
-                "id": "W4ESYUE",
+                "id": "1KPCTDE",
                 "type": "Except"
             },
             {
                 "children": [],
                 "description": "",
                 "enabled": true,
-                "id": "W4ESYUX",
+                "id": "1KPCTDX",
                 "type": "End Try"
             },
             {
