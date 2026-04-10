@@ -628,6 +628,256 @@
                 "type": "Include"
             },
             {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "MBOFC0E",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "OfficeBootLaunches"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Start Menu for Outlook",
+                        "enabled": true,
+                        "id": "MBOFCSM1",
+                        "text": "\ue03d",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Stabilize Start Menu",
+                        "enabled": true,
+                        "id": "MBOFCD1",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Launch Outlook from Start Menu",
+                        "enabled": true,
+                        "id": "MBOFCOL",
+                        "text": "outlook\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "8",
+                        "description": "Wait for Outlook window",
+                        "enabled": true,
+                        "id": "MBOFCOW",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM OUTLOOK.EXE /IM olk.exe /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close Outlook",
+                        "enabled": true,
+                        "id": "MBOFCOK",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle after Outlook close",
+                        "enabled": true,
+                        "id": "MBOFCOS",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Start Menu for Word",
+                        "enabled": true,
+                        "id": "MBOFCSM2",
+                        "text": "\ue03d",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Stabilize Start Menu",
+                        "enabled": true,
+                        "id": "MBOFCD2",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Launch Word from Start Menu",
+                        "enabled": true,
+                        "id": "MBOFCWL",
+                        "text": "word\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "8",
+                        "description": "Wait for Word window",
+                        "enabled": true,
+                        "id": "MBOFCWW",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM WINWORD.EXE /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close Word",
+                        "enabled": true,
+                        "id": "MBOFCWK",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle after Word close",
+                        "enabled": true,
+                        "id": "MBOFCWS",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Start Menu for Excel",
+                        "enabled": true,
+                        "id": "MBOFCSM3",
+                        "text": "\ue03d",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Stabilize Start Menu",
+                        "enabled": true,
+                        "id": "MBOFCD3",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Launch Excel from Start Menu",
+                        "enabled": true,
+                        "id": "MBOFCEL",
+                        "text": "excel\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "8",
+                        "description": "Wait for Excel window",
+                        "enabled": true,
+                        "id": "MBOFCEW",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM EXCEL.EXE /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close Excel",
+                        "enabled": true,
+                        "id": "MBOFCEK",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle after Excel close",
+                        "enabled": true,
+                        "id": "MBOFCES",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Start Menu for PowerPoint",
+                        "enabled": true,
+                        "id": "MBOFCSM4",
+                        "text": "\ue03d",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Stabilize Start Menu",
+                        "enabled": true,
+                        "id": "MBOFCD4",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Launch PowerPoint from Start Menu",
+                        "enabled": true,
+                        "id": "MBOFCPL",
+                        "text": "powerpoint\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "8",
+                        "description": "Wait for PowerPoint window",
+                        "enabled": true,
+                        "id": "MBOFCPW",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM POWERPNT.EXE /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close PowerPoint",
+                        "enabled": true,
+                        "id": "MBOFCPK",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle after PowerPoint close",
+                        "enabled": true,
+                        "id": "MBOFCPS",
+                        "type": "Delay"
+                    }
+                ],
+                "description": "Office Boot PT launches (8804-8807) via Start Menu",
+                "enabled": true,
+                "id": "MBOFCTRY",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Office boot launch failures",
+                "enabled": true,
+                "id": "MBOFCEXC",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "MBOFCEND",
+                "type": "End Try"
+            },
+            {
                 "children": [],
                 "delay": "0",
                 "description": "",
