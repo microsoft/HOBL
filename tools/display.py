@@ -14,20 +14,22 @@ import time
 class Tool(Scenario):
     '''
     Combined display settings tool. Configures one or more display properties
-    before a test and restores initial values on test end.
+    before a test. Initial values are saved to the DUT registry on first use
+    and only restored when display_restore=1 is set.
 
     Only parameters that are explicitly provided are processed — empty parameters
     are ignored, so the tool can be called for any subset of operations.
 
     Parameters:
-      als_adaptive_brightness       0/1 — adaptive brightness (ALS) on/off
-      hdr                           0/1 — HDR on/off
-      hdr_auto                      0/1 — Auto HDR on/off (HDR-capable monitor required)
-      refresh_rate                  60/120/dynamic — display refresh rate (WinAppDriver)
-      content_adaptive_brightness   Off/Always/On battery only — CABC mode
-      adaptive_color                0/1 — adaptive color management on/off
+      als_adaptive_brightness       0/1 — adaptive brightness (ALS) on/off (Windows only)
+      hdr                           0/1 — HDR on/off (Windows only)
+      hdr_auto                      0/1 — Auto HDR on/off (Windows only)
+      refresh_rate                  60/120/dynamic — display refresh rate (Windows only)
+      content_adaptive_brightness   Off/Always/On battery only — CABC mode (Windows only)
+      adaptive_color                0/1 — adaptive color management on/off (Windows only)
       brightness                    brightness value (e.g. 65, 65%, 150nits)
       nits_map                      nits-to-slider mapping (e.g. "100nits:50% 150nits:65%")
+      display_restore               1 — restore all saved initial values after test
     '''
     module = __module__.split('.')[-1]
 
@@ -40,16 +42,10 @@ class Tool(Scenario):
     Params.setDefault(module, 'refresh_rate', '', desc="Refresh rate: 60, 120, or dynamic.", valOptions=["60", "120", "dynamic"])
     Params.setDefault(module, 'brightness', '', desc="Brightness (e.g. 65, 65%, 150nits).")
     Params.setDefault(module, 'nits_map', '100nits:50% 150nits:65%', desc="Nits-to-slider mapping.")
+    Params.setDefault(module, 'display_restore', '', desc="Restore all display settings to saved initial values (1=restore).", valOptions=["0", "1"])
 
-    # HOBL registry key base for persisting initial state across scenario instances
-    REG_KEY_BASE = r"HKLM\SOFTWARE\HOBL"
-
-    def _get_reg_key_path(self):
-        """Get the DUT-specific registry key path to avoid conflicts across DUTs."""
-        dut_name = Params.get('global', 'dut_name', log=False)
-        if dut_name:
-            return self.REG_KEY_BASE + "\\" + dut_name
-        return self.REG_KEY_BASE
+    # HOBL registry key for persisting initial state (lives on the DUT)
+    REG_KEY_PATH = r"HKLM\SOFTWARE\HOBL"
 
     # CABC bidirectional mapping: name↔registry value
     CABC_MAP = {"off": "0", "always": "1", "onbatteryonly": "2",
@@ -71,18 +67,16 @@ class Tool(Scenario):
     SCHTASK_NAME = "HOBL_ACM_RegWrite"
 
     # =========================================================================
-    # State persistence helpers — read/write/delete from HKLM\SOFTWARE\HOBL\<dut_name>
+    # State persistence helpers — read/write/delete from HKLM\SOFTWARE\HOBL
     # =========================================================================
 
     def _save_state(self, name, value):
         """Save initial state to HOBL registry for later restoration."""
-        reg_path = self._get_reg_key_path()
-        self._call(["cmd.exe", f'/C reg add "{reg_path}" /v "{name}" /t REG_SZ /d "{value}" /f'], expected_exit_code="")
+        self._call(["cmd.exe", f'/C reg add "{self.REG_KEY_PATH}" /v "{name}" /t REG_SZ /d "{value}" /f'], expected_exit_code="")
 
     def _read_state(self, name):
         """Read saved state from HOBL registry. Returns string or None."""
-        reg_path = self._get_reg_key_path()
-        result = self._call(["cmd.exe", f'/C reg query "{reg_path}" /v "{name}"'], expected_exit_code="")
+        result = self._call(["cmd.exe", f'/C reg query "{self.REG_KEY_PATH}" /v "{name}"'], expected_exit_code="")
         if result and name in result:
             try:
                 return result.split("REG_SZ")[-1].strip().strip('"')
@@ -92,8 +86,7 @@ class Tool(Scenario):
 
     def _clear_state(self, name):
         """Delete saved state from HOBL registry."""
-        reg_path = self._get_reg_key_path()
-        self._call(["cmd.exe", f'/C reg delete "{reg_path}" /v "{name}" /f'], expected_exit_code="")
+        self._call(["cmd.exe", f'/C reg delete "{self.REG_KEY_PATH}" /v "{name}" /f'], expected_exit_code="")
 
     # =========================================================================
     # ALS (Adaptive Brightness) — powercfg
@@ -112,14 +105,14 @@ class Tool(Scenario):
                 ac_value = "1" if "0x00000001" in line else "0"
             elif "Current DC Power Setting Index" in line:
                 dc_value = "1" if "0x00000001" in line else "0"
-        logging.info("Initial Adaptive Brightness - AC: %s, DC: %s", ac_value, dc_value)
+        logging.info("Current Adaptive Brightness - AC: %s, DC: %s", ac_value, dc_value)
 
-        if ac_value == desired and dc_value == desired:
-            logging.info("Adaptive Brightness already at %s. No change needed.", desired)
-            return
+        # Only save initial state if not already saved (first scenario captures the true original)
+        if self._read_state("InitialAdaptBrightAC") is None:
+            self._save_state("InitialAdaptBrightAC", ac_value)
+            self._save_state("InitialAdaptBrightDC", dc_value)
+            logging.info("Saved initial Adaptive Brightness - AC: %s, DC: %s", ac_value, dc_value)
 
-        self._save_state("InitialAdaptBrightAC", ac_value)
-        self._save_state("InitialAdaptBrightDC", dc_value)
         self._call(["cmd.exe", f"/C powercfg -setacvalueindex scheme_current sub_video ADAPTBRIGHT {desired}"])
         self._call(["cmd.exe", f"/C powercfg -setdcvalueindex scheme_current sub_video ADAPTBRIGHT {desired}"])
         self._call(["cmd.exe", "/C powercfg -setactive scheme_current"])
@@ -139,7 +132,7 @@ class Tool(Scenario):
         self._clear_state("InitialAdaptBrightDC")
 
     # =========================================================================
-    # Brightness — powercfg (no restore)
+    # Brightness — powercfg
     # =========================================================================
 
     def _init_brightness(self, brightness_str):
@@ -165,16 +158,41 @@ class Tool(Scenario):
             else:
                 raise Exception(f"No slider mapping for {brightness_str}.")
 
-        logging.info("Display brightness set to: %s", brightness_val)
-
         if platform and platform.lower() == "android":
+            logging.warning("Brightness save/restore is not supported on Android.")
             self._host_call("adb -s " + self.dut_ip + ":5555 shell settings put system screen_brightness " + str(brightness_val), expected_exit_code="")
         elif platform and platform.lower() == "macos":
+            logging.warning("Brightness save/restore is not supported on macOS.")
             self._call([self.dut_exec_path + "/brightness", str(int(brightness_val) / 100.0)])
         else:
+            # Save initial brightness if not already saved
+            if self._read_state("InitialBrightness") is None:
+                result = self._call(["cmd.exe", "/C powercfg -query scheme_balanced SUB_VIDEO aded5e82-b909-4619-9949-f5d71dac0bcb"])
+                if result and "Current AC Power Setting Index" in result:
+                    for line in result.splitlines():
+                        if "Current AC Power Setting Index" in line:
+                            match = re.search(r'0x([0-9a-fA-F]+)', line)
+                            if match:
+                                current_val = str(int(match.group(1), 16))
+                                self._save_state("InitialBrightness", current_val)
+                                logging.info("Saved initial brightness: %s", current_val)
+                            break
+
             self._call(["cmd.exe", "/c Powercfg.exe -SETDCVALUEINDEX scheme_balanced SUB_VIDEO aded5e82-b909-4619-9949-f5d71dac0bcb " + str(brightness_val)])
             self._call(["cmd.exe", "/c Powercfg.exe -SETACVALUEINDEX scheme_balanced SUB_VIDEO aded5e82-b909-4619-9949-f5d71dac0bcb " + str(brightness_val)])
             self._call(["cmd.exe", "/c Powercfg.exe -SETACTIVE scheme_balanced"])
+
+        logging.info("Display brightness set to: %s", brightness_val)
+
+    def _restore_brightness(self):
+        """Restore brightness from previously saved value in DUT registry."""
+        brightness_val = self._read_state("InitialBrightness")
+        if brightness_val is not None:
+            logging.info("Restoring brightness to: %s", brightness_val)
+            self._call(["cmd.exe", "/c Powercfg.exe -SETDCVALUEINDEX scheme_balanced SUB_VIDEO aded5e82-b909-4619-9949-f5d71dac0bcb " + brightness_val])
+            self._call(["cmd.exe", "/c Powercfg.exe -SETACVALUEINDEX scheme_balanced SUB_VIDEO aded5e82-b909-4619-9949-f5d71dac0bcb " + brightness_val])
+            self._call(["cmd.exe", "/c Powercfg.exe -SETACTIVE scheme_balanced"])
+        self._clear_state("InitialBrightness")
 
     # =========================================================================
     # CABC (Content Adaptive Brightness) — registry
@@ -207,11 +225,15 @@ class Tool(Scenario):
                      current, self.CABC_MAP.get(current, "?"),
                      desired, self.CABC_MAP.get(desired, "?"))
 
+        # Only save initial state if not already saved
+        if self._read_state("InitialCABCOption") is None:
+            self._save_state("InitialCABCOption", current)
+            logging.info("Saved initial CABC: %s (%s)", current, self.CABC_MAP.get(current, "?"))
+
         if current == desired:
             logging.info("CABC already at desired state. No change needed.")
             return
 
-        self._save_state("InitialCABCOption", current)
         self._write_cabc(desired)
         logging.info("CABC set to %s (%s).", desired, self.CABC_MAP.get(desired, "?"))
 
@@ -315,12 +337,16 @@ class Tool(Scenario):
 
         logging.info("Found adaptive color display: %s, current state: %d", display_id, current)
 
+        # Only save initial state if not already saved
+        if self._read_state("InitialACMState") is None:
+            self._save_state("InitialACMState", str(current))
+            self._save_state("ACMDisplayID", display_id)
+            logging.info("Saved initial ACM state: %d for display %s", current, display_id)
+
         if current == desired:
             logging.info("Adaptive color already at %d. No change needed.", desired)
             return
 
-        self._save_state("InitialACMState", str(current))
-        self._save_state("ACMDisplayID", display_id)
         self._set_acm(display_id, desired)
 
     def _restore_acm(self):
@@ -450,7 +476,7 @@ class Tool(Scenario):
         encoded = base64.b64encode(ps_script.encode('utf-16-le')).decode('ascii')
         self._call(["cmd.exe", f'/C powershell.exe -EncodedCommand {encoded}'], expected_exit_code="")
 
-    def _toggle_full_hdr(self, desired_on, post_delay=3):
+    def _toggle_full_hdr(self, desired_on, post_delay=7):
         """Toggle full HDR via Win+Alt+B. post_delay is wait time after toggle."""
         current_on = self._get_full_hdr_state()
         if current_on is None:
@@ -500,26 +526,29 @@ class Tool(Scenario):
             hdr_needs_change = current_hdr_on != desired_hdr_on
             auto_hdr_needs_change = desired_hdr_on and current_auto_hdr != ("1" if desired_auto_hdr else "0")
 
-            if hdr_needs_change or auto_hdr_needs_change:
+            # Only save initial state if not already saved
+            if self._read_state("InitialHDRState") is None:
                 self._save_state("InitialHDRState", initial_state)
                 self._save_state("HDRMode", "full")
                 self._save_state("InitialAutoHDRState", current_auto_hdr)
+                logging.info("Saved initial HDR state: %s, Auto HDR: %s", initial_state, current_auto_hdr)
 
+            if hdr_needs_change or auto_hdr_needs_change:
                 self._set_auto_hdr_state(desired_auto_hdr)
 
                 if hdr_needs_change:
-                    # 5s delay during init for toast notification to disappear
-                    if not self._toggle_full_hdr(desired_hdr_on, post_delay=5):
+                    # 7s delay during init for toast notification to disappear
+                    if not self._toggle_full_hdr(desired_hdr_on, post_delay=7):
                         logging.warning("Failed to toggle HDR. Monitor may have become unavailable.")
                 else:
                     # Double-toggle to apply Auto HDR change
                     logging.info("Double-toggling HDR to apply Auto HDR change...")
                     self._send_win_alt_b()
-                    logging.info("Waiting 3s for HDR toast notification to disappear...")
-                    time.sleep(3)
+                    logging.info("Waiting 7s for HDR toast notification to disappear...")
+                    time.sleep(7)
                     self._send_win_alt_b()
-                    logging.info("Waiting 5s for HDR toast notification to disappear...")
-                    time.sleep(5)
+                    logging.info("Waiting 7s for HDR toast notification to disappear...")
+                    time.sleep(7)
             else:
                 logging.info("HDR and Auto HDR already in desired state.")
 
@@ -542,11 +571,15 @@ class Tool(Scenario):
             initial_on = "0x0" not in result.lower()
 
         initial_state = "1" if initial_on else "0"
-        logging.info("Initial vHDR state: %s", initial_state)
+        logging.info("Current vHDR state: %s", initial_state)
 
-        if initial_state != hdr_param:
+        # Only save initial state if not already saved
+        if self._read_state("InitialHDRState") is None:
             self._save_state("InitialHDRState", initial_state)
             self._save_state("HDRMode", "vhdr")
+            logging.info("Saved initial vHDR state: %s", initial_state)
+
+        if initial_state != hdr_param:
             self._apply_vhdr_state(hdr_param)
             logging.info("vHDR state set to: %s", hdr_param)
         else:
@@ -590,11 +623,11 @@ class Tool(Scenario):
                 elif auto_hdr_changed and desired_hdr_on:
                     logging.info("Double-toggling HDR to restore Auto HDR state...")
                     self._send_win_alt_b()
-                    logging.info("Waiting 3s for HDR toast notification to disappear...")
-                    time.sleep(3)
+                    logging.info("Waiting 7s for HDR toast notification to disappear...")
+                    time.sleep(7)
                     self._send_win_alt_b()
-                    logging.info("Waiting 3s for HDR toast notification to disappear...")
-                    time.sleep(3)
+                    logging.info("Waiting 7s for HDR toast notification to disappear...")
+                    time.sleep(7)
             else:
                 self._apply_vhdr_state(initial_state)
         except Exception as e:
@@ -765,11 +798,13 @@ class Tool(Scenario):
             logging.info("Current refresh rate: %s Hz", current_hz)
 
             if current_hz and current_hz != str(target_hz):
+                # Only save initial state if not already saved
+                if self._read_state("InitialRefreshRate") is None:
+                    self._save_state("InitialRefreshRate", current_hz)
+                    logging.info("Saved initial refresh rate: %s Hz", current_hz)
+
                 logging.info("Changing refresh rate: %s Hz -> %s Hz", current_hz, target_hz)
-                previous_hz = self._set_refresh_rate(driver, target_hz)
-                if previous_hz is not None:
-                    self._save_state("InitialRefreshRate", previous_hz)
-                    logging.info("Saved initial refresh rate: %s Hz", previous_hz)
+                self._set_refresh_rate(driver, target_hz)
 
                 time.sleep(1)
                 verify_hz = self._get_refresh_rate(driver)
@@ -782,10 +817,14 @@ class Tool(Scenario):
 
             # Handle DRR: enable for dynamic, disable for 120, skip for 60 (grayed out)
             if want_dynamic or str(target_hz) == "120":
+                # Only save initial DRR state if not already saved
+                if self._read_state("InitialDRRState") is None:
+                    current_drr = self._get_drr_state(driver)
+                    if current_drr is not None:
+                        self._save_state("InitialDRRState", current_drr)
+                        logging.info("Saved initial DRR state: %s", "on" if current_drr == "1" else "off")
+
                 previous_drr = self._set_drr(driver, want_dynamic)
-                if previous_drr is not None and previous_drr != ("1" if want_dynamic else "0"):
-                    self._save_state("InitialDRRState", previous_drr)
-                    logging.info("Saved initial DRR state: %s", "on" if previous_drr == "1" else "off")
 
                 verify_drr = self._get_drr_state(driver)
                 expected_drr = "1" if want_dynamic else "0"
@@ -837,6 +876,8 @@ class Tool(Scenario):
 
     def initCallback(self, scenario):
         self.scenario = scenario
+        platform = Params.get('global', 'platform')
+        is_windows = not platform or platform.lower() in ["windows", "w365"]
 
         # Read all parameters
         als = Params.get(self.module, 'als_adaptive_brightness').strip()
@@ -847,38 +888,61 @@ class Tool(Scenario):
         acm = Params.get(self.module, 'adaptive_color').strip()
         brightness = Params.get(self.module, 'brightness').strip()
 
-        # Brightness first (fast, no restore)
+        # Brightness (cross-platform)
         if brightness:
             self._init_brightness(brightness)
 
-        # Registry/powercfg operations (fast)
+        # Windows-only features
         if als:
-            self._init_als(als)
+            if is_windows:
+                self._init_als(als)
+            else:
+                logging.warning("Adaptive brightness (ALS) is only supported on Windows.")
         if cabc:
-            self._init_cabc(cabc)
-
-        # ACM (moderate — scheduled task + service restart)
+            if is_windows:
+                self._init_cabc(cabc)
+            else:
+                logging.warning("CABC is only supported on Windows.")
         if acm:
-            self._init_acm(acm)
-
-        # HDR (moderate — registry + keyboard shortcut)
+            if is_windows:
+                self._init_acm(acm)
+            else:
+                logging.warning("Adaptive color (ACM) is only supported on Windows.")
         if hdr or auto_hdr:
-            self._init_hdr(hdr, auto_hdr)
-
-        # Refresh rate last (slow — WinAppDriver UI automation)
+            if is_windows:
+                self._init_hdr(hdr, auto_hdr)
+            else:
+                logging.warning("HDR is only supported on Windows.")
         if rr:
-            self._init_refresh_rate(rr)
+            if is_windows:
+                self._init_refresh_rate(rr)
+            else:
+                logging.warning("Refresh rate setting is only supported on Windows.")
 
     def testBeginCallback(self):
         return
 
     def testEndCallback(self):
+        display_restore = Params.get(self.module, 'display_restore').strip()
+        if display_restore != '1':
+            return
+
+        # Check if any init keys exist before logging
+        has_state = any(self._read_state(key) is not None for key in [
+            "InitialAdaptBrightAC", "InitialCABCOption", "InitialACMState",
+            "InitialHDRState", "InitialDRRState", "InitialRefreshRate", "InitialBrightness"
+        ])
+        if not has_state:
+            return
+
+        logging.info("display_restore=1: Restoring all saved display settings.")
         # Restore in reverse order of init
         self._restore_refresh_rate()
         self._restore_hdr()
         self._restore_acm()
         self._restore_cabc()
         self._restore_als()
+        self._restore_brightness()
 
     def dataReadyCallback(self):
         return
