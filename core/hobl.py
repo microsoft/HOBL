@@ -756,7 +756,7 @@ if __name__ == '__main__':
                         fo.close()
                         logging.info ("HOBL Version: " + hobl_ver)
                     except:
-                        pass
+                        logging.info ("HOBL Version: Unknown")
                     logging.info("run_dir: " + run_dir)
                     params.get('global', 'host_ip') # just to get it to be set properly before dumping
                     params.dump()

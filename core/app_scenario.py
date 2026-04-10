@@ -481,9 +481,12 @@ class Scenario(unittest.TestCase):
             logging.info("Running pre-config_check.")
 
             # Write hobl version
-            with open("hobl_version.txt", "r") as fo:
-                hobl_ver = fo.readline(50).strip()
-                
+            hobl_ver = "Unknown"
+            try:
+                with open("hobl_version.txt", "r") as fo:
+                    hobl_ver = fo.readline(50).strip()
+            except Exception as e:
+                logging.warning(f"Failed to read hobl_version.txt: {e}")
 
             override_dict = {}
             override_dict["Hardware Version"] = Params.get('global', 'hardware_version', log = False)
