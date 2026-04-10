@@ -40,7 +40,7 @@
         "name": "[background_onedrive_copy]",
         "type": "Set Default",
         "val_options": "0,1",
-        "value": "1"
+        "value": "0"
     },
     {
         "children": [],
@@ -848,9 +848,132 @@
                         "enabled": true,
                         "id": "MBOFCPS",
                         "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "MBCPL0E",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "CopilotWarmLaunch"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Start Menu for Copilot cold launch",
+                        "enabled": true,
+                        "id": "MBCPLSM1",
+                        "text": "\ue03d",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Stabilize Start Menu",
+                        "enabled": true,
+                        "id": "MBCPLD1",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Search and launch M365 Copilot (cold)",
+                        "enabled": true,
+                        "id": "MBCPLCLD",
+                        "text": "Microsoft 365\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "10",
+                        "description": "Wait for Copilot to fully load (cold)",
+                        "enabled": true,
+                        "id": "MBCPLDW1",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Start Menu for Copilot warm launch",
+                        "enabled": true,
+                        "id": "MBCPLSM2",
+                        "text": "\ue03d",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Stabilize Start Menu",
+                        "enabled": true,
+                        "id": "MBCPLD2",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Search and launch M365 Copilot (warm - triggers PT_10022)",
+                        "enabled": true,
+                        "id": "MBCPLWRM",
+                        "text": "Microsoft 365\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "5",
+                        "description": "Wait for warm launch to complete",
+                        "enabled": true,
+                        "id": "MBCPLDW2",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Close Copilot via Alt+F4",
+                        "enabled": true,
+                        "id": "MBCPLKIL",
+                        "text": "\ue00a\ue034",
+                        "type": "Type",
+                        "typing_delay": "0"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle after Copilot close",
+                        "enabled": true,
+                        "id": "MBCPLSTL",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM \"Microsoft 365 (Office).exe\" /IM MicrosoftOfficeHub.exe /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Force kill Copilot if Alt+F4 missed",
+                        "enabled": true,
+                        "id": "MBCPLKL2",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle after force kill",
+                        "enabled": true,
+                        "id": "MBCPLSL2",
+                        "type": "Delay"
                     }
                 ],
-                "description": "Office Boot PT launches (8804-8807) via taskbar",
+                "description": "Office launches via taskbar + M365 Copilot Warm Launch (10022)",
                 "enabled": true,
                 "id": "MBOFCTRY",
                 "type": "Try"
@@ -984,29 +1107,62 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1K080RA",
-                        "include_path": "scenarios\\windows\\_library\\misc\\open_file_explorer",
+                        "id": "1KPFE0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "FileExplorerLaunch"
+                            }
+                        ],
                         "type": "Include"
                     },
                     {
                         "children": [],
-                        "delay": "3",
-                        "description": "Close File Explorer",
+                        "command": "powershell -NoProfile -Command \"(New-Object -ComObject Shell.Application).Windows() | ForEach-Object { $_.Quit() }\"",
+                        "delay": "5",
+                        "description": "Close all File Explorer windows for fresh launch",
+                        "enabled": true,
+                        "id": "1KPFEKILL",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Launch File Explorer from taskbar",
+                        "enabled": true,
+                        "id": "1KPFE0CF",
+                        "include_path": "scenarios\\windows\\_library\\misc\\click_file_explorer",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "10",
+                        "description": "Wait for File Explorer XAML Home to fully render",
+                        "enabled": true,
+                        "id": "1KPFE0DY",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Close File Explorer via Alt+F4",
                         "enabled": true,
                         "id": "1KPFE01",
-                        "text": "\ue00c",
+                        "text": "\ue00a\ue034",
                         "type": "Type",
-                        "typing_delay": "0"
+                        "typing_delay": "[typing_delay]"
                     }
                 ],
-                "description": "Best-effort open_file_explorer",
+                "description": "Best-effort File Explorer via taskbar click (perf_stress style)",
                 "enabled": true,
                 "id": "1KPFE0T",
                 "type": "Try"
             },
             {
                 "children": [],
-                "description": "Ignore open_file_explorer failure",
+                "description": "Ignore File Explorer failure",
                 "enabled": true,
                 "id": "1KPFE0E",
                 "type": "Except"
@@ -1016,6 +1172,91 @@
                 "description": "",
                 "enabled": true,
                 "id": "1KPFE0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1KPCM0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "ContextMenuOpen"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c start \"\" explorer.exe /select,\"%USERPROFILE%\\Desktop\\test.txt\"",
+                        "delay": "3",
+                        "description": "Open File Explorer with test.txt selected",
+                        "enabled": true,
+                        "id": "1KPCM0FE",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Open context menu (Shift+F10) on selected file",
+                        "enabled": true,
+                        "id": "1KPCM0SF",
+                        "text": "\ue008\ue03a",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "5",
+                        "description": "Wait for Context Menu to render",
+                        "enabled": true,
+                        "id": "1KPCM0DY",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Dismiss context menu via Escape",
+                        "enabled": true,
+                        "id": "1KPCM0ES",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Close File Explorer via Alt+F4",
+                        "enabled": true,
+                        "id": "1KPCM0CL",
+                        "text": "\ue00a\ue034",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    }
+                ],
+                "description": "Best-effort Context Menu launch (perf_stress style)",
+                "enabled": true,
+                "id": "1KPCM0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Context Menu failure",
+                "enabled": true,
+                "id": "1KPCM0EX",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1KPCM0XT",
                 "type": "End Try"
             },
             {
@@ -1083,39 +1324,47 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1KPSN0I",
-                        "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
+                        "id": "1KPSN0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
                         "params": [
                             {
-                                "name": "[app_name]",
-                                "val_options": "",
-                                "value": "Snipping Tool"
-                            },
-                            {
-                                "name": "[etw_event_tag]",
+                                "name": "[event_tag]",
                                 "val_options": "",
                                 "value": "SnippingToolLaunch"
-                            },
-                            {
-                                "name": "[app_open_delay]",
-                                "val_options": "",
-                                "value": "3"
                             }
                         ],
                         "type": "Include"
                     },
                     {
                         "children": [],
-                        "delay": "3",
-                        "description": "Close Snipping Tool",
+                        "delay": "1",
+                        "description": "Launch Snipping Tool overlay (Win+Shift+S)",
+                        "enabled": true,
+                        "id": "1KPSN0WS",
+                        "text": "\ue03d\ue008s",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "5",
+                        "description": "Wait for Snipping Tool overlay to appear",
+                        "enabled": true,
+                        "id": "1KPSN0DY",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Dismiss Snipping Tool overlay via Escape",
                         "enabled": true,
                         "id": "1KPSN01",
                         "text": "\ue00c",
                         "type": "Type",
-                        "typing_delay": "0"
+                        "typing_delay": "[typing_delay]"
                     }
                 ],
-                "description": "Best-effort Snipping Tool launch",
+                "description": "Best-effort Snipping Tool via Win+Shift+S (perf_stress style)",
                 "enabled": true,
                 "id": "1KPSN0T",
                 "type": "Try"
