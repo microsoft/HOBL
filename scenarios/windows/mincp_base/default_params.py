@@ -14,6 +14,10 @@ def run():
     Params.setParam(None, 'web_replay_run', '1')
     Params.setParam(None, 'phase_reporting', '1')
     Params.setDefault('mincp_base', 'perf_run', '0', desc='', valOptions=['0', '1'])
+    # DO NOT REMOVE these 3 lines - they are required for mincp_base to run correctly
+    Params.setDefault('web_enter_address', 'web_site_load_time', '20', desc='', valOptions=[])
+    Params.setOverride('global', 'short_typing', '1')
+    Params.setDefault('mincp_base', 'web_workload', 'reddit', desc='Specific websites to run during mincp workload. reddit must be included (Tab 1 with new_tab=0).', valOptions=['amazonbsg', 'amazongot', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'instagram', 'reddit', 'theverge', 'wikipedia', 'youtubenasa', 'youtubetos'], multiple=True)
     return
 
 def run_user_only():
