@@ -647,31 +647,29 @@
                     },
                     {
                         "children": [],
-                        "delay": "1",
-                        "description": "Open Start Menu for Outlook",
+                        "command": "cmd /c taskkill /IM OUTLOOK.EXE /IM olk.exe /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Kill Outlook before cold launch",
                         "enabled": true,
-                        "id": "MBOFCSM1",
-                        "text": "\ue03d",
-                        "type": "Type",
-                        "typing_delay": "[typing_delay]"
+                        "id": "MBOFCK1",
+                        "type": "Command"
                     },
                     {
                         "children": [],
-                        "delay": "1",
-                        "description": "Stabilize Start Menu",
+                        "delay": "2",
+                        "description": "Settle after Outlook kill",
                         "enabled": true,
-                        "id": "MBOFCD1",
+                        "id": "MBOFCS1",
                         "type": "Delay"
                     },
                     {
                         "children": [],
                         "delay": "0",
-                        "description": "Launch Outlook from Start Menu",
+                        "description": "Launch Outlook from taskbar",
                         "enabled": true,
                         "id": "MBOFCOL",
-                        "text": "outlook\ue007",
-                        "type": "Type",
-                        "typing_delay": "[typing_delay]"
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
+                        "type": "Include"
                     },
                     {
                         "children": [],
@@ -700,31 +698,29 @@
                     },
                     {
                         "children": [],
-                        "delay": "1",
-                        "description": "Open Start Menu for Word",
+                        "command": "cmd /c taskkill /IM WINWORD.EXE /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Kill Word before cold launch",
                         "enabled": true,
-                        "id": "MBOFCSM2",
-                        "text": "\ue03d",
-                        "type": "Type",
-                        "typing_delay": "[typing_delay]"
+                        "id": "MBOFCK2",
+                        "type": "Command"
                     },
                     {
                         "children": [],
-                        "delay": "1",
-                        "description": "Stabilize Start Menu",
+                        "delay": "2",
+                        "description": "Settle after Word kill",
                         "enabled": true,
-                        "id": "MBOFCD2",
+                        "id": "MBOFCS2",
                         "type": "Delay"
                     },
                     {
                         "children": [],
                         "delay": "0",
-                        "description": "Launch Word from Start Menu",
+                        "description": "Launch Word from taskbar",
                         "enabled": true,
                         "id": "MBOFCWL",
-                        "text": "word\ue007",
-                        "type": "Type",
-                        "typing_delay": "[typing_delay]"
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_switchto",
+                        "type": "Include"
                     },
                     {
                         "children": [],
@@ -753,31 +749,29 @@
                     },
                     {
                         "children": [],
-                        "delay": "1",
-                        "description": "Open Start Menu for Excel",
+                        "command": "cmd /c taskkill /IM EXCEL.EXE /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Kill Excel before cold launch",
                         "enabled": true,
-                        "id": "MBOFCSM3",
-                        "text": "\ue03d",
-                        "type": "Type",
-                        "typing_delay": "[typing_delay]"
+                        "id": "MBOFCK3",
+                        "type": "Command"
                     },
                     {
                         "children": [],
-                        "delay": "1",
-                        "description": "Stabilize Start Menu",
+                        "delay": "2",
+                        "description": "Settle after Excel kill",
                         "enabled": true,
-                        "id": "MBOFCD3",
+                        "id": "MBOFCS3",
                         "type": "Delay"
                     },
                     {
                         "children": [],
                         "delay": "0",
-                        "description": "Launch Excel from Start Menu",
+                        "description": "Launch Excel from taskbar",
                         "enabled": true,
                         "id": "MBOFCEL",
-                        "text": "excel\ue007",
-                        "type": "Type",
-                        "typing_delay": "[typing_delay]"
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+                        "type": "Include"
                     },
                     {
                         "children": [],
@@ -806,31 +800,29 @@
                     },
                     {
                         "children": [],
-                        "delay": "1",
-                        "description": "Open Start Menu for PowerPoint",
+                        "command": "cmd /c taskkill /IM POWERPNT.EXE /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Kill PowerPoint before cold launch",
                         "enabled": true,
-                        "id": "MBOFCSM4",
-                        "text": "\ue03d",
-                        "type": "Type",
-                        "typing_delay": "[typing_delay]"
+                        "id": "MBOFCK4",
+                        "type": "Command"
                     },
                     {
                         "children": [],
-                        "delay": "1",
-                        "description": "Stabilize Start Menu",
+                        "delay": "2",
+                        "description": "Settle after PowerPoint kill",
                         "enabled": true,
-                        "id": "MBOFCD4",
+                        "id": "MBOFCS4",
                         "type": "Delay"
                     },
                     {
                         "children": [],
                         "delay": "0",
-                        "description": "Launch PowerPoint from Start Menu",
+                        "description": "Launch PowerPoint from taskbar",
                         "enabled": true,
                         "id": "MBOFCPL",
-                        "text": "powerpoint\ue007",
-                        "type": "Type",
-                        "typing_delay": "[typing_delay]"
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+                        "type": "Include"
                     },
                     {
                         "children": [],
@@ -858,7 +850,7 @@
                         "type": "Delay"
                     }
                 ],
-                "description": "Office Boot PT launches (8804-8807) via Start Menu",
+                "description": "Office Boot PT launches (8804-8807) via taskbar",
                 "enabled": true,
                 "id": "MBOFCTRY",
                 "type": "Try"
