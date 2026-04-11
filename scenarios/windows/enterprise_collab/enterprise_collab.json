@@ -143,13 +143,35 @@
                         "type": "Code"
                     },
                     {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1EN18UV",
+                                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "Try diagnostics_enable (may fail on DPI mismatch)",
+                        "enabled": true,
+                        "id": "1EN18UT",
+                        "type": "Try"
+                    },
+                    {
                         "children": [],
-                        "delay": "0",
+                        "description": "Ignore diagnostics_enable failure",
+                        "enabled": true,
+                        "id": "1EN18UE",
+                        "type": "Except"
+                    },
+                    {
+                        "children": [],
                         "description": "",
                         "enabled": true,
-                        "id": "1EN18UV",
-                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable",
-                        "type": "Include"
+                        "id": "1EN18UX",
+                        "type": "End Try"
                     },
                     {
                         "children": [],
