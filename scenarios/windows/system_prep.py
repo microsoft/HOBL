@@ -20,8 +20,8 @@ class SystemPrep(core.app_scenario.Scenario):
     module = __module__.split('.')[-1]
     Params.setDefault(module, "hibernate_enabled", "1", desc="Enables or disables hibernation on the device", valOptions=["0", "1"])
     Params.setDefault(module, "telemetry_enabled", "0", desc="Enables or disables the gathering of optional diagnostic data in the OS", valOptions=["0", "1"])
-    Params.setDefault(module, "hdr_enabled", "", desc="Enables or disables HDR on the device (if supported by the device)", valOptions=["0", "1"])
-    Params.setDefault(module, "dark_theme_enabled", "", desc="Enables or disables the dark theme on Windows", valOptions=["0", "1"])
+    # Params.setDefault(module, "hdr_enabled", "", desc="Enables or disables HDR on the device (if supported by the device)", valOptions=["0", "1"])
+    Params.setDefault(module, "theme", "current", desc="Change the Windows theme", valOptions=["current", "light", "dark"])
     Params.setDefault(module, 'wallpaper', 'ColorChecker3000x2000.png', desc="Sets the device's background image.  Uses image files stored in the %SYSTEMDRIVE%\hobl_bin\DesktopImages folder")
     Params.setDefault(module, 'final_reboot', '1', desc="Sets if the device will reboot at the conclusion of daily_prep", valOptions=["0", "1"])
     Params.setDefault(module, 'bpm_pcc_blm_disable', '0', desc="Disable BPM, PCC, and BLM", valOptions=["0", "1"])
@@ -30,8 +30,8 @@ class SystemPrep(core.app_scenario.Scenario):
 
     hibernate_enabled = int(Params.get(module, 'hibernate_enabled'))
     telemetry_enabled = Params.get(module, 'telemetry_enabled')
-    hdr_enabled = Params.get(module, 'hdr_enabled')
-    dark_theme_enabled = Params.get(module, 'dark_theme_enabled')
+    # hdr_enabled = Params.get(module, 'hdr_enabled')
+    theme = Params.get(module, 'theme')
     dut_architecture = Params.get('global', 'dut_architecture')
     final_reboot = Params.get(module, 'final_reboot')
     bpm_pcc_blm_disable = Params.get(module, 'bpm_pcc_blm_disable') == '1'
@@ -49,16 +49,16 @@ class SystemPrep(core.app_scenario.Scenario):
         self._call(["powershell.exe", 'set-executionpolicy unrestricted -Force'], expected_exit_code="", fail_on_exception=False)
 
         # Enable/Disable HDR if specified
-        if self.hdr_enabled == "1":
-            self._call(["cmd.exe", '/C reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\MonitorDataStore\\SHP1577352326049_24_07E6_69" /v HDREnabled /t REG_DWORD /d 1 /f > null 2>&1'])
-        if self.hdr_enabled == "0":
-            self._call(["cmd.exe", '/C reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\MonitorDataStore\\SHP1577352326049_24_07E6_69" /v HDREnabled /t REG_DWORD /d 0 /f > null 2>&1'])
+        # if self.hdr_enabled == "1":
+        #     self._call(["cmd.exe", '/C reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\MonitorDataStore\\SHP1577352326049_24_07E6_69" /v HDREnabled /t REG_DWORD /d 1 /f > null 2>&1'])
+        # if self.hdr_enabled == "0":
+        #     self._call(["cmd.exe", '/C reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\MonitorDataStore\\SHP1577352326049_24_07E6_69" /v HDREnabled /t REG_DWORD /d 0 /f > null 2>&1'])
         
         # Enable/Disable dark theme if specified
-        if self.dark_theme_enabled == "1":
+        if self.theme == "dark":
             self._call(["cmd.exe", '/C reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f > null 2>&1'])
             self._call(["cmd.exe", '/C reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f > null 2>&1'])
-        if self.dark_theme_enabled == "0":
+        if self.theme == "light":
             self._call(["cmd.exe", '/C reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 1 /f > null 2>&1'])
             self._call(["cmd.exe", '/C reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 1 /f > null 2>&1'])
 
@@ -148,7 +148,7 @@ class SystemPrep(core.app_scenario.Scenario):
             self._call(["cmd.exe", "/C powercfg.exe /setdcvalueindex scheme_current sub_presence standbybudgetpercent 0"])
             self._call(["cmd.exe", "/C powercfg.exe /setdcvalueindex scheme_current sub_presence STANDBYRESERVEGRACEPERIOD 0"])
 
-            self._call(["powershell.exe", os.path.join(self.dut_exec_path,"system_prep.ps1") + " -wallpaper " + self.wallpaper + " -telemetry_enabled " + self.telemetry_enabled])
+        self._call(["powershell.exe", os.path.join(self.dut_exec_path,"system_prep.ps1") + " -wallpaper " + self.wallpaper + " -telemetry_enabled " + self.telemetry_enabled])
 
         self.syncClock()
         if self.final_reboot == "1":

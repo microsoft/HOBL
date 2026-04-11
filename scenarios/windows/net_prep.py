@@ -56,8 +56,8 @@ class NetPrep(core.app_scenario.Scenario):
             if (response != "1"):
                 logging.info("Uploading PolicyFileEditor.")
 
-                self._upload("utilities\\PolicyFileEditor", "C:\\Program Files\\WindowsPowerShell\\Modules")
-                self._upload("utilities\\PolicyFileEditor", "C:\\Program Files (x86)\\WindowsPowerShell\\Modules")
+                self._upload("utilities\\third_party\\PolicyFileEditor", "C:\\Program Files\\WindowsPowerShell\\Modules")
+                self._upload("utilities\\third_party\\PolicyFileEditor", "C:\\Program Files (x86)\\WindowsPowerShell\\Modules")
 
                 # Set MinimizeConnections policy to 0, so that Wi=Fi and Cellular can be active at same time
                 logging.debug("Setting MinimizeConnections policy to 1.")
@@ -86,8 +86,8 @@ class NetPrep(core.app_scenario.Scenario):
             if (response != "0"):
                 logging.info("Uploading PolicyFileEditor.")
 
-                self._upload("utilities\\PolicyFileEditor", "C:\\Program Files\\WindowsPowerShell\\Modules")
-                self._upload("utilities\\PolicyFileEditor", "C:\\Program Files (x86)\\WindowsPowerShell\\Modules")
+                self._upload("utilities\\third_party\\PolicyFileEditor", "C:\\Program Files\\WindowsPowerShell\\Modules")
+                self._upload("utilities\\third_party\\PolicyFileEditor", "C:\\Program Files (x86)\\WindowsPowerShell\\Modules")
 
                 # Set MinimizeConnections policy to 0, so that Wi=Fi and Cellular can be active at same time
                 logging.debug("Setting MinimizeConnections policy to 0.")

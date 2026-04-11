@@ -48,7 +48,7 @@
         "description": "",
         "enabled": true,
         "id": "UE5XLM",
-        "include_path": "..\\..\\..\\misc\\recording_phase_begin",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
         "type": "Include"
     },
     {
@@ -68,7 +68,7 @@
         "description": "",
         "enabled": true,
         "id": "UC5PAR",
-        "include_path": "..\\..\\web_enter_address",
+        "include_path": "scenarios\\windows\\_library\\web\\web_enter_address",
         "params": [
             {
                 "name": "[web_site_address]",
@@ -107,6 +107,16 @@
             },
             {
                 "children": [],
+                "delay": "0",
+                "description": "0",
+                "enabled": true,
+                "id": "1JY9RWR",
+                "text": "0",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            },
+            {
+                "children": [],
                 "delay": "2",
                 "description": "NASA Settings",
                 "enabled": true,
@@ -129,14 +139,15 @@
                 "enabled": true,
                 "exception_on": "No match",
                 "file_name": [
-                    "image_UEJ8ET.png",
-                    "image_V8FEX4.png"
+                    "image_1EETKTA.png",
+                    "image_1EETN6L.png"
                 ],
                 "id": "UEJ8ET",
-                "match_threshold": "0.3",
+                "match_threshold": "",
                 "primary": true,
+                "scale": "",
                 "type": "Click",
-                "x": "0.758",
+                "x": "0.500",
                 "y": "0.500"
             },
             {
@@ -218,7 +229,7 @@
         "description": "",
         "enabled": true,
         "id": "UE5XV7",
-        "include_path": "..\\..\\..\\misc\\recording_phase_end",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
         "params": [
             {
                 "name": "[phase_category]",

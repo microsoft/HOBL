@@ -3,7 +3,7 @@ if ($ARGS[0] -eq $null) {return("Params .ini not supplied, please supply a param
 .\hobl.cmd -p $ARGS[0] -s net_prep attempts=2 connection=Wi-Fi post_run_delay=0
 .\hobl.cmd -p $ARGS[0] -s os_install post_run_delay=0
 
-.\hobl.cmd -p $ARGS[0] -s prep post_run_delay=0 prep:scenarios="abl_active cs_floor lvp teams"
+.\hobl.cmd -p $ARGS[0] -s prep post_run_delay=0 prep:scenarios_to_prep="abl_active cs_floor lvp teams"
 
 .\hobl.cmd -p $ARGS[0] -s net_prep attempts=2 post_run_delay=0
 .\hobl.cmd -p $ARGS[0] -s version_report post_run_delay=0

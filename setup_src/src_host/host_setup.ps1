@@ -8,7 +8,7 @@ param(
 )
 
 # HOBL UI and Dut Setup versions
-$hobl_ui_version = "0.95"
+$hobl_ui_version = "0.96"
 # Set $dut_setup_version to value at top of setup_src\src_dut_win\dut_setup.cmd
 $dut_setup_cmd = "$PSScriptRoot\..\src_dut_win\dut_setup.cmd"
 if (Test-Path $dut_setup_cmd) {

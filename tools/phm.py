@@ -58,7 +58,8 @@ class Tool(Scenario):
 
         # Terminate existing PHM server
         logging.info("Terminating existing PHM servers...")
-        self._call(['cmd.exe', '/C taskkill /f /T /IM ' + "node.exe"], expected_exit_code="")
+        self._kill("node.exe")
+        # self._call(['cmd.exe', '/C taskkill /f /T /IM ' + "node.exe"], expected_exit_code="")
         time.sleep(2)
 
         # Start PHM server on the DUT
@@ -88,7 +89,8 @@ class Tool(Scenario):
     def cleanup(self):
         # Terminate PHM server
         logging.info("Terminating PHM server...")
-        self._call(['cmd.exe', '/C taskkill /f /T /IM ' + "node.exe"])
+        self._kill("node.exe")
+        # self._call(['cmd.exe', '/C taskkill /f /T /IM ' + "node.exe"])
         logging.info("PHM server terminated.")
         time.sleep(5)
 

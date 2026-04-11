@@ -45,7 +45,7 @@ class Tool(Scenario):
         
         # Call config_check.ps1 to get the initial power mode so it can swap back to it
         # Check if config_check.ps1 file exists on DUT
-        self._upload("utilities\\config_check.ps1", self.dut_exec_path, check_modified=True)
+        self._upload("utilities\\open_source\\config_check.ps1", self.dut_exec_path, check_modified=True)
         cmd = '-ExecutionPolicy Unrestricted -Command "' + os.path.join(self.dut_exec_path, "config_check.ps1 -GetPowerModeOnly") + '"'
         initial_power_mode = self._call(["powershell.exe", cmd]).lower()
         logging.info(f"Initial Power Mode: {initial_power_mode}")

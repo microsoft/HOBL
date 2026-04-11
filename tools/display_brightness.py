@@ -29,6 +29,7 @@ class Tool(Scenario):
     platform = ""
 
     def initCallback(self, scenario):
+        logging.warning("display_brightness tool is deprecated and will be removed in a future release. Please use the display tool instead.")
         # Get parameters
         self.brightness = Params.get(self.module, 'brightness')
         self.nits_map = Params.get(self.module, 'nits_map')
