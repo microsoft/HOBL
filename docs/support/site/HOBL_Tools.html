@@ -1179,8 +1179,8 @@ are ignored, so the tool can be called for any subset of operations.</p>
 <p><code>hdr</code> - HDR (1=on, 0=off). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
 <p><code>hdr_auto</code> - Auto HDR (1=on, 0=off). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
 <p><code>refresh_rate</code> - Refresh rate: 60, 120, or dynamic. <strong>Default:</strong> <code>`  **Options:**</code>60, 120, dynamic`</p>
-<p><code>brightness</code> - Brightness (e.g. 65, 65%, 150nits). <strong>Default:</strong> `` </p>
-<p><code>nits_map</code> - Nits-to-slider mapping. <strong>Default:</strong> <code>100nits:50% 150nits:65%</code> </p>
+<p><code>brightness</code> - Brightness slider percentage or desired nits (e.g. 65, 65%, 150nits).  If you specify nits, the nits_map parameter will be used to determine the corresponding slider value. <strong>Default:</strong> <code>150nits</code> </p>
+<p><code>nits_map</code> - Nits-to-slider mapping.  Use luminance meter to determine for specific device. <strong>Default:</strong> <code>100nits:50% 150nits:65%</code> </p>
 <p><code>display_restore</code> - Restore all display settings to saved initial values (1=restore). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
 <h2 id="display_brightness">display_brightness</h2>
 <p>Map display brightness slider percentage to nits value specified by scenarios.</p>

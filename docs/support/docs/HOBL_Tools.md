@@ -123,9 +123,9 @@ Parameters:
 
 `refresh_rate` - Refresh rate: 60, 120, or dynamic. **Default:** ``  **Options:** `60, 120, dynamic`
 
-`brightness` - Brightness (e.g. 65, 65%, 150nits). **Default:** `` 
+`brightness` - Brightness slider percentage or desired nits (e.g. 65, 65%, 150nits).  If you specify nits, the nits_map parameter will be used to determine the corresponding slider value. **Default:** `150nits` 
 
-`nits_map` - Nits-to-slider mapping. **Default:** `100nits:50% 150nits:65%` 
+`nits_map` - Nits-to-slider mapping.  Use luminance meter to determine for specific device. **Default:** `100nits:50% 150nits:65%` 
 
 `display_restore` - Restore all display settings to saved initial values (1=restore). **Default:** ``  **Options:** `0, 1`
 

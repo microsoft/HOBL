@@ -15,7 +15,7 @@
 * Clone repo (preferrably to c:\hobl, to avoid appsettings.json tweaks).
 * Run host_setup.exe, located in the root folder.  Select both options.
 * Copy downloads\setup\dut_setup_\<ver\>.exe to a flash drive and run it on the DUT.  This will install SimpleRemote and configure the DUT for communication with the HOBL Host.  HOBL can't communicate without this, and you will see errors about failed remote directory creation and communication timeouts.
-* Verify network connectivity by pinging the DUT from the Host and vice versa.  Then run the comm_check scenario (deselect "Check Preps") and make sure all checks pass.
+* Verify network connectivity by pinging the DUT from the Host and vice versa.  Then run the comm_check scenario and make sure all checks pass.
 * To get HOBL updates, do a "git pull".
 * To get HOBL UI updates, run host_setup.exe and only select the "User Interface" option.
 

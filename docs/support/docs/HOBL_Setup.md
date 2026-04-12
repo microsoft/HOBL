@@ -82,7 +82,7 @@ Set up a Device Profile for each DUT in the HOBLweb UI, giving it a unique name 
     1. Run Cmd or Powershell on the Host.
     1. Make sure sure DUT responds to pings:  `ping <dut_ip>`
     1. Make sure DUT can ping host as well.
-    1. Run the "comm_check" scenario (deselect "Check Preps") to make sure that all communications needs are met.
+    1. Run the "comm_check" scenario to make sure that all communications needs are met.
 
 ## DUT Setup For macOS
 1. Manually make sure the device is onnected to the appropriate Wi-Fi netowrk, on the same subnet as the Host.
@@ -94,4 +94,4 @@ Set up a Device Profile for each DUT in the HOBLweb UI, giving it a unique name 
     1. Run Cmd or Powershell on the Host.
     1. Make sure sure DUT responds to pings:  `ping <dut_ip>`
     1. Make sure DUT can ping host as well.
-    1. Run the "comm_check" scenario (deselect "Check Preps") to make sure that all communications needs are met.
+    1. Run the "comm_check" scenario to make sure that all communications needs are met.
