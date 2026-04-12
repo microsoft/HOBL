@@ -3,6 +3,7 @@
 ## Introduction
 
 * "HOBL" (Hours Of Battery Life) is a test framework and set of test scenarios for the purpose of measuring power, perfromance, and thermal characteristics of Windows and (to a lesser extent) macOS devices.
+* The intent of HOBL is to support fully-automated and scaled out user-representative test execution and analysis, to enable computer system and component manufacturers to validate and tune products during development.
 * Power is expected to be primarily measured with external DAQ equipement, but internal power monitor chips and battery rundown measurements are also supported.
 * The HOBL test framework runs on a "Host" Windows 10/11 PC.  Test scenarios execute on the Host and send commands to the DUT (Device Under Test) over a local network to replicate user interactions.
 * To ensure standardized and representative measurements, testers must not kill or disable processes or services.  "Prep scenarios" will be automatically executed to put the system in a controlled state suitable for testing.
@@ -14,7 +15,7 @@
 * Clone repo (preferrably to c:\hobl, to avoid appsettings.json tweaks).
 * Run host_setup.exe, located in the root folder.  Select both options.
 * Copy downloads\setup\dut_setup_\<ver\>.exe to a flash drive and run it on the DUT.  This will install SimpleRemote and configure the DUT for communication with the HOBL Host.  HOBL can't communicate without this, and you will see errors about failed remote directory creation and communication timeouts.
-* Verify network connectivity by pinging the DUT from the Host and vice versa.  Then run the comm_check scenario and make sure all checks pass.
+* Verify network connectivity by pinging the DUT from the Host and vice versa.  Then run the comm_check scenario (deselect "Check Preps") and make sure all checks pass.
 * To get HOBL updates, do a "git pull".
 * To get HOBL UI updates, run host_setup.exe and only select the "User Interface" option.
 

@@ -156,7 +156,7 @@ if ($framework) {
         "-- Setting git hooks path" | log
         pushd $PSScriptRoot\..\.. > $null
         git.exe config core.hooksPath git_hooks 2>&1 | log
-        check($lastexitcode)
+        # check($lastexitcode)
 
         "-- Updating hobl version" | log
         git.exe hook run post-checkout 2>&1 | log
