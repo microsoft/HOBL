@@ -56,6 +56,15 @@ class Tool(Scenario):
             logging.warning(f"Could not parse manifest for PT lookup: {e}")
         return lookup
 
+    # PerfParser uses etw_event_tag labels as Scenario column values.
+    # Map known event-tag Scenario labels + Metric pairs to PT numbers.
+    _scenario_metric_to_pt = {
+        ('ExcelLaunch', 'ProcessLaunch_PC'): '8806',
+        ('WordLaunch', 'ProcessLaunch_PC'): '8805',
+        ('PowerPointLaunch', 'ProcessLaunch_PC'): '8807',
+        ('OutlookLaunch', 'ProcessLaunch_PC'): '8804',
+    }
+
     def dataReadyCallback(self):
         etl_trace = self.scenario.result_dir + "\\" + self.scenario.testname + ".etl"
         if not os.path.isfile(etl_trace):
@@ -86,23 +95,45 @@ class Tool(Scenario):
                 rows = list(reader)
 
             matched_rows = []
+            # Track how many times each (pt, metric) pair appears to tag cold vs warm
+            pt_metric_count = {}
             with open(perf_output, 'w', newline='') as f_out:
                 writer = csv.writer(f_out)
                 writer.writerow(['PT', 'Metric', 'Duration'])
                 for row in rows:
+                    scenario_name = row.get('Scenario', '').strip()
                     metric = row.get('Metric', '').strip()
                     duration = row.get('Duration', '').strip()
-                    pt = pt_lookup.get(metric, '')
-                    # PerfParser may truncate metric names; try prefix match
+                    # First try: extract PT number directly from Scenario column (e.g. "PT_8805_Office_Word_Boot v2_5f1993")
+                    pt = ''
+                    scenario_match = re.match(r'PT_(\d+)_', scenario_name)
+                    if scenario_match:
+                        pt = scenario_match.group(1)
+                    # Second try: match Metric against ptscenarioname lookup
+                    if not pt:
+                        pt = pt_lookup.get(metric, '')
+                    # Third try: prefix match for truncated metric names
                     if not pt:
                         for full_name, pt_num in pt_lookup.items():
                             if full_name.startswith(metric) or metric.startswith(full_name):
                                 pt = pt_num
                                 break
+                    # Fourth try: match (Scenario, Metric) pair for Office Boot PTs
+                    # PerfParser labels these with event-tag names, not PT scenario names
+                    if not pt:
+                        pt = self._scenario_metric_to_pt.get((scenario_name, metric), '')
                     # Only include metrics that match a PT in our manifest.
                     # Built-in Windows PerfTrack scenarios (not in our XML) are skipped.
                     if pt:
-                        writer.writerow([pt, metric, duration])
+                        # Tag cold vs warm for Office Boot PTs (ProcessLaunch_PC)
+                        key = (pt, metric)
+                        count = pt_metric_count.get(key, 0)
+                        pt_metric_count[key] = count + 1
+                        if metric == 'ProcessLaunch_PC':
+                            tag = ' (cold)' if count == 0 else f' (warm_{count})'
+                            writer.writerow([pt, metric + tag, duration])
+                        else:
+                            writer.writerow([pt, metric, duration])
                         matched_rows.append(pt)
                     else:
                         logging.debug(f"Skipping unmatched metric: {metric}")

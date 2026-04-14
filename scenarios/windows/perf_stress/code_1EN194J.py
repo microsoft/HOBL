@@ -22,7 +22,6 @@ def run(scenario):
 
     files_to_upload = [
         os.path.join(src_dir, "percentile_stress.py"),
-        os.path.join(src_dir, "rightClick_context_menu.ps1"),
         os.path.join(src_dir, "stop_perfStress_background.ps1"),
     ]
 
@@ -33,19 +32,32 @@ def run(scenario):
         logging.info(f"Uploading to DUT {dut_bin_dir}: {src_file}")
         scenario._upload(src_file, dut_bin_dir)
 
-    # Upload cs_floor_wrapper.cmd and sleep.exe to subdirectories matching cs_floor scenario
+    # Upload cs_floor_wrapper.cmd, sleep.exe, and button.exe to subdirectories matching cs_floor scenario
     scenario._upload(os.path.join(repo_root, "scenarios", "windows", "cs_floor", "cs_floor_wrapper.cmd"),
                      os.path.join(dut_bin_dir, "cs_floor_resources"))
     scenario._upload(os.path.join(repo_root, "utilities", "proprietary", "sleep", "sleep.exe"),
                      os.path.join(dut_bin_dir, "sleep"))
+
+    # Upload button.exe (architecture-aware) for Connected Standby sleep via cs_floor_wrapper.cmd
+    import platform
+    arch = Params.get('global', 'architecture') if Params.get('global', 'architecture') else 'x64'
+    button_arch = 'arm64' if 'arm' in arch.lower() else 'x64'
+    scenario._upload(os.path.join(repo_root, "utilities", "proprietary", "button", button_arch, "button.exe"),
+                     os.path.join(dut_bin_dir, "button"))
 
     # Start stress script in background so scenario can proceed.
     # Uses pyenv python if available, otherwise falls back to system python.
     # (Trace collection is handled by the early code_PSECTRC.py block.)
     stress_py = rf"{dut_bin_dir}\percentile_stress.py"
     target_cpu = Params.get('perf_stress', 'stress_cpu_target')
-    if target_cpu not in ['25', '50', '65', '75', '85']:
+    if target_cpu not in ['0', '25', '50', '65', '75', '85']:
         target_cpu = '75'
+
+    if target_cpu == '0':
+        logging.info('stress_cpu_target=0%, skipping percentile_stress.py (no CPU stress).')
+        scenario._sleep_to_now()
+        return
+
     load_label = {
         '25': 'low',
         '50': 'medium',
@@ -54,10 +66,13 @@ def run(scenario):
         '85': 'very high',
     }.get(target_cpu, 'high')
     logging.info(f"Starting percentile_stress.py in minimized window with target CPU {target_cpu}% ({load_label} load).")
-    # Use pyenv python if available (matches pytorch_inf pattern), fallback to py/python
+    # Set pyenv PATH explicitly before resolving python (prep installs to %USERPROFILE%\.pyenv\pyenv-win)
+    # Then use 'pyenv which python' to get the real python.exe path (per HOBL guidelines: never use Get-Command python)
+    pyenv_shims = r'%USERPROFILE%\.pyenv\pyenv-win\shims'
+    pyenv_bin = r'%USERPROFILE%\.pyenv\pyenv-win\bin'
     scenario._call([
         "cmd.exe",
-        f'/C start "" /min cmd.exe /c "pyenv which python > nul 2>&1 && (for /f \"delims=\" %P in (\'pyenv which python\') do \"%P\" \"{stress_py}\" --target-cpu {target_cpu}) || (where py > nul 2>&1 && py -3 \"{stress_py}\" --target-cpu {target_cpu} || python \"{stress_py}\" --target-cpu {target_cpu})"',
+        f'/C set "PATH={pyenv_shims};{pyenv_bin};%PATH%" && for /f "delims=" %P in (\'pyenv which python 2^>nul\') do start "" /min cmd.exe /c ""%P" "{stress_py}" --target-cpu {target_cpu}"',
     ], expected_exit_code="", blocking=False)
 
     scenario._sleep_to_now()

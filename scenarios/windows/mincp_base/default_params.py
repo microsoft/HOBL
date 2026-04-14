@@ -15,10 +15,12 @@ def run():
     Params.setParam(None, 'phase_reporting', '1')
     Params.setDefault('mincp_base', 'perf_run', '0', desc='', valOptions=['0', '1'])
     # === CRITICAL DEFAULTS - DO NOT REMOVE ===
-    # Without these 3 lines, the scenario crashes with ValueError: 'Undefined'
-    Params.setDefault('web_enter_address', 'web_site_load_time', '20', desc='', valOptions=[])
-    Params.setOverride('global', 'short_typing', '1')
-    Params.setDefault('mincp_base', 'web_workload', 'reddit', desc='', valOptions=['amazonbsg', 'amazongot', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'instagram', 'reddit', 'theverge', 'wikipedia', 'youtubenasa', 'youtubetos'], multiple=True)
+    # web_site_load_time: used by Decrement action UCJN7W in web_run_mincp; ValueError crash if missing
+    Params.setDefault('mincp_base', 'web_site_load_time', '20', desc='', valOptions=['20', '15', '10', '25', '30'])
+    # short_typing: used by productivity library for brief typing bursts
+    Params.setDefault('mincp_base', 'short_typing', '1', desc='', valOptions=['0', '1'])
+    # web_workload: determines which web_run variant to use (reddit/cnn/etc)
+    Params.setDefault('mincp_base', 'web_workload', 'reddit', desc='', valOptions=['reddit', 'instagram', 'amazongot', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'wikipedia', 'youtubenasa', 'youtubetos', 'theverge', 'copilot_query', 'productivity', 'click_todo', 'live_captions'])
     # === END CRITICAL DEFAULTS ===
     return
 
@@ -41,13 +43,9 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\misc\\start_app_launch')
     import_run_user_only('scenarios\\windows\\_library\\misc\\studio_effect_blur')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_close')
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_switchto')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_kill')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_open')
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_switchto')
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_setup')
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_word_switchto')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_check')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_close_tabs')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_kill')

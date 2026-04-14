@@ -332,7 +332,7 @@
         <final id="_cancel" />
       </scxml>
     </scenario>
-    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{b821200a-f524-4248-8410-fa3019624671}" scenarioname="PT_8804_Office_Outlook_Boot v2_b82120" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_Outlook_Boot v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{2c65821a-e4b3-424d-ae1a-be1a073ff502}" scenarioname="PT_8804_Office_Outlook_Boot v2_2c6582" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_Outlook_Boot v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
         <trigger triggername="Microsoft.Office.Common.Boot">
           <etwtrigger>
@@ -344,13 +344,6 @@
         <trigger triggername="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess">
           <etwtrigger>
             <provider>{e305fb0f-da8e-52b5-a918-7a4f17a2531a}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick">
-          <etwtrigger>
-            <provider>{ee97cdc4-b095-5c70-6e37-a541eb74c2b5}</provider>
             <keywords>0x400000000000</keywords>
             <level>5</level>
           </etwtrigger>
@@ -397,52 +390,65 @@
             <operation>notexists</operation>
           </registryfilter>
         </filter>
-        <filter appliesto="scenario" filtername="No19400to19999-a6b3f04b-992f-43ae-a66b-19279acbce86">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>19[456789][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
+        <filter appliesto="trigger" filtername="match11862_pide8729ProcessCreateProcess">
+          <dualtriggerpropertyfilter>
+            <triggercriterion strict="true">
+              <triggername>Microsoft.Office.Common.Boot</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ProcessCreateProcess</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
         </filter>
-        <filter appliesto="scenario" filtername="NoMn_-f9623c37-4ed3-48f7-87d1-9cde5c07bf39">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.mn_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="No20000to20399-ac0fe5e1-37cf-46b1-a000-b39257e7db5a">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>20[0123][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoFe_-cf33092e-0231-4622-8b40-47d7481a7565">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.fe_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match5487appIdr_1__OUTLOOK__EXE__">
+        <filter appliesto="trigger" filtername="match11862Interruptede_10">
           <singletriggerpropertyfilter>
-            <triggername>Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick</triggername>
+            <triggername>Microsoft.Office.Common.Boot</triggername>
             <propertyselector>
               <propertykey>
-                <name>appId</name>
+                <name>Interrupted</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>0</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match11862Interruptede_11">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Office.Common.Boot</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>Interrupted</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>1</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match11862ProcessIdentifierr_1__OUTLOOK__EXE__">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Office.Common.Boot</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ProcessIdentifier</name>
               </propertykey>
             </propertyselector>
             <mathoperation>add</mathoperation>
@@ -451,101 +457,37 @@
             <value>.*OUTLOOK\.EXE.*</value>
           </singletriggerpropertyfilter>
         </filter>
-        <filter appliesto="trigger" filtername="match11862Interruptede_11">
-          <singletriggerpropertyfilter>
-            <triggername>Microsoft.Office.Common.Boot</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>Interrupted</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>1</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match11862Interruptede_10">
-          <singletriggerpropertyfilter>
-            <triggername>Microsoft.Office.Common.Boot</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>Interrupted</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>0</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match11862_pide8729ProcessCreateProcess">
-          <dualtriggerpropertyfilter>
-            <triggercriterion strict="true">
-              <triggername>Microsoft.Office.Common.Boot</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>_pid</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion>
-              <triggername>Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>ProcessCreateProcess</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
       </filters>
       <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
         <state id="_start">
-          <transition event="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick" target="1" name="T0">
-            <filter>match5487appIdr_1__OUTLOOK__EXE__</filter>
+          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="1" name="T0">
+            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
+            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
           </transition>
         </state>
         <state id="1">
-          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="2" name="T2">
-            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
-          </transition>
-          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T5">
-            <filter>match11862Interruptede_11</filter>
-          </transition>
-        </state>
-        <state id="2">
-          <transition event="Microsoft.Office.Common.Boot" target="_complete" name="T3">
-            <filter>match11862Interruptede_10</filter>
+          <transition event="Microsoft.Office.Common.Boot" target="_complete" name="T2">
             <filter>match11862_pide8729ProcessCreateProcess</filter>
+            <filter>match11862Interruptede_10</filter>
+            <filter>match11862ProcessIdentifierr_1__OUTLOOK__EXE__</filter>
           </transition>
-          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T4">
+          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T3">
             <filter>match11862Interruptede_11</filter>
+            <filter>match11862ProcessIdentifierr_1__OUTLOOK__EXE__</filter>
+            <filter>match11862_pide8729ProcessCreateProcess</filter>
           </transition>
         </state>
         <final id="_complete" />
         <final id="_cancel" />
       </scxml>
     </scenario>
-    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{83ab25a3-5819-491d-849a-19642b50e738}" scenarioname="PT_8805_Office_Word_Boot v2_83ab25" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_Word_Boot v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{5f199302-8861-4c13-8b37-6826c5fbb8a6}" scenarioname="PT_8805_Office_Word_Boot v2_5f1993" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_Word_Boot v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
         <trigger triggername="Microsoft.Office.Common.Boot">
           <etwtrigger>
             <provider>{8a3a9fd4-21d3-470b-b1d6-838b9fc8637b}</provider>
             <keywords>0x1</keywords>
             <level>4</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick">
-          <etwtrigger>
-            <provider>{ee97cdc4-b095-5c70-6e37-a541eb74c2b5}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
           </etwtrigger>
         </trigger>
         <trigger triggername="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess">
@@ -597,52 +539,12 @@
             <operation>notexists</operation>
           </registryfilter>
         </filter>
-        <filter appliesto="scenario" filtername="No19400to19999-ce49c61c-1e81-431a-914a-bfa3037089c7">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>19[456789][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoMn_-c219d103-6dc8-41a8-9390-2a6b9c4e0c3d">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.mn_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="No20000to20399-5ea98dda-d6fe-4bad-bb03-075e28c5827d">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>20[0123][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoFe_-6b834ef0-a03f-4db7-a732-7d82c07913d3">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.fe_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match5487appIdr_1__WINWORD__EXE__">
+        <filter appliesto="trigger" filtername="match11862ProcessIdentifierr_1__WINWORD__EXE__">
           <singletriggerpropertyfilter>
-            <triggername>Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick</triggername>
+            <triggername>Microsoft.Office.Common.Boot</triggername>
             <propertyselector>
               <propertykey>
-                <name>appId</name>
+                <name>ProcessIdentifier</name>
               </propertykey>
             </propertyselector>
             <mathoperation>add</mathoperation>
@@ -651,20 +553,6 @@
             <value>.*WINWORD\.EXE.*</value>
           </singletriggerpropertyfilter>
         </filter>
-        <filter appliesto="trigger" filtername="match11862Interruptede_10">
-          <singletriggerpropertyfilter>
-            <triggername>Microsoft.Office.Common.Boot</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>Interrupted</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>0</value>
-          </singletriggerpropertyfilter>
-        </filter>
         <filter appliesto="trigger" filtername="match11862Interruptede_11">
           <singletriggerpropertyfilter>
             <triggername>Microsoft.Office.Common.Boot</triggername>
@@ -679,9 +567,23 @@
             <value>1</value>
           </singletriggerpropertyfilter>
         </filter>
+        <filter appliesto="trigger" filtername="match11862Interruptede_10">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Office.Common.Boot</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>Interrupted</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>0</value>
+          </singletriggerpropertyfilter>
+        </filter>
         <filter appliesto="trigger" filtername="match11862_pide8729ProcessCreateProcess">
           <dualtriggerpropertyfilter>
-            <triggercriterion strict="true">
+            <triggercriterion>
               <triggername>Microsoft.Office.Common.Boot</triggername>
               <propertyselector>
                 <propertykey>
@@ -707,45 +609,34 @@
       </filters>
       <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
         <state id="_start">
-          <transition event="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick" target="1" name="T0">
-            <filter>match5487appIdr_1__WINWORD__EXE__</filter>
+          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="1" name="T0">
+            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
+            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
           </transition>
         </state>
         <state id="1">
-          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="2" name="T2">
-            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
-          </transition>
-          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T5">
-            <filter>match11862Interruptede_11</filter>
-          </transition>
-        </state>
-        <state id="2">
-          <transition event="Microsoft.Office.Common.Boot" target="_complete" name="T3">
+          <transition event="Microsoft.Office.Common.Boot" target="_complete" name="T2">
+            <filter>match11862ProcessIdentifierr_1__WINWORD__EXE__</filter>
             <filter>match11862Interruptede_10</filter>
             <filter>match11862_pide8729ProcessCreateProcess</filter>
           </transition>
-          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T4">
+          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T3">
             <filter>match11862Interruptede_11</filter>
+            <filter>match11862ProcessIdentifierr_1__WINWORD__EXE__</filter>
+            <filter>match11862_pide8729ProcessCreateProcess</filter>
           </transition>
         </state>
         <final id="_complete" />
         <final id="_cancel" />
       </scxml>
     </scenario>
-    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{ec0e46a0-ae8f-466b-942f-cc85f0e59a32}" scenarioname="PT_8806_Office_XL_Boot v2_ec0e46" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_XL_Boot v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{0bd1bb9b-9538-49b5-a9d2-099e4fdd551c}" scenarioname="PT_8806_Office_XL_Boot v2_0bd1bb" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_XL_Boot v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
         <trigger triggername="Microsoft.Office.Common.Boot">
           <etwtrigger>
             <provider>{8a3a9fd4-21d3-470b-b1d6-838b9fc8637b}</provider>
             <keywords>0x1</keywords>
             <level>4</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick">
-          <etwtrigger>
-            <provider>{ee97cdc4-b095-5c70-6e37-a541eb74c2b5}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
           </etwtrigger>
         </trigger>
         <trigger triggername="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess">
@@ -797,52 +688,12 @@
             <operation>notexists</operation>
           </registryfilter>
         </filter>
-        <filter appliesto="scenario" filtername="No19400to19999-a8d3f86b-8674-4d72-9da3-3abb49d5988b">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>19[456789][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoMn_-4098b5ab-46f1-478c-8547-7b3581da08ff">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.mn_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="No20000to20399-de35a9ff-90de-4e5a-a846-5ca034a0d896">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>20[0123][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoFe_-42ef90eb-38e7-42ec-a9e2-460c2ea19ab0">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.fe_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match5487appIdr_1__EXCEL__EXE__">
+        <filter appliesto="trigger" filtername="match11862ProcessIdentifierr_1__EXCEL__EXE__">
           <singletriggerpropertyfilter>
-            <triggername>Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick</triggername>
+            <triggername>Microsoft.Office.Common.Boot</triggername>
             <propertyselector>
               <propertykey>
-                <name>appId</name>
+                <name>ProcessIdentifier</name>
               </propertykey>
             </propertyselector>
             <mathoperation>add</mathoperation>
@@ -881,7 +732,7 @@
         </filter>
         <filter appliesto="trigger" filtername="match11862_pide8729ProcessCreateProcess">
           <dualtriggerpropertyfilter>
-            <triggercriterion strict="true">
+            <triggercriterion>
               <triggername>Microsoft.Office.Common.Boot</triggername>
               <propertyselector>
                 <propertykey>
@@ -907,45 +758,34 @@
       </filters>
       <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
         <state id="_start">
-          <transition event="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick" target="1" name="T0">
-            <filter>match5487appIdr_1__EXCEL__EXE__</filter>
+          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="1" name="T0">
+            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
+            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
           </transition>
         </state>
         <state id="1">
-          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="2" name="T2">
-            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
-          </transition>
-          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T5">
-            <filter>match11862Interruptede_11</filter>
-          </transition>
-        </state>
-        <state id="2">
-          <transition event="Microsoft.Office.Common.Boot" target="_complete" name="T3">
+          <transition event="Microsoft.Office.Common.Boot" target="_complete" name="T2">
+            <filter>match11862ProcessIdentifierr_1__EXCEL__EXE__</filter>
             <filter>match11862Interruptede_10</filter>
             <filter>match11862_pide8729ProcessCreateProcess</filter>
           </transition>
-          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T4">
+          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T3">
+            <filter>match11862ProcessIdentifierr_1__EXCEL__EXE__</filter>
             <filter>match11862Interruptede_11</filter>
+            <filter>match11862_pide8729ProcessCreateProcess</filter>
           </transition>
         </state>
         <final id="_complete" />
         <final id="_cancel" />
       </scxml>
     </scenario>
-    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{537c70a7-9ff3-4a2b-959e-243f9f5c4f48}" scenarioname="PT_8807_Office_PPT_Boot v2_537c70" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_PPT_Boot v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{05de5e50-c27c-4f5e-b242-f07c28191d57}" scenarioname="PT_8807_Office_PPT_Boot v2_05de5e" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_PPT_Boot v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
         <trigger triggername="Microsoft.Office.Common.Boot">
           <etwtrigger>
             <provider>{8a3a9fd4-21d3-470b-b1d6-838b9fc8637b}</provider>
             <keywords>0x1</keywords>
             <level>4</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick">
-          <etwtrigger>
-            <provider>{ee97cdc4-b095-5c70-6e37-a541eb74c2b5}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
           </etwtrigger>
         </trigger>
         <trigger triggername="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess">
@@ -997,52 +837,12 @@
             <operation>notexists</operation>
           </registryfilter>
         </filter>
-        <filter appliesto="scenario" filtername="No19400to19999-39309f81-60d7-4782-bb32-0ae0c6d4667a">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>19[456789][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoMn_-cd9d7deb-8afe-45d2-a483-c299b0829549">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.mn_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="No20000to20399-884e3254-6c3f-4f23-871c-cc889fa49054">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>20[0123][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoFe_-139b3e36-9698-4e03-ae41-cfa7fd0b2da9">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.fe_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match5487appIdr_1__POWERPNT__EXE__">
+        <filter appliesto="trigger" filtername="match11862ProcessIdentifierr_1__POWERPNT__EXE__">
           <singletriggerpropertyfilter>
-            <triggername>Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick</triggername>
+            <triggername>Microsoft.Office.Common.Boot</triggername>
             <propertyselector>
               <propertykey>
-                <name>appId</name>
+                <name>ProcessIdentifier</name>
               </propertykey>
             </propertyselector>
             <mathoperation>add</mathoperation>
@@ -1063,20 +863,6 @@
             <constant>0</constant>
             <operation>equal</operation>
             <value>0</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match11862Interruptede_11">
-          <singletriggerpropertyfilter>
-            <triggername>Microsoft.Office.Common.Boot</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>Interrupted</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>1</value>
           </singletriggerpropertyfilter>
         </filter>
         <filter appliesto="trigger" filtername="match11862_pide8729ProcessCreateProcess">
@@ -1104,28 +890,38 @@
             <operation>equal</operation>
           </dualtriggerpropertyfilter>
         </filter>
+        <filter appliesto="trigger" filtername="match11862Interruptede_11">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Office.Common.Boot</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>Interrupted</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>1</value>
+          </singletriggerpropertyfilter>
+        </filter>
       </filters>
       <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
         <state id="_start">
-          <transition event="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick" target="1" name="T0">
-            <filter>match5487appIdr_1__POWERPNT__EXE__</filter>
+          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="1" name="T0">
+            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
+            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
           </transition>
         </state>
         <state id="1">
-          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="2" name="T2">
-            <filter strict="false">match11862_pide8729ProcessCreateProcess</filter>
-          </transition>
-          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T5">
-            <filter>match11862Interruptede_11</filter>
-          </transition>
-        </state>
-        <state id="2">
-          <transition event="Microsoft.Office.Common.Boot" target="_complete" name="T3">
+          <transition event="Microsoft.Office.Common.Boot" target="_complete" name="T2">
+            <filter>match11862ProcessIdentifierr_1__POWERPNT__EXE__</filter>
             <filter>match11862Interruptede_10</filter>
             <filter>match11862_pide8729ProcessCreateProcess</filter>
           </transition>
-          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T4">
+          <transition event="Microsoft.Office.Common.Boot" target="_cancel" name="T3">
+            <filter>match11862ProcessIdentifierr_1__POWERPNT__EXE__</filter>
             <filter>match11862Interruptede_11</filter>
+            <filter>match11862_pide8729ProcessCreateProcess</filter>
           </transition>
         </state>
         <final id="_complete" />
