@@ -221,5 +221,18 @@ dotnet restore Aspire.slnx
 check($lastexitcode)
 "   Restore completed successfully" | log
 
+# -------------------------------------------------------------------
+# Regenerate ConfigurationSchema.json files
+# -------------------------------------------------------------------
+# The Aspire repo validates that checked-in ConfigurationSchema.json files match
+# what the installed SDK generates. A plain 'dotnet build' fails validation if they
+# differ. The Aspire CI pipeline runs with /p:UpdateConfigurationSchema=true to
+# regenerate them before the validation check. We do the same here during prep so
+# that subsequent run iterations (which use plain 'dotnet build') pass cleanly.
+"-- Regenerating ConfigurationSchema.json files" | log
+dotnet build Aspire.slnx --no-incremental /p:UpdateConfigurationSchema=true
+check($lastexitcode)
+"   ConfigurationSchema regeneration completed" | log
+
 "-- net_aspire prep completed ($logSuffix version)" | log
 Exit 0
