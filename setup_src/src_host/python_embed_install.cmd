@@ -89,6 +89,7 @@ if %errorlevel% neq 0 goto ERROR
 echo Hobl command successful
 
 echo Adding firewall entry if needed
+powershell.exe Unblock-File -Path .\firewall_add.ps1
 powershell.exe .\firewall_add.ps1
 
 if %BUILD_ARCHIVE% == true (

@@ -83,6 +83,10 @@ class Prep(core.app_scenario.Scenario):
         return
 
     def runTest(self):
+        if self.scenarios_to_prep == ["comm_check"]:
+            logging.info("comm_check specified, skipping prep scenarios and running comm check only.")
+            return
+        
         self.checkLocalExecution()
 
         prep_scenarios = self.get_prep_scenarios()

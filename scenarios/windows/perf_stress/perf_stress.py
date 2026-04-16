@@ -12,10 +12,6 @@ from . import default_params
 #   Automatically generated standard scenario.
 
 class PerfStress(scenarios.app_scenario.Scenario):
-
-    prep_scenarios = ["edge_install", "web_prep", "teams_install", "office_install", "onedrive_prep", "productivity_prep"]
-    prep_version = "1"
-
     # Set default parameters:
     default_params.run()
 
@@ -29,7 +25,7 @@ class PerfStress(scenarios.app_scenario.Scenario):
     if Params.get(module, "stress_run") == "1":
         logging.info("Applying stress_run parameter profile")
         cpu_param = Params.get(module, "stress_cpu_target")
-        if cpu_param not in ["0", "25", "50", "65", "75", "85"]:
+        if cpu_param not in ["25", "50", "65", "75", "85"]:
             cpu_param = "75"
             Params.setParam(module, "stress_cpu_target", cpu_param)
             logging.info("stress_run=1 and stress_cpu_target not provided; defaulting to 75 (high cpu load)")
@@ -45,24 +41,7 @@ class PerfStress(scenarios.app_scenario.Scenario):
 
     actions = None
 
-    def prep(self):
-        """Install pyenv + Python + numpy/psutil on DUT for percentile_stress.py"""
-        if not self.checkPrepStatusNew([(self.module, self.prep_version)]):
-            return
-        logging.info("Running perf_stress prep: installing Python environment on DUT...")
-        prep_script = os.path.join(os.path.dirname(__file__), "perf_stress_prep.ps1")
-        self._upload(prep_script, self.dut_exec_path)
-        try:
-            self._call(["pwsh", rf"{self.dut_exec_path}\perf_stress_prep.ps1"])
-        finally:
-            self._copy_data_from_remote(self.result_dir)
-        self.createPrepStatusControlFile(self.prep_version)
-
     def setUp(self):
-        # Run prep if needed (installs Python + numpy/psutil on DUT)
-        if Params.get(self.module, 'stress_run') == '1':
-            self.prep()
-
         # Load actions JSON.
         actions_json = os.path.join(os.path.dirname(__file__), "perf_stress.json")
         self.actions = self.load_action_json(actions_json)

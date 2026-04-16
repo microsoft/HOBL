@@ -156,7 +156,7 @@ if params_file is None or params_file == "":
 elif not os.path.exists(params_file):
     print("ERROR:  Specified device profile path does not exist: " + params_file)
     sys.exit(1)
-print("Using profile: " + params_file)
+# print("Using profile: " + params_file)
 params.setCalculated("params_file", params_file)
 
 cmd_tests = args.scenarios
@@ -386,7 +386,7 @@ def set_run_dir(module):
 
     # Copy profile to run dir
     # shutil.copy(args.profile, run_dir)
-    shutil.copy(params_file, run_dir)
+    # shutil.copy(params_file, run_dir)
     
 
 
@@ -942,7 +942,13 @@ if __name__ == '__main__':
             print("Deleting " + result_dir)
             shutil.rmtree(result_dir, onerror=lambda func, path, _: (os.chmod(path, stat.S_IWRITE), func(path)))
 
-    local_execution_reboot_flag = Params.getCalculated("local_exec_reboot")
+    # Checking if local execution and if running from dashboard if so then we want to relaunch the web ui to help notify user that scenario ran. 
+    try:
+        if dashboard_url != '' and dut_ip == "127.0.0.1":
+            subprocess.call(f'start /MAX "" "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" --app="http://localhost:80/plan/Scenarios?PlanID={dashboard_plan_id}" --start-maximized', shell=True)
+    except:
+        pass
+    local_execution_reboot_flag = Params.getCalculated("local_execution_reboot")
 
     if suite_success:
         print("Suite passed")

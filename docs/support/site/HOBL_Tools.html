@@ -308,13 +308,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#adaptive_brightness" class="md-nav__link">
-    adaptive_brightness
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#audio_volume" class="md-nav__link">
     audio_volume
   </a>
@@ -385,6 +378,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#display" class="md-nav__link">
+    display
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#display_brightness" class="md-nav__link">
     display_brightness
   </a>
@@ -408,13 +408,6 @@
         <li class="md-nav__item">
   <a href="#frame_data" class="md-nav__link">
     frame_data
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hdr" class="md-nav__link">
-    hdr
   </a>
   
 </li>
@@ -567,13 +560,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#refresh_rate" class="md-nav__link">
-    refresh_rate
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#run_report" class="md-nav__link">
     run_report
   </a>
@@ -604,6 +590,13 @@
         <li class="md-nav__item">
   <a href="#socwatch" class="md-nav__link">
     socwatch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stress_utc" class="md-nav__link">
+    stress_utc
   </a>
   
 </li>
@@ -743,13 +736,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#adaptive_brightness" class="md-nav__link">
-    adaptive_brightness
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#audio_volume" class="md-nav__link">
     audio_volume
   </a>
@@ -820,6 +806,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#display" class="md-nav__link">
+    display
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#display_brightness" class="md-nav__link">
     display_brightness
   </a>
@@ -843,13 +836,6 @@
         <li class="md-nav__item">
   <a href="#frame_data" class="md-nav__link">
     frame_data
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hdr" class="md-nav__link">
-    hdr
   </a>
   
 </li>
@@ -1002,13 +988,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#refresh_rate" class="md-nav__link">
-    refresh_rate
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#run_report" class="md-nav__link">
     run_report
   </a>
@@ -1039,6 +1018,13 @@
         <li class="md-nav__item">
   <a href="#socwatch" class="md-nav__link">
     socwatch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stress_utc" class="md-nav__link">
+    stress_utc
   </a>
   
 </li>
@@ -1129,11 +1115,6 @@
 
 
 <h1 id="hobl-tools">HOBL Tools</h1>
-<h2 id="adaptive_brightness">adaptive_brightness</h2>
-<p>Enable or disable adaptive brightness (Change brightness automatically when lighting changes). Returns to last mode on test end.
-Uses powercfg to set the ADAPTBRIGHT setting under sub_video for both AC and DC power schemes.</p>
-<p><u>Parameters:</u></p>
-<p><code>adaptive_brightness_enable</code> - Enable or disable adaptive brightness (1=enable, 0=disable). <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>0, 1</code></p>
 <h2 id="audio_volume">audio_volume</h2>
 <p>Set specified audio volume.</p>
 <p><u>Parameters:</u></p>
@@ -1163,7 +1144,7 @@ Uses powercfg to set the ADAPTBRIGHT setting under sub_video for both AC and DC 
 <h2 id="custom_trace">custom_trace</h2>
 <p>Periodically start ETL traces.</p>
 <p><u>Parameters:</u></p>
-<p><code>providers</code> - ETL provider files to use <strong>Default:</strong> <code>power_light.wprp</code>  <strong>Options:</strong> <code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, GTP_CPI_BAM_Defender.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp</code></p>
+<p><code>providers</code> - ETL provider files to use <strong>Default:</strong> <code>power_light.wprp</code>  <strong>Options:</strong> <code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp</code></p>
 <p><code>trace_duration</code> - The duration of the trace in seconds <strong>Default:</strong> <code>300</code> </p>
 <p><code>start_delay</code> - The start delay before the trace starts in seconds <strong>Default:</strong> <code>0</code> </p>
 <p><code>enable_check</code> - Check the result of the trace. 0 = no check, 1 = check <strong>Default:</strong> <code>1</code>  <strong>Options:</strong> <code>0, 1</code></p>
@@ -1175,6 +1156,32 @@ Uses powercfg to set the ADAPTBRIGHT setting under sub_video for both AC and DC 
 <p><code>appVersion</code> -  <strong>Default:</strong> <code>0</code> </p>
 <h2 id="detect_devices">detect_devices</h2>
 <p>Deprecated.</p>
+<h2 id="display">display</h2>
+<p>Combined display settings tool. Configures one or more display properties
+before a test. Initial values are saved to the DUT registry on first use
+and only restored when display_restore=1 is set.</p>
+<p>Only parameters that are explicitly provided are processed — empty parameters
+are ignored, so the tool can be called for any subset of operations.</p>
+<p>Parameters:
+  als_adaptive_brightness       0/1 — adaptive brightness (ALS) on/off (Windows only)
+  hdr                           0/1 — HDR on/off (Windows only)
+  hdr_auto                      0/1 — Auto HDR on/off (Windows only)
+  refresh_rate                  60/120/dynamic — display refresh rate (Windows only)
+  content_adaptive_brightness   Off/Always/On battery only — CABC mode (Windows only)
+  adaptive_color                0/1 — adaptive color management on/off (Windows only)
+  brightness                    brightness value (e.g. 65, 65%, 150nits)
+  nits_map                      nits-to-slider mapping (e.g. "100nits:50% 150nits:65%")
+  display_restore               1 — restore all saved initial values after test</p>
+<p><u>Parameters:</u></p>
+<p><code>als_adaptive_brightness</code> - Adaptive brightness (1=on, 0=off). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
+<p><code>adaptive_color</code> - Adaptive color (1=on, 0=off). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
+<p><code>content_adaptive_brightness</code> - CABC: Off, Always, or OnBatteryOnly. <strong>Default:</strong> <code>`  **Options:**</code>Off, Always, OnBatteryOnly`</p>
+<p><code>hdr</code> - HDR (1=on, 0=off). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
+<p><code>hdr_auto</code> - Auto HDR (1=on, 0=off). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
+<p><code>refresh_rate</code> - Refresh rate: 60, 120, or dynamic. <strong>Default:</strong> <code>`  **Options:**</code>60, 120, dynamic`</p>
+<p><code>brightness</code> - Brightness slider percentage or desired nits (e.g. 65, 65%, 150nits).  If you specify nits, the nits_map parameter will be used to determine the corresponding slider value. <strong>Default:</strong> <code>150nits</code> </p>
+<p><code>nits_map</code> - Nits-to-slider mapping.  Use luminance meter to determine for specific device. <strong>Default:</strong> <code>100nits:50% 150nits:65%</code> </p>
+<p><code>display_restore</code> - Restore all display settings to saved initial values (1=restore). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
 <h2 id="display_brightness">display_brightness</h2>
 <p>Map display brightness slider percentage to nits value specified by scenarios.</p>
 <p><u>Parameters:</u></p>
@@ -1187,17 +1194,9 @@ Uses powercfg to set the ADAPTBRIGHT setting under sub_video for both AC and DC 
 <h2 id="etl_trace">etl_trace</h2>
 <p>Collect ETL trace from specified [providers].</p>
 <p><u>Parameters:</u></p>
-<p><code>providers</code> - ETL provider files to use <strong>Default:</strong> <code>`  **Options:**</code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, GTP_CPI_BAM_Defender.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`</p>
+<p><code>providers</code> - ETL provider files to use <strong>Default:</strong> <code>`  **Options:**</code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`</p>
 <h2 id="frame_data">frame_data</h2>
 <p>Collect and parse framerate and timing data.  Does not have a significant impact on power consumption.</p>
-<h2 id="hdr">hdr</h2>
-<p>Set HDR on/off with optional Auto HDR control. Returns to last mode on test end.
-Attempts full HDR first (MonitorDataStore + Win+Alt+B toggle).
-Falls back to vHDR (VideoSettings registry) if no HDR-capable monitors found.
-Auto HDR is controlled via DirectXUserGlobalSettings registry.</p>
-<p><u>Parameters:</u></p>
-<p><code>hdr_enable</code> - Enable HDR (1/0). <strong>Default:</strong> <code>1</code>  <strong>Options:</strong> <code>1, 0</code></p>
-<p><code>hdr_autohdr</code> - Enable Auto HDR (1/0). Only applies when hdr_enable=1. <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>1, 0</code></p>
 <h2 id="kill_teams">kill_teams</h2>
 <p>Kill all instances of Teams processes.</p>
 <p><u>Parameters:</u></p>
@@ -1251,7 +1250,7 @@ Auto HDR is controlled via DirectXUserGlobalSettings registry.</p>
 <h2 id="perf_utc">perf_utc</h2>
 <p>Collects and processes UTC Perftrack scenarios</p>
 <p><u>Parameters:</u></p>
-<p><code>provider</code> - WPRP file to use for UTC Perftrack traces. <strong>Default:</strong> <code>perf_utc.wprp</code>  <strong>Options:</strong> <code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, GTP_CPI_BAM_Defender.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp</code></p>
+<p><code>provider</code> - WPRP file to use for UTC Perftrack traces. <strong>Default:</strong> <code>perf_utc.wprp</code>  <strong>Options:</strong> <code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp</code></p>
 <h2 id="phm">phm</h2>
 <p>Run Intel's Power House Mountain tool.</p>
 <p><u>Parameters:</u></p>
@@ -1311,15 +1310,6 @@ Auto HDR is controlled via DirectXUserGlobalSettings registry.</p>
 <p><code>mode</code> - The power mode to switch to (best power efficiency, recommended/balanced, better, best performance). <strong>Default:</strong> <code>best power efficiency</code>  <strong>Options:</strong> <code>best power efficiency, recommended/balanced, better, best performance</code></p>
 <h2 id="random_fail">random_fail</h2>
 <p>Randomly fail a test, for devolpment/debug purposes.</p>
-<h2 id="refresh_rate">refresh_rate</h2>
-<p>Set display refresh rate. Returns to last mode on test end.
-Controls settings under System -&gt; Display -&gt; Advanced display.
-Uses WinAppDriver UI automation for both refresh rate and DRR toggle.</p>
-<p>Values: 60, 120, dynamic
-  - 60 or 120: sets the fixed refresh rate and turns DRR off
-  - dynamic: sets refresh rate to 120 Hz then enables Dynamic Refresh Rate</p>
-<p><u>Parameters:</u></p>
-<p><code>refresh_rate</code> - Target refresh rate: 60, 120, or dynamic. Leave empty to not change. <strong>Default:</strong> <code>120</code>  <strong>Options:</strong> <code>60, 120, dynamic</code></p>
 <h2 id="run_report">run_report</h2>
 <p>Generate a report for the test run.</p>
 <p><u>Parameters:</u></p>
@@ -1348,6 +1338,11 @@ Uses WinAppDriver UI automation for both refresh rate and DRR toggle.</p>
 <p><u>Parameters:</u></p>
 <p><code>delay</code> -  <strong>Default:</strong> <code>0</code> </p>
 <p><code>additional_args</code> -  <strong>Default:</strong> <code>-f cpu-pkgc-dbg -f pcie -f platform-ltr -f panel-srr -f cpu-cstate -f cpu-pstate -f gfx-cstate -f gfx-pstate -f acpi-dstate -f sstate -f ddr-bw -f timer-resolution -f cpu-gpu-concurrency -f pch-slps0 -f pcie-lpm -f hw-gfx-pstate -f ddr-bw -f pch-ip-active-all -f pch-ip-status -f sys -f sa-freq -f pch-all</code> </p>
+<h2 id="stress_utc">stress_utc</h2>
+<p>Collects and processes UTC Perftrack scenarios for stress workloads.
+Outputs a CSV with PT number instead of Scenario name.</p>
+<p><u>Parameters:</u></p>
+<p><code>provider</code> - WPRP file to use for UTC Perftrack traces. <strong>Default:</strong> <code>perf_utc.wprp</code>  <strong>Options:</strong> <code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp</code></p>
 <h2 id="study_report">study_report</h2>
 <p>Generate a report for the study (all runs in the same study directory).</p>
 <p><u>Parameters:</u></p>

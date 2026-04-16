@@ -12,7 +12,6 @@ if ($ARGS[0] -eq $null) {return("Params .ini not supplied, please supply a param
 .\hobl.cmd -p $ARGS[0] -s web global:tools="+phm" global:run_type=PHM
 .\hobl.cmd -p $ARGS[0] -s idle_apps global:tools="+phm" global:run_type=PHM
 .\hobl.cmd -p $ARGS[0] -s productivity global:tools="+phm" global:run_type=PHM
-.\hobl.cmd -p $ARGS[0] -s halo2 global:tools="+phm" global:run_type=PHM  
 .\hobl.cmd -p $ARGS[0] -s netflix global:tools="+phm" global:run_type=PHM  
 .\hobl.cmd -p $ARGS[0] -s youtube global:tools="+phm" global:run_type=PHM
 .\hobl.cmd -p $ARGS[0] -s lvp global:tools="+phm" global:run_type=PHM

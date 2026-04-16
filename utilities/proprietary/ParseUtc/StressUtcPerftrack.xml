@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <diagrules>
   <scenarios>
     <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{921c2d75-0044-4048-ba91-17775bc57fa4}" scenarioname="PT_9471_Edge MSN Tab Anylayout NewTab _Stable__921c2d" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge MSN Tab Anylayout NewTab _Stable_" ptdurationfield="Duration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -132,46 +132,6 @@
             <operation>notexists</operation>
           </registryfilter>
         </filter>
-        <filter appliesto="scenario" filtername="No19400to19999-e51383ef-a221-4dcc-8dcf-564dc30fe956">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>19[456789][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoMn_-bc74cdf7-cee7-4dbf-87c8-14a4db758446">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.mn_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="No20000to20399-4c35ff26-947c-4a92-a229-15720f2876aa">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>20[0123][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoFe_-901e1c44-240e-4b3b-b815-227ceb6974e3">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.fe_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
       </filters>
       <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
         <state id="_start">
@@ -181,7 +141,7 @@
         <final id="_cancel" />
       </scxml>
     </scenario>
-    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{1f2fb4fd-4270-431b-925d-5cf6e08be759}" scenarioname="PT_8998_Edge Startup Stable _Shell Click __ First Render _1f2fb4" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge Startup Stable _Shell Click __ First Render NonEmptyPaint2_" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{1f2fb4fd-4270-431b-925d-5cf6e08be759}" scenarioname="PT_8998_Edge Startup Stable _Shell Click __ First Render _1f2fb4" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge Startup Stable _Shell Click __ First Render NonEmptyPaint3_" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
         <trigger triggername="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick">
           <etwtrigger>
@@ -246,45 +206,19 @@
             <operation>notexists</operation>
           </registryfilter>
         </filter>
-        <filter appliesto="scenario" filtername="No19400to19999-9b7bf3b5-1189-4a63-8688-669d2fc6bbce">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>19[456789][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoMn_-bb8f33ef-7e2f-4fc8-a793-f175a5c43664">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.mn_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="No20000to20399-d072ce7c-cba3-454b-bb30-0867ceead222">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>20[0123][0-9][0-9]\..*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="NoFe_-f302de57-632e-4f82-a8aa-2858b0bbff99">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*\.fe_[a-z].*</value>
-            <operation>notregex</operation>
-          </registryfilter>
+        <filter appliesto="trigger" filtername="match5487entryPointe_18">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>entryPoint</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>8</value>
+          </singletriggerpropertyfilter>
         </filter>
         <filter appliesto="trigger" filtername="match5487appIdr_1__MSEdge_MSEdge___a_zA_Z0_9_____">
           <singletriggerpropertyfilter>

@@ -411,6 +411,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#youtube25" class="md-nav__link">
+    youtube25
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#comm_check" class="md-nav__link">
     comm_check
   </a>
@@ -659,6 +666,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#youtube25" class="md-nav__link">
+    youtube25
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#comm_check" class="md-nav__link">
     comm_check
   </a>
@@ -760,8 +774,7 @@ Local camera and mic are on, other 9 participants are bots sending video and aud
 <p><u>Parameters:</u></p>
 <p><code>hibernate_enabled</code> - Enables or disables hibernation on the device <strong>Default:</strong> <code>1</code>  <strong>Options:</strong> <code>0, 1</code></p>
 <p><code>telemetry_enabled</code> - Enables or disables the gathering of optional diagnostic data in the OS <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>0, 1</code></p>
-<p><code>hdr_enabled</code> - Enables or disables HDR on the device (if supported by the device) <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
-<p><code>dark_theme_enabled</code> - Enables or disables the dark theme on Windows <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
+<p><code>theme</code> - Change the Windows theme <strong>Default:</strong> <code>current</code>  <strong>Options:</strong> <code>current, light, dark</code></p>
 <p><code>wallpaper</code> - Sets the device's background image.  Uses image files stored in the %SYSTEMDRIVE%\hobl_bin\DesktopImages folder <strong>Default:</strong> <code>ColorChecker3000x2000.png</code> </p>
 <p><code>final_reboot</code> - Sets if the device will reboot at the conclusion of daily_prep <strong>Default:</strong> <code>1</code>  <strong>Options:</strong> <code>0, 1</code></p>
 <p><code>bpm_pcc_blm_disable</code> - Disable BPM, PCC, and BLM <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>0, 1</code></p>
@@ -996,6 +1009,18 @@ Local user is sharing desktop.</p>
 <p><code>duration</code> - Total scenario duration <strong>Default:</strong> <code>600</code> </p>
 <p><code>loop_duration</code> - YouTube video playback duration before looping (max 480s) <strong>Default:</strong> <code>300</code> </p>
 <p><code>full_screen</code> - Full Screen mode <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>0, 1</code></p>
+<h2 id="youtube25">youtube25</h2>
+<p>Plays a YouTube video in a web browser in Default View mode.</p>
+<p>Steps:</p>
+<ol>
+<li>Navigate to Tears of Steel YouTube video URL: <a href="https://youtu.be/41hv2tW5Lc4">youtu.be/41hv2tW5Lc4</a></li>
+<li>Change video quality to 1080p.</li>
+<li>Let video play for specified duration and loops.</li>
+<li>Close web browser.</li>
+</ol>
+<p><u>Parameters:</u></p>
+<p><code>duration</code> -  <strong>Default:</strong> <code>600</code> </p>
+<p><code>loops</code> -  <strong>Default:</strong> <code>1</code> </p>
 <h2 id="comm_check">comm_check</h2>
 <p>Checks for valid communications between host and DUT.</p>
 <p>Steps:</p>

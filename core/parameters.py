@@ -190,10 +190,14 @@ class Params(object):
                 if section in Params.overrides:
                     if key in Params.overrides[section]:
                         continue
+                if 'password' in key.lower():
+                    continue
                 val = Params.fileParams[section][key]
                 logging.debug("File - " + section + " : " + key + " = " + val)
         for section in Params.overrides:
             for key in Params.overrides[section]:
+                if 'password' in key.lower():
+                    continue
                 val = Params.overrides[section][key]
                 logging.debug("Override - " + section + " : " + key + " = " + val)
 

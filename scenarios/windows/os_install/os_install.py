@@ -53,6 +53,7 @@ class OsInstall(core.app_scenario.Scenario):
     Params.setDefault(module, 'install_wifi_password', '')
     Params.setDefault(module, 'install_dut_ip', original_dut_ip)
     Params.setDefault(module, 'post_deploy_delay', '120', desc="Time to wait (in seconds) after imaging for PostDeploy scripts to complete.")
+    Params.setDefault(module, 'verify_only', '0', desc="When 1, skip boot image copy + imaging and run post-install verification/support steps only.")
     Params.setDefault(module, 'post_install_cleanup', '1', desc="When 1, remove install partitions (TOAST/BOOTME) and expand C: after successful install.")
  
     # Override collection of config data, traces, and execution of callbacks 
@@ -76,6 +77,7 @@ class OsInstall(core.app_scenario.Scenario):
     install_wifi_password = Params.get(module, 'install_wifi_password')
     dut_name = Params.get('global', 'dut_name')
     post_deploy_delay = int(Params.get(module, 'post_deploy_delay'))
+    verify_only = Params.get(module, 'verify_only') == '1'
     post_install_cleanup = Params.get(module, 'post_install_cleanup') == '1'
 
     is_prep = True
@@ -87,137 +89,135 @@ class OsInstall(core.app_scenario.Scenario):
 
 
     def runTest(self):
-        if self.image_path == '':
+        if not self.verify_only and self.image_path == '':
             logging.info("Image path not specified... skipping.")
             return
 
-        # # Delete pagefile.sys and reboot DUT.
-        # if self._check_remote_file_exists("C:\\pagefile.sys"):
-        #     self._call(["powershell.exe", "wmic computersystem set AutomaticManagedPagefile=False"])
-        #     self._call(["powershell.exe", "wmic pagefileset delete"])
-        #     self._call(["shutdown.exe", "/r /f /t 5"])
-        #     time.sleep(15)
-        #     self._wait_for_dut_comm()
-        #     self._call(["shutdown.exe", "/r /f /t 5"])
-        #     time.sleep(15)
-        #     self._wait_for_dut_comm()
-        # else:
-        #     pass
+        if not self.verify_only:
+            # # Delete pagefile.sys and reboot DUT.
+            # if self._check_remote_file_exists("C:\\pagefile.sys"):
+            #     self._call(["powershell.exe", "wmic computersystem set AutomaticManagedPagefile=False"])
+            #     self._call(["powershell.exe", "wmic pagefileset delete"])
+            #     self._call(["shutdown.exe", "/r /f /t 5"])
+            #     time.sleep(15)
+            #     self._wait_for_dut_comm()
+            #     self._call(["shutdown.exe", "/r /f /t 5"])
+            #     time.sleep(15)
+            #     self._wait_for_dut_comm()
+            # else:
+            #     pass
 
-        rc = recharge.Recharge()
-        rc.setResumeThreshold('40')
-        rc.setMonitorOnly('1')  # Do not turn on charger, just monitor battery level
-        rc.runTest()
-        time.sleep(2)
+            rc = recharge.Recharge()
+            rc.setResumeThreshold('40')
+            rc.setMonitorOnly('1')  # Do not turn on charger, just monitor battery level
+            rc.runTest()
+            time.sleep(2)
 
-        if self.install_wifi_name != '':
-            self.switch_to_intall_network()
-            time.sleep(10)
+            if self.install_wifi_name != '':
+                self.switch_to_intall_network()
+                time.sleep(10)
 
-        # Ensure volume shrink is not blocked by System Protection / restore points.
-        self.disable_system_protection_and_restore_points()
+            # Ensure volume shrink is not blocked by System Protection / restore points.
+            self.disable_system_protection_and_restore_points()
 
-        delete_image = self.dut_exec_path + "\\os_install_resources\\DeleteImage.ps1"
-        os_install_automation = self.dut_exec_path + "\\os_install_resources\\SBCT"
+            delete_image = self.dut_exec_path + "\\os_install_resources\\DeleteImage.ps1"
+            os_install_automation = self.dut_exec_path + "\\os_install_resources\\SBCT"
 
-        # Disable Bitlocker on C:
-        if self.getStatus() == "FullyDecrypted":
-            logging.info("Drive already decrypted.")        
-        else:
-            # Decrypt
-            logging.info("Disabling drive encryption.")        
-            self._call(["powershell.exe", 'Disable-bitlocker -MountPoint "C:"'])
-            # Wait until fully decrypted
-            while(True):
-                progress = self.getPercentage()
-                logging.info(f"Encryption percentage: {progress}%")
-                if progress == "0":
-                    break
-                else:    
-                    time.sleep(10)   
-            status =  self.getStatus()
-            logging.info(f"Drive status: {status}")        
-            if status != "FullyDecrypted":
-                logging.error ("Drive decryption failed")
-                self.fail("Drive decryption failed.")
+            # Disable Bitlocker on C:
+            if self.getStatus() == "FullyDecrypted":
+                logging.info("Drive already decrypted.")
+            else:
+                # Decrypt
+                logging.info("Disabling drive encryption.")
+                self._call(["powershell.exe", 'Disable-bitlocker -MountPoint "C:"'])
+                # Wait until fully decrypted
+                while(True):
+                    progress = self.getPercentage()
+                    logging.info(f"Encryption percentage: {progress}%")
+                    if progress == "0":
+                        break
+                    else:
+                        time.sleep(10)
+                status = self.getStatus()
+                logging.info(f"Drive status: {status}")
+                if status != "FullyDecrypted":
+                    logging.error("Drive decryption failed")
+                    self.fail("Drive decryption failed.")
 
-        # Copy over resources
-        self._upload("scenarios\\windows\\os_install\\os_install_resources", self.dut_exec_path)
+            # Copy over resources
+            self._upload("scenarios\\windows\\os_install\\os_install_resources", self.dut_exec_path)
 
-        # Remove previous or failed WinPE drive setup
-        self._call(["powershell.exe", "-ExecutionPolicy Unrestricted " + delete_image])
-                   
-        # Setup access to shared drive
-        # TO_DO: make path and password paramters
-        logging.info("Mounting image path")
-        # self._call(["cmd.exe", "/c net use " + self.share_path + " " + self.install_path_password + " /user:" + self.install_path_username], expected_exit_code="")
-        self._call(["cmd.exe", f'/c net use "{self.share_path}" "{self.install_path_password}" /user:"{self.install_path_username}"'], expected_exit_code="")
+            # Remove previous or failed WinPE drive setup
+            self._call(["powershell.exe", "-ExecutionPolicy Unrestricted " + delete_image])
 
-        # Execute InstallWinPE.ps1 to initiate copying of WinPE and image. True = AutoReboot  False = manual reboot
-        logging.info("Copying boot image...")
-        try:
-            # self._call(["cmd.exe", f'/c {os_install_automation}\\SetupODE.cmd -buildLink {self.image_path} -username {self.install_path_username} -password "{self.install_path_password}" -unattend "NoRollBack,nolocaladmin" -WiFi_Install True'], timeout=7200, expected_exit_code="")
-            self._call(["powershell", f'-command "& {{ Set-Location -Path """{os_install_automation}""" ; {os_install_automation}\\SetupODE.ps1 -buildLink {self.image_path} -username {self.install_path_username} -password """{self.install_path_password}""" -unattend """NoRollBack,nolocaladmin""" -WiFi_Install True ; exit $LASTEXITCODE }}"'], timeout=9000, expected_exit_code="")
-        except Exception as ex:
-            if "timeout" in str(ex).lower():
+            # Setup access to shared drive
+            # TO_DO: make path and password paramters
+            logging.info("Mounting image path")
+            # self._call(["cmd.exe", "/c net use " + self.share_path + " " + self.install_path_password + " /user:" + self.install_path_username], expected_exit_code="")
+            self._call(["cmd.exe", f'/c net use "{self.share_path}" "{self.install_path_password}" /user:"{self.install_path_username}"'], expected_exit_code="")
+
+            # Execute InstallWinPE.ps1 to initiate copying of WinPE and image. True = AutoReboot  False = manual reboot
+            logging.info("Copying boot image...")
+            try:
+                # self._call(["cmd.exe", f'/c {os_install_automation}\\SetupODE.cmd -buildLink {self.image_path} -username {self.install_path_username} -password "{self.install_path_password}" -unattend "NoRollBack,nolocaladmin" -WiFi_Install True'], timeout=7200, expected_exit_code="")
+                self._call(["powershell", f'-command "& {{ Set-Location -Path """{os_install_automation}""" ; {os_install_automation}\\SetupODE.ps1 -buildLink {self.image_path} -username {self.install_path_username} -password """{self.install_path_password}""" -unattend """NoRollBack,nolocaladmin""" -WiFi_Install True ; exit $LASTEXITCODE }}"'], timeout=9000, expected_exit_code="")
+            except Exception as ex:
+                if "timeout" in str(ex).lower():
                     logging.error("Copying boot image timed out after 9000 seconds")
                     self.fail("Copying boot image timed out after 9000 seconds")
-            else:
-                pass
-        logging.info("Boot image copied")
-        time.sleep(2)
+                else:
+                    pass
+            logging.info("Boot image copied")
+            time.sleep(2)
 
-        # Generate dut_setup files, including SimpleRemote, by directly calling the dut_setup module.
-        # This will automatically upload the files to the proper directory (specified in the device profile), and reboot 
-        logging.info("Copying files for DUT setup")
-        ds = dut_setup.DutSetup()
-        ds.runTest()
-        time.sleep(2)
-        
-        logging.info("Imaging...")
+            # Generate dut_setup files, including SimpleRemote, by directly calling the dut_setup module.
+            # This will automatically upload the files to the proper directory (specified in the device profile), and reboot
+            logging.info("Copying files for DUT setup")
+            ds = dut_setup.DutSetup()
+            ds.runTest()
+            time.sleep(2)
 
-        self._call(["shutdown.exe", "/r /f /t 5"])
-        Params.setOverride('global', 'dut_ip', self.original_dut_ip)
-        time.sleep(20)
+            logging.info("Imaging...")
 
-        # Poll for simple remote to determine is DUT setup is complete
-        self._wait_for_dut_comm()
+            self._call(["shutdown.exe", "/r /f /t 5"])
+            Params.setOverride('global', 'dut_ip', self.original_dut_ip)
+            time.sleep(20)
 
-        # At this point dut_setup has been run, but the image's PostDeploy script is running after
-        # and may do a reboot, so wait and check for dut comm again.
-        logging.info(f"Waiting {self.post_deploy_delay}s for any PostDeploy script to complete...")
-        time.sleep(self.post_deploy_delay)
-        self._wait_for_dut_comm()
+            # Poll for simple remote to determine is DUT setup is complete
+            self._wait_for_dut_comm()
 
-        # Wait for first run items to complete
-        logging.info("Waiting 60s for any first-run items to complete...")
-        time.sleep(60)
+            # At this point dut_setup has been run, but the image's PostDeploy script is running after
+            # and may do a reboot, so wait and check for dut comm again.
+            logging.info(f"Waiting {self.post_deploy_delay}s for any PostDeploy script to complete...")
+            time.sleep(self.post_deploy_delay)
+            self._wait_for_dut_comm()
 
-        # Create hobl_data folder, if it doesn't already exist
-        self._remote_make_dir(self.dut_data_path, False)
+            # Wait for first run items to complete
+            logging.info("Waiting 60s for any first-run items to complete...")
+            time.sleep(60)
 
-        # # Restart to prevent IO blue screen
-        logging.info("Restarting to clear out any first-run items left open...")       
-        self._call(["shutdown.exe", "/r /f /t 5"])
-        # time.sleep(60)
+            # Create hobl_data folder, if it doesn't already exist
+            self._remote_make_dir(self.dut_data_path, False)
 
-        # Uploading OS Install Resources to hobl_bin
-        # self._upload("scenarios\\os_install_resources", self.dut_exec_path)
+            # # Restart to prevent IO blue screen
+            logging.info("Restarting to clear out any first-run items left open...")
+            self._call(["shutdown.exe", "/r /f /t 5"])
 
-        # Remove WinPE drive setup
-        # self._call(["powershell.exe", "-ExecutionPolicy Unrestricted " + delete_image])
-               
-        # logging.info("Restarting after partition resize.")       
-        # self._call(["shutdown.exe", "/r /f /t 5"])
-
-        # Poll for simple remote to determine is DUT setup is complete
-        time.sleep(15)
-        self._wait_for_dut_comm()
-        logging.info("Delaying to allow for RPC Connection")
-        time.sleep(120)
+            # Poll for simple remote to determine is DUT setup is complete
+            time.sleep(15)
+            self._wait_for_dut_comm()
+            logging.info("Delaying to allow for RPC Connection")
+            time.sleep(120)
+        else:
+            logging.info("verify_only=1, skipping boot image copy/imaging flow and running post-install steps only.")
+            self._wait_for_dut_comm()
 
         # Uploading OS Install Resources to hobl_bin
         self._upload("scenarios\\windows\\os_install\\os_install_resources", self.dut_exec_path)
+
+        # Upload updated VerifyVersions package from utilities.
+        self._upload("utilities\\proprietary\\VerifyVersions", self.dut_exec_path)
+        verify_versions_path = self.dut_exec_path + "\\VerifyVersions"
 
         # copy d:\bin\postdeploy\drivers folder to support folder if c:\support doesn't already exist
         if not self._check_remote_file_exists(r"c:\support"):
@@ -228,7 +228,7 @@ class OsInstall(core.app_scenario.Scenario):
                 logging.debug(r"Copying d:\support folder to c:\support folder.")
                 self._call(["cmd.exe", r"/c robocopy /E d:\support c:\support /np /nfl /ndl"], expected_exit_code="")
             else:
-                logging.error("Can't find drivers folder for version verification.")
+                logging.info("Can't find drivers folder on D:\ for version verification.")
 
         # Rename BOOTME partition to TOAST
         bootme_letter = self._call(["powershell.exe", '(get-volume -FriendlyName """BOOTME""" -erroraction ignore | Where-Object {$_.DriveType -eq """Fixed"""}).DriveLetter'], expected_exit_code="")
@@ -238,14 +238,23 @@ class OsInstall(core.app_scenario.Scenario):
         else:
             logging.info("BOOTME drive not found")
 
-        # Run VerifyOemDrivers.cmd
+        # Build support folder and run VerifyOemDrivers from updated VerifyVersions.
+        logging.info("Preparing support folder for verification...")
+        create_support_cmd = (
+            f'-NoProfile -ExecutionPolicy RemoteSigned -Command "& \'{verify_versions_path}\\Create-SupportFolder.ps1\'"'
+        )
+        self._call([
+            "powershell.exe",
+            create_support_cmd
+        ], expected_exit_code="")
+
         logging.info("Verifying drivers...")
-        self._call(["cmd.exe", "/c " + self.dut_exec_path + "\\os_install_resources\\VerifyVersions\\VerifyOemDrivers.cmd"], expected_exit_code="")
+        self._call(["cmd.exe", "/c " + verify_versions_path + "\\VerifyOemDrivers.cmd"], expected_exit_code="")
         exit_code = Params.getCalculated('last_call_exit_code')
         logging.debug("Driver verify got exit code " + str(exit_code))
         # Copy results back to host
-        rpc.download(self.dut_ip, self.rpc_port, self.dut_exec_path + "\\os_install_resources\\VerifyVersions\\*.html", self.result_dir)
-        rpc.download(self.dut_ip, self.rpc_port, self.dut_exec_path + "\\os_install_resources\\VerifyVersions\\*.xml", self.result_dir)
+        rpc.download(self.dut_ip, self.rpc_port, verify_versions_path + "\\*.html", self.result_dir)
+        rpc.download(self.dut_ip, self.rpc_port, verify_versions_path + "\\*.xml", self.result_dir)
 
         if exit_code == "1":
             logging.error ("Verification of drivers failed, check results_drivers1.html")
@@ -253,8 +262,10 @@ class OsInstall(core.app_scenario.Scenario):
         else:
             logging.info ("Verification of drivers PASSed")
 
-        if self.post_install_cleanup:
+        if self.post_install_cleanup and not self.verify_only:
             self.cleanup_drive_after_successful_install()
+        elif self.post_install_cleanup and self.verify_only:
+            logging.info("Skipping post-install cleanup because verify_only=1.")
 
 
     def cleanup_drive_after_successful_install(self):

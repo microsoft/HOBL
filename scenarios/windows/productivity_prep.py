@@ -773,24 +773,58 @@ class ProductivityPrep(core.app_scenario.Scenario):
         time.sleep(0.5)
         ActionChains(self.onenote_driver).send_keys("i").perform()
 
-        # Check for no open notebooks
+        # Check whether a notebook is already open.
+        # The Pages list element exists even when no notebook is open (just empty),
+        # so we must confirm it contains at least one ListItem.
+        notebook_open = False
+        logging.info("Checking to make sure a notebook is open")
         try:
-            logging.info("Checking to make sure a notebook is open")
-            self.desktop.find_element_by_accessibility_id('903749698').click()
-            time.sleep(4)
-            logging.info("Opening notebook.")
-            # down - Open
-            ActionChains(self.onenote_driver).send_keys(Keys.DOWN).perform()
-            # pause 5s for list of notebooks to populate
-            time.sleep(5)
-            # right, down, down - select top notebook
-            ActionChains(self.onenote_driver).send_keys(Keys.RIGHT).send_keys(Keys.DOWN).send_keys(Keys.DOWN).perform()
-            # enter to open
-            ActionChains(self.onenote_driver).send_keys(Keys.ENTER).perform()
-            # wait 10s for notebook to load
-            time.sleep(25)
+            pages_list = self.onenote_driver.find_element_by_xpath('//List[@Name="Pages"]')
+            pages_list.find_element_by_xpath('.//ListItem')
+            notebook_open = True
+            logging.info("Notebook is already open.")
         except:
-            pass
+            logging.info("Pages list is empty or not found - no notebook open.")
+
+        if not notebook_open:
+            opened_prompt = False
+            # Try selectors in priority order.
+            # "Click here" is the hyperlink OneNote shows in its "no open notebooks" state.
+            for selector_type, selector in [
+                ("onenote_xpath", '//*[contains(@Name, "Click here")]'),
+                ("accessibility_id", "903749698"),  # Legacy UIA id (pre-2026 OneNote).
+                ("name", "Open Notebook"),
+                ("name", "Open notebook"),
+                ("name", "Open"),
+            ]:
+                try:
+                    if selector_type == "onenote_xpath":
+                        self.onenote_driver.find_element_by_xpath(selector).click()
+                    elif selector_type == "accessibility_id":
+                        self.desktop.find_element_by_accessibility_id(selector).click()
+                    else:
+                        self.desktop.find_element_by_name(selector).click()
+                    opened_prompt = True
+                    logging.info("Opened OneNote notebook prompt using %s: %s", selector_type, selector)
+                    break
+                except:
+                    pass
+
+            if opened_prompt:
+                time.sleep(4)
+                logging.info("Opening notebook.")
+                # down - Open
+                ActionChains(self.onenote_driver).send_keys(Keys.DOWN).perform()
+                # pause 5s for list of notebooks to populate
+                time.sleep(5)
+                # right, down, down - select top notebook
+                ActionChains(self.onenote_driver).send_keys(Keys.RIGHT).send_keys(Keys.DOWN).send_keys(Keys.DOWN).perform()
+                # enter to open
+                ActionChains(self.onenote_driver).send_keys(Keys.ENTER).perform()
+                # wait 10s for notebook to load
+                time.sleep(25)
+            else:
+                logging.info("Could not find open-notebook prompt; continuing.")
         logging.info("Notebook is open")
 
         # Force sync

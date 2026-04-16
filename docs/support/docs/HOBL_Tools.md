@@ -1,15 +1,5 @@
 # HOBL Tools
 
-## adaptive_brightness
-
-Enable or disable adaptive brightness (Change brightness automatically when lighting changes). Returns to last mode on test end.
-Uses powercfg to set the ADAPTBRIGHT setting under sub_video for both AC and DC power schemes.
-
-
-<u>Parameters:</u>
-
-`adaptive_brightness_enable` - Enable or disable adaptive brightness (1=enable, 0=disable). **Default:** `0`  **Options:** `0, 1`
-
 ## audio_volume
 
 Set specified audio volume.
@@ -73,7 +63,7 @@ Periodically start ETL traces.
 
 <u>Parameters:</u>
 
-`providers` - ETL provider files to use **Default:** `power_light.wprp`  **Options:** `abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, GTP_CPI_BAM_Defender.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`
+`providers` - ETL provider files to use **Default:** `power_light.wprp`  **Options:** `abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`
 
 `trace_duration` - The duration of the trace in seconds **Default:** `300` 
 
@@ -97,6 +87,47 @@ Deprecated.
 ## detect_devices
 
 Deprecated.
+
+## display
+
+Combined display settings tool. Configures one or more display properties
+before a test. Initial values are saved to the DUT registry on first use
+and only restored when display_restore=1 is set.
+
+Only parameters that are explicitly provided are processed — empty parameters
+are ignored, so the tool can be called for any subset of operations.
+
+Parameters:
+  als_adaptive_brightness       0/1 — adaptive brightness (ALS) on/off (Windows only)
+  hdr                           0/1 — HDR on/off (Windows only)
+  hdr_auto                      0/1 — Auto HDR on/off (Windows only)
+  refresh_rate                  60/120/dynamic — display refresh rate (Windows only)
+  content_adaptive_brightness   Off/Always/On battery only — CABC mode (Windows only)
+  adaptive_color                0/1 — adaptive color management on/off (Windows only)
+  brightness                    brightness value (e.g. 65, 65%, 150nits)
+  nits_map                      nits-to-slider mapping (e.g. "100nits:50% 150nits:65%")
+  display_restore               1 — restore all saved initial values after test
+
+
+<u>Parameters:</u>
+
+`als_adaptive_brightness` - Adaptive brightness (1=on, 0=off). **Default:** ``  **Options:** `0, 1`
+
+`adaptive_color` - Adaptive color (1=on, 0=off). **Default:** ``  **Options:** `0, 1`
+
+`content_adaptive_brightness` - CABC: Off, Always, or OnBatteryOnly. **Default:** ``  **Options:** `Off, Always, OnBatteryOnly`
+
+`hdr` - HDR (1=on, 0=off). **Default:** ``  **Options:** `0, 1`
+
+`hdr_auto` - Auto HDR (1=on, 0=off). **Default:** ``  **Options:** `0, 1`
+
+`refresh_rate` - Refresh rate: 60, 120, or dynamic. **Default:** ``  **Options:** `60, 120, dynamic`
+
+`brightness` - Brightness slider percentage or desired nits (e.g. 65, 65%, 150nits).  If you specify nits, the nits_map parameter will be used to determine the corresponding slider value. **Default:** `150nits` 
+
+`nits_map` - Nits-to-slider mapping.  Use luminance meter to determine for specific device. **Default:** `100nits:50% 150nits:65%` 
+
+`display_restore` - Restore all display settings to saved initial values (1=restore). **Default:** ``  **Options:** `0, 1`
 
 ## display_brightness
 
@@ -125,25 +156,11 @@ Collect ETL trace from specified [providers].
 
 <u>Parameters:</u>
 
-`providers` - ETL provider files to use **Default:** ``  **Options:** `abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, GTP_CPI_BAM_Defender.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`
+`providers` - ETL provider files to use **Default:** ``  **Options:** `abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`
 
 ## frame_data
 
 Collect and parse framerate and timing data.  Does not have a significant impact on power consumption.
-
-## hdr
-
-Set HDR on/off with optional Auto HDR control. Returns to last mode on test end.
-Attempts full HDR first (MonitorDataStore + Win+Alt+B toggle).
-Falls back to vHDR (VideoSettings registry) if no HDR-capable monitors found.
-Auto HDR is controlled via DirectXUserGlobalSettings registry.
-
-
-<u>Parameters:</u>
-
-`hdr_enable` - Enable HDR (1/0). **Default:** `1`  **Options:** `1, 0`
-
-`hdr_autohdr` - Enable Auto HDR (1/0). Only applies when hdr_enable=1. **Default:** `0`  **Options:** `1, 0`
 
 ## kill_teams
 
@@ -258,7 +275,7 @@ Collects and processes UTC Perftrack scenarios
 
 <u>Parameters:</u>
 
-`provider` - WPRP file to use for UTC Perftrack traces. **Default:** `perf_utc.wprp`  **Options:** `abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, GTP_CPI_BAM_Defender.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`
+`provider` - WPRP file to use for UTC Perftrack traces. **Default:** `perf_utc.wprp`  **Options:** `abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`
 
 ## phm
 
@@ -386,21 +403,6 @@ Switch to specified power mode (best power efficiency, recommended/balanced, bet
 
 Randomly fail a test, for devolpment/debug purposes.
 
-## refresh_rate
-
-Set display refresh rate. Returns to last mode on test end.
-Controls settings under System -> Display -> Advanced display.
-Uses WinAppDriver UI automation for both refresh rate and DRR toggle.
-
-Values: 60, 120, dynamic
-  - 60 or 120: sets the fixed refresh rate and turns DRR off
-  - dynamic: sets refresh rate to 120 Hz then enables Dynamic Refresh Rate
-
-
-<u>Parameters:</u>
-
-`refresh_rate` - Target refresh rate: 60, 120, or dynamic. Leave empty to not change. **Default:** `120`  **Options:** `60, 120, dynamic`
-
 ## run_report
 
 Generate a report for the test run.
@@ -460,6 +462,16 @@ Run Intel's SOCWatch tool.
 `delay` -  **Default:** `0` 
 
 `additional_args` -  **Default:** `-f cpu-pkgc-dbg -f pcie -f platform-ltr -f panel-srr -f cpu-cstate -f cpu-pstate -f gfx-cstate -f gfx-pstate -f acpi-dstate -f sstate -f ddr-bw -f timer-resolution -f cpu-gpu-concurrency -f pch-slps0 -f pcie-lpm -f hw-gfx-pstate -f ddr-bw -f pch-ip-active-all -f pch-ip-status -f sys -f sa-freq -f pch-all` 
+
+## stress_utc
+
+Collects and processes UTC Perftrack scenarios for stress workloads.
+Outputs a CSV with PT number instead of Scenario name.
+
+
+<u>Parameters:</u>
+
+`provider` - WPRP file to use for UTC Perftrack traces. **Default:** `perf_utc.wprp`  **Options:** `abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`
 
 ## study_report
 

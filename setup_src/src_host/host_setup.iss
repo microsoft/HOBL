@@ -34,6 +34,8 @@ Name: "UI"; Description: "User interface for executing, monitoring, and analyzin
 [Run]
 Filename: "{win}\syswow64\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "set-executionpolicy unrestricted -Force"; Flags: shellexec waituntilterminated
 Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "set-executionpolicy unrestricted -Force"; Flags: shellexec waituntilterminated
+Filename: "{win}\syswow64\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path {src}\setup_src\src_host\host_setup.ps1"; Flags: shellexec waituntilterminated
+Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path {src}\setup_src\src_host\host_setup.ps1"; Flags: shellexec waituntilterminated
 Filename: "{win}\system32\reg.exe"; Parameters: "/?"; StatusMsg: "Running installation. Please wait."; AfterInstall: ExecuteRealProgram
 
 [Code]

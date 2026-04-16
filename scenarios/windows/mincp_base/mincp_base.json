@@ -616,6 +616,15 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
+                "id": "W4ESYUL",
+                "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
                 "id": "1A4W5AL",
                 "include_path": "scenarios\\windows\\_library\\web\\web_setup",
                 "params": [
@@ -816,37 +825,6 @@
                 "enabled": true,
                 "id": "MCOBEN",
                 "type": "End If"
-            },
-            {
-                "children": [
-                    {
-                        "children": [],
-                        "delay": "0",
-                        "description": "",
-                        "enabled": true,
-                        "id": "W4ESYUL",
-                        "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
-                        "type": "Include"
-                    }
-                ],
-                "description": "Best-effort search_taskbar",
-                "enabled": true,
-                "id": "W4ESYUT",
-                "type": "Try"
-            },
-            {
-                "children": [],
-                "description": "Ignore search_taskbar failure",
-                "enabled": true,
-                "id": "W4ESYUE",
-                "type": "Except"
-            },
-            {
-                "children": [],
-                "description": "",
-                "enabled": true,
-                "id": "W4ESYUX",
-                "type": "End Try"
             },
             {
                 "children": [
@@ -1063,6 +1041,37 @@
                 "description": "",
                 "enabled": true,
                 "id": "1KPST0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "W4ESYUL",
+                        "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
+                        "type": "Include"
+                    }
+                ],
+                "description": "Best-effort search_taskbar",
+                "enabled": false,
+                "id": "W4ESYUT",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore search_taskbar failure",
+                "enabled": false,
+                "id": "W4ESYUE",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "W4ESYUX",
                 "type": "End Try"
             },
             {

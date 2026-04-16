@@ -117,6 +117,7 @@ class Scenario(unittest.TestCase):
         self.typing_delay = Params.get('global', 'typing_delay')
         self.dut_scaling_override = Params.get('global', 'dut_scaling_override')
         self.dut_coord_scaler = float(Params.get('global', 'dut_coord_scaler'))
+        self.dashboard_url = Params.get('global', 'dashboard_url')
 
         self.web_replay_run = Params.get('global', 'web_replay_run')
         self.web_replay_action = Params.get('global', 'web_replay_action')
@@ -127,6 +128,9 @@ class Scenario(unittest.TestCase):
         self.web_replay_http_proxy_port = Params.get('global', 'web_replay_http_proxy_port')
         self.web_replay_excludes_list = Params.get('global', 'web_replay_excludes_list')
         self.web_replay_ip = Params.get('global', 'web_replay_ip')
+
+        # Output full hobl command to log file
+        logging.debug("Hobl Command: " + " ".join(sys.argv))
 
         if self.platform.lower() == "macos":
             # On MacOS, 300ms tends to be a long press, so we reduce the default click time.
@@ -213,6 +217,10 @@ class Scenario(unittest.TestCase):
             # Store the resolved IP in the Params object
             Params.setCalculated("dut_resolved_ip", self.dut_resolved_ip)
 
+        # Checking for local execution and running from web ui. If so then we want to kill web ui.
+        if self.dut_ip == "127.0.0.1" and self.dashboard_url != '':
+            self._kill("msedge.exe")
+            
         # Set up dut_exec_path and dut_data_path.  Doing it before tools initialized in case they need it.
         if Params.get('global', 'local_execution') == '1':
             self.dut_exec_path = "C:\\hobl_bin"
@@ -451,7 +459,7 @@ class Scenario(unittest.TestCase):
         if (Params.get('global', 'module_name') != ""):
             test_name = Params.get('global', 'module_name')
 
-        self.dashboard_url = Params.get('global', 'dashboard_url')
+        
         url = ""
         if self.dashboard_url != '':
             url = urlunparse(
@@ -567,6 +575,12 @@ class Scenario(unittest.TestCase):
             # Cancel any existing traces first.
             self._call(
                 ["cmd.exe", "/c wpr.exe -cancel > null 2>&1"], expected_exit_code="")
+            
+            # Getting built in providers to support that as well when calling for etl providers
+            output = self._call(["cmd.exe", "/c wpr.exe -profiles"], expected_exit_code="")
+            lines = output.strip().split('\n')
+            built_in_profiles = [line.split()[0].lower() for line in lines[2:] if line.strip()]
+            
 
             provider_list = self.trace_providers.split()
             provider_list = list(set(provider_list)) #remove any duplicate wprp files
@@ -574,6 +588,12 @@ class Scenario(unittest.TestCase):
 
             for profile in provider_list:
                 try:
+                    # Checking if provider provided was a built in one. 
+                    if profile.lower() in built_in_profiles:
+                        logging.debug("Profile " + profile + " is a built in profile, no need to upload.")
+                        wpr_command = wpr_command + " -start " + profile
+                        continue
+
                     logging.debug("Attempting to move " + profile)
                     self._upload(self.resolve("providers\\" + profile), self.dut_exec_path)
 
@@ -3569,7 +3589,7 @@ class Scenario(unittest.TestCase):
 
     def _check_local_exec_reboot(self):
         if self.dut_ip == "127.0.0.1" and self.platform.lower() == "windows":
-            Params.setCalculated("local_exec_reboot", "1")
+            Params.setCalculated("local_execution_reboot", "1")
             dashboard_url = Params.get('global', 'dashboard_url')
 
             if dashboard_url != "":

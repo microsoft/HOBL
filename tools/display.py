@@ -40,8 +40,8 @@ class Tool(Scenario):
     Params.setDefault(module, 'hdr', '', desc="HDR (1=on, 0=off).", valOptions=["0", "1"])
     Params.setDefault(module, 'hdr_auto', '', desc="Auto HDR (1=on, 0=off).", valOptions=["0", "1"])
     Params.setDefault(module, 'refresh_rate', '', desc="Refresh rate: 60, 120, or dynamic.", valOptions=["60", "120", "dynamic"])
-    Params.setDefault(module, 'brightness', '', desc="Brightness (e.g. 65, 65%, 150nits).")
-    Params.setDefault(module, 'nits_map', '100nits:50% 150nits:65%', desc="Nits-to-slider mapping.")
+    Params.setDefault(module, 'brightness', '150nits', desc="Brightness slider percentage or desired nits (e.g. 65, 65%, 150nits).  If you specify nits, the nits_map parameter will be used to determine the corresponding slider value.")
+    Params.setDefault(module, 'nits_map', '100nits:50% 150nits:65%', desc="Nits-to-slider mapping.  Use luminance meter to determine for specific device.")
     Params.setDefault(module, 'display_restore', '', desc="Restore all display settings to saved initial values (1=restore).", valOptions=["0", "1"])
 
     # HOBL registry key for persisting initial state (lives on the DUT)
@@ -135,8 +135,7 @@ class Tool(Scenario):
     # Brightness — powercfg
     # =========================================================================
 
-    def _init_brightness(self, brightness_str):
-        nits_map_str = Params.get(self.module, 'nits_map')
+    def _init_brightness(self, brightness_str, nits_map_str):
         platform = Params.get('global', 'platform')
 
         nits_table = {}
@@ -887,10 +886,11 @@ class Tool(Scenario):
         cabc = Params.get(self.module, 'content_adaptive_brightness').strip()
         acm = Params.get(self.module, 'adaptive_color').strip()
         brightness = Params.get(self.module, 'brightness').strip()
+        nits_map = Params.get(self.module, 'nits_map').strip()
 
         # Brightness (cross-platform)
-        if brightness:
-            self._init_brightness(brightness)
+        if brightness or nits_map:
+            self._init_brightness(brightness, nits_map)
 
         # Windows-only features
         if als:

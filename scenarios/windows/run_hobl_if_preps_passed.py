@@ -39,15 +39,6 @@ class RunAblIfPrepsPassed(core.app_scenario.Scenario):
         assert_list = ""
         assert_list += self.checkPrepStatus(prep_list)
 
-        # for scenario in ["abl", "halo2", "netflix", "youtube"]:
-        #     training_root, training_folder = self._find_latest_training_folder(scenario)
-        #     if training_folder == "":
-        #         assert_list += scenario + "_training folder is missing on the Host.\n"
-        #     local_training = training_root + os.sep + training_folder
-        #     for files in os.listdir(local_training):
-        #         if fnmatch.fnmatch(files, '.FAIL'):
-        #             assert_list  += "Most recent " + scenario + "_training Failed.\n"
-
         if assert_list != "":
             self._assert(assert_list)
         else:

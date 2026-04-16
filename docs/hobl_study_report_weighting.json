@@ -24,7 +24,6 @@
                             "scenarios":{
                                 "minecraft": 0,
                                 "lvp": 0,
-                                "halo2": 0,
                                 "netflix": 66,
                                 "youtube": 34
                             }
@@ -51,20 +50,17 @@
     },
     "score card headers":{
         "Modern Standby Floor (Wi-Fi Disconnected)": "cs_floor",
-        "Local Video Playback (Airplane Mode)": "lvp",
+        "ABL Standby": "abl_standby",
+        "Local Video Playback": "lvp",
         "Idle Desktop": "idle_desktop",
         "ABL Active":  "abl_active",
-        "ABL Standby": "abl_standby",
         "Idle Applications": "abl_active.idle",
         "Productivity": "abl_active.prod",
-        "Web Browsing (EdgeChromium)": "abl_active.web",
+        "Web Browsing (Edge)": "abl_active.web",
         "Teams2 Video Conference":  "teams2_3x3_video",
         "Teams2 Audio Call": "teams2_1on1_audio",
         "Teams2 Idle": "teams2_idle",
-        "Halo 2 Video (Movies & TV)": "halo2", 
-        "Netflix Full Screen (EdgeChromium)": "netflix", 
-        "YouTube Default View (EdgeChromium)": "youtube", 
-        "Minecraft": "minecraft",
-        "Hibernate": "hibernate"
+        "Netflix Full Screen (Edge)": "netflix", 
+        "YouTube Default View (Edge)": "youtube"
     }
 }
