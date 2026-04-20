@@ -53,6 +53,7 @@ class Tool(Scenario):
             self._call(["cmd.exe", "/C powercfg.exe /BATTERYREPORT /DURATION 5 /OUTPUT " + self.scenario.dut_data_path + battery_file_xml], expected_exit_code="", fail_on_exception=False)
             if self.platform.lower() != "wcos":
                 self._call(["cmd.exe", "/C powercfg.exe /BATTERYREPORT /DURATION 5 /OUTPUT " + self.scenario.dut_data_path + battery_file_html], expected_exit_code="", fail_on_exception=False)
+        self._call(["cmd.exe", "/C powercfg.exe /SRUMUTIL /OUTPUT " + self.scenario.dut_data_path + "\\srumutil.csv"], expected_exit_code="", fail_on_exception=False)
 
         # if self.platform.lower() == "wcos":
         #     self._copy_data_from_remote(self.scenario.result_dir)

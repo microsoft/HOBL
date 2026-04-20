@@ -68,6 +68,7 @@
               <th>Rollback</th>
               <th>Expected Driver</th>
               <th>Installed Driver</th>
+              <th>Signing Type</th>
             </tr>
 
             <xsl:for-each select="Results/Result">
@@ -320,6 +321,34 @@
                         </td>
                       </xsl:otherwise>
                     </xsl:choose>
+
+                    <xsl:choose>
+                      <xsl:when test="not (SigAlgo)">
+                        <td bgcolor="#99CCCC" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:when>
+                      <xsl:when test="SigAlgo = 'Pass'">
+                        <td bgcolor="#7CFC00" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:when>
+                      <xsl:when test="(SigAlgo = 'Fail SHA0') or (SigAlgo = 'Fail SHA1')">
+                        <td bgcolor="#FF0000" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:when>
+                      <xsl:when test="SigAlgo = ''">
+                        <td bgcolor="#99CCCC" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <td bgcolor="#FF0000" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </tr>
                 </xsl:when>
               </xsl:choose>
@@ -339,6 +368,7 @@
               <th>Match Status</th>
               <th>Expected Driver</th>
               <th>Installed Driver</th>
+              <th>Signing Type</th>
             </tr>
 
             <xsl:for-each select="Results/Result">
@@ -522,6 +552,35 @@
                         </td>
                       </xsl:otherwise>
                     </xsl:choose>
+
+                    <xsl:choose>
+                      <xsl:when test="not (SigAlgo)">
+                        <td bgcolor="#99CCCC" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:when>
+                      <xsl:when test="SigAlgo = 'Pass'">
+                        <td bgcolor="#7CFC00" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:when>
+                      <xsl:when test="(SigAlgo = 'Fail SHA0') or (SigAlgo = 'Fail SHA1')">
+                        <td bgcolor="#FF0000" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:when>
+                      <xsl:when test="SigAlgo = ''">
+                        <td bgcolor="#99CCCC" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <td bgcolor="#FF0000" style="text-align:center;">
+                          <xsl:value-of select="SigAlgo" />
+                        </td>
+                      </xsl:otherwise>
+                    </xsl:choose>
+
                   </tr>
 
                 </xsl:when>
@@ -542,6 +601,7 @@
               <th>Match Status</th>
               <th>Expected Driver</th>
               <th>Installed Driver</th>
+              <th>Signing Type</th>
             </tr>
             <xsl:for-each select="Results/ExtensionDriver">
               <xsl:sort select="ExtensionExpectedPath" order="descending" />
@@ -637,6 +697,33 @@
                     </td>
                   </xsl:otherwise>
                 </xsl:choose>
+                <xsl:choose>
+                  <xsl:when test="not (SigAlgo)">
+                    <td bgcolor="#99CCCC" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:when>
+                  <xsl:when test="SigAlgo = 'Pass'">
+                    <td bgcolor="#7CFC00" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:when>
+                  <xsl:when test="(SigAlgo = 'Fail SHA0') or (SigAlgo = 'Fail SHA1')">
+                    <td bgcolor="#FF0000" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:when>
+                  <xsl:when test="SigAlgo = ''">
+                    <td bgcolor="#99CCCC" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <td bgcolor="#FF0000" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:otherwise>
+                </xsl:choose>
               </tr>
             </xsl:for-each>
           </table>
@@ -650,6 +737,7 @@
               <th>INFS NOT Installed on a Device</th>
               <th>Rollback</th>
               <th>Signed</th>
+              <th>Signing Type</th>
             </tr>
             <xsl:for-each select="Results/NotFound">
               <xsl:sort select="NotInstalled" order="descending" />
@@ -710,6 +798,34 @@
                   <xsl:otherwise>
                     <td bgcolor="Yellow" style="text-align:center;">
                       <xsl:value-of select="Signed" />
+                    </td>
+                  </xsl:otherwise>
+                </xsl:choose>
+
+                <xsl:choose>
+                  <xsl:when test="not (SigAlgo)">
+                    <td bgcolor="#99CCCC" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:when>
+                  <xsl:when test="SigAlgo = 'Pass'">
+                    <td bgcolor="#7CFC00" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:when>
+                  <xsl:when test="(SigAlgo = 'Fail SHA0') or (SigAlgo = 'Fail SHA1')">
+                    <td bgcolor="#FF0000" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:when>
+                  <xsl:when test="SigAlgo = ''">
+                    <td bgcolor="#99CCCC" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
+                    </td>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <td bgcolor="#FF0000" style="text-align:center;">
+                      <xsl:value-of select="SigAlgo" />
                     </td>
                   </xsl:otherwise>
                 </xsl:choose>

@@ -55,6 +55,7 @@ def main():
         "scenario_events.csv",
         "*_power_heavy.csv",
         "*_DAQ.csv",
+        "srumutil.csv",
         "*rails.csv"
     ]
 

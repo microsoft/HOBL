@@ -170,6 +170,19 @@ if [ "$PYTHON_VERSION" != "3.12.10" ]; then
 fi
 log "✓ Python version confirmed: $PYTHON_VERSION"
 
+# -------------------------------------------------------------------
+# Regenerate ConfigurationSchema.json files
+# -------------------------------------------------------------------
+# The Aspire repo validates that checked-in ConfigurationSchema.json files match
+# what the installed SDK generates. A plain build fails validation if they differ.
+# The Aspire CI runs with /p:UpdateConfigurationSchema=true to regenerate them
+# before validation. We do the same here during prep so that subsequent run
+# iterations (which use plain --build) pass cleanly.
+log "-- Regenerating ConfigurationSchema.json files"
+cd $BIN_DIR/aspire
+./build.sh --restore --build /p:UpdateConfigurationSchema=true
+check_status "ConfigurationSchema regeneration"
+
 log ""
 log "✓ All checks passed"
 log "-- net_aspire prep completed successfully"

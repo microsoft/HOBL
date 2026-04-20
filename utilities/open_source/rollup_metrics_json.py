@@ -60,6 +60,7 @@ def main():
         "phase_time.csv",
         "scenario_events.csv",
         "*_power_heavy.csv",
+        "srumutil.csv",
         "*_DAQ.csv"
     ]
 

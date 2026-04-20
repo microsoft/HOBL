@@ -14,7 +14,7 @@ from datetime import datetime
 class NetAspire(core.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
-    prep_version = "7"
+    prep_version = "8"
     resources = module + "_resources"
 
 
