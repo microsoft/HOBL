@@ -612,61 +612,548 @@
                 "type": "Delay"
             },
             {
-                "children": [],
-                "delay": "0",
-                "description": "",
+                "children": [
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM EXCEL.EXE /IM OUTLOOK.EXE /IM olk.exe /IM WINWORD.EXE /IM POWERPNT.EXE /IM ONENOTE.EXE /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Kill all Office apps. MANDATORY: PT_8804-8807/8991 only fire on a real process launch via DefaultAssoc. If apps are already running, file-association launches just focus existing windows and no PerfTrack scenario is emitted.",
+                        "enabled": true,
+                        "id": "PSECSMK0",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Settle after Office kill",
+                        "enabled": true,
+                        "id": "PSECSMK0D",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB01",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c explorer.exe \"c:\\abl_docs\\FamilyBudget.xlsx\" & exit /b 0",
+                        "delay": "0",
+                        "description": "Launch Excel via file association (fires DefaultAssoc.CreateAssociatedProcess for PT_8806)",
+                        "enabled": true,
+                        "id": "PSECSM02",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB02",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+                        "params": [
+                            {
+                                "name": "[phase_category]",
+                                "val_options": "",
+                                "value": "shell"
+                            },
+                            {
+                                "name": "[phase_name]",
+                                "val_options": "",
+                                "value": "office_boot_excel"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "12",
+                        "description": "Wait for Excel window",
+                        "enabled": true,
+                        "id": "PSECSM03",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /F /T /IM EXCEL.EXE > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close Excel",
+                        "enabled": true,
+                        "id": "PSECSM04",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /F /T /IM WINWORD.EXE > nul 2>&1 & taskkill /F /T /IM POWERPNT.EXE > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Pre-kill any leftover Word/PowerPoint before Word cold launch (PT_8805 only fires on real cold start)",
+                        "enabled": true,
+                        "id": "PSECSM04K",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "4",
+                        "description": "Settle before Word launch",
+                        "enabled": true,
+                        "id": "PSECSM04D",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB05",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c explorer.exe \"c:\\abl_docs\\test_long_doc.docx\" & exit /b 0",
+                        "delay": "0",
+                        "description": "Launch Word via file association (fires DefaultAssoc.CreateAssociatedProcess for PT_8805)",
+                        "enabled": true,
+                        "id": "PSECSM10",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB06",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+                        "params": [
+                            {
+                                "name": "[phase_category]",
+                                "val_options": "",
+                                "value": "shell"
+                            },
+                            {
+                                "name": "[phase_name]",
+                                "val_options": "",
+                                "value": "office_boot_word"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "14",
+                        "description": "Wait for Word window",
+                        "enabled": true,
+                        "id": "PSECSM11",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /F /T /IM WINWORD.EXE > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close Word",
+                        "enabled": true,
+                        "id": "PSECSM12",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /F /T /IM POWERPNT.EXE > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Pre-kill any leftover PowerPoint before PPT cold launch (user observed 2 PPT windows; ensures PT_8807 fires)",
+                        "enabled": true,
+                        "id": "PSECSM12K",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "4",
+                        "description": "Settle before PowerPoint launch",
+                        "enabled": true,
+                        "id": "PSECSM12D",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB07",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c explorer.exe \"c:\\abl_docs\\sample.pptx\" & exit /b 0",
+                        "delay": "0",
+                        "description": "Launch PowerPoint via file association (fires DefaultAssoc.CreateAssociatedProcess for PT_8807)",
+                        "enabled": true,
+                        "id": "PSECSM14",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB08",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+                        "params": [
+                            {
+                                "name": "[phase_category]",
+                                "val_options": "",
+                                "value": "shell"
+                            },
+                            {
+                                "name": "[phase_name]",
+                                "val_options": "",
+                                "value": "office_boot_powerpoint"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "15",
+                        "description": "Wait for PowerPoint window",
+                        "enabled": true,
+                        "id": "PSECSM15",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /F /T /IM POWERPNT.EXE > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close PowerPoint",
+                        "enabled": true,
+                        "id": "PSECSM16",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle before OneNote launch",
+                        "enabled": true,
+                        "id": "PSECSM16D",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB13",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Open Start Menu for OneNote (PT_8991 won't fire via onenote: URI - needs Start Menu type)",
+                        "enabled": true,
+                        "id": "PSECSM18A",
+                        "text": "\ue03d",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Launch OneNote from Start Menu (fires PT_8991 via Shell DefaultAssoc)",
+                        "enabled": true,
+                        "id": "PSECSM18",
+                        "text": "onenote\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB14",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+                        "params": [
+                            {
+                                "name": "[phase_category]",
+                                "val_options": "",
+                                "value": "shell"
+                            },
+                            {
+                                "name": "[phase_name]",
+                                "val_options": "",
+                                "value": "office_boot_onenote"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "12",
+                        "description": "Wait for OneNote cold boot",
+                        "enabled": true,
+                        "id": "PSECSM19",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM ONENOTE.EXE /IM onenoteim.exe /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close OneNote",
+                        "enabled": true,
+                        "id": "PSECSM20",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle before Outlook launch",
+                        "enabled": true,
+                        "id": "PSECSM20D",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB03",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Open Start Menu for Outlook (PT_8804 won't fire via outlook: URI - needs Start Menu type)",
+                        "enabled": true,
+                        "id": "PSECSM06A",
+                        "text": "\ue03d",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Launch Outlook from Start Menu (fires PT_8804 via Shell DefaultAssoc)",
+                        "enabled": true,
+                        "id": "PSECSM06",
+                        "text": "outlook\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "PSECPB04",
+                        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+                        "params": [
+                            {
+                                "name": "[phase_category]",
+                                "val_options": "",
+                                "value": "shell"
+                            },
+                            {
+                                "name": "[phase_name]",
+                                "val_options": "",
+                                "value": "office_boot_outlook"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "20",
+                        "description": "Wait for Outlook cold boot",
+                        "enabled": true,
+                        "id": "PSECSM07",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM OUTLOOK.EXE /IM olk.exe /F > nul 2>&1 & exit /b 0",
+                        "delay": "0",
+                        "description": "Close Outlook",
+                        "enabled": true,
+                        "id": "PSECSM08",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Settle before productivity file open",
+                        "enabled": true,
+                        "id": "PSECSM08D",
+                        "type": "Delay"
+                    }
+                ],
+                "description": "Best-effort Office Boot block (PT 8804-8807/8991)",
                 "enabled": true,
-                "id": "W4ESYUL",
-                "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
-                "type": "Include"
+                "id": "1OBT0T",
+                "type": "Try"
             },
             {
                 "children": [],
-                "delay": "0",
-                "description": "",
+                "description": "Ignore Office Boot block (PT 8804-8807/8991) failure",
                 "enabled": true,
-                "id": "1A4W5AL",
-                "include_path": "scenarios\\windows\\_library\\web\\web_setup",
-                "params": [
-                    {
-                        "name": "[disable_delay]",
-                        "val_options": "0,1",
-                        "value": "1"
-                    }
-                ],
-                "type": "Include"
+                "id": "1OBT0E",
+                "type": "Except"
             },
             {
                 "children": [],
-                "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1J443W1",
-                "include_path": "scenarios\\windows\\_library\\web\\web_run_mincp",
-                "params": [
+                "id": "1OBT0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
                     {
-                        "name": "[load_only]",
-                        "val_options": "0,1",
-                        "value": "0"
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "W4ESYUL",
+                        "include_path": "scenarios\\windows\\_library\\misc\\search_taskbar",
+                        "type": "Include"
                     }
                 ],
-                "type": "Include"
+                "description": "Best-effort search_taskbar",
+                "enabled": true,
+                "id": "1WTBT0T",
+                "type": "Try"
             },
             {
                 "children": [],
-                "delay": "0",
+                "description": "Ignore search_taskbar failure",
+                "enabled": true,
+                "id": "1WTBT0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
                 "description": "",
                 "enabled": true,
-                "id": "1JKUTR7",
-                "include_path": "scenarios\\windows\\_library\\web\\web_check",
-                "params": [
+                "id": "1WTBT0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
                     {
-                        "name": "[youtube_duration]",
-                        "val_options": "",
-                        "value": "90"
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1A4W5AL",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_setup",
+                        "params": [
+                            {
+                                "name": "[disable_delay]",
+                                "val_options": "0,1",
+                                "value": "1"
+                            }
+                        ],
+                        "type": "Include"
                     }
                 ],
-                "type": "Include"
+                "description": "Best-effort web_setup",
+                "enabled": true,
+                "id": "1WSUT0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore web_setup failure",
+                "enabled": true,
+                "id": "1WSUT0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1WSUT0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1J443W1",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_run_mincp",
+                        "params": [
+                            {
+                                "name": "[load_only]",
+                                "val_options": "0,1",
+                                "value": "0"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "Best-effort web_run_mincp (cascade of web sites - one site flake will not abort run)",
+                "enabled": true,
+                "id": "1WRMT0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore web_run_mincp (cascade of web sites - one site flake will not abort run) failure",
+                "enabled": true,
+                "id": "1WRMT0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1WRMT0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1JKUTR7",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_check",
+                        "params": [
+                            {
+                                "name": "[youtube_duration]",
+                                "val_options": "",
+                                "value": "90"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "Best-effort web_check",
+                "enabled": true,
+                "id": "1WCKT0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore web_check failure",
+                "enabled": true,
+                "id": "1WCKT0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1WCKT0X",
+                "type": "End Try"
             },
             {
                 "children": [
@@ -846,9 +1333,18 @@
                     },
                     {
                         "children": [],
+                        "command": "powershell -NoProfile -Command \"reg add 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' /v LaunchTo /t REG_DWORD /d 1 /f | Out-Null\"",
+                        "delay": "1",
+                        "description": "Force 'Open File Explorer to: Home' (LaunchTo=1) so PT_9475/10052 namespaceCLSID filter f874310e-b6b7-47dc-bc84-b9e6b38f5903 (Home) matches",
+                        "enabled": true,
+                        "id": "1KPFEHOME",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
                         "command": "powershell -NoProfile -Command \"(New-Object -ComObject Shell.Application).Windows() | ForEach-Object { $_.Quit() }\"",
                         "delay": "5",
-                        "description": "Close all File Explorer windows for fresh launch",
+                        "description": "Close all File Explorer windows so next launch is non-prelaunched (PT_9475/10052 filter isPrelaunchedWindow=false)",
                         "enabled": true,
                         "id": "1KPFEKILL",
                         "type": "Command"
@@ -856,19 +1352,123 @@
                     {
                         "children": [],
                         "delay": "0",
-                        "description": "Launch File Explorer from taskbar",
+                        "description": "Click pinned File Explorer icon on taskbar (enterprise_collab proven pattern: emits Microsoft-Windows-Shell-Launcher.AppLaunch with Location=3 + AppId=Microsoft.Windows.Explorer required by PT_9475/10052)",
                         "enabled": true,
-                        "id": "1KPFE0CF",
+                        "id": "1KPFE0K1",
                         "include_path": "scenarios\\windows\\_library\\misc\\click_file_explorer",
                         "type": "Include"
                     },
                     {
                         "children": [],
-                        "delay": "10",
-                        "description": "Wait for File Explorer XAML Home to fully render",
+                        "delay": "5",
+                        "description": "Wait for File Explorer to fully render (PT_9475 chain ends at XamlFolderView_ReportFirstItemRendered; PT_10052 ends at FirstViewLoadedOnWindowCreation)",
                         "enabled": true,
                         "id": "1KPFE0DY",
                         "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Wait after FE render before navigation",
+                        "enabled": true,
+                        "id": "1KPFE0DY2",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Navigate to Desktop via Ctrl+L (address bar focus)",
+                        "enabled": true,
+                        "id": "1KPFENAV1",
+                        "text": "\ue009l",
+                        "type": "Type",
+                        "typing_delay": "100"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Type Desktop path and press Enter (fires PT_9244 File Explorer Folder Navigation Performance + PT_9338 EIM2 navigation)",
+                        "enabled": true,
+                        "id": "1KPFENAV2",
+                        "text": "[userprofile]\\Desktop\ue007",
+                        "type": "Type",
+                        "typing_delay": "50"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Wait for Desktop folder to load",
+                        "enabled": true,
+                        "id": "1KPFENAV3",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0.5",
+                        "description": "Capture File Explorer content area for context-menu right-click region constraint",
+                        "enabled": true,
+                        "file_name": [
+                            "image_fe_content.png"
+                        ],
+                        "h": "0.800",
+                        "id": "1KPFECAP",
+                        "recapture": true,
+                        "type": "Capture",
+                        "w": "0.800",
+                        "x": "0.100",
+                        "y": "0.100"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1KPFECMTAG",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "ContextMenuOpen"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "capture_id": "1KPFECAP",
+                        "children": [],
+                        "delay": "2",
+                        "description": "Right click on test.txt in Desktop (fires PT_210 ContextMenu_MenuRendered + PT_9248 ContextMenu performance)",
+                        "enabled": true,
+                        "exception_on": "No match",
+                        "file_name": [
+                            "image_1J5C9RW.png"
+                        ],
+                        "id": "1J5C9RW",
+                        "match_threshold": "",
+                        "primary": false,
+                        "scale": "",
+                        "type": "Click",
+                        "x": "0.500",
+                        "y": "0.500"
+                    },
+                    {
+                        "children": [],
+                        "delay": "5",
+                        "description": "Wait for Context Menu to render",
+                        "enabled": true,
+                        "id": "1KPFECMWAIT",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Dismiss context menu via Escape",
+                        "enabled": true,
+                        "id": "1KPFECMESC",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "100"
                     },
                     {
                         "children": [],
@@ -879,9 +1479,17 @@
                         "text": "\ue00a\ue034",
                         "type": "Type",
                         "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Wait after close",
+                        "enabled": true,
+                        "id": "1KPFE0CLOSE",
+                        "type": "Delay"
                     }
                 ],
-                "description": "Best-effort File Explorer via taskbar click (perf_stress style)",
+                "description": "File Explorer Launch + Context Menu (lifted from enterprise_collab pattern: taskbar click for PT_9475/10052 Location=3, then Ctrl+L Desktop nav for PT_9244/9338, then right-click test.txt for PT_210/9248)",
                 "enabled": true,
                 "id": "1KPFE0T",
                 "type": "Try"
@@ -898,6 +1506,135 @@
                 "description": "",
                 "enabled": true,
                 "id": "1KPFE0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1KPED0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "BrowserLaunch"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /F /T /IM msedge.exe > nul 2>&1 & exit /b 0",
+                        "delay": "5",
+                        "description": "Cold-kill all Edge processes — PT_8998 BrowserLaunch + PT_9412 PageLoad require a true cold start (no warm renderer reuse)",
+                        "enabled": true,
+                        "id": "1KPEDKILL",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "powershell -NoProfile -Command \"Start-Process 'microsoft-edge:https://www.bing.com'\"",
+                        "delay": "1",
+                        "description": "Launch Edge via microsoft-edge: protocol handler (Start-Process invokes ShellExecute → Shell URL handler → AppLifeCycle.AppLaunch_UserClick + DefaultAssoc.CreateAssociatedProcess for msedge.exe — required for PT_8998; bing.com triggers PT_9412 page load). The microsoft-edge: protocol bypasses 'default browser' setting and always routes to Edge.",
+                        "enabled": true,
+                        "id": "1KPED0SE",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "15",
+                        "description": "Wait for Edge cold boot + bing.com first-paint (PT_8998 chain + PT_9412 NavStart→FirstContentfulPaint)",
+                        "enabled": true,
+                        "id": "1KPED0DY",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /F /T /IM msedge.exe > nul 2>&1 & exit /b 0",
+                        "delay": "1",
+                        "description": "Close Edge",
+                        "enabled": true,
+                        "id": "1KPED01",
+                        "type": "Command"
+                    }
+                ],
+                "description": "Best-effort Edge cold launch via http URL (Shell DefaultAssoc) for PT_8998 + PT_9412",
+                "enabled": true,
+                "id": "1KPED0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Edge launch failure",
+                "enabled": true,
+                "id": "1KPED0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1KPED0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1KPSL0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "SlowInputLatency"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='SilentlyContinue'; try { Start-Process notepad.exe; Start-Sleep -Seconds 2; $cores=[int]$env:NUMBER_OF_PROCESSORS; $jobs=1..$cores | ForEach-Object { Start-Job -ScriptBlock { $x=0.0; while($true){ $x = [Math]::Sqrt($x + [Math]::PI) * [Math]::Sin($x) } } }; Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing; $wsh = New-Object -ComObject WScript.Shell; $null = $wsh.AppActivate('Notepad'); $rand = New-Object System.Random; $end = (Get-Date).AddSeconds(15); while ((Get-Date) -lt $end) { try { [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($rand.Next(200,1400), $rand.Next(200,700)); $wsh.SendKeys('a') } catch {}; Start-Sleep -Milliseconds 25 }; $jobs | Stop-Job -ErrorAction SilentlyContinue; $jobs | Remove-Job -Force -ErrorAction SilentlyContinue; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue } catch {}; exit 0\" & exit /b 0",
+                        "delay": "2",
+                        "description": "Spawn N CPU-bound stress jobs (one per core) + jiggle mouse + SendKeys for 15s. Forces Win32k input dispatch to lag >200ms so PT_9159 (MouseLatencyDelay) and PT_9169 (KeyEventLatencyGreaterThan200ms) fire. Notepad is launched as keystroke sink so SendKeys has a focus target. All stress jobs + notepad are killed at end. Wrapped in cmd+try/exit-0 because Add-Type/AppActivate inside RDP-less DUT sessions can throw and propagate exit code 1, which previously aborted the entire scenario at run 253 (mincp_base.py line 45) before Settings/Snipping/Copilot/ActionCenter/TaskView/SnapAssist/AltTab/SettingsNav/FolderNav blocks could run.",
+                        "enabled": true,
+                        "id": "1KPSL01",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c powershell -NoProfile -Command \"Get-Job | Stop-Job -ErrorAction SilentlyContinue; Get-Job | Remove-Job -Force -ErrorAction SilentlyContinue; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue\" & exit /b 0",
+                        "delay": "1",
+                        "description": "Belt-and-suspenders cleanup: ensure no stress jobs or notepad survive the block (force exit 0 so any orphan errors don't abort the scenario)",
+                        "enabled": true,
+                        "id": "1KPSL0K",
+                        "type": "Command"
+                    }
+                ],
+                "description": "Best-effort Slow Input Latency stress for PT_9159 (mouse) + PT_9169 (keyboard)",
+                "enabled": true,
+                "id": "1KPSL0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Slow Input stress failure",
+                "enabled": true,
+                "id": "1KPSL0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1KPSL0X",
                 "type": "End Try"
             },
             {
@@ -964,9 +1701,47 @@
                         "text": "\ue00a\ue034",
                         "type": "Type",
                         "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Show Desktop (Win+D) before right-clicking - PT_9248 captures launch surface as metadata so we exercise multiple shell surfaces",
+                        "enabled": true,
+                        "id": "1KPCM0WD",
+                        "text": "\ue03dd",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Right-click on Desktop via Shift+F10 (additional PT_9248 hit on Desktop shell surface)",
+                        "enabled": true,
+                        "id": "1KPCM0DK",
+                        "text": "\ue008\ue03a",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "4",
+                        "description": "Wait for Desktop context menu to render",
+                        "enabled": true,
+                        "id": "1KPCM0DD",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Dismiss Desktop context menu via Escape",
+                        "enabled": true,
+                        "id": "1KPCM0DE",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
                     }
                 ],
-                "description": "Best-effort Context Menu launch (perf_stress style)",
+                "description": "Best-effort Context Menu launch on multiple shell surfaces - File Explorer + Desktop (PT_9248)",
                 "enabled": true,
                 "id": "1KPCM0T",
                 "type": "Try"
@@ -1095,7 +1870,7 @@
                     {
                         "children": [],
                         "delay": "1",
-                        "description": "Launch Snipping Tool overlay (Win+Shift+S)",
+                        "description": "Trigger Snipping Tool overlay via Win+Shift+S (fires PT_9971 Snipping Tool Overlay Launch Performance via ScreenSketch overlay)",
                         "enabled": true,
                         "id": "1KPSN0WS",
                         "text": "\ue03d\ue008s",
@@ -1105,20 +1880,29 @@
                     {
                         "children": [],
                         "delay": "5",
-                        "description": "Wait for Snipping Tool overlay to appear",
+                        "description": "Wait for Snipping overlay to render",
                         "enabled": true,
                         "id": "1KPSN0DY",
                         "type": "Delay"
                     },
                     {
                         "children": [],
-                        "delay": "2",
-                        "description": "Dismiss Snipping Tool overlay via Escape",
+                        "delay": "1",
+                        "description": "Dismiss Snipping overlay via Escape",
                         "enabled": true,
-                        "id": "1KPSN01",
+                        "id": "1KPSN0ES",
                         "text": "\ue00c",
                         "type": "Type",
                         "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /F /T /IM ScreenClippingHost.exe > nul 2>&1 & taskkill /F /T /IM SnippingTool.exe > nul 2>&1 & exit /b 0",
+                        "delay": "1",
+                        "description": "Close Snipping Tool / Screen Clipping host",
+                        "enabled": true,
+                        "id": "1KPSN01",
+                        "type": "Command"
                     }
                 ],
                 "description": "Best-effort Snipping Tool via Win+Shift+S (perf_stress style)",
@@ -1256,20 +2040,472 @@
                 "type": "End Try"
             },
             {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "19K59KV",
-                "include_path": "scenarios\\windows\\_library\\web\\web_close_tabs",
-                "params": [
+                "children": [
                     {
-                        "name": "[num_tabs_to_close]",
-                        "val_options": "",
-                        "value": "[web:tabs]"
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1PTAC0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "ActionCenter"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Action Center / Quick Settings (Win+A) - fires PT_9149 ControlCenter_Pane_Visible",
+                        "enabled": true,
+                        "id": "1PTAC0WA",
+                        "text": "\ue03da",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Wait for Action Center to render",
+                        "enabled": true,
+                        "id": "1PTAC0DY",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Dismiss Action Center via Esc",
+                        "enabled": true,
+                        "id": "1PTAC0ES",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
                     }
                 ],
-                "type": "Include"
+                "description": "Best-effort Action Center / Quick Settings (PT_9149)",
+                "enabled": true,
+                "id": "1PTAC0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Action Center failure",
+                "enabled": true,
+                "id": "1PTAC0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1PTAC0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1PTTV0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "TaskViewInvocation"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Task View (Win+Tab) - fires PT_9198 _TIP_ Task View Invocation",
+                        "enabled": true,
+                        "id": "1PTTV0WT",
+                        "text": "\ue03d\ue004",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "3",
+                        "description": "Wait for Task View",
+                        "enabled": true,
+                        "id": "1PTTV0DY",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Dismiss Task View via Esc",
+                        "enabled": true,
+                        "id": "1PTTV0ES",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    }
+                ],
+                "description": "Best-effort Task View (PT_9198)",
+                "enabled": true,
+                "id": "1PTTV0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Task View failure",
+                "enabled": true,
+                "id": "1PTTV0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1PTTV0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1PTSA0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "SnapAssistInvocation"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c start \"\" notepad.exe",
+                        "delay": "3",
+                        "description": "Launch Notepad as a foreground window so Snap Assist has something to snap",
+                        "enabled": true,
+                        "id": "1PTSA0NP",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Snap Notepad to the right (Win+Right) - fires PT_9199 _TIP_ XAML Snap Assist Invocation",
+                        "enabled": true,
+                        "id": "1PTSA0WR",
+                        "text": "\ue03d\ue014",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "4",
+                        "description": "Wait for Snap Assist overlay to render",
+                        "enabled": true,
+                        "id": "1PTSA0DY",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Dismiss Snap Assist via Esc",
+                        "enabled": true,
+                        "id": "1PTSA0ES",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM notepad.exe /F > nul 2>&1 & exit /b 0",
+                        "delay": "1",
+                        "description": "Close Notepad",
+                        "enabled": true,
+                        "id": "1PTSA01",
+                        "type": "Command"
+                    }
+                ],
+                "description": "Best-effort Snap Assist (PT_9199) - Win+Arrow on a foreground window",
+                "enabled": true,
+                "id": "1PTSA0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Snap Assist failure",
+                "enabled": true,
+                "id": "1PTSA0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1PTSA0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1PTAT0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "AltTabInvocation"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Open Alt+Tab switcher - fires PT_9201 _TIP_ XAML Alt_Tab Invocation",
+                        "enabled": true,
+                        "id": "1PTAT0AT",
+                        "text": "\ue00a\ue004",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Wait for Alt+Tab switcher",
+                        "enabled": true,
+                        "id": "1PTAT0DY",
+                        "type": "Delay"
+                    },
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "Dismiss Alt+Tab via Esc",
+                        "enabled": true,
+                        "id": "1PTAT0ES",
+                        "text": "\ue00c",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    }
+                ],
+                "description": "Best-effort Alt+Tab switcher (PT_9201)",
+                "enabled": true,
+                "id": "1PTAT0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Alt+Tab failure",
+                "enabled": true,
+                "id": "1PTAT0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1PTAT0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1PTSN0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "SettingsNavigation"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c start ms-settings:home",
+                        "delay": "5",
+                        "description": "Launch Settings to Home (PT_9207 Settings App Activation, PT_9160 Settings Perftrack)",
+                        "enabled": true,
+                        "id": "1PTSN0LH",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c start ms-settings:display",
+                        "delay": "4",
+                        "description": "Navigate to Display page (PT_1866 Settings Page Navigation, PT_9227 Desktop Settings Page Navigation)",
+                        "enabled": true,
+                        "id": "1PTSN0DI",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c start ms-settings:about",
+                        "delay": "4",
+                        "description": "Navigate to About page (more PT_1866/9227 hits)",
+                        "enabled": true,
+                        "id": "1PTSN0AB",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c taskkill /IM SystemSettings.exe /F > nul 2>&1 & exit /b 0",
+                        "delay": "1",
+                        "description": "Close Settings",
+                        "enabled": true,
+                        "id": "1PTSN01",
+                        "type": "Command"
+                    }
+                ],
+                "description": "Best-effort Settings page navigation (PT_1866/9160/9207/9227)",
+                "enabled": true,
+                "id": "1PTSN0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore Settings navigation failure",
+                "enabled": true,
+                "id": "1PTSN0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1PTSN0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1PTFN0E0",
+                        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                        "params": [
+                            {
+                                "name": "[event_tag]",
+                                "val_options": "",
+                                "value": "FileExplorerFolderNav"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c start \"\" explorer.exe \"%USERPROFILE%\"",
+                        "delay": "4",
+                        "description": "Open File Explorer at user home",
+                        "enabled": true,
+                        "id": "1PTFN0H",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c start \"\" explorer.exe \"%USERPROFILE%\\Documents\"",
+                        "delay": "3",
+                        "description": "Navigate to Documents (PT_9244 File Explorer Folder Navigation Performance)",
+                        "enabled": true,
+                        "id": "1PTFN0D",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "cmd /c start \"\" explorer.exe \"%USERPROFILE%\\Downloads\"",
+                        "delay": "3",
+                        "description": "Navigate to Downloads (more PT_9244 hits)",
+                        "enabled": true,
+                        "id": "1PTFN0L",
+                        "type": "Command"
+                    },
+                    {
+                        "children": [],
+                        "command": "powershell -NoProfile -Command \"(New-Object -ComObject Shell.Application).Windows() | ForEach-Object { $_.Quit() }\"",
+                        "delay": "2",
+                        "description": "Close all File Explorer windows",
+                        "enabled": true,
+                        "id": "1PTFN01",
+                        "type": "Command"
+                    }
+                ],
+                "description": "Best-effort File Explorer folder navigation (PT_9244)",
+                "enabled": true,
+                "id": "1PTFN0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore folder navigation failure",
+                "enabled": true,
+                "id": "1PTFN0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1PTFN0X",
+                "type": "End Try"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "19K59KV",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_close_tabs",
+                        "params": [
+                            {
+                                "name": "[num_tabs_to_close]",
+                                "val_options": "",
+                                "value": "[web:tabs]"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "Best-effort web_close_tabs",
+                "enabled": true,
+                "id": "1WCTT0T",
+                "type": "Try"
+            },
+            {
+                "children": [],
+                "description": "Ignore web_close_tabs failure",
+                "enabled": true,
+                "id": "1WCTT0E",
+                "type": "Except"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1WCTT0X",
+                "type": "End Try"
             },
             {
                 "children": [

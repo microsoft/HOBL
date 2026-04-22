@@ -270,5 +270,14 @@
         ],
         "id": "1E293XV",
         "type": "Code"
+    },
+    {
+        "children": [],
+        "command": "powershell -NoProfile -Command \"$shell = New-Object -ComObject WScript.Shell; Get-Process msedge -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle } | Sort-Object StartTime | Select-Object -First 1 | ForEach-Object { [void]$shell.AppActivate($_.Id) }\"",
+        "delay": "1",
+        "description": "Focus Edge after Copilot kill (deeper fix for run 059 abort: without this, screen state may not have Edge in foreground when web_run_mincp tries the next web_new_tab, causing capture/click failures)",
+        "enabled": true,
+        "id": "1E293XW",
+        "type": "Command"
     }
 ]

@@ -29,18 +29,11 @@
         "capture_id": "UEW62Y",
         "children": [],
         "delay": "2",
-        "description": "New tab",
+        "description": "Open new tab via CTRL+T (universal Edge shortcut; replaced image-click which was fragile after Copilot screen state changes and was the unwrapped failure that aborted run 059)",
         "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_UEW7NA.png",
-            "image_V8C29W.png",
-            "image_V8C2TA.png"
-        ],
         "id": "UEW7NA",
-        "primary": true,
-        "type": "Click",
-        "x": "0.820",
-        "y": "0.500"
+        "text": "\ue009t",
+        "type": "Type",
+        "typing_delay": "100"
     }
 ]

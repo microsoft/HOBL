@@ -95,12 +95,12 @@
         "id": "XIHW2EI",
         "text": "notepad",
         "type": "Type",
-        "typing_delay": "150"
+        "typing_delay": "200"
     },
     {
         "children": [],
-        "delay": "5",
-        "description": "Wait for search results to render",
+        "delay": "15",
+        "description": "Wait for search results + Bing top-result render (PT_2430/10010 TopResultRender fires when CortanaApp_LogMeasure 'Bing_QF_topResultRendered' is emitted; needs Bing server round-trip — 15s safe upper bound on slow enterprise wifi)",
         "enabled": true,
         "id": "3R2BXGD",
         "type": "Delay"
@@ -108,20 +108,29 @@
     {
         "children": [],
         "delay": "0",
-        "description": "Dismiss search",
+        "description": "Press Enter to select top result (fires PT_2430 Type_to_Search _TopResultRender_ via Microsoft.Windows.Shell.CortanaSearch.SearchBox_HandleSelectionChanged). Esc dismiss does NOT trigger PT_2430.",
         "enabled": true,
         "id": "EFUN894",
-        "text": "\ue00c",
+        "text": "\ue007",
         "type": "Type",
         "typing_delay": "100"
     },
     {
         "children": [],
         "delay": "3",
-        "description": "Settle after search dismiss",
+        "description": "Wait for top result to render / launch",
         "enabled": true,
         "id": "6LWHCE5",
         "type": "Delay"
+    },
+    {
+        "children": [],
+        "command": "cmd /c taskkill /IM notepad.exe /F > nul 2>&1 & exit /b 0",
+        "delay": "1",
+        "description": "Close notepad launched by top-result selection",
+        "enabled": true,
+        "id": "6LWHCE6",
+        "type": "Command"
     },
     {
         "children": [],

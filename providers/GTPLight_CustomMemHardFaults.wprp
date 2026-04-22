@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WindowsPerformanceRecorder Author="Custom Light Profile" Version="1">
+	<Profiles>
+		<SystemCollector Id="SystemCollector_Custom" Name="Custom_KernelLogger" HostGuestCorrelation="true">
+			<BufferSize Value="2048" />
+			<Buffers Value="40" />
+			<StackCaching BucketCount="256" CacheSize="3072" />
+		</SystemCollector>
+		<EventCollector Id="EventCollector_PerfTrack_UTC" Name="PerfTrack_UTC_EC" HostGuestCorrelation="true">
+			<BufferSize Value="1024" />
+			<Buffers Value="10" />
+		</EventCollector>
+		<SystemProvider Id="SystemProvider_Light">
+			<Keywords>
+				<Keyword Value="MemoryInfo" />
+				<Keyword Value="MemoryInfoWS" />
+				<Keyword Value="HardFaults" />
+				<Keyword Value="ProcessThread" />
+				<Keyword Value="Loader" />
+			</Keywords>
+		</SystemProvider>
+		<EventProvider Id="EventProvider_PerfTrack" Name="PerfTrack" NonPagedMemory="true" Level="4" />
+		<EventProvider Id="EventProvider_UTC" Name="UTC" NonPagedMemory="true" Level="4" />
+		<EventProvider Id="EP_Microsoft.Windows.Health.TestInProduction" Name="50109fbd-6d85-5815-731e-c907eca1607b" NonPagedMemory="true" Level="5" EventKey="true" />
+		<HardwareCounter Id="HardwareCounter_General_Mobile_+_CPI" Strict="false">
+			<Counters>
+				<Counter Value="TotalCycles" />
+				<Counter Value="InstructionRetired" />
+			</Counters>
+			<Events>
+				<Event Value="CSwitch" />
+			</Events>
+		</HardwareCounter>
+		<Profile Id="CustomMemHardFaults.Verbose.File" Name="CustomMemHardFaults" Description="Custom Mem/HardFaults with PerfTrack/UTC/TestInProduction" LoggingMode="File" DetailLevel="Verbose" Default="true">
+			<ProblemCategories>
+				<ProblemCategory Value="First Level Triage" />
+			</ProblemCategories>
+			<Collectors>
+				<SystemCollectorId Value="SystemCollector_Custom">
+					<SystemProviderId Value="SystemProvider_Light" />
+					<HardwareCounterId Value="HardwareCounter_General_Mobile_+_CPI" />
+				</SystemCollectorId>
+				<EventCollectorId Value="EventCollector_PerfTrack_UTC">
+					<EventProviders>
+						<EventProviderId Value="EventProvider_PerfTrack" />
+						<EventProviderId Value="EventProvider_UTC" />
+						<EventProviderId Value="EP_Microsoft.Windows.Health.TestInProduction" />
+					</EventProviders>
+				</EventCollectorId>
+			</Collectors>
+		</Profile>
+	</Profiles>
+	<TraceMergeProperties>
+		<TraceMergeProperty Id="TraceMerge_Default" Name="TraceMerge_Default">
+			<CustomEvents>
+				<CustomEvent Value="ImageId" />
+				<CustomEvent Value="BuildInfo" />
+				<CustomEvent Value="VolumeMapping" />
+				<CustomEvent Value="EventMetadata" />
+				<CustomEvent Value="PerfTrackMetadata" />
+				<CustomEvent Value="WinSAT" />
+			</CustomEvents>
+		</TraceMergeProperty>
+	</TraceMergeProperties>
+</WindowsPerformanceRecorder>

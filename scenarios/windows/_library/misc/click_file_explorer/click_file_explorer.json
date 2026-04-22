@@ -22,7 +22,7 @@
         "capture_id": "TYH95X",
         "children": [],
         "delay": "2",
-        "description": "File Explorer",
+        "description": "File Explorer (default strict match_threshold; loosened threshold caused wrong-location match in run 277 at y=88, not on taskbar). Same shared image as perf_stress + enterprise_collab.",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
