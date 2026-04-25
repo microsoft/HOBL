@@ -44,7 +44,7 @@
         "children": [
             {
                 "children": [],
-                "delay": "0.5",
+                "delay": "5",
                 "description": "1st Launch Sign in Page",
                 "enabled": true,
                 "file_name": [
@@ -185,7 +185,7 @@
                 "children": [
                     {
                         "children": [],
-                        "delay": "2",
+                        "delay": "10",
                         "description": "Sign in Option",
                         "enabled": true,
                         "file_name": [
@@ -227,7 +227,7 @@
                 "children": [
                     {
                         "children": [],
-                        "delay": "2",
+                        "delay": "10",
                         "description": "Check for Other Password Option",
                         "enabled": true,
                         "file_name": [
