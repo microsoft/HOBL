@@ -1333,18 +1333,9 @@
                     },
                     {
                         "children": [],
-                        "command": "powershell -NoProfile -Command \"reg add 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' /v LaunchTo /t REG_DWORD /d 1 /f | Out-Null\"",
-                        "delay": "1",
-                        "description": "Force 'Open File Explorer to: Home' (LaunchTo=1) so PT_9475/10052 namespaceCLSID filter f874310e-b6b7-47dc-bc84-b9e6b38f5903 (Home) matches",
-                        "enabled": true,
-                        "id": "1KPFEHOME",
-                        "type": "Command"
-                    },
-                    {
-                        "children": [],
-                        "command": "powershell -NoProfile -Command \"(New-Object -ComObject Shell.Application).Windows() | ForEach-Object { $_.Quit() }\"",
+                        "command": "cmd /c reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\" /v SeparateProcess /t REG_DWORD /d 1 /f >nul 2>&1 & reg delete \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\" /v LaunchTo /f >nul 2>&1 & powershell -NoProfile -Command \"Get-Process explorer -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle -ne '' } | Stop-Process -Force -ErrorAction SilentlyContinue\" & exit /b 0",
                         "delay": "5",
-                        "description": "Close all File Explorer windows so next launch is non-prelaunched (PT_9475/10052 filter isPrelaunchedWindow=false)",
+                        "description": "Normalize FE launch state for PT_9475/10052/10144: SeparateProcess=1 (each FE window own explorer.exe so isPrelaunchedWindow=false filter is satisfied) + delete LaunchTo (forces Home view namespaceCLSID f874310e-... NOT This PC 20d04fe0-...) + kill only explorer.exe instances with non-empty MainWindowTitle (FE windows only, leaves shell intact). Replaces older Shell.Application.Windows().Quit() which did NOT enumerate Win11 XAML FE windows.",
                         "enabled": true,
                         "id": "1KPFEKILL",
                         "type": "Command"
