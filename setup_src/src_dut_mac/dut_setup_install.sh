@@ -121,6 +121,31 @@ send_rpc "$PAYLOAD2" "Documents Access Trigger"
 send_rpc "$PAYLOAD3" "Accessibility Trigger"
 send_rpc "$PAYLOAD4" "Downloads Access Trigger"
 
+echo ""
+echo "======================================================"
+echo "  ACTION REQUIRED:"
+echo "  Enable the permissions for SimpleRemoteConsole by going through screen & system audio recording pop up."
+echo "  If popup disappeared the setting is under:"
+echo "  System Settings → Privacy & Security → Screen & System Audio Recording -> Allow SimpleRemoteConsole"
+echo "======================================================"
+read -rp "Press Enter to continue once permissions are enabled..."
+echo ""
+# Kill simpleremote and start it again after user sets permission for screen recording
+echo "Killing SimpleRemoteConsole"
+pkill -x "SimpleRemoteConsole"
+sleep 5
+# Start SimpleRemtote
+echo "Starting SimpleRemote..."
+launchctl enable gui/$(id -u)/SimpleRemote
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/simple_remote.plist
+sleep 1s
+launchctl kickstart gui/$(id -u)/SimpleRemote
+
+send_rpc "$PAYLOAD1" "Plugin Load"
+send_rpc "$PAYLOAD3" "Accessibility Trigger"
+send_rpc "$PAYLOAD3" "Accessibility Trigger"
+
+
 
 # Install Brew (or verify it exists at default location)
 echo "Installing Brew"
