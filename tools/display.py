@@ -642,10 +642,7 @@ class Tool(Scenario):
 
     def _start_driver(self):
         """Start WinAppDriver and connect with Root desktop session."""
-        self._call(
-            [(self.dut_exec_path + "\\WindowsApplicationDriver\\WinAppDriver.exe"),
-             (self.dut_ip + " " + self.app_port)],
-            blocking=False)
+        self._call([(self.dut_exec_path + "\\WindowsApplicationDriver\\WinAppDriver.exe"), (self.dut_resolved_ip + " " + self.app_port + " /forcequit")], blocking=False)
         time.sleep(2)
         driver = self._launchApp({"app": "Root"})
         driver.implicitly_wait(10)

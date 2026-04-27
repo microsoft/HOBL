@@ -115,7 +115,10 @@ if [ "$PreRun" = true ]; then
     # add_to_table "Scenario" ""
     add_to_table "Run Start Time" "$(date +'%Y-%m-%d %H:%M:%S')"
     # Add current battery level without the percent sign
-    battery_level=$(pmset -g batt | grep -o '[0-9]\+%' | head -n 1 | tr -d '%')
+    # battery_level=$(pmset -g batt | grep -o '[0-9]\+%' | head -n 1 | tr -d '%')
+    raw_current_capacity_level=$(ioreg -r -c AppleSmartBattery -a | plutil -extract 0.AppleRawCurrentCapacity raw -)
+    raw_max_capacity_level=$(ioreg -r -c AppleSmartBattery -a | plutil -extract 0.AppleRawMaxCapacity raw -)
+    battery_level=$(printf "%.2f" $(echo "$raw_current_capacity_level / $raw_max_capacity_level * 100" | bc -l))
     add_to_table "Run Start Battery State (%)" "$battery_level"
     battery_status=$(pmset -g batt | grep -o 'discharging\|charging\|charged' | head -n 1)
     add_to_table "Run Start Charge State" "$battery_status"
@@ -144,7 +147,10 @@ elif [ "$PostRun" = true ]; then
     run_stop_time=$(date +'%Y-%m-%d %H:%M:%S')
     add_to_table "Run Stop Time" "$run_stop_time"
     # Add current battery level without the percent sign
-    battery_level=$(pmset -g batt | grep -o '[0-9]\+%' | head -n 1 | tr -d '%')
+    # battery_level=$(pmset -g batt | grep -o '[0-9]\+%' | head -n 1 | tr -d '%')
+    raw_current_capacity_level=$(ioreg -r -c AppleSmartBattery -a | plutil -extract 0.AppleRawCurrentCapacity raw -)
+    raw_max_capacity_level=$(ioreg -r -c AppleSmartBattery -a | plutil -extract 0.AppleRawMaxCapacity raw -)
+    battery_level=$(printf "%.2f" $(echo "$raw_current_capacity_level / $raw_max_capacity_level * 100" | bc -l))
     add_to_table "Run Stop Battery State (%)" "$battery_level"
     battery_status=$(pmset -g batt | grep -o 'discharging\|charging\|charged' | head -n 1)
     add_to_table "Run Stop Charge State" "$battery_status"

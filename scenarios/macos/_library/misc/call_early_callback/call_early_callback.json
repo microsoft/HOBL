@@ -4,8 +4,8 @@
         "type": "Information",
         "description": "Call TestBeginEarlyCallback for tools.  This allow them to execute at the beginnign of Setup",
         "enabled": true,
-        "author": "Jeff Wilder",
-        "capture_device": "Surface Laptop 8 15-in",
+        "author": "jewilder",
+        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
         "create_date": "2025-03-27",
         "children": []
     },

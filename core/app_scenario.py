@@ -781,6 +781,7 @@ class Scenario(unittest.TestCase):
         logging.info("Life monitoring thread started")
         # Poll DUT to see if it's still responsive, if not, raise timeout exception
         file_path = self.result_dir + os.sep + 'battery_level.txt'
+        csv_path = self.result_dir + os.sep + 'battery_level.csv'
         while(True):
             try:
                 if self.platform.lower() == 'windows':
@@ -795,13 +796,26 @@ class Scenario(unittest.TestCase):
                         # logging.info("RTC Wake timer reset")
                     time.sleep(900)
                 elif self.platform.lower() == 'macos':
-                    result = self._call(["pmset", "-g batt"], blocking=True)
-                    level = result.split("\n")[1].split("\t")[1].split("%")[0]
+                    # Get AppleRawCurrentCapacity level via ioreg
+                    raw_current_capacity_result = self._call(["bash", '-c "ioreg -r -c AppleSmartBattery -a | plutil -extract 0.AppleRawCurrentCapacity raw -"'], blocking=True)
+                    raw_current_capacity_level = raw_current_capacity_result.strip()
+
+                    # Get AppleRawMaxCapacity level via ioreg
+                    raw_max_capacity_result = self._call(["bash", '-c "ioreg -r -c AppleSmartBattery -a | plutil -extract 0.AppleRawMaxCapacity raw -"'], blocking=True)
+                    raw_max_capacity_level = raw_max_capacity_result.strip()
+
+                    # Calculate Battery level to 2 decimal places
+                    level = round(float(raw_current_capacity_level) / float(raw_max_capacity_level) * 100, 2)
+
                     current_time = datetime.now()
                     time_s = current_time.strftime("%m/%d/%Y %I:%M:%S %p")
-                    logging.info(f"Battery level: {level}")
+                    logging.info(f"Battery level : {str(level)}")
+
+                    # Write human-readable txt log
                     with open(file_path, 'a', newline='') as f:
-                        f.write(f"{time_s}: total battery: {level}\n")
+                        f.write(f"{time_s}: total battery: {str(level)}\n")
+
+            
                     if int(level) <= int(self.stop_soc):
                         break
                     time.sleep(int(self.poll_rate))
