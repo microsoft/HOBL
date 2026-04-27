@@ -14,14 +14,9 @@ def run():
     Params.setParam(None, 'web_replay_run', '1')
     Params.setParam(None, 'phase_reporting', '1')
     Params.setDefault('mincp_base', 'perf_run', '0', desc='', valOptions=['0', '1'])
-    # === CRITICAL DEFAULTS - DO NOT REMOVE ===
-    # web_site_load_time: used by Decrement action UCJN7W in web_run_mincp; ValueError crash if missing
-    Params.setDefault('mincp_base', 'web_site_load_time', '20', desc='', valOptions=['20', '15', '10', '25', '30'])
-    # short_typing: used by productivity library for brief typing bursts
-    Params.setDefault('mincp_base', 'short_typing', '1', desc='', valOptions=['0', '1'])
-    # web_workload: determines which web_run variant to use (reddit/cnn/etc)
-    Params.setDefault('mincp_base', 'web_workload', 'reddit', desc='', valOptions=['reddit', 'instagram', 'amazongot', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'wikipedia', 'youtubenasa', 'youtubetos', 'theverge', 'copilot_query', 'productivity', 'click_todo', 'live_captions'])
-    # === END CRITICAL DEFAULTS ===
+    Params.setDefault('mincp_base', 'web_site_load_time', '20', desc='web_site_load_time: used by Decrement action UCJN7W in web_run_mincp; ValueError crash if missing', valOptions=['20', '15', '10', '25', '30'])
+    Params.setDefault('mincp_base', 'short_typing', '0', desc='short_typing: used by productivity library for brief typing bursts', valOptions=['0', '1'])
+    Params.setDefault('mincp_base', 'web_workload', 'reddit', desc='web_workload: determines which web_run variant to use (reddit/cnn/etc)', valOptions=['reddit', 'instagram', 'amazongot', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'wikipedia', 'youtubenasa', 'youtubetos', 'theverge', 'copilot_query', 'productivity', 'click_todo', 'live_captions'])
     return
 
 def run_user_only():
@@ -39,6 +34,8 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\misc\\click_to_do_teardown')
     import_run_user_only('scenarios\\windows\\_library\\misc\\etw_event_tag')
     import_run_user_only('scenarios\\windows\\_library\\misc\\perf_click_to_do')
+    import_run_user_only('scenarios\\windows\\_library\\misc\\recording_phase_begin')
+    import_run_user_only('scenarios\\windows\\_library\\misc\\recording_phase_end')
     import_run_user_only('scenarios\\windows\\_library\\misc\\search_taskbar')
     import_run_user_only('scenarios\\windows\\_library\\misc\\start_app_launch')
     import_run_user_only('scenarios\\windows\\_library\\misc\\studio_effect_blur')

@@ -1,10 +1,10 @@
 [
     {
-        "author": "dasashutosh",
+        "author": "ojhavarun",
         "capture_device": "",
         "children": [],
         "create_date": "2025-12-02",
-        "description": "Enterprise Collaborator",
+        "description": "Minimum Windows Experience",
         "enabled": true,
         "id": "19K3NWN",
         "type": "Information"
@@ -95,6 +95,39 @@
         "type": "Set Default",
         "val_options": "0,1",
         "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "web_site_load_time: used by Decrement action UCJN7W in web_run_mincp; ValueError crash if missing",
+        "enabled": true,
+        "id": "1KWRW09",
+        "name": "[web_site_load_time]",
+        "type": "Set Default",
+        "val_options": "20,15,10,25,30",
+        "value": "20"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "short_typing: used by productivity library for brief typing bursts",
+        "enabled": true,
+        "id": "1KWRWTV",
+        "name": "[short_typing]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "web_workload: determines which web_run variant to use (reddit/cnn/etc)",
+        "enabled": true,
+        "id": "1KWRX96",
+        "name": "[web_workload]",
+        "type": "Set Default",
+        "val_options": "reddit,instagram,amazongot,amazonvacuum,googleimagesapollo,googleimageslondon,googlesearchbelgium,googlesearchsuperbowl,wikipedia,youtubenasa,youtubetos,theverge,copilot_query,productivity,click_todo,live_captions",
+        "value": "reddit"
     },
     {
         "children": [
@@ -1521,7 +1554,7 @@
                         "children": [],
                         "command": "cmd /c taskkill /F /T /IM msedge.exe > nul 2>&1 & exit /b 0",
                         "delay": "5",
-                        "description": "Cold-kill all Edge processes — PT_8998 BrowserLaunch + PT_9412 PageLoad require a true cold start (no warm renderer reuse)",
+                        "description": "Cold-kill all Edge processes - PT_8998 BrowserLaunch + PT_9412 PageLoad require a true cold start (no warm renderer reuse)",
                         "enabled": true,
                         "id": "1KPEDKILL",
                         "type": "Command"
@@ -1530,7 +1563,7 @@
                         "children": [],
                         "command": "powershell -NoProfile -Command \"Start-Process 'microsoft-edge:https://www.bing.com'\"",
                         "delay": "1",
-                        "description": "Launch Edge via microsoft-edge: protocol handler (Start-Process invokes ShellExecute → Shell URL handler → AppLifeCycle.AppLaunch_UserClick + DefaultAssoc.CreateAssociatedProcess for msedge.exe — required for PT_8998; bing.com triggers PT_9412 page load). The microsoft-edge: protocol bypasses 'default browser' setting and always routes to Edge.",
+                        "description": "Launch Edge via microsoft-edge: protocol handler (Start-Process invokes ShellExecute -> Shell URL handler -> AppLifeCycle.AppLaunch_UserClick + DefaultAssoc.CreateAssociatedProcess for msedge.exe - required for PT_8998; bing.com triggers PT_9412 page load). The microsoft-edge: protocol bypasses 'default browser' setting and always routes to Edge.",
                         "enabled": true,
                         "id": "1KPED0SE",
                         "type": "Command"
@@ -1538,7 +1571,7 @@
                     {
                         "children": [],
                         "delay": "15",
-                        "description": "Wait for Edge cold boot + bing.com first-paint (PT_8998 chain + PT_9412 NavStart→FirstContentfulPaint)",
+                        "description": "Wait for Edge cold boot + bing.com first-paint (PT_8998 chain + PT_9412 NavStart -> FirstContentfulPaint)",
                         "enabled": true,
                         "id": "1KPED0DY",
                         "type": "Delay"
