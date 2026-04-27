@@ -17,7 +17,7 @@ def run(scenario):
     exe_file = os.path.join(extract_dir, "benchmark-launcher-cli.exe")
 
     # Download the zip file if not already present
-    scenario._check_and_download('benchmark-launcher-cli.zip', "scenarios\\blender_resources", url='https://download.blender.org/release/BlenderBenchmark2.0/launcher/benchmark-launcher-cli-3.2.0-windows.zip')
+    scenario._check_and_download('benchmark-launcher-cli.zip', "scenarios\\blender_resources", url='https://download.blender.org/release/BlenderBenchmark2.0/launcher/benchmark-launcher-cli-3.3.0-windows.zip')
     
     try:
         # Extract the zip file
@@ -34,8 +34,8 @@ def run(scenario):
         scenario._upload(exe_file, scenario.dut_exec_path)
     
     logging.info("Checking/Downloading Benchmark Version")
-    scenario._call(["cmd.exe", "/C " + os.path.join(scenario.dut_exec_path, "benchmark-launcher-cli.exe") + " blender download 4.4.0"], expected_exit_code="")
+    scenario._call(["cmd.exe", "/C " + os.path.join(scenario.dut_exec_path, "benchmark-launcher-cli.exe") + " blender download 5.1.1"], expected_exit_code="")
     
     logging.info("Checking/Downloading Benchmark Scenes")
-    scenario._call(["cmd.exe", "/C " + os.path.join(scenario.dut_exec_path, "benchmark-launcher-cli.exe") + " scenes download --blender-version 4.4.0 monster junkshop classroom"], expected_exit_code="")
+    scenario._call(["cmd.exe", "/C " + os.path.join(scenario.dut_exec_path, "benchmark-launcher-cli.exe") + " scenes download --blender-version 5.1.1 monster junkshop classroom"], expected_exit_code="")
 

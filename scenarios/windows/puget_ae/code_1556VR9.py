@@ -6,7 +6,6 @@ import os
 from core.parameters import Params
 def run(scenario):
     logging.debug('Executing code block: code_1556VR9.py')
-    logging.debug('Executing code block: code_153N9TN.py')
     benchmark_version = Params.get('puget_ae', 'benchmark_version')
     # license_key = Params.get('puget_ae', 'puget_license')
     loops = Params.get('puget_ae', 'loops')
