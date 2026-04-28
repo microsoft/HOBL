@@ -11,7 +11,23 @@ import csv
 import logging
 import os
 import re
+import subprocess
+import tempfile
 import xml.etree.ElementTree as ET
+
+
+# --- ETL side-channel constants -------------------------------------------------
+# PT_10010 (Type-to-Search TopResultRender) and PT_2430 in StressUtcPerftrack.xml
+# rely on legacy Cortana events that are not emitted on modern Windows builds, so
+# PerfParser cannot complete their state machines. The modern provider that DOES
+# fire is Microsoft.Windows.Health.TestInProduction; we extract the metric
+# directly from the ETL via tracerpt without touching the manifest XML.
+_TIP_PROVIDER_GUID = "{50109fbd-6d85-5815-731e-c907eca1607b}"
+_TIP_PROVIDER_NAME = "microsoft.windows.health.testinproduction"
+_TIP_TEST_CASE = "TypeToSearchTestTopResultRendered"
+_TIP_COMPLETION_PASSED = "1"
+_TIP_PT_NUMBER = "10010"
+_TIP_METRIC_NAME = "TopResultRender"
 
 
 class Tool(Scenario):
@@ -165,6 +181,104 @@ class Tool(Scenario):
             # If post-processing fails, keep the raw output as the final output
             if os.path.isfile(raw_output) and not os.path.isfile(perf_output):
                 os.rename(raw_output, perf_output)
+
+        # Side-channel: extract PT_10010 TopResultRender directly from the ETL.
+        # The PT_10010 state machine in StressUtcPerftrack.xml targets legacy
+        # Cortana events that modern Windows does not emit, so PerfParser cannot
+        # produce this metric. We read the modern TestInProduction TestResult
+        # event from the ETL via tracerpt and emit a single averaged row.
+        # Every search/keystroke during the run produces one passing event, so
+        # individual rows can't be tied back to a specific user action; the mean
+        # of all passing samples is the meaningful aggregate.
+        try:
+            extra = self._extract_type_to_search(etl_trace)
+            if extra and os.path.isfile(perf_output):
+                durations_ms = []
+                for d in extra:
+                    try:
+                        durations_ms.append(float(d))
+                    except (TypeError, ValueError):
+                        continue
+                if durations_ms:
+                    avg_ms = sum(durations_ms) / len(durations_ms)
+                    # Round to integer ms to match the format of other rows.
+                    avg_str = str(int(round(avg_ms)))
+                    with open(perf_output, 'a', newline='') as f_out:
+                        w = csv.writer(f_out)
+                        w.writerow([_TIP_PT_NUMBER, _TIP_METRIC_NAME, avg_str])
+                    logging.info(
+                        f"Perf Stress Tool - Appended PT_{_TIP_PT_NUMBER} "
+                        f"{_TIP_METRIC_NAME} avg={avg_str}ms over "
+                        f"{len(durations_ms)} passing event(s) from ETL side-channel"
+                    )
+        except Exception as e:
+            logging.warning(f"TypeToSearch ETL side-channel extraction failed: {e}")
+
+    @staticmethod
+    def _extract_type_to_search(etl_path):
+        """Return a list of durationMs strings for passing
+        TypeToSearchTestTopResultRendered events found in the ETL.
+        Uses tracerpt.exe to render the ETL to XML, then streams events.
+        Returns [] on any failure or if no matching events are present.
+        """
+        if not os.path.isfile(etl_path):
+            return []
+        with tempfile.TemporaryDirectory() as tmp:
+            out_xml = os.path.join(tmp, "etl_dump.xml")
+            cmd = ["tracerpt.exe", etl_path, "-of", "XML", "-o", out_xml, "-y"]
+            try:
+                subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+            except FileNotFoundError:
+                logging.warning("tracerpt.exe not found; skipping TypeToSearch side-channel.")
+                return []
+            except subprocess.TimeoutExpired:
+                logging.warning("tracerpt timed out on %s", etl_path)
+                return []
+            if not (os.path.isfile(out_xml) and os.path.getsize(out_xml) > 0):
+                return []
+
+            durations = []
+            guid_lower = _TIP_PROVIDER_GUID.lower()
+            try:
+                for _, elem in ET.iterparse(out_xml, events=("end",)):
+                    tag = elem.tag.split("}", 1)[1] if "}" in elem.tag else elem.tag
+                    if tag != "Event":
+                        continue
+                    try:
+                        provider = ""
+                        data = {}
+                        for child in elem:
+                            ctag = child.tag.split("}", 1)[1] if "}" in child.tag else child.tag
+                            if ctag == "System":
+                                for sc in child:
+                                    sctag = sc.tag.split("}", 1)[1] if "}" in sc.tag else sc.tag
+                                    if sctag == "Provider":
+                                        provider = (sc.get("Guid") or sc.get("Name") or "").lower()
+                            elif ctag in ("EventData", "UserData"):
+                                for d in child.iter():
+                                    dtag = d.tag.split("}", 1)[1] if "}" in d.tag else d.tag
+                                    name = d.get("Name")
+                                    if dtag == "Data" and name is not None:
+                                        data[name] = (d.text or "").strip()
+                                    elif dtag not in ("EventData", "UserData") and d.text:
+                                        data[dtag] = (d.text or "").strip()
+                        if guid_lower not in provider and _TIP_PROVIDER_NAME not in provider:
+                            continue
+                        tc_name = data.get("testCaseName") or data.get("TestCaseName") or ""
+                        if tc_name != _TIP_TEST_CASE:
+                            continue
+                        ck = data.get("completionKind") or data.get("CompletionKind") or ""
+                        if ck != _TIP_COMPLETION_PASSED:
+                            continue
+                        dur = data.get("durationMs") or data.get("DurationMs") or ""
+                        if dur:
+                            durations.append(dur)
+                    finally:
+                        elem.clear()
+            except ET.ParseError as e:
+                logging.warning(f"Could not parse tracerpt XML: {e}")
+                return []
+            return durations
 
     def testTimeoutCallback(self):
         return
