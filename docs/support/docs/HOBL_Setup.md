@@ -79,19 +79,28 @@ Set up a Device Profile for each DUT in the HOBLweb UI, giving it a unique name 
     1. If you see an error when it tries to set the developer mode, this can safely be ignored.
 4. Test network connection to the DUT:
     1. Host and DUT need to be on the same subnet (first 2 octets of the IP address).
-    1. Run Cmd or Powershell on the Host.
-    1. Make sure sure DUT responds to pings:  `ping <dut_ip>`
+    1. Run Cmd or Powershell on the Host, and make sure sure DUT responds to pings:  `ping <dut_ip>`
     1. Make sure DUT can ping host as well.
     1. Run the "comm_check" scenario to make sure that all communications needs are met.
 
 ## DUT Setup For macOS
-1. Manually make sure the device is onnected to the appropriate Wi-Fi netowrk, on the same subnet as the Host.
-1. After running host_setup.exe, dut_setup.sh should be found in the /downloads/Setup folder.  Copy dut_setup.sh from here to a USB stick.
-1. Plug the USB stick into the DUT and execute dut_setup.sh.
-1. There will be numerous prompts for password and to enable various security items.  It's critical to enable all.
-1. Test network connection to the DUT:
+1. Manually set up the Mac with an account and connect the device to the appropriate Wi-Fi netowrk, on the same subnet as the Host.
+2. If Global Secure Access app exists, disable it.  It prevents peer-to-peer communication.
+3. Change settings to do auto-login:
+    a. System Settings -> Users & Groups -> Automatically log in as: specify account and password
+4. Copy hobl\downloads\setup\dut_setup_<ver>.sh to Mac using a FAT32 formatted USB stick, and execute from terminal window.  You will be prompted for password and access permissions multiple times.  Be sure to enable everything.  If you don't see dut_setup_\<ver>\.sh in the hobl\downloads\setup folder, then do [Host Setup](#host-setup).
+5. Either disable firewall, or disable "Stealth Mode" in Firewall Options (to allow pings to go through)
+6. Use light meter to adjust screen brightness to 150 nits, on DC with white background.  Then run /users/Shared/hobl_bin/brightness -l to report setting level.  Multiply that fraction by 100 to turn to percentage, to set display:brightness in profile.
+7. Leave audio level at out-of-box setting.
+8. The first time you run some tests or tools there may be various permissions popups.  Manually allow them all. Then subsequent runs should work without interference.
+10. Set keyboard shortcut Shift-Cmd-H to Safari "Clear History…"
+    a. Settings -> Keyboard -> Keyboard Shortcuts -> App Shortcuts
+    b. Application: "Safari"
+    c. Menu title: "Clear History…" (the three dots are critical)
+    d. Keyboard shortcut: "Shift-Cmd-H"
+11. Set Safari history clear to "All History"
+12. Test network connection to the DUT:
     1. Host and DUT need to be on the same subnet (first 2 octets of the IP address).
-    1. Run Cmd or Powershell on the Host.
-    1. Make sure sure DUT responds to pings:  `ping <dut_ip>`
+    1. Run Cmd or Powershell on the Host, and make sure sure DUT responds to pings:  `ping <dut_ip>`
     1. Make sure DUT can ping host as well.
     1. Run the "comm_check" scenario to make sure that all communications needs are met.

@@ -65,7 +65,7 @@ params.setDefault('global', 'host_ip', '', desc="Option to override IP address o
 params.setDefault('global', 'run_type', '', desc="A results sub-folde to indicate the type of run it is, such as 'Power', 'ETL', 'Misc', etc.")
 params.setDefault('global', 'iterations', '1', desc="How many time to repeat the scenario.")
 params.setDefault('global', 'training_mode', '0', desc="Specify if this is a training run (1) or not (0).", valOptions=["0", "1"])
-params.setDefault('global', 'platform', 'Windows', desc="Operating system platform.", valOptions=["Windows", "Android", "W365", "MacOS"])
+params.setDefault('global', 'platform', '[PLATFORM]', desc="Operating system platform.", valOptions=["[PLATFORM]", "Windows", "Android", "W365", "MacOS"])
 params.setDefault('global', 'msa_account', '', desc="The test account that Windows and apps will be logged in with.")
 params.setDefault('global', 'dut_password', '', desc="The password for the test account (msa_account).")
 params.setDefault('global', 'dut_ip', '127.0.0.1', desc="IP address of the Device Under Test (name can be used if DNS is supported).")
@@ -201,7 +201,7 @@ if args.dump or args.dump_verbose:
 
 # Check if we're runnign a scenario that shouldn't contact the DUT before
 # loading params, which can make calls to the DUT
-for scenario in ['charge_off', 'charge_on', 'hard_reboot', 'sleep_wake', 'manual_offline', 'study_report', 'run_report', 'dut_setup']:
+for scenario in ['comm_check', 'charge_off', 'charge_on', 'hard_reboot', 'sleep_wake', 'manual_offline', 'study_report', 'run_report', 'dut_setup']:
     if scenario in sys.argv:
         print("Forcing dut_alive to 0")
         Params.setCalculated("dut_alive", '0')

@@ -20,10 +20,12 @@ class Tool(Scenario):
     Params.setDefault(module, 'resume_threshold', '95')  # Percent battery level (95%)
     Params.setDefault('charge_on', 'charge_on_call', '')
     Params.setDefault('charge_off', 'charge_off_call', '')
+    Params.setDefault(module, 'post_charge_delay', '1800', desc="How many seconds to wait after reaching the resume_threshold before disconnecting charger.")  # Adding time here can help sensure the device is maximally charged.
 
     # Get parameters
     charge_threshold = Params.get(module, 'charge_threshold')
     resume_threshold = Params.get(module, 'resume_threshold')
+    post_charge_delay = Params.get(module, 'post_charge_delay')
 
     charge_on_call = Params.get('global', 'charge_on_call')
     charge_off_call = Params.get('global', 'charge_off_call')
@@ -77,6 +79,13 @@ class Tool(Scenario):
                     if count == MAX_COUNT:
                         logging.info(f"Disengaging charger since seeing same battery level for {MAX_COUNT} times.")
                         self.chargeOff()
+                        try:
+                            delay = int(self.post_charge_delay)
+                        except:
+                            logging.error(f"Invalid post_charge_delay setting: {self.post_charge_delay}.  Make sure it's an integer.")
+                        else:
+                            logging.info(f"Delaying for {delay} seconds to let device quiesce.")
+                            time.sleep(delay)
                         break
                     time.sleep(300) # sleep 5 minutes
                     old_batt_level = batt_level
