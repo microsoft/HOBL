@@ -104,3 +104,15 @@ Set up a Device Profile for each DUT in the HOBLweb UI, giving it a unique name 
     1. Run Cmd or Powershell on the Host, and make sure sure DUT responds to pings:  `ping <dut_ip>`
     1. Make sure DUT can ping host as well.
     1. Run the "comm_check" scenario to make sure that all communications needs are met.
+
+One thing to be aware of on Mac is that as icon count in the dock increases, macos reduces their size so that they all fit.  However, in our automation we need them to stay constant size for proper image matching.  So the solution is remove unneeded icons to make sure there is plenty of space on the left and right of the dock.  So you might need to remove a few unused ones, such as Calendar, Reminders, etc.  Make sure the dock is always visible.
+
+
+Verify these settings have been set in  System Settings -> Privacy & Security:
+- Files & Folders -> SimpleRemoteconsole:
+  - Documents Folder
+  - Downloads Folder
+- Accessibility -> SimpleRemoteConsole
+- Local Network -> SimpleRemoteConsole
+- Screen & System Audio Recording -> SimpleRemoteConsole
+

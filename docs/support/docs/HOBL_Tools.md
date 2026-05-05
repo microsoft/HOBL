@@ -31,6 +31,8 @@ Pause run and recharge device when battery drops below [charge_threshold], then 
 
 `resume_threshold` -  **Default:** `95` 
 
+`post_charge_delay` - How many seconds to wait after reaching the resume_threshold before disconnecting charger. **Default:** `1800` 
+
 `charge_on_call` -  **Default:** `` 
 
 `charge_off_call` -  **Default:** `` 
@@ -440,6 +442,11 @@ Record periodic screen shots, for debug purposes.
 ## screen_record
 
 Records a screen cast from the DUT for debug purposes.  Has considerable power impact.
+
+
+<u>Parameters:</u>
+
+`device_index` - MacOS-only.  1 for older or non-Pro macbooks **Default:** `2`  **Options:** `1, 2`
 
 ## serialize_copyback
 
