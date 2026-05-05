@@ -17,8 +17,8 @@ if ($ARGS[0] -eq $null) {return("Params .ini not supplied, please supply a param
 .\hobl.cmd -p $ARGS[0] -s teams2_1on1_audio global:iterations=3 global:attempts=2 global:run_type=Power global:tools="+power_light"
 .\hobl.cmd -p $ARGS[0] -s teams2_1on1_video global:iterations=3 global:attempts=2 global:run_type=Power global:tools="+power_light"
 .\hobl.cmd -p $ARGS[0] -s teams2_idle global:iterations=3 global:attempts=2 global:run_type=Power global:tools="+power_light"
-# .\hobl.cmd -p $ARGS[0] -s idle_desktop global:iterations=3 global:run_type=Power global:tools="+power_light"
-# .\hobl.cmd -p $ARGS[0] -s cs_floor global:iterations=3 global:run_type=Power global:tools="+powercfg power_light"
+.\hobl.cmd -p $ARGS[0] -s idle_desktop global:iterations=1 global:run_type=Power global:tools="+power_light"
+.\hobl.cmd -p $ARGS[0] -s cs_floor global:iterations=1 global:run_type=Power global:tools="+powercfg power_light"
 .\hobl.cmd -p $ARGS[0] -s charge_on global:run_type=Misc
 .\hobl.cmd -p $ARGS[0] -s study_report global:run_type=Misc
 .\hobl.cmd -p $ARGS[0] -s version_report global:run_type=Prep global:post_run_delay=0

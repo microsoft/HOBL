@@ -6,7 +6,7 @@ Write-Host " INFO - stop_perfStress_background starting"
 
 # Retry helper so cleanup remains robust when processes are still spinning up/down.
 function Stop-PerfStressProcesses {
-    $patterns = "collect_5min_traces\.ps1|percentile_stress\.py|install_python\.ps1"
+    $patterns = "percentile_stress\.py|install_python\.ps1"
     $attempt = 0
     while ($attempt -lt 5) {
         $found = $false
@@ -41,11 +41,14 @@ function Stop-PerfStressProcesses {
 }
 
 function Close-ExplorerWindows {
-    $explorerCount = (Get-Process explorer | Where-Object { $_.MainWindowHandle -ne 0 } | Measure-Object).Count
-    Write-Host (" INFO - Explorer windows before close={0}" -f $explorerCount)
+    # Filter to actual File Explorer folder windows (have a MainWindowTitle).
+    # The desktop shell explorer process has MainWindowHandle != 0 but no title, so excluding it
+    # avoids the misleading "before=1 / after=1" count caused by the always-present shell process.
+    $explorerCount = (Get-Process explorer | Where-Object { $_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -ne '' } | Measure-Object).Count
+    Write-Host (" INFO - Explorer folder windows before close={0}" -f $explorerCount)
 
     Get-Process explorer |
-        Where-Object { $_.MainWindowHandle -ne 0 } |
+        Where-Object { $_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -ne '' } |
         ForEach-Object { $_.CloseMainWindow() | Out-Null }
 
     Start-Sleep -Milliseconds 700
@@ -63,8 +66,8 @@ function Close-ExplorerWindows {
         Write-Host " ERROR - stop_perfStress_background fallback close failed."
     }
 
-    $remainingExplorer = (Get-Process explorer | Where-Object { $_.MainWindowHandle -ne 0 } | Measure-Object).Count
-    Write-Host (" INFO - Explorer windows after close={0}" -f $remainingExplorer)
+    $remainingExplorer = (Get-Process explorer | Where-Object { $_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -ne '' } | Measure-Object).Count
+    Write-Host (" INFO - Explorer folder windows after close={0}" -f $remainingExplorer)
 }
 
 # Stop background processes launched by perf_stress setup.
@@ -72,7 +75,7 @@ Stop-PerfStressProcesses
 
 $remainingStress = (Get-CimInstance Win32_Process |
     Where-Object {
-        ($_.CommandLine -and ($_.CommandLine -match "collect_5min_traces\.ps1|percentile_stress\.py|install_python\.ps1")) -or
+        ($_.CommandLine -and ($_.CommandLine -match "percentile_stress\.py|install_python\.ps1")) -or
         ($_.Name -match "(?i)^(python|py|pythonw)\.exe$" -and $_.CommandLine -and ($_.CommandLine -match "percentile_stress\.py"))
     } |
     Measure-Object).Count

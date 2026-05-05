@@ -167,7 +167,7 @@ class Tab(QtWidgets.QWidget):
                 y_frac = max(0, dut_y / self.main_win.dut_screen_height)
                 action = self.actionModel.appendAction(self.working_dir, type=self.action_type, x="{:.3f}".format(x_frac), y="{:.3f}".format(y_frac), delay=str(self.settings.get("default_delay")), direction=dir)
                 if self.main_win.connected:
-                    result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Scroll", dut_x, dut_y, 720, dir, self.main_win.current_display)
+                    result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Scroll", dut_x, dut_y, 720, dir, self.main_win.current_display, "0", "0", 0, 0, 0, 0, 0, 0)
             # else squash events
 
         elif self.mode_select or self.mode_record:
@@ -202,7 +202,7 @@ class Tab(QtWidgets.QWidget):
                 dir = "up"
             dut_x, dut_y = self.image_to_dut_coords(self.selection_x, self.selection_y)
             if self.main_win.connected:
-                result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Scroll", dut_x, dut_y, 120, dir, self.main_win.current_display)
+                result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Scroll", dut_x, dut_y, 120, dir, self.main_win.current_display, "0", "0", 0, 0, 0, 0, 0, 0)
 
     @pyqtSlot(QtGui.QMouseEvent)
     def update_mouse_move(self, event):
@@ -381,7 +381,7 @@ class Tab(QtWidgets.QWidget):
                     self.action_typing_str += key_text
                 if self.main_win.connected:
                     print(f"Sending: {key_text}")
-                    result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Type", key_text, 0)
+                    result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Type", key_text, 0, "0", 0, 0, 0, 0, 0, 0)
             elif only_shift:
                 # if Shift is pressed, convert to uppercase
                 if key_text.isalpha():
@@ -391,7 +391,7 @@ class Tab(QtWidgets.QWidget):
                     self.labelImage.clearSelect()
                     self.action_typing_str = self.convert_capitals(self.action_typing_str) + key_text
                 if self.main_win.connected:
-                    result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Type", key_text, 0)
+                    result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Type", key_text, 0, "0", 0, 0, 0, 0, 0, 0)
             else:
                 self.modifier_string += key_text
                 self.action_typing_str += key_text
@@ -431,7 +431,7 @@ class Tab(QtWidgets.QWidget):
                 # self.action_typing_str = self.convert_capitals(self.action_typing_str)
                 print(f"Sending mstring: {self.modifier_string}")
                 if self.main_win.connected:
-                    result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Type", self.modifier_string, 150)
+                    result = rpc.plugin_call(self.dut_ip, 8000, "InputInject", "Type", self.modifier_string, 150, "0", 0, 0, 0, 0, 0, 0, 0)
                 self.modifier_string = ""
                 if self.mode_typing or self.mode_record:
                     self.create_typing_action()

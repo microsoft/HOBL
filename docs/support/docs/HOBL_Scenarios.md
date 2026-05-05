@@ -124,6 +124,27 @@ Preforms various tasks that prepare a device for testing.  This includes queuing
 
 `final_reboot` - Sets if the device will reboot at the conclusion of process_idle_tasks **Default:** `1`  **Options:** `0, 1`
 
+## standby
+
+Puts the device into standby mode, still conneccted to the network.
+
+
+<u>Parameters:</u>
+
+`cs_duration` -  **Default:** `1200` 
+
+`button_to_record_delay` -  **Default:** `900` 
+
+`button_sleep_callback` -  **Default:** `` 
+
+`button_wake_callback` -  **Default:** `` 
+
+`local_button` -  **Default:** `1` 
+
+`sleep_mode` -  **Default:** `` 
+
+`connection` - Connected or Disconnected from the network during standby **Default:** `Connected`  **Options:** `Disconnected, Connected`
+
 ## system_prep
 
 Preforms various tasks that prepare a device for testing.
@@ -595,23 +616,22 @@ Steps:
 
 `full_screen` - Full Screen mode **Default:** `0`  **Options:** `0, 1`
 
-## youtube25
+## brightness_study_report
 
-Plays a YouTube video in a web browser in Default View mode.
-
-Steps:
-
-1. Navigate to Tears of Steel YouTube video URL: [youtu.be/41hv2tW5Lc4](https://youtu.be/41hv2tW5Lc4)
-2. Change video quality to 1080p.
-3. Let video play for specified duration and loops.
-4. Close web browser.
+Extract brightness value from a path containing a Brightness-XX folder.
 
 
 <u>Parameters:</u>
 
-`duration` -  **Default:** `600` 
+`result_path` -  **Default:** `` 
 
-`loops` -  **Default:** `1` 
+`name` -  **Default:** `` 
+
+`device_name` -  **Default:** `` 
+
+`backlight_key` - Metric name for backlight power in brightness curve report. **Default:** `DisplayLight Power (W)` 
+
+`analog_key` - Metric name for analog/panel power in brightness curve report. **Default:** `DisplayLogic Power (W)` 
 
 ## comm_check
 

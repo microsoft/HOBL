@@ -191,6 +191,17 @@
             },
             {
                 "children": [],
+                "delay": "0.0",
+                "description": "Capture screenshot",
+                "enabled": true,
+                "file_name": [
+                    "code_1KN4CL2.py"
+                ],
+                "id": "1KN4CL2",
+                "type": "Code"
+            },
+            {
+                "children": [],
                 "delay": "0",
                 "description": "k to pause video",
                 "enabled": true,

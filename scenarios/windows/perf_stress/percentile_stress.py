@@ -113,12 +113,12 @@ def stress_worker(worker_id: int) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Background CPU stress load generator")
-    parser.add_argument("--target-cpu", type=int, choices=[25, 50, 75], default=75)
+    parser.add_argument("--target-cpu", type=int, choices=[25, 50, 65, 75, 85], default=75)
     args = parser.parse_args()
 
     TARGET_CPU = int(args.target_cpu)
     WORKERS = max(1, int((os.cpu_count() or 1) * (TARGET_CPU / 100)))
-    load_label = {25: "LOW", 50: "MEDIUM", 75: "HIGH"}[TARGET_CPU]
+    load_label = {25: "LOW", 50: "MEDIUM", 65: "MEDIUM-HIGH", 75: "HIGH", 85: "VERY-HIGH"}[TARGET_CPU]
 
     mp.freeze_support()
     print(f"Background stress {load_label} | Target CPU {TARGET_CPU}% | Workers {WORKERS}")

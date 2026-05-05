@@ -11,26 +11,6 @@
     },
     {
         "children": [],
-        "delay": "0.0",
-        "description": "",
-        "enabled": true,
-        "id": "1HX8NJL",
-        "name": "[default_typing_delay]",
-        "type": "Set",
-        "value": "[global:typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "Fast typing to reduce irrelevant time",
-        "enabled": true,
-        "id": "1HX4YN4",
-        "name": "[global:typing_delay]",
-        "type": "Set",
-        "value": "20"
-    },
-    {
-        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
@@ -245,7 +225,7 @@
                 "type": "Include"
             }
         ],
-        "count": "6",
+        "count": "[bg_tab_loops]",
         "delay": "0.0",
         "description": "",
         "enabled": true,
@@ -258,15 +238,5 @@
         "enabled": true,
         "id": "1HVX5UW",
         "type": "End Loop"
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "Revert back to the default typing delay",
-        "enabled": true,
-        "id": "1HX8P2U",
-        "name": "[global:typing_delay]",
-        "type": "Set",
-        "value": "[default_typing_delay]"
     }
 ]

@@ -2,7 +2,9 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 # Tool for collecting and processing UTC performance data for perf_stress scenarios.
-# Uses StressUtcPerftrack.xml manifest and replaces the Scenario column with a PT column.
+# Runs the proprietary PerfParser binary against the captured ETL and post-processes
+# its output CSV: filters rows to the metrics declared in our manifest and rewrites
+# the Scenario column with the manifest's id.
 
 from builtins import *
 from core.parameters import Params
@@ -16,13 +18,13 @@ import xml.etree.ElementTree as ET
 
 class Tool(Scenario):
     '''
-    Collects and processes UTC Perftrack scenarios for stress workloads.
-    Outputs a CSV with PT number instead of Scenario name.
+    Collects and processes UTC performance metrics for stress workloads.
+    Outputs a CSV with manifest id instead of Scenario name.
     '''
 
     module = __module__.split('.')[-1]
     # Set default parameters
-    Params.setDefault(module, 'provider', 'perf_utc.wprp', desc="WPRP file to use for UTC Perftrack traces.", valOptions=["@\\providers"])
+    Params.setDefault(module, 'provider', 'perf_utc.wprp', desc="WPRP file to use for UTC traces.", valOptions=["@\\providers"])
     # Get parameters
     provider = Params.get(module, 'provider')
 
@@ -41,7 +43,9 @@ class Tool(Scenario):
 
     @staticmethod
     def _build_pt_lookup(manifest_file):
-        """Parse the manifest XML and build a dict mapping ptscenarioname -> PT_XXXX."""
+        """Parse the manifest XML and build a dict mapping the manifest's metric
+        name to the manifest scenario id.
+        """
         lookup = {}
         try:
             tree = ET.parse(manifest_file)
@@ -50,12 +54,27 @@ class Tool(Scenario):
                 sname = scenario.get('scenarioname', '')
                 pt_name = scenario.get('ptscenarioname', '')
                 match = re.match(r'PT_(\d+)_', sname)
-                if match and pt_name:
-                    lookup[pt_name] = match.group(1)
+                if not match:
+                    continue
+                pt_num = match.group(1)
+                if pt_name:
+                    lookup[pt_name] = pt_num
+                stripped_match = re.match(r'^PT_\d+_(.+)_[^_]*$', sname)
+                if stripped_match:
+                    parser_form = stripped_match.group(1)
+                    if parser_form:
+                        lookup.setdefault(parser_form, pt_num)
+                        trimmed = parser_form.strip()
+                        if trimmed and trimmed != parser_form:
+                            lookup.setdefault(trimmed, pt_num)
         except Exception as e:
-            logging.warning(f"Could not parse manifest for PT lookup: {e}")
+            logging.warning(f"Could not parse manifest for id lookup: {e}")
         return lookup
 
+    # PerfParser writes either the full manifest scenario name or the HOBL
+    # etw_event_tag value into the Scenario column, and the manifest's metric
+    # name into the Metric column. We recover the scenario id from whichever
+    # column carries it.
     def dataReadyCallback(self):
         etl_trace = self.scenario.result_dir + "\\" + self.scenario.testname + ".etl"
         if not os.path.isfile(etl_trace):
@@ -90,17 +109,21 @@ class Tool(Scenario):
                 writer = csv.writer(f_out)
                 writer.writerow(['PT', 'Metric', 'Duration'])
                 for row in rows:
+                    scenario_name = row.get('Scenario', '').strip()
                     metric = row.get('Metric', '').strip()
                     duration = row.get('Duration', '').strip()
-                    pt = pt_lookup.get(metric, '')
-                    # PerfParser may truncate metric names; try prefix match
+                    # First try: extract id directly from Scenario column
+                    pt = ''
+                    scenario_match = re.match(r'PT_(\d+)_', scenario_name)
+                    if scenario_match:
+                        pt = scenario_match.group(1)
+                    # Second try: look up Metric against manifest mapping. This
+                    # handles rows where Scenario is an injected etw_event_tag
+                    # rather than the manifest scenario name itself.
                     if not pt:
-                        for full_name, pt_num in pt_lookup.items():
-                            if full_name.startswith(metric) or metric.startswith(full_name):
-                                pt = pt_num
-                                break
-                    # Only include metrics that match a PT in our manifest.
-                    # Built-in Windows PerfTrack scenarios (not in our XML) are skipped.
+                        pt = pt_lookup.get(metric, '')
+                    # Only include metrics whose id is in our manifest. Built-in
+                    # scenarios not in our XML are skipped.
                     if pt:
                         writer.writerow([pt, metric, duration])
                         matched_rows.append(pt)
@@ -108,8 +131,9 @@ class Tool(Scenario):
                         logging.debug(f"Skipping unmatched metric: {metric}")
 
             logging.info(f"Perf Stress Tool - Wrote {len(matched_rows)} metrics to {perf_output} (filtered {len(rows) - len(matched_rows)} unmatched)")
-            # Clean up raw file
-            os.remove(raw_output)
+            # Keep raw_output so the operator can see ALL ids PerfParser found,
+            # including those filtered by manifest whitelisting. Useful for tuning
+            # the manifest and diagnosing metric loss under stress.
         except Exception as e:
             logging.error(f"Error post-processing PerfMetrics CSV: {e}")
             # If post-processing fails, keep the raw output as the final output

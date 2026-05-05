@@ -56,7 +56,10 @@ def main():
         "*_power_heavy.csv",
         "*_DAQ.csv",
         "srumutil.csv",
-        "*rails.csv"
+        "*rails.csv",
+        "combined_trace_data.csv",
+        "*fan_log.csv",
+        "*temp_log.csv"
     ]
 
     def is_exception(file):

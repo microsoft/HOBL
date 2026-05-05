@@ -20,6 +20,17 @@
     },
     {
         "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "PSECSTX0",
+        "name": "[short_typing]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
         "delay": "1",
         "description": "Menu",
         "enabled": true,

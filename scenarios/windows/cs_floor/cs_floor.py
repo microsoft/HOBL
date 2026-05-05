@@ -28,6 +28,7 @@ class CS(core.app_scenario.Scenario):
     Params.setDefault('cs_floor', 'button_wake_callback', '')
     Params.setDefault('cs_floor', 'local_button', '1') # 0 = host, 1 = DUT
     Params.setDefault('cs_floor', 'sleep_mode', '') # Blank = connected standby, "S3" for S3.
+    Params.setDefault('cs_floor', 'connection', 'Disconnected', desc="Connected or Disconnected from the network during standby", valOptions=["Disconnected", "Connected"])
 
     prep_scenarios = ["button_install"]
 
@@ -42,6 +43,7 @@ class CS(core.app_scenario.Scenario):
         self.local_button = Params.get('cs_floor', 'local_button')
         self.local_execution = Params.get('global', 'local_execution')
         self.sleep_mode = Params.get('cs_floor', 'sleep_mode')
+        self.connection = Params.get('cs_floor', 'connection')
 
         self.wifi_off_duration = str((int(self.cs_duration)) + (int(self.button_to_record_delay)) + 15)
 
@@ -64,8 +66,8 @@ class CS(core.app_scenario.Scenario):
        
         if self.button_sleep != '':
             try:
-                logging.info('DUT command: cmd.exe /C ' + self.dut_exec_path + '\\cs_floor_resources\\cs_floor_wrapper.cmd ' + str(15))
-                self._call(["cmd.exe", "/C " + os.path.join(self.dut_exec_path, "cs_floor_resources", "cs_floor_wrapper.cmd") + ' ' + str(15)], blocking = False) 
+                logging.info('DUT command: cmd.exe /C ' + self.dut_exec_path + '\\cs_floor_resources\\cs_floor_wrapper.cmd ' + str(15) + " " + self.connection)
+                self._call(["cmd.exe", "/C " + os.path.join(self.dut_exec_path, "cs_floor_resources", "cs_floor_wrapper.cmd") + ' ' + str(15) + " " + self.connection], blocking = False) 
             except:
                 pass
             time.sleep(5)
@@ -84,8 +86,8 @@ class CS(core.app_scenario.Scenario):
             else:  # Connected Standby
                 logging.info("Calling Button.exe on DUT")
                 try:             
-                    logging.info("DUT command: cmd.exe /C " + self.dut_exec_path + "\\cs_floor_resources\\cs_floor_wrapper.cmd " + self.wifi_off_duration + " " + self.dut_exec_path)
-                    self._call(["cmd.exe", "/C " + os.path.join(self.dut_exec_path, "cs_floor_resources", "cs_floor_wrapper.cmd") + ' ' + self.wifi_off_duration + " " + self.dut_exec_path], blocking = False) 
+                    logging.info("DUT command: cmd.exe /C " + self.dut_exec_path + "\\cs_floor_resources\\cs_floor_wrapper.cmd " + self.wifi_off_duration + " " + self.connection + " " + self.dut_exec_path)
+                    self._call(["cmd.exe", "/C " + os.path.join(self.dut_exec_path, "cs_floor_resources", "cs_floor_wrapper.cmd") + ' ' + self.wifi_off_duration + " " + self.connection + " " + self.dut_exec_path], blocking = False) 
                     time.sleep(2)
                 except:
                     logging.error("button.exe not found on DUT")
