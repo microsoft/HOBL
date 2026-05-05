@@ -215,9 +215,21 @@ class OsInstall(core.app_scenario.Scenario):
         # Uploading OS Install Resources to hobl_bin
         self._upload("scenarios\\windows\\os_install\\os_install_resources", self.dut_exec_path)
 
-        # Upload updated VerifyVersions package from utilities.
-        self._upload("utilities\\proprietary\\VerifyVersions", self.dut_exec_path)
+        # Upload VerifyVersions package. Prefer proprietary utilities path when present,
+        # otherwise use the copy bundled with os_install_resources.
+        verify_versions_source = "utilities\\proprietary\\VerifyVersions"
+        if not os.path.isdir(verify_versions_source):
+            verify_versions_source = "scenarios\\windows\\os_install\\os_install_resources\\VerifyVersions"
+
+        if not os.path.isdir(verify_versions_source):
+            logging.error("VerifyVersions source not found on host in expected locations.")
+            self.fail("VerifyVersions source not found on host. Expected utilities\\proprietary\\VerifyVersions or scenarios\\windows\\os_install\\os_install_resources\\VerifyVersions.")
+
+        self._upload(verify_versions_source, self.dut_exec_path)
         verify_versions_path = self.dut_exec_path + "\\VerifyVersions"
+
+        if not self._check_remote_file_exists(verify_versions_path):
+            self.fail("VerifyVersions package was not found on DUT after upload.")
 
         # copy d:\bin\postdeploy\drivers folder to support folder if c:\support doesn't already exist
         if not self._check_remote_file_exists(r"c:\support"):
@@ -240,6 +252,8 @@ class OsInstall(core.app_scenario.Scenario):
 
         # Build support folder and run VerifyOemDrivers from updated VerifyVersions.
         logging.info("Preparing support folder for verification...")
+        if not self._check_remote_file_exists(verify_versions_path + "\\Create-SupportFolder.ps1"):
+            self.fail("Create-SupportFolder.ps1 is missing on DUT at " + verify_versions_path)
         create_support_cmd = (
             f'-NoProfile -ExecutionPolicy RemoteSigned -Command "& \'{verify_versions_path}\\Create-SupportFolder.ps1\'"'
         )

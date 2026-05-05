@@ -37,16 +37,50 @@ function Invoke-DiskPartCommand {
         & "diskpart.exe" /s $DiskpartCmdFile $MyInvocation.UnboundArguments | Out-File -FilePath "$DiskpartLogFile" -Encoding "ASCII"
         if ($LASTEXITCODE -ne 0) {
             if (-not $ContinueOnError) {
-                Write-Host -BackgroundColor Red "Last exit code: $LASTEXITCODE" 
-                Write-Error "Disk Partitioning Failed - error log at: $DiskpartLogFile" 
-                exit $LASTEXITCODE
+                Write-Host -BackgroundColor Red "Last exit code: $LASTEXITCODE"
+                if (Test-Path $DiskpartLogFile) {
+                    Write-Host "Diskpart output (tail):"
+                    Get-Content $DiskpartLogFile -Tail 40 | Write-Host
+                }
+                throw "Disk Partitioning Failed - error log at: $DiskpartLogFile"
             } else {
-                Write-Host -ForegroundColor Yellow "Last exit code: $LASTEXITCODE" 
-                Write-Host -ForegroundColor Yellow "Disk Partitioning Failed - error log at: $DiskpartLogFile" 
+                Write-Host -ForegroundColor Yellow "Last exit code: $LASTEXITCODE"
+                Write-Host -ForegroundColor Yellow "Disk Partitioning Failed - error log at: $DiskpartLogFile"
                 return $LASTEXITCODE
             }
         }
 
+}
+
+function New-ToastPartitionWithStorageCmdlets {
+
+    param(
+        [Parameter(Mandatory=$true)] [int]$DiskNumber,
+        [Parameter(Mandatory=$true)] [int]$OSPartitionNumber
+    )
+
+    # Keep TOAST between 30-32 GB. Request 32 GB, but honor supported shrink limits.
+    $targetShrinkBytes = 32000MB
+    $minShrinkBytes = 30001MB
+
+    $osPart = Get-Partition -DiskNumber $DiskNumber -PartitionNumber $OSPartitionNumber
+    $supported = Get-PartitionSupportedSize -DiskNumber $DiskNumber -PartitionNumber $OSPartitionNumber
+    $currentSize = [int64]$osPart.Size
+    $maxShrinkBytes = $currentSize - [int64]$supported.SizeMin
+
+    if ($maxShrinkBytes -lt $minShrinkBytes) {
+        throw "Unable to shrink OS partition by at least 30001MB. Max available shrink is $([math]::Round($maxShrinkBytes / 1MB, 2))MB."
+    }
+
+    $actualShrink = [math]::Min($targetShrinkBytes, $maxShrinkBytes)
+    $newSize = $currentSize - $actualShrink
+    Write-Host "Resizing C: partition by approximately $([math]::Round($actualShrink / 1MB, 2))MB"
+    Resize-Partition -DiskNumber $DiskNumber -PartitionNumber $OSPartitionNumber -Size $newSize -ErrorAction Stop | Out-Null
+
+    # Create and format the new partition for WiFi ODE content.
+    $newPart = New-Partition -DiskNumber $DiskNumber -UseMaximumSize -DriveLetter U -ErrorAction Stop
+    Format-Volume -DriveLetter U -FileSystem FAT32 -NewFileSystemLabel "TOAST" -Confirm:$false -Force -ErrorAction Stop | Out-Null
+    return $newPart
 }
 
 Function EnumToastVol {
@@ -155,8 +189,16 @@ assign letter=U:
     $SmallDiskSize = get-disk | where-object {$_.size -gt 64300200100 -and $_.PartitionStyle -ne "MBR"}
 
     if ($SmallDiskSize -ne $null) {
-        Invoke-DiskpartCommand -DiskpartCommands $DiskpartCommands -continueOnError $false
-        New-PSDrive "U" -PSProvider FileSystem -Root "U:\" -Scope Global -ErrorAction Continue
+        try {
+            Invoke-DiskpartCommand -DiskpartCommands $DiskpartCommands -continueOnError $false
+        } catch {
+            Write-Host -ForegroundColor Yellow "Diskpart failed, retrying with Storage cmdlets: $($_.Exception.Message)"
+            New-ToastPartitionWithStorageCmdlets -DiskNumber $OSIndex -OSPartitionNumber $OSPartition | Out-Null
+        }
+
+        if (-not (Test-Path "U:\")) {
+            New-PSDrive "U" -PSProvider FileSystem -Root "U:\" -Scope Global -ErrorAction SilentlyContinue | Out-Null
+        }
     } else {
         $global:LocalExitCode = 1
         "Disk to small - Cannot create TOAST Partition" | OutputErrorMessage
