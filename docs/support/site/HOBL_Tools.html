@@ -1129,6 +1129,7 @@
 <p><u>Parameters:</u></p>
 <p><code>charge_threshold</code> -  <strong>Default:</strong> <code>40</code> </p>
 <p><code>resume_threshold</code> -  <strong>Default:</strong> <code>95</code> </p>
+<p><code>post_charge_delay</code> - How many seconds to wait after reaching the resume_threshold before disconnecting charger. <strong>Default:</strong> <code>1800</code> </p>
 <p><code>charge_on_call</code> -  <strong>Default:</strong> `` </p>
 <p><code>charge_off_call</code> -  <strong>Default:</strong> `` </p>
 <h2 id="battery_bar">battery_bar</h2>
@@ -1328,6 +1329,8 @@ are ignored, so the tool can be called for any subset of operations.</p>
 <p><code>pause</code> -  <strong>Default:</strong> <code>0</code> </p>
 <h2 id="screen_record">screen_record</h2>
 <p>Records a screen cast from the DUT for debug purposes.  Has considerable power impact.</p>
+<p><u>Parameters:</u></p>
+<p><code>device_index</code> - MacOS-only.  1 for older or non-Pro macbooks <strong>Default:</strong> <code>2</code>  <strong>Options:</strong> <code>1, 2</code></p>
 <h2 id="serialize_copyback">serialize_copyback</h2>
 <p>Deprecated.</p>
 <p><u>Parameters:</u></p>

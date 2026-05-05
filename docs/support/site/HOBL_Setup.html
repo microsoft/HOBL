@@ -554,8 +554,7 @@
 </li>
 <li>Test network connection to the DUT:<ol>
 <li>Host and DUT need to be on the same subnet (first 2 octets of the IP address).</li>
-<li>Run Cmd or Powershell on the Host.</li>
-<li>Make sure sure DUT responds to pings:  <code>ping &lt;dut_ip&gt;</code></li>
+<li>Run Cmd or Powershell on the Host, and make sure sure DUT responds to pings:  <code>ping &lt;dut_ip&gt;</code></li>
 <li>Make sure DUT can ping host as well.</li>
 <li>Run the "comm_check" scenario to make sure that all communications needs are met.</li>
 </ol>
@@ -563,19 +562,37 @@
 </ol>
 <h2 id="dut-setup-for-macos">DUT Setup For macOS</h2>
 <ol>
-<li>Manually make sure the device is onnected to the appropriate Wi-Fi netowrk, on the same subnet as the Host.</li>
-<li>After running host_setup.exe, dut_setup.sh should be found in the /downloads/Setup folder.  Copy dut_setup.sh from here to a USB stick.</li>
-<li>Plug the USB stick into the DUT and execute dut_setup.sh.</li>
-<li>There will be numerous prompts for password and to enable various security items.  It's critical to enable all.</li>
+<li>Manually set up the Mac with an account and connect the device to the appropriate Wi-Fi netowrk, on the same subnet as the Host.</li>
+<li>If Global Secure Access app exists, disable it.  It prevents peer-to-peer communication.</li>
+<li>Change settings to do auto-login:
+    a. System Settings -&gt; Users &amp; Groups -&gt; Automatically log in as: specify account and password</li>
+<li>Copy hobl\downloads\setup\dut_setup_<ver>.sh to Mac using a FAT32 formatted USB stick, and execute from terminal window.  You will be prompted for password and access permissions multiple times.  Be sure to enable everything.  If you don't see dut_setup_\<ver>.sh in the hobl\downloads\setup folder, then do <a href="#host-setup">Host Setup</a>.</li>
+<li>Either disable firewall, or disable "Stealth Mode" in Firewall Options (to allow pings to go through)</li>
+<li>Use light meter to adjust screen brightness to 150 nits, on DC with white background.  Then run /users/Shared/hobl_bin/brightness -l to report setting level.  Multiply that fraction by 100 to turn to percentage, to set display:brightness in profile.</li>
+<li>Leave audio level at out-of-box setting.</li>
+<li>The first time you run some tests or tools there may be various permissions popups.  Manually allow them all. Then subsequent runs should work without interference.</li>
+<li>Set keyboard shortcut Shift-Cmd-H to Safari "Clear History…"
+    a. Settings -&gt; Keyboard -&gt; Keyboard Shortcuts -&gt; App Shortcuts
+    b. Application: "Safari"
+    c. Menu title: "Clear History…" (the three dots are critical)
+    d. Keyboard shortcut: "Shift-Cmd-H"</li>
+<li>Set Safari history clear to "All History"</li>
 <li>Test network connection to the DUT:<ol>
 <li>Host and DUT need to be on the same subnet (first 2 octets of the IP address).</li>
-<li>Run Cmd or Powershell on the Host.</li>
-<li>Make sure sure DUT responds to pings:  <code>ping &lt;dut_ip&gt;</code></li>
+<li>Run Cmd or Powershell on the Host, and make sure sure DUT responds to pings:  <code>ping &lt;dut_ip&gt;</code></li>
 <li>Make sure DUT can ping host as well.</li>
 <li>Run the "comm_check" scenario to make sure that all communications needs are met.</li>
 </ol>
 </li>
 </ol>
+<p>One thing to be aware of on Mac is that as icon count in the dock increases, macos reduces their size so that they all fit.  However, in our automation we need them to stay constant size for proper image matching.  So the solution is remove unneeded icons to make sure there is plenty of space on the left and right of the dock.  So you might need to remove a few unused ones, such as Calendar, Reminders, etc.  Make sure the dock is always visible.</p>
+<p>Verify these settings have been set in  System Settings -&gt; Privacy &amp; Security:
+- Files &amp; Folders -&gt; SimpleRemoteconsole:
+  - Documents Folder
+  - Downloads Folder
+- Accessibility -&gt; SimpleRemoteConsole
+- Local Network -&gt; SimpleRemoteConsole
+- Screen &amp; System Audio Recording -&gt; SimpleRemoteConsole</p>
 
 
 
