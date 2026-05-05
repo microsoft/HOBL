@@ -1,0 +1,180 @@
+[
+    {
+        "author": "Yoon Kim",
+        "capture_device": "surface_laptop_15in",
+        "children": [],
+        "create_date": "2026-05-05",
+        "description": "",
+        "enabled": true,
+        "id": "1L96U04",
+        "type": "Information"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1L96V94",
+                "include_path": "scenarios\\windows\\_library\\web\\web_setup",
+                "params": [
+                    {
+                        "name": "[disable_delay]",
+                        "val_options": "0,1",
+                        "value": "0"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "40",
+                "description": "",
+                "enabled": true,
+                "id": "1L96Y79",
+                "include_path": "scenarios\\windows\\_library\\web\\web_enter_address",
+                "params": [
+                    {
+                        "name": "web_site_address",
+                        "val_options": "",
+                        "value": "https://browserbench.org/Speedometer3.1/"
+                    },
+                    {
+                        "name": "new_tab",
+                        "val_options": "0, 1",
+                        "value": "0"
+                    },
+                    {
+                        "name": "[web_site_load_time]",
+                        "val_options": "",
+                        "value": "20"
+                    },
+                    {
+                        "name": "[event_tag]",
+                        "val_options": "",
+                        "value": ""
+                    }
+                ],
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "1L96V0J",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "5",
+                "description": "Speedometer benchmark homepage",
+                "enabled": true,
+                "file_name": [
+                    "image_1L97CE7.png"
+                ],
+                "h": "0.814",
+                "id": "1L97CE7",
+                "recapture": false,
+                "type": "Capture",
+                "w": "0.722",
+                "x": "0.121",
+                "y": "0.122"
+            },
+            {
+                "capture_id": "1L97CE7",
+                "children": [],
+                "delay": "2",
+                "description": "Start Test",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_1L97EF3.png"
+                ],
+                "id": "1L97EF3",
+                "match_threshold": "",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "",
+                "enabled": true,
+                "file_name": [
+                    "image_1L97J46.png"
+                ],
+                "h": "0.810",
+                "id": "1L97J46",
+                "recapture": false,
+                "type": "Capture",
+                "w": "0.754",
+                "x": "0.133",
+                "y": "0.120"
+            },
+            {
+                "capture_id": "1L97J46",
+                "children": [],
+                "delay": "30",
+                "description": "",
+                "enabled": true,
+                "file_name": [
+                    "image_1L97JWN.png"
+                ],
+                "h": "0.810",
+                "id": "1L97JWN",
+                "timeout": "180",
+                "type": "Check Until Found",
+                "w": "0.754",
+                "x": "0.133",
+                "y": "0.120"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Copy Results",
+                "enabled": true,
+                "id": "1L98550",
+                "text": "\ue009ac",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            },
+            {
+                "children": [],
+                "delay": "5.0",
+                "description": "Get Score",
+                "enabled": true,
+                "file_name": [
+                    "code_1L97XLW.py"
+                ],
+                "id": "1L97XLW",
+                "type": "Code"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "1L96V0V",
+        "type": "Run Test"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1L98F02",
+                "include_path": "scenarios\\windows\\_library\\web\\web_close_browser",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "1L96V15",
+        "type": "Teardown"
+    }
+]

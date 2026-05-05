@@ -40,6 +40,9 @@ class ProcessIdleTasks(core.app_scenario.Scenario):
 
 
     def runTest(self):
+        if self.dut_ip == "127.0.0.1":
+            self.loops = 1
+        
         #logging.info("Setup")
         self._upload("utilities\\open_source\\process_idle_tasks.ps1", self.dut_exec_path)
         #logging.info("Initial Thread timeout - " + str(self.timeout / 60) + " min.")
@@ -70,7 +73,8 @@ class ProcessIdleTasks(core.app_scenario.Scenario):
         tThread.event.set()
         if self.final_reboot == "1":
             logging.info("Final reboot")
-            rebootDut(self, self)
+            self._dut_reboot()
+            # rebootDut(self, self)
         if success:
             logging.info("process_idle_tasks complete")
         else:
@@ -100,6 +104,7 @@ class ProcessIdleTasks(core.app_scenario.Scenario):
                     time.sleep(60)
                     self.timeout -= 60
                 logging.info("Timeout expired")
+                # self._dut_reboot()
                 rebootDut(self, self.scenario)
                 time.sleep(10)
                 self.scenario.reboot_complete = True
