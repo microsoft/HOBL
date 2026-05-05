@@ -10,7 +10,12 @@ def run(scenario):
     module_folder = os.path.dirname(__file__)
     
     typing_delay = int(Params.get('global', 'typing_delay'))
-    size = 21
+    # Honor [short_typing] (Set Default 0 in prod_excel_run.json) the same way
+    # prod_word_run / prod_outlook_run do. perf_stress sets short_typing=1.
+    # section=None walks scenario_section -> global, matching how JSON resolves [short_typing].
+    short_val = Params.get(None, 'short_typing')
+    short = (short_val == '1')
+    size = 10 if short else 21
     index = 0
     typing_str = ""
     with open(os.path.join(module_folder, "TestBookData.txt"), 'r') as myfile:

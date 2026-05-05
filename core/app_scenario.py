@@ -602,30 +602,26 @@ class Scenario(unittest.TestCase):
                     raise Exception("Couldn't find provider " + profile)
                     
 
-            # Start ETL trace. In filemode use an instance name so we can avoid collisions with existing tracing sessions.
+            # Start ETL trace.
             try:
                 if Params.get('global', 'trace_filemode') == '1':
-                    self._call(["cmd.exe", "/c wpr.exe" + wpr_command + " -filemode -instancename perfTrace"])
+                    self._call(["cmd.exe", "/c wpr.exe" + wpr_command + " -filemode"])
                 else:
                     self._call(["cmd.exe", "/c wpr.exe" + wpr_command])
             except Exception as e:
                 err_msg = str(e)
                 if "-984076287" in err_msg or "0xc5583001" in err_msg.lower():
                     logging.warning("WPR reported profiles already running. Retrying trace start after cancel.")
-                    self._call(["cmd.exe", "/c wpr.exe -cancel -instancename perfTrace > null 2>&1"], expected_exit_code="")
                     self._call(["cmd.exe", "/c wpr.exe -cancel > null 2>&1"], expected_exit_code="")
                     if Params.get('global', 'trace_filemode') == '1':
-                        self._call(["cmd.exe", "/c wpr.exe" + wpr_command + " -filemode -instancename perfTrace"])
+                        self._call(["cmd.exe", "/c wpr.exe" + wpr_command + " -filemode"])
                     else:
                         self._call(["cmd.exe", "/c wpr.exe" + wpr_command])
                 else:
                     raise
 
             # Mark beginning of test
-            if Params.get('global', 'trace_filemode') == '1':
-                self._call(["cmd.exe", '/c wpr.exe -marker "test_begin" -instancename perfTrace'])
-            else:
-                self._call(["cmd.exe", '/c wpr.exe -marker "test_begin"'])
+            self._call(["cmd.exe", '/c wpr.exe -marker "test_begin"'])
             self.trace_started = True
 
         # Trigger global test begin callback
@@ -1165,17 +1161,14 @@ class Scenario(unittest.TestCase):
                         ["cmd.exe", "/c wpr.exe -cancel > null 2>&1"], expected_exit_code="")
                 else:
                     # Mark end of test
-                    if Params.get('global', 'trace_filemode') == '1':
-                        self._call(["cmd.exe", '/c wpr.exe -marker "test_end" -instancename perfTrace'])
-                    else:
-                        self._call(["cmd.exe", '/c wpr.exe -marker "test_end"'])
+                    self._call(["cmd.exe", '/c wpr.exe -marker "test_end"'])
                     # Stop ETL trace
                     outfile = os.path.join(
                         self.dut_data_path, self.testname + ".etl")
 
                     logging.info("Ending trace and saving at: " + outfile)
                     if Params.get('global', 'trace_filemode') == '1':
-                        self._call(["cmd.exe", f"/c wpr.exe -stop {outfile} -compress -instancename perfTrace"])
+                        self._call(["cmd.exe", f"/c wpr.exe -stop {outfile} -compress"])
                     else:
                         self._call(["cmd.exe", f"/c wpr.exe -stop {outfile} -compress"])
                 self.trace_started = False
@@ -3558,10 +3551,7 @@ class Scenario(unittest.TestCase):
 
     def _mark_trace(self, tag):
         if self.trace == "1":
-            if Params.get('global', 'trace_filemode') == '1':
-                self._call(["cmd.exe", '/c wpr.exe -marker ' + tag + ' -instancename perfTrace'])
-            else:
-                self._call(["cmd.exe", '/c wpr.exe -marker ' + tag])
+            self._call(["cmd.exe", '/c wpr.exe -marker ' + tag])
 
     def _assert(self, assert_list):
         logging.error(assert_list)

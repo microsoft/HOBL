@@ -9,6 +9,7 @@ from utilities.modules import import_run_user_only
 def run():
     Params.setCalculated('scenario_section', __package__.split('.')[-1])
     run_user_only()
+    Params.setDefault('web_bg_tabs', 'bg_tab_loops', '6', desc='Number of iterations of the background-site loop. Each iteration opens 5 tabs (reddit, instagram, wikipedia, youtube_nasa, theverge). Default 6 = 30 bg tabs + 1 apollo foreground = 31 total. perf_stress overrides to 4 (= 20 bg tabs).', valOptions=['1', '2', '3', '4', '5', '6', '8', '10'])
     Params.setParam(None, 'default_typing_delay', '[global:typing_delay]')
     Params.setParam('global', 'typing_delay', '20')
     Params.setParam('global', 'typing_delay', '[default_typing_delay]')

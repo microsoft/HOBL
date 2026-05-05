@@ -3,7 +3,7 @@
   <scenarios>
     <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{921c2d75-0044-4048-ba91-17775bc57fa4}" scenarioname="PT_9471_Edge MSN Tab Anylayout NewTab _Stable__921c2d" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge MSN Tab Anylayout NewTab _Stable_" ptdurationfield="Duration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
-        <trigger triggername="Microsoft.MSEdgeStable.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab">
+        <trigger triggername="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab">
           <etwtrigger>
             <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
             <keywords>0x20000000000</keywords>
@@ -75,7 +75,7 @@
       </filters>
       <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
         <state id="_start">
-          <transition event="Microsoft.MSEdgeStable.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab" target="_complete" name="T1" />
+          <transition event="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab" target="_complete" name="T1" />
         </state>
         <final id="_complete" />
         <final id="_cancel" />
@@ -83,7 +83,7 @@
     </scenario>
     <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{dae017f3-cc0a-4875-b2eb-a383c4eaca4c}" scenarioname="PT_9412_Edge Navigation To First Paint _Stable__dae017" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="oldest" maxinflightinstances="1" ptscenarioname="Edge Navigation To First Paint _Stable_" ptdurationfield="Duration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
-        <trigger triggername="Microsoft.MSEdgeStable.PageLoad.PaintTiming.NavigationToFirstPaint">
+        <trigger triggername="Microsoft.MSEdge.PageLoad.PaintTiming.NavigationToFirstPaint">
           <etwtrigger>
             <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
             <keywords>0x20000000000</keywords>
@@ -175,7 +175,7 @@
       </filters>
       <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
         <state id="_start">
-          <transition event="Microsoft.MSEdgeStable.PageLoad.PaintTiming.NavigationToFirstPaint" target="_complete" name="T1" />
+          <transition event="Microsoft.MSEdge.PageLoad.PaintTiming.NavigationToFirstPaint" target="_complete" name="T1" />
         </state>
         <final id="_complete" />
         <final id="_cancel" />
@@ -190,14 +190,14 @@
             <level>5</level>
           </etwtrigger>
         </trigger>
-        <trigger triggername="Microsoft.MSEdgeStable.Microsoft.Startup.BrowserWindow.FirstWebContents.NonEmptyPaint3">
+        <trigger triggername="Microsoft.MSEdge.Microsoft.Startup.BrowserWindow.FirstWebContents.NonEmptyPaint3">
           <etwtrigger>
             <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
             <keywords>0x200000000000</keywords>
             <level>5</level>
           </etwtrigger>
         </trigger>
-        <trigger triggername="Microsoft.MSEdgeStable.LaunchBrowser">
+        <trigger triggername="Microsoft.MSEdge.LaunchBrowser">
           <etwtrigger>
             <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
             <keywords>0x20000000000</keywords>
@@ -317,7 +317,7 @@
       </filters>
       <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
         <state id="2">
-          <transition event="Microsoft.MSEdgeStable.Microsoft.Startup.BrowserWindow.FirstWebContents.NonEmptyPaint3" target="_complete" name="T3" />
+          <transition event="Microsoft.MSEdge.Microsoft.Startup.BrowserWindow.FirstWebContents.NonEmptyPaint3" target="_complete" name="T3" />
         </state>
         <state id="_start">
           <transition event="Microsoft.Windows.AppLifeCycle.UI.AppLaunch_UserClick" target="1" name="T1">
@@ -326,7 +326,7 @@
           </transition>
         </state>
         <state id="1">
-          <transition event="Microsoft.MSEdgeStable.LaunchBrowser" target="2" name="T2" />
+          <transition event="Microsoft.MSEdge.LaunchBrowser" target="2" name="T2" />
         </state>
         <final id="_complete" />
         <final id="_cancel" />
@@ -2597,7 +2597,7 @@
     </scenario>
     <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{a5ac1f54-5959-491c-aa11-4a7201501aa7}" scenarioname="PT_9006_Edge Startup Stable _Shell Click __ NTP TimeToVis_a5ac1f" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge Startup Stable _Shell Click __ NTP TimeToVisuallyReady_" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
-        <trigger triggername="Microsoft.MSEdgeStable.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.Startup">
+        <trigger triggername="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.Startup">
           <etwtrigger>
             <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
             <keywords>0x200000000000</keywords>
@@ -2675,7 +2675,7 @@
           </transition>
         </state>
         <state id="1">
-          <transition event="Microsoft.MSEdgeStable.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.Startup" target="_complete" name="T2" uploadtrigger="false" />
+          <transition event="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.Startup" target="_complete" name="T2" uploadtrigger="false" />
         </state>
         <final id="_complete" />
         <final id="_cancel" />
@@ -3915,14 +3915,14 @@
             <level>5</level>
           </etwtrigger>
         </trigger>
-        <trigger triggername="Microsoft.MSEdgeStable.Startup.FirstWebContents.NonEmptyPaint3">
+        <trigger triggername="Microsoft.MSEdge.Startup.FirstWebContents.NonEmptyPaint3">
           <etwtrigger>
             <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
             <keywords>0x4000</keywords>
             <level>5</level>
           </etwtrigger>
         </trigger>
-        <trigger triggername="Microsoft.MSEdgeStable.smartscreen.CreateSmartScreenClientV3">
+        <trigger triggername="Microsoft.MSEdge.smartscreen.CreateSmartScreenClientV3">
           <etwtrigger>
             <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
             <keywords>0x20000000000</keywords>
@@ -3993,11 +3993,11 @@
           </transition>
         </state>
         <state id="1">
-          <transition event="Microsoft.MSEdgeStable.smartscreen.CreateSmartScreenClientV3" target="2" name="T2" uploadtrigger="false" />
-          <transition event="Microsoft.MSEdgeStable.Startup.FirstWebContents.NonEmptyPaint3" target="_cancel" name="T4" uploadtrigger="false" />
+          <transition event="Microsoft.MSEdge.smartscreen.CreateSmartScreenClientV3" target="2" name="T2" uploadtrigger="false" />
+          <transition event="Microsoft.MSEdge.Startup.FirstWebContents.NonEmptyPaint3" target="_cancel" name="T4" uploadtrigger="false" />
         </state>
         <state id="2">
-          <transition event="Microsoft.MSEdgeStable.Startup.FirstWebContents.NonEmptyPaint3" target="_complete" name="T3" uploadtrigger="false" />
+          <transition event="Microsoft.MSEdge.Startup.FirstWebContents.NonEmptyPaint3" target="_complete" name="T3" uploadtrigger="false" />
         </state>
         <final id="_complete" />
         <final id="_cancel" />
