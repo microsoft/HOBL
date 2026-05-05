@@ -74,7 +74,6 @@ class ProcessIdleTasks(core.app_scenario.Scenario):
         if self.final_reboot == "1":
             logging.info("Final reboot")
             self._dut_reboot()
-            # rebootDut(self, self)
         if success:
             logging.info("process_idle_tasks complete")
         else:
@@ -104,8 +103,8 @@ class ProcessIdleTasks(core.app_scenario.Scenario):
                     time.sleep(60)
                     self.timeout -= 60
                 logging.info("Timeout expired")
-                # self._dut_reboot()
-                rebootDut(self, self.scenario)
+                # rebootDut(self, self.scenario)
+                self.scenario._dut_reboot()
                 time.sleep(10)
                 self.scenario.reboot_complete = True
                 timeout_reset = timeout_reset * 2
