@@ -15,7 +15,7 @@ import time
 
 class Tool(Scenario):
     '''
-    Turn off charger before scenario, turn it on after.
+    Turn off/on charger before scenario, turn on charger after.
     '''
     module = __module__.split('.')[-1]
     # Set default parameters
@@ -33,17 +33,28 @@ class Tool(Scenario):
     def initCallback(self, scenario):
         self.conn_timeout = False
         if self.mode == "AC":
-            return
-        # Disengage charging
-        logging.info("Attempting to turn off charger...")
-        if self.charge_off_call != "" and self.charge_off_call != None:
-            self._host_call(self.charge_off_call)
-            logging.info("Charger turned off.")
+            # Engage charging
+            logging.info("Attempting to turn on charger...")
+            if self.charge_on_call != "" and self.charge_on_call != None:
+                self._host_call(self.charge_on_call)
+                logging.info("Charger turned on.")
+            else:
+                logging.warning("No charge_on_call specified.")
+            if Params.get('global', 'local_execution') == '1':
+                self._host_call('utilities\\MsgPrompt.exe -WaitForAC')
+                logging.info("Charger plugged in.")
         else:
-            logging.warning("No charge_off_call specified.")
-        if Params.get('global', 'local_execution') == '1':
-            self._host_call('utilities\\MsgPrompt.exe -WaitForDC')
-            logging.info("Charger unplugged.")
+            # Disengage charging
+            logging.info("Attempting to turn off charger...")
+            if self.charge_off_call != "" and self.charge_off_call != None:
+                self._host_call(self.charge_off_call)
+                logging.info("Charger turned off.")
+            else:
+                logging.warning("No charge_off_call specified.")
+            if Params.get('global', 'local_execution') == '1':
+                self._host_call('utilities\\MsgPrompt.exe -WaitForDC')
+                logging.info("Charger unplugged.")
+
         time.sleep(int(self.delay))
 
     def testBeginCallback(self):
