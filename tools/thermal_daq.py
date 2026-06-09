@@ -158,6 +158,7 @@ class Tool(Scenario):
             self.channel_names[channel_bank].append(channel_name)
 
         self.record_thread = ThermalRecordThread(self)
+        self.cleanup = self.testEndCallback  # Register cleanup function to ensure thread is stopped on exit
         return
 
     def testBeginCallback(self):
@@ -182,7 +183,6 @@ class Tool(Scenario):
     def mergeThermalData(self):
         return
 
-
 class ThermalRecordThread(threading.Thread):
     def __init__(self, tool):
         threading.Thread.__init__(self)
@@ -190,8 +190,7 @@ class ThermalRecordThread(threading.Thread):
         self.client = DAQSocketClient(host=tool.thermal_daq_host, port=int(tool.thermal_daq_port))
         self.client.connect()
         self.stop_event = threading.Event()
-        self.data_log_file = open(f"{self.tool.scenario.result_dir}/{self.tool.output_filename}", "w")
-
+        self.data_log_file = f"{self.tool.scenario.result_dir}/{self.tool.output_filename}"
 
         # Set the channel names on the server
         self.set_channel_names(channels=self.tool.channels, channel_names=self.tool.channel_names)
@@ -202,8 +201,8 @@ class ThermalRecordThread(threading.Thread):
         
         # Write the header
         log_line = "Time," + ",".join(channel_names) + "\n"
-        self.data_log_file.write(log_line)
-    
+        with open(self.data_log_file, "a") as f:
+            f.write(log_line)
 
     def run(self):
         start_time = time.time()
@@ -215,9 +214,9 @@ class ThermalRecordThread(threading.Thread):
                     log_line = f"{timestamp}," + ",".join(f"{value:.2f}" for value in data) + "\n"
                     # # Flatten the list of data values and format each value individually
                     # formatted_values = [f"{value:.2f}" for sublist in data for value in sublist]
-                    # log_line = f"{timestamp}," + ",".join(formatted_values) + "\n"
-                    self.data_log_file.write(log_line)
-                    self.data_log_file.flush()
+                    
+                    with open(self.data_log_file, "a") as f:
+                        f.write(log_line)
                 time.sleep(self.tool.polling_interval)
             except Exception as e:
                 logging.error(f"Error in ThermalRecordThread: {e}")
@@ -226,7 +225,7 @@ class ThermalRecordThread(threading.Thread):
                 if not self.client.connect():
                     logging.error("Reconnection failed. Stopping Thermal DAQ recording.")
                     break # Optionally break the loop on error if we want to stop recording
-        self.data_log_file.close()
+
         self.client.close()
 
     def get_channel_names(self, channels):
