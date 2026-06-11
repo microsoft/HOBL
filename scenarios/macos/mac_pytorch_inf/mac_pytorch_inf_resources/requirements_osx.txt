@@ -1,5 +1,5 @@
 # PyTorch on macOS includes Metal support by default
 --extra-index-url https://download.pytorch.org/whl/nightly/cpu
-torch==2.8.0
+torch==2.13.0.dev20260416
 tokenizers==0.22.2
 transformers==4.56.1
