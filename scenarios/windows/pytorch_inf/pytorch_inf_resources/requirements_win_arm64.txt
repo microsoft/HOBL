@@ -1,6 +1,6 @@
 # CPU-only wheels for Arm64 Windows (no NVIDIA GPU)
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.8.0
+torch==2.12.0+cpu
 # Pin tokenizers to a version with pre-built win_arm64 wheels to avoid
 # requiring the Rust toolchain for source compilation on Arm64
 tokenizers==0.22.2
