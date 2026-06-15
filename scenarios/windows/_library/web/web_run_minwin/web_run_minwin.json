@@ -74,7 +74,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V7AJ",
+                "id": "1LA9NWK",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_reddit",
                 "params": [
                     {
@@ -85,7 +85,12 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
+                    },
+                    {
+                        "name": "[web_site_load_time]",
+                        "val_options": "",
+                        "value": "20"
                     }
                 ],
                 "type": "Include"
@@ -140,7 +145,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V815",
+                "id": "1LA9P5N",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_instagram",
                 "params": [
                     {
@@ -151,7 +156,12 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
+                    },
+                    {
+                        "name": "[web_site_load_time]",
+                        "val_options": "",
+                        "value": "20"
                     }
                 ],
                 "type": "Include"
@@ -206,7 +216,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1A93KF2",
+                "id": "1LA9PFA",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_amazon_got",
                 "params": [
                     {
@@ -267,7 +277,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V90X",
+                "id": "1LA9R6U",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_amazon_vacuum",
                 "params": [
                     {
@@ -278,7 +288,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
                     }
                 ],
                 "type": "Include"
@@ -316,34 +326,8 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1H6JNYW",
-                "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
-                "params": [
-                    {
-                        "name": "[app_name]",
-                        "val_options": "",
-                        "value": "File Explorer"
-                    },
-                    {
-                        "name": "[etw_event_tag]",
-                        "val_options": "",
-                        "value": "FileExplorerLaunch"
-                    },
-                    {
-                        "name": "[app_open_delay]",
-                        "val_options": "",
-                        "value": "3"
-                    }
-                ],
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1FXHRH8",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_open_file_explorer",
+                "id": "1L8MWR0",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_open",
                 "type": "Include"
             },
             {
@@ -360,25 +344,8 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1H6JPHH",
-                "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
-                "params": [
-                    {
-                        "name": "[app_name]",
-                        "val_options": "",
-                        "value": "[userprofile]\\onedrive\\abl_docs\\FamilyBudget.xlsx"
-                    },
-                    {
-                        "name": "[etw_event_tag]",
-                        "val_options": "",
-                        "value": "ExcelLaunch"
-                    },
-                    {
-                        "name": "[app_open_delay]",
-                        "val_options": "",
-                        "value": "3"
-                    }
-                ],
+                "id": "1L8MWJH",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_open",
                 "type": "Include"
             },
             {
@@ -446,7 +413,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V9F0",
+                "id": "1LA9T2N",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_images_apollo",
                 "params": [
                     {
@@ -457,7 +424,12 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
+                    },
+                    {
+                        "name": "[web_site_load_time]",
+                        "val_options": "",
+                        "value": "15"
                     }
                 ],
                 "type": "Include"
@@ -512,7 +484,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V9J1",
+                "id": "1LA9TCT",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_images_london",
                 "params": [
                     {
@@ -523,7 +495,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
                     }
                 ],
                 "type": "Include"
@@ -613,7 +585,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "110FT6A",
+                "id": "1LA9TMW",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_youtube_tos",
                 "params": [
                     {
@@ -624,12 +596,22 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
                     },
                     {
                         "name": "[enable_pause]",
                         "val_options": "0,1",
                         "value": "1"
+                    },
+                    {
+                        "name": "[full_screen]",
+                        "val_options": "0,1",
+                        "value": "0"
+                    },
+                    {
+                        "name": "[duration]",
+                        "val_options": "",
+                        "value": "120"
                     }
                 ],
                 "type": "Include"
@@ -702,25 +684,8 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1H6U664",
-                "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
-                "params": [
-                    {
-                        "name": "[app_name]",
-                        "val_options": "",
-                        "value": "[userprofile]\\onedrive\\abl_docs\\test_long_doc.docx"
-                    },
-                    {
-                        "name": "[etw_event_tag]",
-                        "val_options": "",
-                        "value": ""
-                    },
-                    {
-                        "name": "[app_open_delay]",
-                        "val_options": "",
-                        "value": "3"
-                    }
-                ],
+                "id": "1L8MXVP",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_open",
                 "type": "Include"
             },
             {
@@ -734,15 +699,6 @@
             },
             {
                 "children": [
-                    {
-                        "children": [],
-                        "delay": "0",
-                        "description": "",
-                        "enabled": true,
-                        "id": "1H6JM1M",
-                        "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
-                        "type": "Include"
-                    },
                     {
                         "children": [],
                         "delay": "5",
@@ -766,6 +722,15 @@
                 "enabled": true,
                 "id": "1HE5RH4",
                 "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1H6JM1M",
+                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+                "type": "Include"
             }
         ],
         "description": "",
@@ -773,7 +738,7 @@
         "eval_method": "in",
         "id": "1FUNWTF",
         "left_term": "productivity",
-        "right_term": "[enterprise_collab:mincp_workloads]",
+        "right_term": "[mincp_workloads]",
         "type": "If"
     },
     {
@@ -810,7 +775,7 @@
         "eval_method": "in",
         "id": "1HH4RJV",
         "left_term": "click_todo",
-        "right_term": "[enterprise_collab:mincp_workloads]",
+        "right_term": "[mincp_workloads]",
         "type": "If"
     },
     {
@@ -850,7 +815,7 @@
             },
             {
                 "children": [],
-                "delay": "3",
+                "delay": "5",
                 "description": "",
                 "enabled": true,
                 "id": "1HJA867",
@@ -896,7 +861,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VA6C",
+                "id": "1LA9U5E",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_wikipedia",
                 "params": [
                     {
@@ -907,7 +872,12 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
+                    },
+                    {
+                        "name": "[web_site_load_time]",
+                        "val_options": "",
+                        "value": "15"
                     }
                 ],
                 "type": "Include"
@@ -997,7 +967,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VATC",
+                "id": "1LA9V70",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_youtube_nasa",
                 "params": [
                     {
@@ -1008,7 +978,12 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
+                    },
+                    {
+                        "name": "[web_site_load_time]",
+                        "val_options": "",
+                        "value": "15"
                     }
                 ],
                 "type": "Include"
@@ -1101,6 +1076,33 @@
         "type": "End If"
     },
     {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1LCH9MT",
+                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\file_explorer_launch",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "in",
+        "id": "1L8PHXP",
+        "left_term": "file_explorer",
+        "right_term": "[mincp_workloads]",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1L8PHXR",
+        "type": "End If"
+    },
+    {
         "children": [],
         "delay": "0.0",
         "description": "Tab 10",
@@ -1124,7 +1126,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VAWC",
+                "id": "1LA9VLW",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_search_belgium",
                 "params": [
                     {
@@ -1135,7 +1137,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
                     }
                 ],
                 "type": "Include"
@@ -1190,7 +1192,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VCC1",
+                "id": "1LA9VTY",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_the_verge",
                 "params": [
                     {
@@ -1201,7 +1203,12 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
+                    },
+                    {
+                        "name": "[web_site_load_time]",
+                        "val_options": "",
+                        "value": "20"
                     }
                 ],
                 "type": "Include"
@@ -1247,18 +1254,18 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VCPR",
+                "id": "1LA9W9J",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_search_super_bowl",
                 "params": [
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "1"
+                        "value": "0"
                     },
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "[load_only]"
+                        "value": "0"
                     }
                 ],
                 "type": "Include"
@@ -1296,6 +1303,15 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
+                "id": "1LCH9YN",
+                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\type_to_search",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
                 "id": "1HECJT4",
                 "include_path": "scenarios\\windows\\_library\\misc\\snipping_tool",
                 "type": "Include"
@@ -1305,25 +1321,8 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1H6U7P7",
-                "include_path": "scenarios\\windows\\_library\\misc\\start_app_launch",
-                "params": [
-                    {
-                        "name": "[app_name]",
-                        "val_options": "",
-                        "value": "Outlook Classic"
-                    },
-                    {
-                        "name": "[etw_event_tag]",
-                        "val_options": "",
-                        "value": "OutlookLaunch"
-                    },
-                    {
-                        "name": "[app_open_delay]",
-                        "val_options": "",
-                        "value": "3"
-                    }
-                ],
+                "id": "1L8MYJU",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_open",
                 "type": "Include"
             },
             {
@@ -1331,8 +1330,15 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1H6JTLL",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_run",
+                "id": "1LCK742",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_run_minwin",
+                "params": [
+                    {
+                        "name": "[short_typing]",
+                        "val_options": "0,1",
+                        "value": "1"
+                    }
+                ],
                 "type": "Include"
             },
             {
@@ -1396,24 +1402,6 @@
                 "enabled": true,
                 "id": "1HE6UNH",
                 "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_close",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HFPFUF",
-                "include_path": "scenarios\\windows\\_library\\misc\\switchto_file_explorer",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HE6VX4",
-                "include_path": "scenarios\\windows\\_library\\misc\\close_file_explorer",
                 "type": "Include"
             },
             {
