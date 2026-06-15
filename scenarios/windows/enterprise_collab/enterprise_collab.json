@@ -60,7 +60,7 @@
         "enabled": true,
         "id": "1N9VK08",
         "multiple": true,
-        "name": "[mincp_workloads]",
+        "name": "[minwin_workloads]",
         "type": "Set User Default",
         "val_options": "live_captions,copilot_query,semantic_search,click_todo,studioeffect_blur,productivity,snipping_tool,file_explorer",
         "value": ""
@@ -332,7 +332,7 @@
                 "eval_method": "in",
                 "id": "1N9WMX0",
                 "left_term": "productivity",
-                "right_term": "[mincp_workloads]",
+                "right_term": "[minwin_workloads]",
                 "type": "If"
             },
             {

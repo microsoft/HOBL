@@ -7,10 +7,10 @@ from core.parameters import Params
 def run(scenario):
     logging.debug('Executing code block: code_1HX80P5.py')
     sideload_dir = "C:\\ProgramData\\Microsoft\\Diagnosis\\Sideload"
-    mincp_workloads = Params.get("enterprise_collab", "mincp_workloads")
-    logging.info(f"enterprise_collab:mincp_workloads='{mincp_workloads}'")
+    minwin_workloads = Params.get("enterprise_collab", "minwin_workloads")
+    logging.info(f"enterprise_collab:minwin_workloads='{minwin_workloads}'")
 
-    if mincp_workloads and len(mincp_workloads.strip()) > 0:
+    if minwin_workloads and len(minwin_workloads.strip()) > 0:
         logging.info("Setting enterprise_collab:simple_office_launch=0 because mincp_workloads has entries")
         Params.setParam("enterprise_collab", "simple_office_launch", "0")
         logging.info("Sideloading StressUtcPerftrack.xml because mincp_workloads is set")
