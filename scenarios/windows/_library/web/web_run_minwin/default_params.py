@@ -12,8 +12,6 @@ def run():
     return
 
 def run_user_only():
-    import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_switch_to')
-    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\copilot_query')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\file_explorer_launch')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\start_live_captions')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\terminate_live_captions')
