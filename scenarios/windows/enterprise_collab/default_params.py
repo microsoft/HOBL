@@ -22,8 +22,8 @@ def run():
 def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_setup')
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_teardown')
-    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable')
-    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable')
+    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\perf_setup')
+    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\perf_teardown')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\timers_setup')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\timers_teardown')
     import_run_user_only('scenarios\\windows\\_library\\misc\\click_file_explorer')
@@ -41,4 +41,5 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\web\\web_run_12')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_setup')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_switchto')
+    Params.setUserDefault(None, 'mincp_workloads', '', desc='', valOptions=['live_captions', 'copilot_query', 'semantic_search', 'click_todo', 'studioeffect_blur', 'productivity', 'snipping_tool', 'file_explorer'], multiple=True)
     return
