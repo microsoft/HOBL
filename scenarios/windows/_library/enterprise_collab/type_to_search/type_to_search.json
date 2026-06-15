@@ -1,0 +1,94 @@
+[
+    {
+        "author": "dasashutosh",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-05-07",
+        "description": "",
+        "enabled": true,
+        "id": "1LCFYW9",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH0CH",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LELH8K",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "StartLaunch"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH0LK",
+        "include_path": "scenarios\\windows\\_library\\misc\\start_launch",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH0HH",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "invalid"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "invalid"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Microsoft 365 Copilot",
+        "enabled": true,
+        "id": "1LCH0YW",
+        "text": "Microsoft\ue00d365\ue00dCopilot",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH1C0",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH1JT",
+        "include_path": "scenarios\\windows\\_library\\misc\\start_launch",
+        "type": "Include"
+    }
+]

@@ -925,7 +925,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1LCH9MT",
+                "id": "1NA645R",
                 "include_path": "scenarios\\windows\\_library\\enterprise_collab\\file_explorer_launch",
                 "type": "Include"
             }
@@ -1155,8 +1155,8 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1HECJT4",
-                "include_path": "scenarios\\windows\\_library\\misc\\snipping_tool",
+                "id": "1NA640H",
+                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\snipping_tool",
                 "type": "Include"
             },
             {

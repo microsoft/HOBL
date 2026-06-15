@@ -415,20 +415,62 @@
                 "type": "Include"
             },
             {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "19K57MP",
-                "include_path": "scenarios\\windows\\_library\\web\\web_run_12",
-                "params": [
+                "children": [
                     {
-                        "name": "[load_only]",
-                        "val_options": "0,1",
-                        "value": "0"
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1NA525H",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_run_minwin",
+                        "params": [
+                            {
+                                "name": "[load_only]",
+                                "val_options": "0,1",
+                                "value": "0"
+                            }
+                        ],
+                        "type": "Include"
                     }
                 ],
-                "type": "Include"
+                "description": "",
+                "enabled": true,
+                "eval_method": "!=",
+                "id": "1NA50YH",
+                "left_term": "[minwin_workloads]",
+                "right_term": "",
+                "type": "If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "19K57MP",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_run_12",
+                        "params": [
+                            {
+                                "name": "[load_only]",
+                                "val_options": "0,1",
+                                "value": "0"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "id": "1NA51PH",
+                "type": "Else"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1NA50YJ",
+                "type": "End If"
             },
             {
                 "children": [],

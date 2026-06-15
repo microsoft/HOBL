@@ -1,0 +1,39 @@
+[
+    {
+        "author": "dasashutosh",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-05-06",
+        "description": "",
+        "enabled": true,
+        "id": "1L9NLAK",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1L9NLEY",
+        "include_path": "scenarios\\windows\\_library\\misc\\capture_taskbar",
+        "type": "Include"
+    },
+    {
+        "capture_id": "TYH95X",
+        "children": [],
+        "delay": "2",
+        "description": "",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1L9NM3A.png"
+        ],
+        "id": "1L9NM3A",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    }
+]
