@@ -314,6 +314,33 @@
                 "enabled": true,
                 "id": "19MUF2R",
                 "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1N9WNHN",
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "in",
+                "id": "1N9WMX0",
+                "left_term": "productivity",
+                "right_term": "[mincp_workloads]",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1N9WMX1",
+                "type": "End If"
             }
         ],
         "description": "",

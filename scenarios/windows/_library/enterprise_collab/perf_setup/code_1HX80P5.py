@@ -8,8 +8,11 @@ def run(scenario):
     logging.debug('Executing code block: code_1HX80P5.py')
     sideload_dir = "C:\\ProgramData\\Microsoft\\Diagnosis\\Sideload"
     mincp_workloads = Params.get("enterprise_collab", "mincp_workloads")
+    logging.info(f"enterprise_collab:mincp_workloads='{mincp_workloads}'")
 
     if mincp_workloads and len(mincp_workloads.strip()) > 0:
+        logging.info("Setting enterprise_collab:simple_office_launch=0 because mincp_workloads has entries")
+        Params.setParam("enterprise_collab", "simple_office_launch", "0")
         logging.info("Sideloading StressUtcPerftrack.xml because mincp_workloads is set")
         scenario._upload("utilities\\proprietary\\ParseUtc\\StressUtcPerftrack.xml", sideload_dir)
         scenario._call(["cmd.exe", f'/C copy /Y "{sideload_dir}\\StressUtcPerftrack.xml" "{sideload_dir}\\UtcPerftrack.xml"'])
