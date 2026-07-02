@@ -527,50 +527,6 @@
         "type": "End If"
     },
     {
-        "children": [
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1H2MH62",
-                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\start_live_captions",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1H2MJU7",
-                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "5",
-                "description": "",
-                "enabled": true,
-                "id": "1H6X8K8",
-                "type": "Delay"
-            }
-        ],
-        "description": "",
-        "enabled": true,
-        "eval_method": "in",
-        "id": "1H2MEEF",
-        "left_term": "live_captions",
-        "right_term": "[mincp_workloads]",
-        "type": "If"
-    },
-    {
-        "children": [],
-        "description": "",
-        "enabled": true,
-        "id": "1H2MEEH",
-        "type": "End If"
-    },
-    {
         "children": [],
         "delay": "0.0",
         "description": "Tab 7",
@@ -646,41 +602,6 @@
         "children": [
             {
                 "children": [],
-                "delay": "3",
-                "description": "",
-                "enabled": true,
-                "id": "1H2ML4U",
-                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\terminate_live_captions",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "3",
-                "description": "",
-                "enabled": true,
-                "id": "1HEMKTA",
-                "type": "Delay"
-            }
-        ],
-        "description": "",
-        "enabled": true,
-        "eval_method": "in",
-        "id": "1H2MK6H",
-        "left_term": "live_captions",
-        "right_term": "[mincp_workloads]",
-        "type": "If"
-    },
-    {
-        "children": [],
-        "description": "",
-        "enabled": true,
-        "id": "1H2MK6J",
-        "type": "End If"
-    },
-    {
-        "children": [
-            {
-                "children": [],
                 "delay": "0",
                 "description": "",
                 "enabled": true,
@@ -698,32 +619,6 @@
                 "type": "Include"
             },
             {
-                "children": [
-                    {
-                        "children": [],
-                        "delay": "5",
-                        "description": "",
-                        "enabled": true,
-                        "id": "1H6JM41",
-                        "type": "Delay"
-                    }
-                ],
-                "description": "",
-                "enabled": true,
-                "eval_method": "not in",
-                "id": "1HE5RH2",
-                "left_term": "copilot_query",
-                "right_term": "[mincp_workloads]",
-                "type": "If"
-            },
-            {
-                "children": [],
-                "description": "",
-                "enabled": true,
-                "id": "1HE5RH4",
-                "type": "End If"
-            },
-            {
                 "children": [],
                 "delay": "0",
                 "description": "",
@@ -731,6 +626,14 @@
                 "id": "1H6JM1M",
                 "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
                 "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "",
+                "enabled": true,
+                "id": "1P5T1RC",
+                "type": "Delay"
             }
         ],
         "description": "",
@@ -746,43 +649,6 @@
         "description": "",
         "enabled": true,
         "id": "1FUNWTH",
-        "type": "End If"
-    },
-    {
-        "children": [
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HH4T37",
-                "include_path": "scenarios\\windows\\_library\\misc\\click_to_do_bg_blur",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "2",
-                "description": "",
-                "enabled": true,
-                "id": "1HJ0F1M",
-                "name": "[web:tabs]",
-                "type": "Increment",
-                "value": "1"
-            }
-        ],
-        "description": "",
-        "enabled": true,
-        "eval_method": "in",
-        "id": "1HH4RJV",
-        "left_term": "click_todo",
-        "right_term": "[mincp_workloads]",
-        "type": "If"
-    },
-    {
-        "children": [],
-        "description": "",
-        "enabled": true,
-        "id": "1HH4RJW",
         "type": "End If"
     },
     {
