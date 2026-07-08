@@ -388,7 +388,7 @@
         "eval_method": "in",
         "id": "1FXHP79",
         "left_term": "productivity",
-        "right_term": "[mincp_workloads]",
+        "right_term": "[minwin_workloads]",
         "type": "If"
     },
     {
@@ -641,7 +641,7 @@
         "eval_method": "in",
         "id": "1FUNWTF",
         "left_term": "productivity",
-        "right_term": "[mincp_workloads]",
+        "right_term": "[minwin_workloads]",
         "type": "If"
     },
     {
@@ -801,7 +801,7 @@
         "eval_method": "in",
         "id": "1L8PHXP",
         "left_term": "file_explorer",
-        "right_term": "[mincp_workloads]",
+        "right_term": "[minwin_workloads]",
         "type": "If"
     },
     {
@@ -1128,7 +1128,7 @@
         "eval_method": "in",
         "id": "1H6JT03",
         "left_term": "productivity",
-        "right_term": "[enterprise_collab:mincp_workloads]",
+        "right_term": "[minwin_workloads]",
         "type": "If"
     },
     {
