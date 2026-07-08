@@ -17,8 +17,10 @@ class Tool(Scenario):
     module = __module__.split('.')[-1]
     # Set default parameters
     Params.setDefault(module, 'provider', 'perf_utc.wprp', desc="WPRP file to use for UTC Perftrack traces.", valOptions=["@\\providers"])
+    Params.setDefault(module, 'raw', '0', desc="Use raw UTC parser manifest and emit raw parsing output when set to 1.")
     # Get parameters
     provider = Params.get(module, 'provider')
+    raw = Params.get(module, 'raw')
 
     def initCallback(self, scenario):
         # Keep a pointer to the scenario that this tools is being run with
@@ -46,10 +48,15 @@ class Tool(Scenario):
         etl_trace = self.scenario.result_dir + "\\" + self.scenario.testname + ".etl"
         perf_output = self.scenario.result_dir + "\\" + self.scenario.testname + "_PerfMetrics.csv"
         manifest_file = "utilities\\proprietary\\ParseUtc\\UtcPerftrack.xml"
+        parser_args = ""
+
+        if self.raw == '1':
+            manifest_file = "utilities\\proprietary\\ParseUtc\\StressUtcPerftrack.xml"
+            parser_args = " --raw"
 
         logging.info("Perf Tool - Running PerfParser on " + etl_trace)
 
-        self._host_call("utilities\\proprietary\\ParseUtc\\PerfParser.exe " + etl_trace + " " + manifest_file + " " + perf_output)
+        self._host_call("utilities\\proprietary\\ParseUtc\\PerfParser.exe " + etl_trace + " " + manifest_file + " " + perf_output + parser_args)
 
     def testTimeoutCallback(self):
         self.conn_timeout = True
