@@ -14,13 +14,22 @@
         "delay": "0",
         "description": "",
         "enabled": true,
+        "id": "1R60F61",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
         "id": "1LEKCYH",
         "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
         "params": [
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "SnippintToolLaunch"
+                "value": "SnippingToolLaunch"
             }
         ],
         "type": "Include"
@@ -102,5 +111,26 @@
         "type": "Click",
         "x": "0.500",
         "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1R60F9N",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "invalid"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "invalid"
+            }
+        ],
+        "type": "Include"
     }
 ]

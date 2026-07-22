@@ -29,7 +29,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "StartLaunch"
+                "value": "StartQueryType"
             }
         ],
         "type": "Include"
@@ -41,27 +41,6 @@
         "enabled": true,
         "id": "1LCH0LK",
         "include_path": "scenarios\\windows\\_library\\misc\\start_launch",
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1LCH0HH",
-        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
-        "params": [
-            {
-                "name": "[phase_category]",
-                "val_options": "",
-                "value": "invalid"
-            },
-            {
-                "name": "[phase_name]",
-                "val_options": "",
-                "value": "invalid"
-            }
-        ],
         "type": "Include"
     },
     {
