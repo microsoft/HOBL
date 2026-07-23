@@ -51,7 +51,7 @@ class Tool(Scenario):
         parser_args = ""
 
         if self.raw == '1':
-            manifest_file = "utilities\\proprietary\\ParseUtc\\StressUtcPerftrack.xml"
+            manifest_file = "utilities\\proprietary\\ParseUtc\\ConsumerMultitaskerPTs.xml"
             parser_args = " --raw"
 
         logging.info("Perf Tool - Running PerfParser on " + etl_trace)
