@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <diagrules>
   <scenarios>
     <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{dae017f3-cc0a-4875-b2eb-a383c4eaca4c}" scenarioname="PT_9412_Edge Navigation To First Paint _Stable__dae017" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="oldest" maxinflightinstances="1" ptscenarioname="Edge Navigation To First Paint _Stable_" ptdurationfield="Duration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -1148,37 +1148,77 @@
         <final id="_cancel" />
       </scxml>
     </scenario>
-    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{9a700fae-8b2d-4664-b951-ab65ba309b26}" scenarioname="PT_1809_Open Start Menu_9a700f" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" maxinflightinstances="1" ptscenarioname="Open Start Menu" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+    <scenario schemaversion="2" scenarioid="{4f6cf0d4-9566-4338-a3fa-f2ce10623927}" scenarioname="PT_9197__TIP_ Start Launch_4f6cf0" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="_TIP_ Start Launch" ptdurationfield="durationMs" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
-        <trigger triggername="Microsoft-Windows-Shell-Launcher.LauncherInvokeActivity">
+        <trigger triggername="Microsoft.Windows.Health.TestInProduction.TestResult">
           <etwtrigger>
-            <provider>{3d6120a6-0986-51c4-213a-e2975903051d}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="Microsoft-Windows-Shell-Launcher.LauncherOpened">
-          <etwtrigger>
-            <provider>{3d6120a6-0986-51c4-213a-e2975903051d}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="Microsoft-Windows-Shell-Launcher.StartDidntOpenInSpecifiedTime">
-          <etwtrigger>
-            <provider>{3d6120a6-0986-51c4-213a-e2975903051d}</provider>
-            <keywords>0x400000000000</keywords>
+            <provider>{50109fbd-6d85-5815-731e-c907eca1607b}</provider>
+            <keywords>0x2</keywords>
             <level>5</level>
           </etwtrigger>
         </trigger>
       </triggers>
       <filters>
-        <filter appliesto="trigger" filtername="match807_opcodee_11">
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value />
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename />
+            <valuetype>REG_NONE</valuetype>
+            <value />
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match13547testCaseIde_132188357">
           <singletriggerpropertyfilter>
-            <triggername>Microsoft-Windows-Shell-Launcher.LauncherInvokeActivity</triggername>
+            <triggername>Microsoft.Windows.Health.TestInProduction.TestResult</triggername>
             <propertyselector>
               <propertykey>
-                <name>_opcode</name>
+                <name>testCaseId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>32188357</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match13547completionKinde_11">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Windows.Health.TestInProduction.TestResult</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>completionKind</name>
               </propertykey>
             </propertyselector>
             <mathoperation>add</mathoperation>
@@ -1188,15 +1228,12 @@
           </singletriggerpropertyfilter>
         </filter>
       </filters>
-      <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
         <state id="_start">
-          <transition event="Microsoft-Windows-Shell-Launcher.LauncherInvokeActivity" target="1" name="T0" uploadtrigger="false">
-            <filter strict="false">match807_opcodee_11</filter>
+          <transition event="Microsoft.Windows.Health.TestInProduction.TestResult" target="_complete" name="T1">
+            <filter strict="false">match13547testCaseIde_132188357</filter>
+            <filter strict="false">match13547completionKinde_11</filter>
           </transition>
-        </state>
-        <state id="1">
-          <transition event="Microsoft-Windows-Shell-Launcher.LauncherOpened" target="_complete" name="T1" uploadtrigger="false" />
-          <transition event="Microsoft-Windows-Shell-Launcher.StartDidntOpenInSpecifiedTime" target="_cancel" name="T2" uploadtrigger="false" />
         </state>
         <final id="_complete" />
         <final id="_cancel" />
