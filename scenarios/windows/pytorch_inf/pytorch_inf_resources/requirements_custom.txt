@@ -3,6 +3,6 @@
 --index-url https://packagefeedproxy.microsoft.io/pypi/simple
 # Dependencies for custom wheel path (torch wheel installed separately from local file)
 tokenizers==0.22.2
-transformers==4.56.1
+transformers==5.5.0
 accelerate==1.13.0
 safetensors==0.8.0rc0
