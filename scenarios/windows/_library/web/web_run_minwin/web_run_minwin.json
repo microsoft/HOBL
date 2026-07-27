@@ -136,6 +136,22 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
+                "id": "1RF06CT",
+                "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                "params": [
+                    {
+                        "name": "[event_tag]",
+                        "val_options": "",
+                        "value": "Instagram"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
                 "id": "1CAHEP5",
                 "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
                 "type": "Include"
@@ -207,6 +223,22 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
+                "id": "1RF0727",
+                "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                "params": [
+                    {
+                        "name": "[event_tag]",
+                        "val_options": "",
+                        "value": "AmazonGOT"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
                 "id": "1CAHF41",
                 "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
                 "type": "Include"
@@ -263,6 +295,22 @@
     },
     {
         "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1RF07F6",
+                "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                "params": [
+                    {
+                        "name": "[event_tag]",
+                        "val_options": "",
+                        "value": "AmazonVaccum"
+                    }
+                ],
+                "type": "Include"
+            },
             {
                 "children": [],
                 "delay": "0",
@@ -475,6 +523,22 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
+                "id": "1RF07VL",
+                "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                "params": [
+                    {
+                        "name": "[event_tag]",
+                        "val_options": "",
+                        "value": "GoogleImagesLondon"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
                 "id": "1CAHH74",
                 "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
                 "type": "Include"
@@ -666,6 +730,22 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
+                "id": "1RF087T",
+                "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                "params": [
+                    {
+                        "name": "[event_tag]",
+                        "val_options": "",
+                        "value": "Wikipedia"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
                 "id": "1CAHJ72",
                 "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
                 "type": "Include"
@@ -826,6 +906,22 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
+                "id": "1RF08KL",
+                "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                "params": [
+                    {
+                        "name": "[event_tag]",
+                        "val_options": "",
+                        "value": "GoogleSearchBelgium"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
                 "id": "1CAHJP9",
                 "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
                 "type": "Include"
@@ -887,6 +983,22 @@
     },
     {
         "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1RF08W6",
+                "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+                "params": [
+                    {
+                        "name": "[event_tag]",
+                        "val_options": "",
+                        "value": "TheVerge"
+                    }
+                ],
+                "type": "Include"
+            },
             {
                 "children": [],
                 "delay": "0",

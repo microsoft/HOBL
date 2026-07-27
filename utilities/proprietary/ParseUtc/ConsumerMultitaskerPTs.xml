@@ -1923,5 +1923,23 @@
         <final id="_cancel" />
       </scxml>
     </scenario>
+    <scenario schemaversion="2" scenarioid="{9bf26973-1446-4c85-b54d-f7bce1575ad7}" scenarioname="PT_9471_Edge MSN Tab Anylayout NewTab _Stable__9bf269" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge MSN Tab Anylayout NewTab _Stable_" ptdurationfield="Duration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab">
+          <etwtrigger>
+            <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
+            <keywords>0x20000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab" target="_complete" name="T1" />
+        </state>
+        <final id="_complete" />
+        <final id="_cancel" />
+      </scxml>
+    </scenario>
   </scenarios>
 </diagrules>
