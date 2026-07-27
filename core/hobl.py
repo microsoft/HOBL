@@ -113,6 +113,7 @@ params.setDefault('global', 'crit_batt_level', '3')  # Full Rundown SOC threshol
 params.setDefault('global', 'trigger_soc', '5')  # Rundown trigger SoC level in percent to call post config and save etl
 params.setDefault('global', 'trigger_script', 'postconfig_etl.bat')  # Rundown trigger script to call post config and save etl
 params.setDefault('global', 'rundown_mode', '0')  # Rundown Enable Switch
+params.setDefault('global', 'rundown_quick_charge_on', '0')  # Immediately flip charger on after hitting soc level
 params.setDefault('global', 'goal_limit', '30') # Goal_limit is a percentage (30%)
 params.setDefault('global', 'warn_limit', '20') # Warn_limit is a percentage (20%)
 # params.setDefault('global', 'enable_vbs', '')

@@ -387,6 +387,7 @@ class Scenario(unittest.TestCase):
         self.trigger_soc = Params.get('global', 'trigger_soc')
         self.trigger_script = Params.get('global', 'trigger_script')
         self.rundown_mode = Params.get('global', 'rundown_mode')
+        self.rundown_quick_charge_on = Params.get('global', 'rundown_quick_charge_on')
         self.poll_rate = "360" # 6 minutes, gives us battery life hours in 0.1 increments.
 
     def _record_phase_time(self, phase_name, start_time, duration):
@@ -1013,6 +1014,14 @@ class Scenario(unittest.TestCase):
             logging.debug("waiting for threads to end")
             endThreadEvent.wait()
 
+            # Check if we want to flip back charger immedialtely after a thread ends
+            if self.rundown_quick_charge_on == "1":
+                charge_on_call = Params.get('global', 'charge_on_call')
+                if charge_on_call == '':      
+                    logging.warning("No charge_on_call specified.")             
+                else:
+                    self._host_call(charge_on_call)    
+                    
             # Check if the scenario finished before the Monitor Thread if rundown mode
             if self.rundown_mode == "1":
                 if (int(self.stop_soc) > 0):
