@@ -4,6 +4,6 @@
 --index-url https://packagefeedproxy.microsoft.io/pypi/simple
 # CUDA 12.8 doesn't come with pytorch by default and on Windows we want CUDA
 --extra-index-url https://download.pytorch.org/whl/cu128
-torch==2.8.0
+torch==2.12.1+cpu
 tokenizers==0.22.2
 transformers==4.56.1
