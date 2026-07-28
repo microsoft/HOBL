@@ -15,7 +15,6 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\file_explorer_launch')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\snipping_tool')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\type_to_search')
-    import_run_user_only('scenarios\\windows\\_library\\misc\\etw_event_tag')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_close')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_open')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_run')
