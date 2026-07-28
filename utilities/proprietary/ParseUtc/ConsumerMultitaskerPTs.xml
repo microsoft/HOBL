@@ -1935,10 +1935,10 @@
       </triggers>
       <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
         <state id="_start">
-          <transition event="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab" target="_complete" name="T1" />
+          <transition event="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab" target="_complete" name="T1"/>
         </state>
-        <final id="_complete" />
-        <final id="_cancel" />
+        <final id="_complete"/>
+        <final id="_cancel"/>
       </scxml>
     </scenario>
   </scenarios>
