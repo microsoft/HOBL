@@ -30,7 +30,7 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_word_open')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_word_run')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_word_switchto')
-    import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_amazon_got')
+    import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_amazon_bsg')
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_amazon_vacuum')
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_google_images_apollo')
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_google_images_london')
@@ -45,5 +45,5 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\web\\web_clear_cache')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_new_tab')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_switchto')
-    Params.setUserDefault(None, 'web_workload', 'amazongot amazonvacuum googleimagesapollo googleimageslondon googlesearchbelgium googlesearchsuperbowl instagram reddit theverge wikipedia youtubenasa youtubetos', desc='Specific websites to run.', valOptions=['amazonbsg', 'amazongot', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'instagram', 'reddit', 'theverge', 'wikipedia', 'youtubenasa', 'youtubetos'], multiple=True)
+    Params.setUserDefault(None, 'web_workload', 'amazonbsg amazonvacuum googleimagesapollo googleimageslondon googlesearchbelgium googlesearchsuperbowl instagram reddit theverge wikipedia youtubenasa youtubetos', desc='Specific websites to run.', valOptions=['amazonbsg', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'instagram', 'reddit', 'theverge', 'wikipedia', 'youtubenasa', 'youtubetos'], multiple=True)
     return

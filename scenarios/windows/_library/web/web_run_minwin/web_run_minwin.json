@@ -29,8 +29,8 @@
         "multiple": true,
         "name": "[web_workload]",
         "type": "Set User Default",
-        "val_options": "amazonbsg,amazongot,amazonvacuum,googleimagesapollo,googleimageslondon,googlesearchbelgium,googlesearchsuperbowl,instagram,reddit,theverge,wikipedia,youtubenasa,youtubetos",
-        "value": "amazongot amazonvacuum googleimagesapollo googleimageslondon googlesearchbelgium googlesearchsuperbowl instagram reddit theverge wikipedia youtubenasa youtubetos"
+        "val_options": "amazonbsg,amazonvacuum,googleimagesapollo,googleimageslondon,googlesearchbelgium,googlesearchsuperbowl,instagram,reddit,theverge,wikipedia,youtubenasa,youtubetos",
+        "value": "amazonbsg amazonvacuum googleimagesapollo googleimageslondon googlesearchbelgium googlesearchsuperbowl instagram reddit theverge wikipedia youtubenasa youtubetos"
     },
     {
         "children": [],
@@ -216,12 +216,17 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1LA9PFA",
-                "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_amazon_got",
+                "id": "1RKAVK3",
+                "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_amazon_bsg",
                 "params": [
                     {
                         "name": "new_tab",
                         "val_options": "0, 1",
+                        "value": "0"
+                    },
+                    {
+                        "name": "[load_only]",
+                        "val_options": "0,1",
                         "value": "0"
                     }
                 ],
@@ -242,7 +247,7 @@
         "enabled": true,
         "eval_method": "in",
         "id": "1A93JTC",
-        "left_term": "amazongot",
+        "left_term": "amazonbsg",
         "right_term": "[web:web_workload]",
         "type": "If"
     },
