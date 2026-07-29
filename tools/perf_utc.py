@@ -17,7 +17,7 @@ class Tool(Scenario):
     module = __module__.split('.')[-1]
     # Set default parameters
     Params.setDefault(module, 'provider', 'perf_utc.wprp', desc="WPRP file to use for UTC Perftrack traces.", valOptions=["@\\providers"])
-    Params.setDefault(module, 'cm', '0', desc="Use raw UTC parser manifest and emit raw parsing output when set to 1.")
+    Params.setDefault(module, 'cm', '0', desc="Use the ConsumerMultitaskerPTs.xml manifest.")
     # Get parameters
     provider = Params.get(module, 'provider')
     cm = Params.get(module, 'cm')
