@@ -17,10 +17,10 @@ class Tool(Scenario):
     module = __module__.split('.')[-1]
     # Set default parameters
     Params.setDefault(module, 'provider', 'perf_utc.wprp', desc="WPRP file to use for UTC Perftrack traces.", valOptions=["@\\providers"])
-    Params.setDefault(module, 'raw', '0', desc="Use raw UTC parser manifest and emit raw parsing output when set to 1.")
+    Params.setDefault(module, 'cm', '0', desc="Use raw UTC parser manifest and emit raw parsing output when set to 1.")
     # Get parameters
     provider = Params.get(module, 'provider')
-    raw = Params.get(module, 'raw')
+    cm = Params.get(module, 'cm')
 
     def initCallback(self, scenario):
         # Keep a pointer to the scenario that this tools is being run with
@@ -50,7 +50,7 @@ class Tool(Scenario):
         manifest_file = "utilities\\proprietary\\ParseUtc\\UtcPerftrack.xml"
         parser_args = ""
 
-        if self.raw == '1':
+        if self.cm == '1':
             manifest_file = "utilities\\proprietary\\ParseUtc\\ConsumerMultitaskerPTs.xml"
             parser_args = " --raw"
 
