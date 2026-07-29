@@ -48,15 +48,13 @@ class Tool(Scenario):
         etl_trace = self.scenario.result_dir + "\\" + self.scenario.testname + ".etl"
         perf_output = self.scenario.result_dir + "\\" + self.scenario.testname + "_PerfMetrics.csv"
         manifest_file = "utilities\\proprietary\\ParseUtc\\UtcPerftrack.xml"
-        parser_args = ""
 
         if self.cm == '1':
             manifest_file = "utilities\\proprietary\\ParseUtc\\ConsumerMultitaskerPTs.xml"
-            parser_args = " --raw"
 
         logging.info("Perf Tool - Running PerfParser on " + etl_trace)
 
-        self._host_call("utilities\\proprietary\\ParseUtc\\PerfParser.exe " + etl_trace + " " + manifest_file + " " + perf_output + parser_args)
+        self._host_call("utilities\\proprietary\\ParseUtc\\PerfParser.exe " + etl_trace + " " + manifest_file + " " + perf_output )
 
     def testTimeoutCallback(self):
         self.conn_timeout = True
