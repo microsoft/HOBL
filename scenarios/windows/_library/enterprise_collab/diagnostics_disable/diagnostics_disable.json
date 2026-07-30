@@ -32,27 +32,27 @@
         "description": "Account Section",
         "enabled": true,
         "file_name": [
-            "image_1NA0KEK.png"
+            "image_1RLR5MA.png"
         ],
-        "h": "0.323",
-        "id": "1NA0KEK",
+        "h": "0.333",
+        "id": "1RLR5MA",
         "recapture": false,
         "type": "Capture",
-        "w": "0.329",
+        "w": "0.231",
         "x": "0.001",
-        "y": "0.626"
+        "y": "0.662"
     },
     {
-        "capture_id": "1NA0KEK",
+        "capture_id": "1RLR5MA",
         "children": [],
         "delay": "2",
-        "description": "",
+        "description": "Account Button",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1NA0KXT.png"
+            "image_1RLR6U5.png"
         ],
-        "id": "1NA0KXT",
+        "id": "1RLR6U5",
         "match_threshold": "",
         "primary": true,
         "scale": "",
