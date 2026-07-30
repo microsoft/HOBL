@@ -113,97 +113,64 @@
     {
         "children": [],
         "delay": "0.5",
-        "description": "Privacy Settings Dialouge Box",
+        "description": "Diagnostic Check Box",
         "enabled": true,
         "file_name": [
-            "image_1CE941M.png"
+            "image_1RLM1YT.png"
         ],
-        "h": "0.879",
-        "id": "1CE941M",
+        "h": "0.261",
+        "id": "1RLM1YT",
         "recapture": false,
         "type": "Capture",
-        "w": "0.845",
-        "x": "0.106",
-        "y": "0.060"
+        "w": "0.241",
+        "x": "0.183",
+        "y": "0.524"
     },
     {
-        "children": [
-            {
-                "capture_id": "1CE941M",
-                "children": [],
-                "delay": "2",
-                "description": "Uncheck Send Diagnostics",
-                "enabled": true,
-                "exception_on": "No match",
-                "file_name": [
-                    "image_19WT1FC.png"
-                ],
-                "id": "1ALM12P",
-                "match_threshold": "0.85",
-                "primary": true,
-                "scale": "",
-                "type": "Click",
-                "x": "0.500",
-                "y": "0.500"
-            }
-        ],
-        "description": "",
+        "capture_id": "1RLM1YT",
+        "children": [],
+        "delay": "2",
+        "description": "Dignostic Checkbox",
         "enabled": true,
-        "id": "19LT69P",
-        "type": "Try"
-    },
-    {
-        "children": [
-            {
-                "capture_id": "1CE941M",
-                "children": [],
-                "delay": "2",
-                "description": "Diagnostics Option Unchecked",
-                "enabled": true,
-                "exception_on": "No match",
-                "file_name": [
-                    "image_1ALM12P.png"
-                ],
-                "h": "0.034",
-                "id": "19LTRTX",
-                "match_threshold": "0.6",
-                "scale": "",
-                "type": "Check",
-                "w": "0.018",
-                "x": "0.294",
-                "y": "0.647"
-            }
+        "exception_on": "No match",
+        "file_name": [
+            "image_1RLM2FP.png"
         ],
-        "description": "",
-        "enabled": true,
-        "id": "19LT69R",
-        "type": "Except"
+        "id": "1RLM2FP",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     },
     {
         "children": [],
-        "description": "",
+        "delay": "0.5",
+        "description": "OK Button",
         "enabled": true,
-        "id": "19LT69T",
-        "type": "On Success"
+        "file_name": [
+            "image_1RLM356.png"
+        ],
+        "h": "0.240",
+        "id": "1RLM356",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.244",
+        "x": "0.558",
+        "y": "0.648"
     },
     {
-        "children": [],
-        "description": "",
-        "enabled": true,
-        "id": "19LT69U",
-        "type": "End Try"
-    },
-    {
-        "capture_id": "1CE941M",
+        "capture_id": "1RLM356",
         "children": [],
         "delay": "2",
         "description": "OK",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_19WT4AP.png"
+            "image_1RLM57Y.png"
         ],
-        "id": "19WT4AP",
+        "id": "1RLM57Y",
         "match_threshold": "",
         "primary": true,
         "scale": "",
