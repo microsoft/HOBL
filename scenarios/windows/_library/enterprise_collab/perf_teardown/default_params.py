@@ -10,6 +10,5 @@ def run():
     return
 
 def run_user_only():
-    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\restart_diagtrack')
     return

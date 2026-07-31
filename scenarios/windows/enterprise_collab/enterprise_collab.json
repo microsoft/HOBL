@@ -135,7 +135,7 @@
         "description": "",
         "enabled": true,
         "id": "1RMA581",
-        "name": "[teams:parse_MSTeams_Logs]",
+        "name": "[teams:collect_MSTeams_Logs]",
         "type": "Set",
         "value": "0"
     },

@@ -17,7 +17,7 @@ def run():
     Params.setDefault('enterprise_collab', 'file_explorer', '0', desc='', valOptions=['0', '1'])
     Params.setDefault('enterprise_collab', 'snipping_tool', '0', desc='', valOptions=['0', '1'])
     Params.setDefault('enterprise_collab', 'settings_app', '0', desc='', valOptions=['0', '1'])
-    Params.setParam('teams', 'parse_MSTeams_Logs', '0')
+    Params.setParam('teams', 'collect_MSTeams_Logs', '0')
     return
 
 def run_user_only():
