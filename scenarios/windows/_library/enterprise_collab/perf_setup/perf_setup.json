@@ -24,7 +24,7 @@
         "children": [],
         "delay": "0",
         "description": "",
-        "enabled": true,
+        "enabled": false,
         "id": "1HX81AT",
         "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable",
         "type": "Include"
