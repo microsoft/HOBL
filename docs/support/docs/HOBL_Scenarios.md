@@ -144,6 +144,42 @@ Results written to the run directory:
 
 `wlan_logging` - Set to '1' to capture Wi-Fi layer telemetry alongside iperf3. Logs adapter error/discard counter deltas (Get-NetAdapterStatistics), a 5-second channel/RSSI/rate poll time series, and WLAN AutoConfig event log entries (connects, disconnects, roaming, channel switches). Adds wlan_*.txt / wlan_events.csv to the results directory and appends wlan_* metrics to iperf3.csv. **Default:** `0`  **Options:** `0, 1`
 
+## consumer_multitasker
+
+Use the HOBL UI to run the `ConsumerMultitasker_v0.5` workload. The scenario name exposed in the UI is `consumer_multitasker`.
+
+### Prerequisite: Enable diagnostic data
+
+To enable PerfMetrics collection, turn on diagnostic data on the DUT:
+
+1. Open PowerPoint.
+2. Open the **File** tab.
+3. Select **Account** in the lower-left section.
+4. Select **Manage Settings**.
+5. Check **Send Diagnostic Data**.
+6. Select **OK**.
+7. Close PowerPoint.
+
+### Run the workload
+
+1. Open the HOBL UI and create a new job.
+2. Add the `consumer_multitasker` scenario and configure it as follows:
+
+	| Setting | Value |
+	| --- | --- |
+	| Enabled | Yes |
+	| Tools | `perf_utc` (performance data), `power_light` (power data), `run_report` (results rollup) |
+	| Parameters | `enterprise_collab:perf_run=1`<br>`perf_utc:cm=1` |
+
+3. Submit the job. The HOBL UI automatically adds and runs the required prep scenarios before the measured workload.
+
+Results are written under the `result_dir` configured in the selected device profile. Each iteration produces:
+
+* PerfMetrics in `consumer_multitasker_<iteration>_PerfMetrics.csv`.
+* Power metrics in `consumer_multitasker_<iteration>_power_light_summary.csv`.
+
+The `power_light` tool requires the DUT to have a supported Maxim chipset. If the DUT does not have a supported Maxim chipset, use the battery rundown method to measure power instead.
+
 ## lvp
 
 Plays a video on full screen for a specified amount of time.  
