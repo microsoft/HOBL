@@ -130,6 +130,16 @@
         "value": "0"
     },
     {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1RMA581",
+        "name": "[teams:parse_MSTeams_Logs]",
+        "type": "Set",
+        "value": "0"
+    },
+    {
         "children": [
             {
                 "children": [
