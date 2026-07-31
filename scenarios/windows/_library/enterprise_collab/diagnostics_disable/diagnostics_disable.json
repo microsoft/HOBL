@@ -32,27 +32,27 @@
         "description": "Account Section",
         "enabled": true,
         "file_name": [
-            "image_1RLR5MA.png"
+            "image_1NA0KEK.png"
         ],
-        "h": "0.333",
-        "id": "1RLR5MA",
+        "h": "0.323",
+        "id": "1NA0KEK",
         "recapture": false,
         "type": "Capture",
-        "w": "0.231",
+        "w": "0.329",
         "x": "0.001",
-        "y": "0.662"
+        "y": "0.626"
     },
     {
-        "capture_id": "1RLR5MA",
+        "capture_id": "1NA0KEK",
         "children": [],
         "delay": "2",
-        "description": "Account Button",
+        "description": "",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1RLR6U5.png"
+            "image_1NA0KXT.png"
         ],
-        "id": "1RLR6U5",
+        "id": "1NA0KXT",
         "match_threshold": "",
         "primary": true,
         "scale": "",
@@ -113,64 +113,97 @@
     {
         "children": [],
         "delay": "0.5",
-        "description": "Diagnostic Check Box",
+        "description": "Privacy Settings Dialouge Box",
         "enabled": true,
         "file_name": [
-            "image_1RLM1YT.png"
+            "image_1CE941M.png"
         ],
-        "h": "0.261",
-        "id": "1RLM1YT",
+        "h": "0.879",
+        "id": "1CE941M",
         "recapture": false,
         "type": "Capture",
-        "w": "0.241",
-        "x": "0.183",
-        "y": "0.524"
+        "w": "0.845",
+        "x": "0.106",
+        "y": "0.060"
     },
     {
-        "capture_id": "1RLM1YT",
-        "children": [],
-        "delay": "2",
-        "description": "Dignostic Checkbox",
-        "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_1RLM2FP.png"
+        "children": [
+            {
+                "capture_id": "1CE941M",
+                "children": [],
+                "delay": "2",
+                "description": "Uncheck Send Diagnostics",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_19WT1FC.png"
+                ],
+                "id": "1ALM12P",
+                "match_threshold": "0.85",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            }
         ],
-        "id": "1RLM2FP",
-        "match_threshold": "",
-        "primary": true,
-        "scale": "",
-        "type": "Click",
-        "x": "0.500",
-        "y": "0.500"
+        "description": "",
+        "enabled": true,
+        "id": "19LT69P",
+        "type": "Try"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "1CE941M",
+                "children": [],
+                "delay": "2",
+                "description": "Diagnostics Option Unchecked",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_1ALM12P.png"
+                ],
+                "h": "0.034",
+                "id": "19LTRTX",
+                "match_threshold": "0.6",
+                "scale": "",
+                "type": "Check",
+                "w": "0.018",
+                "x": "0.294",
+                "y": "0.647"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "19LT69R",
+        "type": "Except"
     },
     {
         "children": [],
-        "delay": "0.5",
-        "description": "OK Button",
+        "description": "",
         "enabled": true,
-        "file_name": [
-            "image_1RLM356.png"
-        ],
-        "h": "0.240",
-        "id": "1RLM356",
-        "recapture": false,
-        "type": "Capture",
-        "w": "0.244",
-        "x": "0.558",
-        "y": "0.648"
+        "id": "19LT69T",
+        "type": "On Success"
     },
     {
-        "capture_id": "1RLM356",
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "19LT69U",
+        "type": "End Try"
+    },
+    {
+        "capture_id": "1CE941M",
         "children": [],
         "delay": "2",
         "description": "OK",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1RLM57Y.png"
+            "image_19WT4AP.png"
         ],
-        "id": "1RLM57Y",
+        "id": "19WT4AP",
         "match_threshold": "",
         "primary": true,
         "scale": "",
