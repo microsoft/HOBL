@@ -19,7 +19,7 @@ marker. The focused tests cover those application behaviors.
 
 | Metric | Timed operation |
 |---|---|
-| `sync_time` | Delete the project `.venv`, then run `uv sync --frozen --offline` from a cache primed during prep. Network downloads are not timed. |
+| `sync_time` | Delete the project `.venv`, then run default `uv sync --frozen --offline` from a cache primed during prep. Network downloads are not timed, and uv's default lazy-bytecode behavior is preserved. |
 | `server_start_time` | Launch `fastapi dev` and poll until `/health` returns the expected build marker. |
 | `import_openapi_time` | Start a fresh app Python process, import the app, generate OpenAPI, and validate its path count. |
 | `app_test_time` | Run the focused application pytest suite. |
@@ -31,6 +31,33 @@ per-iteration CSV, JSON, and logs are retained with the scenario results.
 An external reload run reuses the existing app venv and therefore omits
 `sync_time`; run the default no-reload workload first for the controlled sync
 metric.
+
+## Bytecode interpretation
+
+Default uv sync does not eagerly compile Python bytecode, unlike a default pip
+install. The two setup timings therefore do not have identical semantics:
+some `.pyc` work is deferred until modules are first imported. This workload
+intentionally keeps uv's default behavior because it represents the normal uv
+developer workflow. The separate `import_openapi_time` phase includes the first
+fresh-process app import, where deferred bytecode work can appear.
+
+Controlled warm-cache medians for this same 46-package lock and Python 3.12.10
+were:
+
+| Install mode | Windows | WSL2 |
+|---|---:|---:|
+| Default `uv sync` | 1.899s | 0.146s |
+| `uv sync --compile-bytecode` | 5.078s | 0.684s |
+| Default offline venv + pip install | 54.35s | 9.16s |
+| Pip install with `--no-compile` | 20.47s | 5.589s |
+
+If package-manager installation is compared, `uv sync --compile-bytecode` is
+the controlled eager-bytecode uv comparison. HOBL does not add that comparison
+to this application workload or prescribe `pip --no-compile`: the latter is a
+valid tradeoff for some ephemeral environments, but it shifts bytecode work to
+first import. Even with eager bytecode compilation, uv remained about 10.7x
+faster than default pip on Windows in the controlled data, so its advantage was
+not solely deferred compilation.
 
 ## Reload interpretation
 
@@ -57,5 +84,4 @@ That dependency setup is real `fastapi[standard]` behavior, but it is not the
 cause of the FastAPI package-build timing and is not included in app phase
 metrics.
 
-`pip --no-compile` is not used or recommended. It was useful only as a
-diagnostic during the investigation.
+`pip --no-compile` is not the general recommendation for this workload.
