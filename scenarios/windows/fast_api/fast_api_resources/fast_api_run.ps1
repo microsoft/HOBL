@@ -283,7 +283,7 @@ Set-OptimizedPathOrder
 
 # Verify required commands are findable on PATH after Set-OptimizedPathOrder.
 # Fail fast with a clear diagnostic instead of a chain of "term not recognized" errors.
-foreach ($cmd in @('pyenv', 'python')) {
+foreach ($cmd in @('pyenv')) {
     $resolved = Get-Command $cmd -ErrorAction SilentlyContinue
     if (-not $resolved) {
         " ERROR - Required command '$cmd' not found on PATH after PATH optimization." | log
@@ -314,7 +314,7 @@ $venvPython = "$scriptDrive\hobl_bin\fast_api_resources\.venv\Scripts\python.exe
 if (-not (Test-Path $venvPython)) {
     " ERROR - fast_api venv missing at $venvPython" | log
     " ERROR - Prep state is corrupt. Re-prep required:" | log
-    " ERROR -   delete C:\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
+    " ERROR -   delete $scriptDrive\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
     Exit 1
 }
 "Using venv python: $venvPython" | log
@@ -324,7 +324,7 @@ if (-not (Test-Path $venvPython)) {
 if ($LASTEXITCODE -ne 0) {
     " ERROR - venv has missing/broken Python packages (build, coverage, pytest expected)." | log
     " ERROR - Possible causes: Defender quarantine, disk cleanup, or external tampering." | log
-    " ERROR - Re-prep required: delete C:\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
+    " ERROR - Re-prep required: delete $scriptDrive\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
     Exit 1
 }
 
@@ -335,9 +335,11 @@ if ($LASTEXITCODE -ne 0) {
 # devices (CISO Central Feed Services policy) and injects network variability into
 # build_time. Setting it here keeps the timed build off the non-approved feed.
 $env:PIP_INDEX_URL = "https://packagefeedproxy.microsoft.io/pypi/simple"
+$env:UV_DEFAULT_INDEX = $env:PIP_INDEX_URL
 "Set PIP_INDEX_URL for build isolation: $env:PIP_INDEX_URL" | log
+"Set UV_DEFAULT_INDEX for uv build isolation: $env:UV_DEFAULT_INDEX" | log
 
-"Building FastAPI..." | log
+"Running legacy Python package build..." | log
 Write-RunPhaseMarker "phase.run_prep.end"
 Write-RunPhaseMarker "phase.run_build.start"
 # Redirect output to a per-phase log so it is preserved in the results share.
@@ -345,6 +347,9 @@ Write-RunPhaseMarker "phase.run_build.start"
 # so file redirection is the only way to capture build/test output.
 $buildLog = "$LOG_DIR\fast_api_build.log"
 "Build output: $buildLog" | log
+if (Test-Path ".\dist") {
+    Remove-Item -Recurse -Force ".\dist"
+}
 $buildTime = (Measure-Command {
     & $venvPython -m build *> $buildLog
 }).TotalSeconds
@@ -355,7 +360,32 @@ if ($buildExitCode -ne 0) {
     Exit 1
 }
 $buildTime = [math]::Round($buildTime, 2)
-"Build completed in ${buildTime}s" | log
+"Legacy python -m build completed in ${buildTime}s" | log
+
+$venvUv = "$scriptDrive\hobl_bin\fast_api_resources\.venv\Scripts\uv.exe"
+if (-not (Test-Path $venvUv)) {
+    " ERROR - uv executable missing at $venvUv. Re-prep required." | log
+    Exit 1
+}
+
+"Running modern uv package build..." | log
+Write-RunPhaseMarker "phase.run_uv_build.start"
+$uvBuildLog = "$LOG_DIR\fast_api_uv_build.log"
+"uv build output: $uvBuildLog" | log
+if (Test-Path ".\dist_uv") {
+    Remove-Item -Recurse -Force ".\dist_uv"
+}
+$uvBuildTime = (Measure-Command {
+    & $venvUv build --out-dir ".\dist_uv" *> $uvBuildLog
+}).TotalSeconds
+$uvBuildExitCode = $LASTEXITCODE
+Write-RunPhaseMarker "phase.run_uv_build.end"
+if ($uvBuildExitCode -ne 0) {
+    " ERROR - uv build failed. See $uvBuildLog for details." | log
+    Exit 1
+}
+$uvBuildTime = [math]::Round($uvBuildTime, 2)
+"uv build completed in ${uvBuildTime}s" | log
 
 "Setting environment variables..." | log
 $env:PYTHONPATH = "./docs_src"
@@ -386,14 +416,15 @@ if ($testExitCode -eq 0) {
 # ============================================================================
 # Calculate scenario_runtime and save metrics
 # ============================================================================
-$scenarioRuntime = [math]::Round($buildTime + $testTime, 2)
+$scenarioRuntime = [math]::Round($buildTime + $uvBuildTime + $testTime, 2)
 
 "" | log
 "========================================" | log
-"Fast API Metrics Summary" | log
+"FastAPI Maintainer Release Validation Metrics" | log
 "========================================" | log
-"Build Time:  ${buildTime}s" | log
-"Test Time:   ${testTime}s" | log
+"Legacy python -m build: ${buildTime}s" | log
+"Modern uv build:        ${uvBuildTime}s" | log
+"Full coverage tests:    ${testTime}s" | log
 "scenario_runtime (total): ${scenarioRuntime}s" | log
 "========================================" | log
 
@@ -401,7 +432,9 @@ $scenarioRuntime = [math]::Round($buildTime + $testTime, 2)
 $metricsContent = @"
 scenario_runtime,$scenarioRuntime
 build_time,$buildTime
+uv_build_time,$uvBuildTime
 test_time,$testTime
+architecture,$logSuffix
 "@
 
 Set-Content -Path $METRICS_FILE -Value $metricsContent -NoNewline
@@ -411,11 +444,11 @@ $elapsedTime = ((Get-Date) - [DateTime]$startTime).TotalSeconds
 # Append to .trace files for timeline correlation (key,value format)
 if (-not (Test-Path $timeTraceFile)) {
     "Creating trace file with header: $timeTraceFile" | log
-    Set-Content -Path $timeTraceFile -Value "Timestamp,build_time, test_time, total_time" -Encoding UTF8
+    Set-Content -Path $timeTraceFile -Value "Timestamp,build_time,uv_build_time,test_time,total_time" -Encoding UTF8
 }
 
 $traceContent = @"
-$elapsedTime,$buildTime,$testTime,$scenarioRuntime
+$elapsedTime,$buildTime,$uvBuildTime,$testTime,$scenarioRuntime
 "@
 "Appending time info to trace file: $timeTraceFile" | log  
 Add-Content -Path $timeTraceFile -Value $traceContent -Encoding UTF8

@@ -1,41 +1,33 @@
-# FastAPI Build & Test Workload
+# FastAPI maintainer release-validation workload
 
-Python developer inner-loop benchmark. It builds the [FastAPI](https://github.com/fastapi/fastapi)
-library from source using a PEP 517 build (PDM backend), then runs the project's full test
-suite under `coverage`. It measures **build time** and **test time** separately and reports
-their sum as the scenario runtime — a proxy for Python package build + test performance.
+This scenario validates the pinned FastAPI 0.119.1 source tree as a package
+maintainer would. It is not FastAPI compilation and is not an application
+developer inner loop.
 
-## What HOBL sets up (from `fast_api_resources/fast_api_prep.ps1`)
+The Windows `fast_api` and macOS `mac_fast_api` scenarios use Python 3.12.10 and
+measure:
 
-- Python 3.12.10 via pyenv (isolated venv)
-- Visual Studio 2022 C++ build tools (for native extension builds)
-- Git (winget)
-- Clones `https://github.com/fastapi/fastapi.git` to `<drive>\fastapi`
+| Metric | Workload |
+|---|---|
+| `build_time` | Legacy `python -m build`, producing an sdist and then a wheel from that sdist. Kept for historical continuity. |
+| `uv_build_time` | Modern `uv build`, preserving the same sdist then wheel-from-sdist validation contract. |
+| `test_time` | The complete upstream FastAPI test suite under coverage. |
+| `scenario_runtime` | Sum of the two package builds and full upstream validation. |
 
-## Run it standalone (Windows)
+Build isolation uses the Microsoft-approved Python package feed. Prep performs
+an untimed uv build warm-up, and both package output directories are cleaned
+before each measured build. The timed command retains uv's normal isolated
+build behavior.
 
-```powershell
-# 1. Prerequisites
-winget install --id Git.Git --source winget
-pyenv install 3.12.10; pyenv local 3.12.10
+The separate `fast_api_app` / `mac_fast_api_app` scenarios represent application
+development: controlled locked sync, `fastapi dev` readiness, import plus
+OpenAPI generation, focused tests, and optional reload.
 
-# 2. Clone the repo
-git clone https://github.com/fastapi/fastapi.git
-cd fastapi
+## Windows ARM64
 
-# 3. Isolated venv + build/test tooling
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install build coverage pytest
-python -m pip install -r requirements-tests.txt
+FastAPI is pure Python, so the unavailable Windows ARM64 `httptools` wheel does
+not explain package-build timing. Optional `fastapi[standard]` setup may build
+`httptools` from source on native ARM64; that dependency-install behavior is
+documented and measured only by the app workload's controlled sync phase.
 
-# 4. Timed workload
-python -m build                        # PEP 517 build -> dist/
-python -m coverage run -m pytest tests
-```
-
-## Notes
-
-- The PEP 517 build spins up its own isolated environment. On a proxied corporate network,
-  set `$env:PIP_INDEX_URL` to your approved PyPI mirror so build isolation can fetch deps.
-- HOBL default: 5 loops (each loop = build + test). Works on x64 and ARM64.
+`pip --no-compile` is not used or recommended. It was diagnostic evidence only.
