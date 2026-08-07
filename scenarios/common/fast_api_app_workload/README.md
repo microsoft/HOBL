@@ -53,11 +53,11 @@ were:
 
 If package-manager installation is compared, `uv sync --compile-bytecode` is
 the controlled eager-bytecode uv comparison. HOBL does not add that comparison
-to this application workload or prescribe `pip --no-compile`: the latter is a
-valid tradeoff for some ephemeral environments, but it shifts bytecode work to
-first import. Even with eager bytecode compilation, uv remained about 10.7x
-faster than default pip on Windows in the controlled data, so its advantage was
-not solely deferred compilation.
+to this application workload. The `pip --no-compile` result is diagnostic
+ephemeral-environment evidence only, not a recommendation; it shifts bytecode
+work to first import. Even with eager bytecode compilation, uv remained about
+10.7x faster than default pip on Windows in the controlled data, so its
+advantage was not solely deferred compilation.
 
 ## Reload interpretation
 
@@ -84,4 +84,4 @@ That dependency setup is real `fastapi[standard]` behavior, but it is not the
 cause of the FastAPI package-build timing and is not included in app phase
 metrics.
 
-`pip --no-compile` is not the general recommendation for this workload.
+`pip --no-compile` is not recommended by this workload.
