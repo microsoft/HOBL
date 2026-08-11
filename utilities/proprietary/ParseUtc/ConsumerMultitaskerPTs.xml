@@ -1969,5 +1969,85 @@
         <final id="_complete"/>
       </scxml>
     </scenario>
+    <scenario schemaversion="2" scenarioid="{a1b460d9-156d-46a8-a09d-59d18c032f92}" scenarioname="PT_10216_Edge Tab Switch_a1b460" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge Tab Switch" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.MSEdge.TabSwitch.Activated">
+          <etwtrigger>
+            <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
+            <keywords>0x20000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.MSEdge.TabSwitch.Input">
+          <etwtrigger>
+            <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
+            <keywords>0x20000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.MSEdge.TabSwitch.Presented">
+          <etwtrigger>
+            <provider>{3a5f2396-5c8f-4f1f-9b67-6cca6c990e61}</provider>
+            <keywords>0x20000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value />
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename />
+            <valuetype>REG_NONE</valuetype>
+            <value />
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+      </filters>
+      <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
+        <state id="_start">
+          <transition event="Microsoft.MSEdge.TabSwitch.Input" target="1" name="T0" uploadtrigger="false" />
+        </state>
+        <state id="1">
+          <transition event="Microsoft.MSEdge.TabSwitch.Activated" target="2" name="T1" uploadtrigger="false" />
+        </state>
+        <state id="2">
+          <transition event="Microsoft.MSEdge.TabSwitch.Presented" target="_complete" name="T2" uploadtrigger="false" />
+        </state>
+        <final id="_complete" />
+        <final id="_cancel" />
+      </scxml>
+    </scenario>
   </scenarios>
 </diagrules>
