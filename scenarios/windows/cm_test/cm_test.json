@@ -1,0 +1,107 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-11",
+        "description": "",
+        "enabled": true,
+        "id": "1T615LF",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1T615P6",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1T61634",
+                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1T6174Y",
+                "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+                "params": [
+                    {
+                        "name": "[tab_number]",
+                        "val_options": "",
+                        "value": "1"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1T6179E",
+                "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+                "params": [
+                    {
+                        "name": "[tab_number]",
+                        "val_options": "",
+                        "value": "2"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1T617HT",
+                "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+                "params": [
+                    {
+                        "name": "[tab_number]",
+                        "val_options": "",
+                        "value": "4"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1T617M4",
+                "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+                "params": [
+                    {
+                        "name": "[tab_number]",
+                        "val_options": "",
+                        "value": "5"
+                    }
+                ],
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "1T615PP",
+        "type": "Run Test"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1T615R5",
+        "type": "Teardown"
+    }
+]
