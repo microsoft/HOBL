@@ -23,10 +23,10 @@
     {
         "children": [],
         "delay": "2",
-        "description": "",
+        "description": "CTRL + [tab_number]",
         "enabled": true,
         "id": "1T60VEE",
-        "text": "CTRL[tab_number]",
+        "text": "\ue009[tab_number]",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     }
