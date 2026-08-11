@@ -12,12 +12,13 @@
     {
         "children": [],
         "delay": "0.0",
-        "description": "Tabs switch",
+        "description": "",
         "enabled": true,
-        "id": "1T60TW8",
+        "id": "1T616RH",
         "name": "[tab_number]",
-        "type": "Set",
-        "value": ""
+        "type": "Set Default",
+        "val_options": "",
+        "value": "1"
     },
     {
         "children": [],

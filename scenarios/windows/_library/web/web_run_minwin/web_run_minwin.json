@@ -1011,136 +1011,99 @@
         "type": "End If"
     },
     {
-        "children": [
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1LCH9YN",
-                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\type_to_search",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1NA640H",
-                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\snipping_tool",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1L8MYJU",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_open",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1LCK742",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_run_minwin",
-                "params": [
-                    {
-                        "name": "[short_typing]",
-                        "val_options": "0,1",
-                        "value": "1"
-                    }
-                ],
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1H6JTTC",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_close",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HE6TX6",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HE6TPR",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_close",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HE6U3X",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HE6U6C",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_close",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HE6UEJ",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_switchto",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HE6UNH",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_close",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1HFYLPM",
-                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
-                "type": "Include"
-            }
-        ],
+        "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
-        "eval_method": "in",
-        "id": "1H6JT03",
-        "left_term": "productivity",
-        "right_term": "[minwin_workloads]",
-        "type": "If"
+        "id": "1LCH9YN",
+        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\type_to_search",
+        "type": "Include"
     },
     {
         "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1H6JT04",
-        "type": "End If"
+        "id": "1NA640H",
+        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\snipping_tool",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1L8MYJU",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_open",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T60E55",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_run_minwin",
+        "params": [
+            {
+                "name": "[short_typing]",
+                "val_options": "0,1",
+                "value": "0"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "30",
+        "description": "",
+        "enabled": true,
+        "id": "1T60JE0",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T4XNTW",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T4XP31",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T60R65",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T4XR8R",
+        "include_path": "scenarios\\windows\\_library\\misc\\switchto_file_explorer",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T60T42",
+        "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+        "type": "Include"
     }
 ]
