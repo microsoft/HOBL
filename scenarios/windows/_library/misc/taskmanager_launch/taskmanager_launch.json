@@ -1,0 +1,22 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-11",
+        "description": "",
+        "enabled": true,
+        "id": "1T64N78",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": " Taskbar Launch CTRL+SHIFT+ESC",
+        "enabled": true,
+        "id": "1T64NY8",
+        "text": "\ue009\ue008\ue00c",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    }
+]

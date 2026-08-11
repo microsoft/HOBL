@@ -1941,5 +1941,33 @@
         <final id="_cancel"/>
       </scxml>
     </scenario>
+    <scenario schemaversion="2" scenarioid="{77b6b8ee-097a-4c2a-96e6-fb83332f6487}" scenarioname="PT_9175_Taskbar app launch performance_77b6b8" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Taskbar app launch performance" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Windows.Shell.Launcher.AppLaunch">
+          <etwtrigger>
+            <provider>{3d6120a6-0986-51c4-213a-e2975903051d}</provider>
+            <keywords>0x200000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.Windows.Shell.Taskbar.TaskListButtonPrepared">
+          <etwtrigger>
+            <provider>{df8dab3f-b1c9-58d3-2ea1-4c08592bb71b}</provider>
+            <keywords>0x200000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="1">
+          <transition event="Microsoft.Windows.Shell.Taskbar.TaskListButtonPrepared" target="_complete" name="T2" uploadtrigger="false"/>
+        </state>
+        <state id="_start">
+          <transition event="Microsoft.Windows.Shell.Launcher.AppLaunch" target="1" name="T1" uploadtrigger="false"/>
+        </state>
+        <final id="_cancel"/>
+        <final id="_complete"/>
+      </scxml>
+    </scenario>
   </scenarios>
 </diagrules>
