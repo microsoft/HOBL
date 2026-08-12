@@ -1,0 +1,446 @@
+[
+    {
+        "author": "dasashutosh",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2025-12-02",
+        "description": "Consumer Multitasker v0.9",
+        "enabled": true,
+        "id": "19K3NWN",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "19K5VX0",
+        "name": "[background_teams]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "19K5WA4",
+        "name": "[background_onedrive_copy]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1N9VK08",
+        "multiple": true,
+        "name": "[minwin_workloads]",
+        "type": "Set User Default",
+        "val_options": "live_captions,copilot_query,semantic_search,click_todo,studioeffect_blur,productivity,snipping_tool,file_explorer",
+        "value": ""
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "19K7X90",
+        "name": "[web_replay_run]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "19K7XML",
+        "name": "[phase_reporting]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1EN17N6",
+        "name": "[perf_run]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1RMA581",
+        "name": "[teams:collect_MSTeams_Logs]",
+        "type": "Set",
+        "value": "0"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1N9W8VE",
+                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_setup",
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1EN189V",
+                "left_term": "[perf_run]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1EN189W",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "19V8920",
+                        "name": "[teams:number_of_bots]",
+                        "type": "Set",
+                        "value": "9"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "19K4CEU",
+                        "include_path": "scenarios\\windows\\_library\\Teams\\teams_setup",
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "19K41HR",
+                "left_term": "[background_teams]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "19K41HT",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Clean Up and Create Large Files",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1CYAE3L.py"
+                        ],
+                        "id": "1CYAE3L",
+                        "type": "Code"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1CYAAKV",
+                "left_term": "[background_onedrive_copy]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1CYAAKW",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1N9WNHN",
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "in",
+                "id": "1N9WMX0",
+                "left_term": "productivity",
+                "right_term": "[minwin_workloads]",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1N9WMX1",
+                "type": "End If"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "19K3TWR",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Powershell Download",
+                        "enabled": true,
+                        "file_name": [
+                            "code_19K4MXK.py"
+                        ],
+                        "id": "19K4MXK",
+                        "type": "Code"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Upload Large Files",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1CYAENL.py"
+                        ],
+                        "id": "1CYAENL",
+                        "type": "Code"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "19K5HEY",
+                "left_term": "[background_onedrive_copy]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "19K5HF0",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "10",
+                "description": "",
+                "enabled": true,
+                "id": "1A4X1TN",
+                "type": "Delay"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1A4W5AL",
+                "include_path": "scenarios\\windows\\_library\\web\\web_setup",
+                "params": [
+                    {
+                        "name": "[disable_delay]",
+                        "val_options": "0,1",
+                        "value": "1"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1NA525H",
+                "include_path": "scenarios\\windows\\_library\\web\\web_run_minwin",
+                "params": [
+                    {
+                        "name": "[load_only]",
+                        "val_options": "0,1",
+                        "value": "0"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1JP44RV",
+                "include_path": "scenarios\\windows\\_library\\web\\web_check",
+                "params": [
+                    {
+                        "name": "[youtube_duration]",
+                        "val_options": "",
+                        "value": "90"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "19K59KV",
+                "include_path": "scenarios\\windows\\_library\\web\\web_close_tabs",
+                "params": [
+                    {
+                        "name": "[num_tabs_to_close]",
+                        "val_options": "",
+                        "value": "[web:tabs]"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Kill Powershell Download",
+                        "enabled": true,
+                        "file_name": [
+                            "code_19K5K7L.py"
+                        ],
+                        "id": "19K5K7L",
+                        "type": "Code"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Kill Onedrive Upload",
+                        "enabled": true,
+                        "file_name": [
+                            "code_19K5L2R.py"
+                        ],
+                        "id": "19K5L2R",
+                        "type": "Code"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "19K5J8C",
+                "left_term": "[background_onedrive_copy]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "19K5J8E",
+                "type": "End If"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "19K42E3",
+        "type": "Run Test"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "19K5ENF",
+                "include_path": "scenarios\\windows\\_library\\web\\web_kill",
+                "type": "Include"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "19K8C22",
+                        "include_path": "scenarios\\windows\\_library\\Teams\\teams_teardown",
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "19L6E7K",
+                "left_term": "[background_teams]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "19L6E7L",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1N9WCU8",
+                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_teardown",
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1EN19HM",
+                "left_term": "[perf_run]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1EN19HN",
+                "type": "End If"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "19K42JX",
+        "type": "Teardown"
+    }
+]
