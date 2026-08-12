@@ -39,6 +39,7 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_wikipedia')
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_youtube_nasa')
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_youtube_tos')
+    import_run_user_only('scenarios\\windows\\_library\\web\\tab_switch')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_clear_cache')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_new_tab')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_switchto')

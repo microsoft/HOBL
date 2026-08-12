@@ -1105,5 +1105,77 @@
         "id": "1T60T42",
         "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
         "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R1 Tab1 Reddit",
+        "enabled": true,
+        "id": "1T7FVV1",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T64J45",
+        "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "1"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R1 Tab7 Youtube TOS",
+        "enabled": true,
+        "id": "1T7FVCY",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T64JHX",
+        "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "7"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R1 Tab3 Amazon BSG",
+        "enabled": true,
+        "id": "1T7FV95",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "R1 Tab3 Amazon BSG",
+        "enabled": true,
+        "id": "1T64JUR",
+        "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "3"
+            }
+        ],
+        "type": "Include"
     }
 ]
