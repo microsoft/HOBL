@@ -22,6 +22,33 @@
     },
     {
         "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1T7FWM5",
+        "name": "[tab_name]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": ""
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T7FX01",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "[tab_name]"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "2",
         "description": "CTRL + [tab_number]",
         "enabled": true,
