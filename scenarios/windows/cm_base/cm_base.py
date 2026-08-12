@@ -56,4 +56,74 @@ class CmBase(core.app_scenario.Scenario):
 
     def kill(self):
         # In case of scenario failure or termination, kill any applications left open here:
+
+        #Kill teams related processes
+        try:
+            if self.platform.lower() == "w365":
+                self._run_with_inputinject("cmd.exe /c tasklist /nh /fo csv /fi \"IMAGENAME eq 'Video.UI.exe'\"")
+            else:
+                self._kill("Video.UI.exe")
+        except:
+            pass
+        
+        try:
+            if self.platform.lower() == "w365":
+                self._run_with_inputinject("cmd.exe /c tasklist /nh /fo csv /fi \"IMAGENAME eq 'Microsoft.Media.Player.exe'\"")
+            else:
+                self._kill("Microsoft.Media.Player.exe")
+        except:
+            pass
+
+        try:
+            if self.platform.lower() == "w365":
+                self._run_with_inputinject("cmd.exe /c tasklist /nh /fo csv /fi \"IMAGENAME eq 'ms-teams.exe'\"")
+            else:
+                self._kill("ms-teams.exe", force = True)
+        except:
+            pass
+
+        try:
+            # Do it again because some windows can still be left open
+            if self.platform.lower() == "w365":
+                self._run_with_inputinject("cmd.exe /c tasklist /nh /fo csv /fi \"IMAGENAME eq 'ms-teams.exe'\"")
+            else:
+                self._kill("ms-teams.exe", force = True)
+        except:
+            pass
+
+        time.sleep(3)
+         # Kill web browser and web_replay
+        try:
+            self._kill("msedge.exe")
+        except:
+            pass
+        try:
+            self._kill("chrome.exe")
+        except:
+            pass
+
+        time.sleep(3)
+        self._web_replay_kill()
+
+        time.sleep(3)
+        #Kill Timers
+        try:
+            self._kill("SimpleTimer.exe")
+        except:
+            pass
+
+        # Kill office apps
+        try:
+            self._kill("Outlook.exe Excel.exe Powerpnt.exe Winword.exe OneNote.exe")
+        except:
+            pass
+
+        # Kill Powershell
+        try:
+            # self._kill("powershell.exe")
+            logging.info("Logging here because Powershell kill is commented out")
+            pass
+        except:
+            pass
+
         return
