@@ -84,7 +84,7 @@
                 "description": "sample.pptx",
                 "enabled": true,
                 "id": "UH86K8",
-                "text": "[userprofile]\\onedrive\\abl_docs\\sample.pptx\ue007",
+                "text": "[userprofile]\\abl_docs\\sample.pptx\ue007",
                 "type": "Type",
                 "typing_delay": "[typing_delay]"
             }

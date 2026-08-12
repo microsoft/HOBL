@@ -436,6 +436,15 @@
                 "enabled": true,
                 "id": "1EN19HN",
                 "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1T80E8A",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_kill",
+                "type": "Include"
             }
         ],
         "description": "",

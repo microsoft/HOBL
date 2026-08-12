@@ -84,7 +84,7 @@
                 "description": "test_long_doc.docx",
                 "enabled": true,
                 "id": "UH86K8",
-                "text": "[userprofile]\\onedrive\\abl_docs\\test_long_doc.docx\ue007",
+                "text": "[userprofile]\\abl_docs\\test_long_doc.docx\ue007",
                 "type": "Type",
                 "typing_delay": "[typing_delay]"
             }
