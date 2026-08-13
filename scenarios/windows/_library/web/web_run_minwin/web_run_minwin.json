@@ -1167,13 +1167,18 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T64J45",
-        "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+        "id": "1T8W99F",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
                 "name": "[tab_number]",
                 "val_options": "",
                 "value": "1"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R1 Tab 7 Youtube TOS Revisit"
             }
         ],
         "type": "Include"
@@ -1191,13 +1196,18 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T64JHX",
-        "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+        "id": "1T8WA3N",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
                 "name": "[tab_number]",
                 "val_options": "",
-                "value": "7"
+                "value": "1"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R1 Tab7 Youtube TOS revisit"
             }
         ],
         "type": "Include"
@@ -1213,15 +1223,20 @@
     {
         "children": [],
         "delay": "0",
-        "description": "R1 Tab3 Amazon BSG",
+        "description": "",
         "enabled": true,
-        "id": "1T64JUR",
-        "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
+        "id": "1T8WC11",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
                 "name": "[tab_number]",
                 "val_options": "",
                 "value": "3"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R1 Tab 3 Amazon BSG Revisit"
             }
         ],
         "type": "Include"
@@ -1269,11 +1284,29 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V1AH",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R2 Excel Revisit",
         "enabled": true,
         "id": "1T7TU2F",
         "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V1H8",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+        "type": "Include"
     },
     {
         "children": [],
@@ -1285,11 +1318,29 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V1M0",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R2 Outlook Revisit",
         "enabled": true,
         "id": "1T7TUNT",
         "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V1RF",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
+        "type": "Include"
     },
     {
         "children": [],
@@ -1301,6 +1352,36 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V1YW",
+        "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V2XE",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "1"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R2 Reddit Tab Revisit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R2 Tab 7 YoutubeTOS Revisit",
         "enabled": true,
@@ -1309,11 +1390,233 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V31R",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "3"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R2 YoutubeTOS Tab Revisit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R2 Tab 3 Amazon BSG",
         "enabled": true,
         "id": "1T7TY2T",
         "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V38Y",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "7"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R2 Amazon BSG Tab Revisit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Dwell 3",
+        "enabled": true,
+        "id": "1T8V6VT",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "30",
+        "description": "",
+        "enabled": true,
+        "id": "1T8V777",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R3 Word Revisit",
+        "enabled": true,
+        "id": "1T8V80M",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8VFT1",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R3 Excel Revisit",
+        "enabled": true,
+        "id": "1T8V88L",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8VFXJ",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R3 Powerpoint Revisit",
+        "enabled": true,
+        "id": "1T8V8EK",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8VH1N",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R3 Outlook Revisit",
+        "enabled": true,
+        "id": "1T8V8M9",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8VHAM",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R3 Tab1 Reddit Revisit",
+        "enabled": true,
+        "id": "1T8VELK",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8VHMT",
+        "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8VJ24",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "1"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R3 Tab 1 Revisit Reddit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R3 Tab7 YouTube TOS Revisit",
+        "enabled": true,
+        "id": "1T8VET5",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8VJ4F",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "7"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R3 Tab 7 Youtube TOS Revisit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R3 Tab3 Amazon BSG Revisit",
+        "enabled": true,
+        "id": "1T8VF2J",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T8VJ72",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "3"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "R3 Tab 3 AmazonBSG Revisit"
+            }
+        ],
+        "type": "Include"
     },
     {
         "children": [],

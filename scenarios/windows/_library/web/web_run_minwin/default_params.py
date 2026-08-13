@@ -22,6 +22,7 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_switchto')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_open')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_run_minwin')
+    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_switchto')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_close')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_open')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_run')
@@ -43,9 +44,9 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_wikipedia')
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_youtube_nasa')
     import_run_user_only('scenarios\\windows\\_library\\web\\site\\web_site_youtube_tos')
-    import_run_user_only('scenarios\\windows\\_library\\web\\tab_switch')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_clear_cache')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_new_tab')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_switchto')
+    import_run_user_only('scenarios\\windows\\_library\\web\\web_tab_switch')
     Params.setUserDefault(None, 'web_workload', 'amazonbsg amazonvacuum googleimagesapollo googleimageslondon googlesearchbelgium googlesearchsuperbowl instagram reddit theverge wikipedia youtubenasa youtubetos', desc='Specific websites to run.', valOptions=['amazonbsg', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'instagram', 'reddit', 'theverge', 'wikipedia', 'youtubenasa', 'youtubetos'], multiple=True)
     return

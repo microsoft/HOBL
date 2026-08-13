@@ -7,8 +7,8 @@ from utilities.open_source.modules import import_run_user_only
 def run():
     Params.setCalculated('scenario_section', __package__.split('.')[-1])
     run_user_only()
-    Params.setDefault('tab_switch', 'tab_number', '1', desc='', valOptions=[])
-    Params.setDefault('tab_switch', 'tab_name', '', desc='', valOptions=[])
+    Params.setDefault('web_tab_switch', 'tab_number', '1', desc='', valOptions=[])
+    Params.setDefault('web_tab_switch', 'tab_name', '', desc='', valOptions=[])
     return
 
 def run_user_only():
