@@ -39,6 +39,18 @@ timeout_s = float(args.timeout)
 send_msg = " ".join(args.message)
 command = args.message[0] if args.message else ""
 
+# Quick commands reply almost instantly, so cap them at a short timeout. This
+# makes a misconfigured/unreachable DAQ (wrong IP, app down, firewall) fail in
+# seconds instead of hanging for the full -timeout window. Long-running commands
+# (Calibrate_Device) and data transfer keep the full -timeout.
+QUICK_COMMAND_TIMEOUT = 15.0
+QUICK_COMMANDS = {"DAQ_Start", "DAQ_Stop", "DAQ_Reset"}
+
+
+class Unreachable(Exception):
+    """The DAQ host could not be connected to (wrong IP, app down, firewall)."""
+
+
 print("\nSending:")
 print("\tHost:\t\t" + host)
 print("\tPort:\t\t" + str(port))
@@ -46,10 +58,16 @@ print("\tCommand:\t" + str(send_msg) + "\n")
 
 
 def _open_socket(target_host, target_port, timeout):
-    """Open a TCP connection with a timeout so no call can block forever."""
+    """Open a TCP connection with a timeout so no call can block forever.
+    Connection-phase failures (wrong IP, DAQ down, firewall) are classified as
+    Unreachable so they report clearly instead of looking like a reply timeout."""
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(timeout)
-    s.connect((target_host, target_port))
+    try:
+        s.connect((target_host, target_port))
+    except (socket.timeout, ConnectionRefusedError, OSError) as exc:
+        s.close()
+        raise Unreachable("{}:{} ({})".format(target_host, target_port, type(exc).__name__))
     return s
 
 
@@ -198,8 +216,13 @@ try:
         rcvd_msg = "OK"
     else:
         # All other commands (including the long-running Calibrate_Device) send
-        # one command and get back a single status reply.
-        rcvd_msg = send_command(host, port, send_msg, timeout_s)
+        # one command and get back a single status reply. Quick commands use a
+        # short timeout so an unreachable DAQ fails fast; Calibrate_Device keeps
+        # the full -timeout window.
+        cmd_timeout = QUICK_COMMAND_TIMEOUT if command in QUICK_COMMANDS else timeout_s
+        rcvd_msg = send_command(host, port, send_msg, cmd_timeout)
+except Unreachable as exc:
+    rcvd_msg = "unreachable: {}".format(exc)
 except socket.timeout:
     rcvd_msg = "timeout"
 except Exception as exc:
