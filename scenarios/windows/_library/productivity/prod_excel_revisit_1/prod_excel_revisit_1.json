@@ -1,0 +1,190 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "",
+        "enabled": true,
+        "id": "1TK60KL",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6KXU",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon",
+        "type": "Include"
+    },
+    {
+        "capture_id": "1TK5L73",
+        "children": [],
+        "delay": "2",
+        "description": "Big Data Sheet",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TK6LJM.png"
+        ],
+        "id": "1TK6LJM",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Select Cells",
+        "enabled": true,
+        "id": "1TK60UT",
+        "text": "\ue009g",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Range (E2:E400001)",
+        "enabled": true,
+        "id": "1TK615K",
+        "text": "E2:E400001",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK64KJ",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_top_ribbon",
+        "type": "Include"
+    },
+    {
+        "capture_id": "1TK64CP",
+        "children": [],
+        "delay": "2",
+        "description": "Data Tab",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TK6538.png"
+        ],
+        "id": "1TK6538",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Sort Button",
+        "enabled": true,
+        "file_name": [
+            "image_1TK68PR.png"
+        ],
+        "h": "0.270",
+        "id": "1TK68PR",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.340",
+        "x": "0.372",
+        "y": "0.013"
+    },
+    {
+        "capture_id": "1TK68PR",
+        "children": [],
+        "delay": "2",
+        "description": "Sort Button",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TK6MHM.png"
+        ],
+        "id": "1TK6MHM",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Select Current Data only",
+        "enabled": true,
+        "id": "1TK6ALU",
+        "text": "\ue015",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Enter",
+        "enabled": true,
+        "id": "1TK6AX8",
+        "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6E6E",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "sort_start"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Enter",
+        "enabled": true,
+        "id": "1TK6C84",
+        "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6EKY",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "sort_end"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6EWW",
+        "type": "Delay"
+    }
+]

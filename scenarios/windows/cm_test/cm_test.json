@@ -10,7 +10,17 @@
         "type": "Information"
     },
     {
-        "children": [],
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1TK5MMH",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
+                "type": "Include"
+            }
+        ],
         "description": "",
         "enabled": true,
         "id": "1T615P6",
@@ -23,8 +33,8 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1T61634",
-                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+                "id": "1TK5N6X",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_open",
                 "type": "Include"
             },
             {
@@ -32,63 +42,8 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1T6174Y",
-                "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
-                "params": [
-                    {
-                        "name": "[tab_number]",
-                        "val_options": "",
-                        "value": "1"
-                    }
-                ],
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1T6179E",
-                "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
-                "params": [
-                    {
-                        "name": "[tab_number]",
-                        "val_options": "",
-                        "value": "2"
-                    }
-                ],
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1T617HT",
-                "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
-                "params": [
-                    {
-                        "name": "[tab_number]",
-                        "val_options": "",
-                        "value": "4"
-                    }
-                ],
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1T617M4",
-                "include_path": "scenarios\\windows\\_library\\web\\tab_switch",
-                "params": [
-                    {
-                        "name": "[tab_number]",
-                        "val_options": "",
-                        "value": "5"
-                    }
-                ],
+                "id": "1TK6FEN",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_revisit_1",
                 "type": "Include"
             }
         ],
