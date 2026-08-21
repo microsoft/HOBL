@@ -14,8 +14,8 @@ while the server works and return one final status reply. The -timeout bounds
 the wait so a lost or hung reply can't block forever.
 
 Data_Ready is handled locally: the client obtains the completed DAQ run
-manifest with List_Data, downloads each file with Get_Data, and writes the run
-under the HOBL result directory supplied by the callback.
+manifest with List_Data and downloads each file with Get_Data. The DAQ manifest
+provides each file's destination relative to the HOBL result directory.
 '''
 from builtins import str
 from builtins import *
@@ -172,21 +172,34 @@ def receive_daq_run(target_host, target_port, result_dir, timeout):
     if run_name != os.path.basename(run_name) or "/" in run_name or "\\" in run_name:
         raise ValueError("invalid DAQ run name in manifest")
 
-    daq_root = os.path.abspath(os.path.join(result_dir, "DAQ", run_name))
+    result_root = os.path.abspath(result_dir)
+    destinations = set()
     for entry in files:
         relative_path = entry.get("path") if isinstance(entry, dict) else None
+        destination = entry.get("destination") if isinstance(entry, dict) else None
         expected_size = entry.get("size") if isinstance(entry, dict) else None
-        if not relative_path or not isinstance(expected_size, int) or expected_size < 0:
+        if (
+            not relative_path
+            or not destination
+            or not isinstance(expected_size, int)
+            or expected_size < 0
+        ):
             raise ValueError("invalid file entry in DAQ data manifest")
 
         relative_os_path = relative_path.replace("/", os.sep)
         if os.path.isabs(relative_os_path):
             raise ValueError("manifest contains an absolute file path")
-        dest_path = os.path.abspath(os.path.join(daq_root, relative_os_path))
-        if os.path.commonpath((daq_root, dest_path)) != daq_root:
-            raise ValueError("manifest file path escapes the DAQ result directory")
+        destination_os_path = destination.replace("/", os.sep)
+        if os.path.isabs(destination_os_path):
+            raise ValueError("manifest contains an absolute destination path")
+        dest_path = os.path.abspath(os.path.join(result_root, destination_os_path))
+        if os.path.commonpath((result_root, dest_path)) != result_root:
+            raise ValueError("manifest file path escapes the HOBL result directory")
+        if dest_path in destinations:
+            raise ValueError("multiple manifest files map to the same destination: {}".format(destination))
+        destinations.add(dest_path)
 
-        print("Downloading: {}".format(relative_path))
+        print("Downloading: {} -> {}".format(relative_path, dest_path))
         download_file(
             target_host,
             target_port,
