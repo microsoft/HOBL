@@ -1,0 +1,287 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "",
+        "enabled": true,
+        "id": "1TK60KL",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6KXU",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon",
+        "type": "Include"
+    },
+    {
+        "capture_id": "1TK5L73",
+        "children": [],
+        "delay": "2",
+        "description": "Big Data Sheet",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TK6LJM.png"
+        ],
+        "id": "1TK6LJM",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Select Cells",
+        "enabled": true,
+        "id": "1TK60UT",
+        "text": "\ue009g",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Range (A1:E400001)",
+        "enabled": true,
+        "id": "1TK615K",
+        "text": "A1:E400001",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Select Range",
+        "enabled": true,
+        "id": "1TVP571",
+        "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Select Top Ribbon",
+        "enabled": true,
+        "id": "1TVNRX0",
+        "text": "\ue00a",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Home Button",
+        "enabled": true,
+        "id": "1TVNT0L",
+        "text": "h",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Format Table Bar",
+        "enabled": true,
+        "file_name": [
+            "image_1TWMK60.png"
+        ],
+        "h": "0.220",
+        "id": "1TWMK60",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.410",
+        "x": "0.401",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "1TWMK60",
+        "children": [],
+        "delay": "2",
+        "description": "Format Table",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TWMKPL.png"
+        ],
+        "id": "1TWMKPL",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Format Options",
+        "enabled": true,
+        "file_name": [
+            "image_1TWMLFN.png"
+        ],
+        "h": "0.383",
+        "id": "1TWMLFN",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.418",
+        "x": "0.385",
+        "y": "0.122"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TWMT7A",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "excel_table_format_start"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "capture_id": "1TWMLFN",
+        "children": [],
+        "delay": "2",
+        "description": "Standard Option",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TWMM50.png"
+        ],
+        "id": "1TWMM50",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Apply",
+        "enabled": true,
+        "id": "1TWN93P",
+        "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TWMTCK",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "excel_format_table_end"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Goto Cell Selection",
+        "enabled": true,
+        "id": "1TVNTPC",
+        "text": "\ue009g",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "H5",
+        "enabled": true,
+        "id": "1TWMNMT",
+        "text": "h5\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "VLOOKUP",
+        "enabled": true,
+        "id": "1TVNTRK",
+        "text": "=VLOOKUP(51271,A2:E400001,5,FALSE)",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6E6E",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "excel_vlookup_start"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Enter",
+        "enabled": true,
+        "id": "1TVNU50",
+        "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6EKY",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "excel_vlookup_end"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TWN79H",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": ""
+            }
+        ],
+        "type": "Include"
+    }
+]

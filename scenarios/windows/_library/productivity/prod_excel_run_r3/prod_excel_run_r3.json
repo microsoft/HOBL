@@ -1,0 +1,129 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "",
+        "enabled": true,
+        "id": "1TK60KL",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6KXU",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon",
+        "type": "Include"
+    },
+    {
+        "capture_id": "1TK5L73",
+        "children": [],
+        "delay": "2",
+        "description": "",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TLJTYF.png"
+        ],
+        "id": "1TLJTYF",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Accesibilty Mode",
+        "enabled": true,
+        "id": "1TLK2MC",
+        "text": "\ue00a",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "File Menu",
+        "enabled": true,
+        "id": "1TLK30F",
+        "text": "f",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Export Menu",
+        "enabled": true,
+        "id": "1TLK38W",
+        "text": "e",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Print to PDF",
+        "enabled": true,
+        "id": "1TLK7WA",
+        "text": "a",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6E6E",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "export_to_pdf_start"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Enter",
+        "enabled": true,
+        "id": "1TK6AX8",
+        "text": "[userprofile]\\abl_docs\\BigFamilyBudgetReport.pdf\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6EWW",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6EKY",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "sort_end"
+            }
+        ],
+        "type": "Include"
+    }
+]
