@@ -1,0 +1,149 @@
+[
+    {
+        "author": "jewilder",
+        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "children": [],
+        "create_date": "2025-03-01",
+        "description": "Edit Word doc",
+        "enabled": true,
+        "id": "UR27L8",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "V2N2MH",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "PSECST10",
+        "name": "[short_typing]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "CTRL-END",
+        "enabled": true,
+        "id": "UR28NK",
+        "text": "\ue009\ue010",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Error",
+        "enabled": true,
+        "id": "UR29AM",
+        "text": "Error\ue009z",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "6",
+                "description": "Passage 1",
+                "enabled": true,
+                "id": "PSECST19",
+                "text": "albert\ue00dEinstein\ue00dwas\ue00da\ue00dGerman-born\ue00dphysicist\ue00dwho\ue00ddeveloped\ue00dthe\ue00dtheory\ue00dof\ue00drelativity.\ue00d",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            },
+            {
+                "children": [],
+                "delay": "5",
+                "description": "Passage 2",
+                "enabled": true,
+                "id": "PSECST1A",
+                "text": "He\ue00dis\ue00dconsidered\ue00dthe\ue00dmost\ue00dinfluential\ue00dphysicist\ue00dof\ue00dthe\ue00d20th\ue00dcentury.\ue00d",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Short typing?",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "PSECST16",
+        "left_term": "[short_typing]",
+        "right_term": "1",
+        "type": "If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "18",
+                "description": "Passage 1",
+                "enabled": true,
+                "id": "UR29XH",
+                "text": "albert\ue00dEinstein\ue00dwas\ue00da\ue00dGerman-born\ue00dphysicist\ue00dwho\ue00ddeveloped\ue00dthe\ue00dtheory\ue00dof\ue00drelativity.\ue00d",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            },
+            {
+                "children": [],
+                "delay": "15",
+                "description": "Passage 2",
+                "enabled": true,
+                "id": "UR2C78",
+                "text": "He\ue00dis\ue00dconsidered\ue00dthe\ue00dmost\ue00dinfluential\ue00dphysicist\ue00dof\ue00dthe\ue00d20th\ue00dcentury.\ue00d",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "PSECST17",
+        "type": "Else"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "PSECST18",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "CTRL-s",
+        "enabled": true,
+        "id": "UR35E1",
+        "text": "\ue009s",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "V2N2PW",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_word"
+            }
+        ],
+        "type": "Include"
+    }
+]

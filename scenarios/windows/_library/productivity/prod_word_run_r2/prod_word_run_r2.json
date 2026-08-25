@@ -1,0 +1,132 @@
+[
+    {
+        "author": "jewilder",
+        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "children": [],
+        "create_date": "2025-03-01",
+        "description": "Edit Word doc",
+        "enabled": true,
+        "id": "UR27L8",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "V2N2MH",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "CTRL-END",
+        "enabled": true,
+        "id": "UR28NK",
+        "text": "\ue009\ue010",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "6",
+        "description": "Select last two paragraph",
+        "enabled": true,
+        "id": "PSECST19",
+        "text": "\ue009\ue008\ue013\ue013",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "18",
+        "description": "Cut",
+        "enabled": true,
+        "id": "UR29XH",
+        "text": "\ue009x",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "Find and Replace",
+        "enabled": true,
+        "id": "UR35E1",
+        "text": "\ue009h",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Search Word",
+        "enabled": true,
+        "id": "1TWYYV9",
+        "text": "was",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Switch to Replace Window",
+        "enabled": true,
+        "id": "1TWYYWJ",
+        "text": "\ue004",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Replace Word",
+        "enabled": true,
+        "id": "1TWYYY9",
+        "text": "is",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Switch to replace all",
+        "enabled": true,
+        "id": "1TX035X",
+        "text": "\ue004\ue004\ue004\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Discard Replace Window",
+        "enabled": true,
+        "id": "1TX07HP",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "V2N2PW",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_word"
+            }
+        ],
+        "type": "Include"
+    }
+]
