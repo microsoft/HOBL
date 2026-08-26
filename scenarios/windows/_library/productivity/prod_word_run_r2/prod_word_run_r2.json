@@ -40,7 +40,7 @@
     },
     {
         "children": [],
-        "delay": "18",
+        "delay": "2",
         "description": "Cut",
         "enabled": true,
         "id": "UR29XH",
@@ -95,6 +95,16 @@
         "enabled": true,
         "id": "1TX035X",
         "text": "\ue004\ue004\ue004\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Discard Success Prompt",
+        "enabled": true,
+        "id": "1TY4FR1",
+        "text": "\ue00c",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },

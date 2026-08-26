@@ -40,16 +40,6 @@
         "typing_delay": "[typing_delay]"
     },
     {
-        "children": [],
-        "delay": "2",
-        "description": "Error",
-        "enabled": true,
-        "id": "UR29AM",
-        "text": "Error\ue009z",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
         "children": [
             {
                 "children": [],
@@ -114,16 +104,6 @@
         "enabled": true,
         "id": "PSECST18",
         "type": "End If"
-    },
-    {
-        "children": [],
-        "delay": "3",
-        "description": "CTRL-s",
-        "enabled": true,
-        "id": "UR35E1",
-        "text": "\ue009s",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
