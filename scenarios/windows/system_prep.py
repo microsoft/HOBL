@@ -155,6 +155,8 @@ class SystemPrep(core.app_scenario.Scenario):
         # Ensure DUT and host clocks are synced
         logging.info("Enabling auto time zone")
         self._call(["cmd.exe", '/C reg add "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\tzautoupdate" /v Start /t REG_DWORD /d 00000003 /f > null 2>&1'])
+        # Align time zone first; a mismatched TZ can prevent w32tm /resync from succeeding
+        self.syncTimeZone()
         logging.info("Checking for clock sync")
         resync_attempts = 0
         while resync_attempts < 3:
@@ -177,6 +179,34 @@ class SystemPrep(core.app_scenario.Scenario):
         else:
             logging.info("Unable to sync clocks")
             self.fail()
+
+    def syncTimeZone(self):
+        # Force the DUT's Windows time zone to match the host's so w32tm /resync can succeed
+        try:
+            host_tz = self._host_call("tzutil /g", expected_exit_code="", timeout=30)
+        except Exception as e:
+            logging.warning("Unable to read host time zone via tzutil /g: " + str(e))
+            return
+
+        host_tz = (host_tz or "").strip()
+        if not host_tz:
+            logging.warning("Host time zone came back empty; skipping DUT time zone sync")
+            return
+
+        logging.info("Host time zone: " + host_tz)
+        try:
+            dut_tz = self._call(["cmd.exe", "/C tzutil /g"]).strip()
+            logging.info("DUT time zone: " + dut_tz)
+        except Exception:
+            dut_tz = ""
+
+        if dut_tz and dut_tz.lower() == host_tz.lower():
+            logging.info("DUT time zone already matches host")
+            return
+
+        logging.info("Setting DUT time zone to " + host_tz)
+        # tzutil /s requires the ID to be quoted because names contain spaces
+        self._call(["cmd.exe", '/C tzutil /s "' + host_tz + '"'], expected_exit_code="")
 
     def tearDown(self):
         # Set polling rate for Surface power monitor chips (after all reboots have happened)

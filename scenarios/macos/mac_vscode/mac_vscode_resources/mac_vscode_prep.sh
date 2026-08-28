@@ -95,18 +95,35 @@ if [ ! -x /opt/homebrew/bin/brew ]; then
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# 3. Install Node.js 22
+# 3. Install Node.js 24.18.0
 log "-- Checking Node.js installation"
-if command -v node >/dev/null 2>&1 && node --version | grep -q "^v22"; then
-    log "✓ Node.js 22 already installed: $(node --version)"
+NODE_VERSION="24.18.0"
+NODE_PACKAGE="node-v${NODE_VERSION}.pkg"
+NODE_PACKAGE_URL="https://nodejs.org/dist/v${NODE_VERSION}/${NODE_PACKAGE}"
+NODE_PACKAGE_SHA256="e5a6701100066156d69da48878e4b95986733b0688e0b83afbe1093778e3fffd"
+NODE_PACKAGE_PATH="${TMPDIR:-/tmp}/${NODE_PACKAGE}"
+
+if command -v node >/dev/null 2>&1 && [ "$(node --version)" = "v${NODE_VERSION}" ]; then
+    log "✓ Node.js ${NODE_VERSION} already installed: $(node --version)"
 else
-    log "-- Installing Node.js 22..."
-    brew install node@22
-    check_status "Node.js 22 installation"
-    brew link node@22 --force --overwrite
-    check_status "Node.js 22 linking"
+    log "-- Installing Node.js ${NODE_VERSION}..."
+    brew list --formula | grep -E '^node(@.*)?$' | while read -r formula; do
+        brew unlink "$formula" >/dev/null 2>&1 || true
+    done
+    curl -fL "$NODE_PACKAGE_URL" -o "$NODE_PACKAGE_PATH"
+    check_status "Node.js ${NODE_VERSION} download"
+    echo "${NODE_PACKAGE_SHA256}  ${NODE_PACKAGE_PATH}" | shasum -a 256 -c -
+    check_status "Node.js ${NODE_VERSION} checksum verification"
+    sudo -A installer -pkg "$NODE_PACKAGE_PATH" -target /
+    check_status "Node.js ${NODE_VERSION} installation"
+    rm -f "$NODE_PACKAGE_PATH"
+    hash -r
 fi
 check_command "node" || exit 1
+if [ "$(node --version)" != "v${NODE_VERSION}" ]; then
+    log " ERROR - Node.js version is $(node --version), expected v${NODE_VERSION}"
+    exit 1
+fi
 log "-- Node.js version: $(node --version)"
 
 # 4. Install readline and xz (needed for pyenv Python builds)
@@ -169,9 +186,9 @@ cd "$VSCODE_DIR" || { log " ERROR - Failed to change to $VSCODE_DIR"; exit 1; }
 log "✓ Current directory: $(pwd)"
 
 # Checkout specific version
-log "-- Checking out VS Code version 1.106.2"
-git checkout 1.106.2
-check_status "VS Code checkout v1.106.2"
+log "-- Checking out VS Code version 1.132.0"
+git checkout 1.132.0
+check_status "VS Code checkout v1.132.0"
 
 # 7. Install npm dependencies
 log "-- Installing npm dependencies (this may take 10-20 minutes)..."
@@ -191,8 +208,8 @@ log "✓ phase-1 npm install completed"
 # Apply a checked-in patch (durable and auditable) instead of ad-hoc string
 # replacement in the script. This keeps the workaround deterministic for the
 # pinned VS Code tag.
-# TODO: Revisit/remove this patch when we move off VS Code 1.106.2 or when
-# upstream @vscode/spdlog/fmt builds cleanly on Darwin 25+ with Node 22.
+# The fast path below skips this compatibility patch when upstream
+# @vscode/spdlog/fmt already builds cleanly on Darwin 25+.
 PATCH_FILE="$BIN_DIR/mac_vscode_resources/spdlog_fmt_darwin25.patch"
 if [ ! -f "$PATCH_FILE" ]; then
     log " ERROR - Required patch file not found: $PATCH_FILE"

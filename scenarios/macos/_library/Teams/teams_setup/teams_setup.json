@@ -15,7 +15,7 @@
         "description": "",
         "enabled": true,
         "id": "13AJV31",
-        "include_path": "..\\teams_create_meeting",
+        "include_path": "scenarios\\macos\\_library\\Teams\\teams_create_meeting",
         "params": [],
         "type": "Include"
     },
@@ -25,7 +25,7 @@
         "description": "",
         "enabled": true,
         "id": "13AJV6F",
-        "include_path": "..\\teams_join_meeting",
+        "include_path": "scenarios\\macos\\_library\\Teams\\teams_join_meeting",
         "params": [],
         "type": "Include"
     },

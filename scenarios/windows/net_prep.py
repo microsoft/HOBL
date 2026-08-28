@@ -23,11 +23,6 @@ class NetPrep(core.app_scenario.Scenario):
     # Set default parameters
     Params.setDefault(module, 'connection', 'Wi-Fi')  # Wi-Fi, Cellular, or Ethernet
 
-    # Get parameters
-    connection = Params.get(module, 'connection')
-    host_ip = Params.get('global', 'host_ip')
-    dut_architecture = Params.get('global', 'dut_architecture')
-    local_execution = Params.get('global', 'local_execution')
     is_prep = True
 
     def runTest(self):
@@ -42,11 +37,15 @@ class NetPrep(core.app_scenario.Scenario):
         # x64   sysnative   system32
         # arm64 sysnative   sysnative (because powerhsell is 32b program on 64b OS)
 
+        # Get parameters
+        connection = Params.get(self.module, 'connection')
+        host_ip = Params.get('global', 'host_ip')
+
         system_path = "System32"
         cmd = "cmd.exe"
 
         # Set route priorities
-        if self.connection.lower() == "wi-fi":
+        if connection.lower() == "wi-fi":
             # See if connection minimize policy is already 0, to save us from having to set it.
             try:
                 logging.info("Checking if connection minimize policy is already set to 1.")
@@ -68,15 +67,15 @@ class NetPrep(core.app_scenario.Scenario):
 
             # Add route to host
             logging.info("Setting route to host for Wi-Fi.")
-            self._call(["powershell.exe", 'New-NetRoute -DestinationPrefix "' + self.host_ip + '/32" -InterfaceAlias "Wi-Fi*" -ErrorAction SilentlyContinue'], expected_exit_code="")
+            self._call(["powershell.exe", 'New-NetRoute -DestinationPrefix "' + host_ip + '/32" -InterfaceAlias "Wi-Fi*" -ErrorAction SilentlyContinue'], expected_exit_code="")
             logging.info("Setting route to host for Ethernet.")
-            self._call(["powershell.exe", 'New-NetRoute -DestinationPrefix "' + self.host_ip + '/32" -InterfaceAlias "Ethernet*" -ErrorAction SilentlyContinue'], expected_exit_code="")
+            self._call(["powershell.exe", 'New-NetRoute -DestinationPrefix "' + host_ip + '/32" -InterfaceAlias "Ethernet*" -ErrorAction SilentlyContinue'], expected_exit_code="")
 
             # Prioritize default route on Wi-Fi (but below Ethernet at 25)
             logging.info("Enabling Wi-Fi default route to the internet, with high priority.")
             self._call(["powershell.exe", 'Set-NetIpInterface -InterfaceAlias Wi-Fi* -IgnoreDefaultRoutes Disabled -InterfaceMetric 30'])
             self._call(["powershell.exe", 'Set-NetIpInterface -InterfaceAlias Cellular* -IgnoreDefaultRoutes Enabled -InterfaceMetric 500'])
-        elif self.connection.lower() == "cellular": 
+        elif connection.lower() == "cellular":
             # See if connection minimize policy is already 0, to save us from having to set it.
             try:
                 logging.info("Checking if connection minimize policy is already set to 0.")
@@ -98,9 +97,9 @@ class NetPrep(core.app_scenario.Scenario):
 
             # Add route to host
             logging.info("Setting route to host for Wi-Fi.")
-            self._call(["powershell.exe", 'New-NetRoute -DestinationPrefix "' + self.host_ip + '/32" -InterfaceAlias "Wi-Fi*" -ErrorAction SilentlyContinue'], expected_exit_code="")
+            self._call(["powershell.exe", 'New-NetRoute -DestinationPrefix "' + host_ip + '/32" -InterfaceAlias "Wi-Fi*" -ErrorAction SilentlyContinue'], expected_exit_code="")
             logging.info("Setting route to host for Ethernet.")
-            self._call(["powershell.exe", 'New-NetRoute -DestinationPrefix "' + self.host_ip + '/32" -InterfaceAlias "Ethernet*" -ErrorAction SilentlyContinue'], expected_exit_code="")
+            self._call(["powershell.exe", 'New-NetRoute -DestinationPrefix "' + host_ip + '/32" -InterfaceAlias "Ethernet*" -ErrorAction SilentlyContinue'], expected_exit_code="")
 
             # Ignore default route on Wi-Fi and set Wi-Fi interface at low priority
             logging.info("Disabling Wi-Fi default route to the internet, and setting low priority.")
@@ -121,7 +120,7 @@ class NetPrep(core.app_scenario.Scenario):
                 logging.info("Active cellular profile: " + p + ", setting to unmetered.")
                 # Set cost to unrestricted (unmetered)
                 self._call([cmd, '/c netsh mbn set profileparameter ' + p + ' cost=unrestricted'], expected_exit_code="")
-        elif self.connection.lower() == "ethernet": 
+        elif connection.lower() == "ethernet":
             # Ignore default route on Wi-Fi and set Wi-Fi interface at low priority
             logging.info("Disabling Wi-Fi default route to the internet, and setting low priority.")
             self._call(["powershell.exe", 'Set-NetIpInterface -InterfaceAlias Wi-Fi* -IgnoreDefaultRoutes Enabled -InterfaceMetric 500'])

@@ -131,7 +131,7 @@
     },
     {
         "children": [],
-        "delay": "0.0",
+        "delay": "6.0",
         "description": "Join Meeting",
         "enabled": true,
         "file_name": [

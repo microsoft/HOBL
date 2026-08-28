@@ -55,7 +55,12 @@ class OfficeInstall(core.app_scenario.Scenario):
             # 64b version works on all platforms now, so just using that.
             self._upload("utilities\\proprietary\\OfficeDeployment", self.dut_exec_path)
 
-
+            # Delete productivity prep folder from prep status so it needs to be reran whenever office install removes office to reinstall.
+            try:
+                logging.info("Deleting productivity prep status folder.")
+                self._call(["cmd.exe", "/C rmdir /s /q " + self.dut_exec_path + "\\prep_status" + "\\productivity_prep"], expected_exit_code="")
+            except:
+                pass
 
             odt_path = self.dut_exec_path + "\\OfficeDeployment"
             # Remove any existing installations

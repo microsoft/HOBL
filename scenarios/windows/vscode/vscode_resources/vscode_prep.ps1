@@ -182,20 +182,25 @@ git --version 2>&1 | log
 check($lastexitcode)
 
 # -------------------------------------------------------------------
-# Install Node.js 22.20.0
+# Install Node.js 24.18.0
 # -------------------------------------------------------------------
-"-- Installing Node.js 22.20.0 ($logSuffix)" | log
+"-- Installing Node.js 24.18.0 ($logSuffix)" | log
 if ($isARM64) {
-    winget install --id OpenJS.NodeJS.22 --version 22.20.0 --architecture arm64 --source winget --accept-source-agreements --accept-package-agreements
+    winget install --id OpenJS.NodeJS.LTS --version 24.18.0 --architecture arm64 --source winget --accept-source-agreements --accept-package-agreements --force
 } else {
-    winget install --id OpenJS.NodeJS.22 --version 22.20.0 --architecture x64 --source winget --accept-source-agreements --accept-package-agreements
+    winget install --id OpenJS.NodeJS.LTS --version 24.18.0 --architecture x64 --source winget --accept-source-agreements --accept-package-agreements --force
 }
 checkWinget($lastexitcode)
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
 "-- Verifying Node.js installation" | log
-node --version 2>&1 | log
+$installedNodeVersion = (node --version 2>&1).Trim()
+$installedNodeVersion | log
 check($lastexitcode)
+if ($installedNodeVersion -ne "v24.18.0") {
+    " ERROR - Node.js version is $installedNodeVersion, expected v24.18.0" | log
+    Exit 1
+}
 npm --version 2>&1 | log
 
 # -------------------------------------------------------------------
@@ -389,9 +394,9 @@ if (Test-Path $vscodePath) {
 git clone https://github.com/microsoft/vscode.git
 checkGitClone $lastexitcode "$vscodePath"
 
-"-- Checking out VS Code version 1.106.2" | log
+"-- Checking out VS Code version 1.132.0" | log
 Set-Location $vscodePath
-git checkout 1.106.2
+git checkout 1.132.0
 check($lastexitcode)
 
 # -------------------------------------------------------------------

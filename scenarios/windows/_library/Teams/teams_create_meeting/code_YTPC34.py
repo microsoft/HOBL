@@ -99,7 +99,7 @@ def run(scenario):
         attempts = 1
         while attempts < 10:
             logging.info("Attempting to start meeting. Attempt #" + str(attempts))
-            logging.debug("Request String: " + request_string)
+            logging.debug("Request String: " + request_string.replace("code=", "[REDACTED]"))
             logging.debug("Bot Data: " + bot_data)
             # break
             # Send the request to the server

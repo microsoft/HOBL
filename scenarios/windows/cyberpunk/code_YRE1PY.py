@@ -11,6 +11,7 @@ def run(scenario):
     benchmark_loops = Params.get('cyberpunk', 'benchmark_loops')
     graphics_settings = Params.get('cyberpunk', 'graphics_settings')
     cyberpunk_executable = os.path.join(game_location, "bin", "x64", "Cyberpunk2077.exe")
+    saved_files = Params.get('cyberpunk', 'saved_files')
 
     # Order of what happens during setup up:
     # 1. Check if cyberpunk path is valid if not then fail test. 
@@ -118,3 +119,24 @@ def run(scenario):
         ["cmd.exe", f'/C del /q /s /f "{benchmark_path}\\*.*" & for /d %i in ("{benchmark_path}\\*") do rd /s /q "%i"'],
         expected_exit_code=""
     )
+
+    # Check if any saved files exists, if so then set flag so correct key inputs can be sent.
+    # Resolve %USERPROFILE% on the DUT (may not match the host's user).
+    userprofile_result = scenario._call(
+        ["cmd.exe", "/C echo %USERPROFILE%"],
+        expected_exit_code=""
+    )
+    userprofile = userprofile_result.strip().splitlines()[-1].strip() if userprofile_result else ""
+
+    if userprofile:
+        saves_path = os.path.join(userprofile, "Saved Games", "CD Projekt Red", "Cyberpunk 2077")
+        # /b = bare names only, /ad = directories only. findstr exits 0 if any dir name contains "save".
+        dir_listing = scenario._call(
+            ["cmd.exe", f'/C dir /b /ad "{saves_path}" 2>nul | findstr /i save'],
+            expected_exit_code=""
+        )
+        if dir_listing:
+            logging.info("Save directory found")
+            Params.setOverride('cyberpunk', 'saved_files', '1')
+    else:
+        logging.info("Could not resolve %USERPROFILE% on DUT; skipping saved-file check.")

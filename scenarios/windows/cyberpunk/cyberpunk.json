@@ -45,6 +45,17 @@
     {
         "children": [],
         "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1TM8581",
+        "name": "[saved_files]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
         "description": "Loop Counter for Screenshot Naming",
         "enabled": true,
         "id": "1MFL0K9",
@@ -122,7 +133,7 @@
                 "children": [],
                 "delay": "10",
                 "description": "",
-                "enabled": true,
+                "enabled": false,
                 "id": "Y9V2WJ",
                 "type": "Delay"
             },
@@ -137,14 +148,50 @@
                 "typing_delay": "[typing_delay]"
             },
             {
-                "children": [],
-                "delay": "5",
-                "description": "Go to Settings",
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "5",
+                        "description": "Go to Settings",
+                        "enabled": true,
+                        "id": "1TM8VPF",
+                        "text": "\ue012\ue015\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    }
+                ],
+                "description": "",
                 "enabled": true,
-                "id": "Y9V3E0",
-                "text": "\ue012\ue007",
-                "type": "Type",
-                "typing_delay": "[typing_delay]"
+                "eval_method": "==",
+                "id": "1TM8UYC",
+                "left_term": "[saved_files]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "5",
+                        "description": "Go to Settings",
+                        "enabled": true,
+                        "id": "Y9V3E0",
+                        "text": "\ue012\ue007",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "id": "1TM8V7A",
+                "type": "Else"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1TM8UYE",
+                "type": "End If"
             },
             {
                 "children": [],

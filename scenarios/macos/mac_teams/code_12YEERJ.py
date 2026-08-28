@@ -57,6 +57,10 @@ def run(scenario):
         result = get_participant_list(scenario, scenario.bot_uris[0])
         # If list is empty, or any bot is missing
         if result is None or result == "[]" or not all(bot in result for bot in scenario.bot_names):
+            if result is None:
+                logging.error("Unable to get participant list from server.")
+                scenario._sleep_by(period)
+                continue
             if len(result) == 0:
                 logging.warning("Participant list is empty")
                 for bot in scenario.bot_names:

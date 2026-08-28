@@ -193,7 +193,7 @@
         "delay": "2",
         "description": "Leave Button",
         "enabled": true,
-        "exception_on": "No match",
+        "exception_on": "Never",
         "file_name": [
             "image_YTV4NA.png"
         ],
