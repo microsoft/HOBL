@@ -1,0 +1,94 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-31",
+        "description": "",
+        "enabled": true,
+        "id": "1U6771K",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1U67744",
+        "name": "[duration]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "30"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1U67960",
+        "name": "[etw_tag]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "video"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U678V3",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "[etw_tag]_start"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Resume Playback",
+        "enabled": true,
+        "id": "1U677PL",
+        "text": "k",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U67916",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "[etw_tag]_end"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "[duration]",
+        "description": "Watch Video",
+        "enabled": true,
+        "id": "1U6781X",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Pause Playback",
+        "enabled": true,
+        "id": "1U6788P",
+        "text": "k",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    }
+]
