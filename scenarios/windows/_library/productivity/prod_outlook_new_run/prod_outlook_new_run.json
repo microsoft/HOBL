@@ -124,7 +124,7 @@
         "id": "UPVYR4",
         "text": "c:\\abl_docs\\Manarola2.png\ue007",
         "type": "Type",
-        "typing_delay": "[typing_delay]"
+        "typing_delay": "1000"
     },
     {
         "children": [],
@@ -288,7 +288,7 @@
         "id": "UPWXL9",
         "text": "c:\\abl_docs\\asample.pptx\ue007",
         "type": "Type",
-        "typing_delay": "[typing_delay]"
+        "typing_delay": "1000"
     },
     {
         "children": [],

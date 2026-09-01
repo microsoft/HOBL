@@ -208,7 +208,7 @@
         "id": "UPVYR4",
         "text": "c:\\abl_docs\\Manarola2.png\ue007",
         "type": "Type",
-        "typing_delay": "[typing_delay]"
+        "typing_delay": "1000"
     },
     {
         "children": [],
@@ -278,7 +278,7 @@
             "image_VVXCYF.png"
         ],
         "id": "VVXCYF",
-        "match_threshold": "",
+        "match_threshold": "0.65",
         "primary": true,
         "type": "Click",
         "x": "0.500",
@@ -375,7 +375,7 @@
         "id": "UPWXL9",
         "text": "c:\\abl_docs\\asample.pptx\ue007",
         "type": "Type",
-        "typing_delay": "[typing_delay]"
+        "typing_delay": "1000"
     },
     {
         "children": [],
