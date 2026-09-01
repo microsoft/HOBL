@@ -1,0 +1,125 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-29",
+        "description": "Switch to an open PowerPoint deck, apply a Fly In animation from the bottom, and save the deck",
+        "enabled": true,
+        "id": "PPR1I00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Begin recording the PowerPoint animation phase",
+        "enabled": true,
+        "id": "PPR1I01",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Switch to the open PowerPoint deck and select the first object",
+        "enabled": true,
+        "id": "PPR1C01",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Switch to the open PowerPoint window",
+        "enabled": true,
+        "id": "PPR1I02",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Move focus to the current slide and select the first object (F6, Tab)",
+        "enabled": true,
+        "id": "PPR1T01",
+        "text": "\ue036\ue004",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Open the Animations tab (Alt+A)",
+        "enabled": true,
+        "id": "PPR1T02",
+        "text": "\ue00aa",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Animation gallery and Effect Options KeyTip sequences depend on the PowerPoint version; the following sequences target PowerPoint 2602",
+        "enabled": true,
+        "id": "PPR1C02",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Expand the animation gallery and apply Fly In (S, Down, Right twice, Enter)",
+        "enabled": true,
+        "id": "PPR1T04",
+        "text": "s\ue015\ue014\ue014\ue007",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Set the Fly In direction to From Bottom (Alt+A, O, B)",
+        "enabled": true,
+        "id": "PPR1T05",
+        "text": "\ue00aaob",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Save the updated PowerPoint deck",
+        "enabled": true,
+        "id": "PPR1C04",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "Save the PowerPoint deck (Ctrl+S)",
+        "enabled": true,
+        "id": "PPR1T03",
+        "text": "\ue009s",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "End recording the PowerPoint animation phase",
+        "enabled": true,
+        "id": "PPR1I03",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_powerpoint"
+            }
+        ],
+        "type": "Include"
+    }
+]
