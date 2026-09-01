@@ -11,6 +11,17 @@
     },
     {
         "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VENA",
+        "name": "[app_name]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": ""
+    },
+    {
+        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
@@ -49,7 +60,7 @@
         "description": "Microsoft 365 Copilot",
         "enabled": true,
         "id": "1LCH0YW",
-        "text": "Microsoft\ue00d365\ue00dCopilot",
+        "text": "[app_name]",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
