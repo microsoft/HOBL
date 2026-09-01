@@ -1,0 +1,22 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-28",
+        "description": "Open a new email compose form in New Outlook",
+        "enabled": true,
+        "id": "PONCEI00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Open new email (Ctrl+N)",
+        "enabled": true,
+        "id": "PONCEI01",
+        "text": "\ue009n",
+        "type": "Type",
+        "typing_delay": "400"
+    }
+]
