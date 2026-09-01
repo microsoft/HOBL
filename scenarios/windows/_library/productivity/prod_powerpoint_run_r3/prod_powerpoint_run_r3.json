@@ -1,0 +1,97 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-30",
+        "description": "Switch to an open PowerPoint deck, paste clipboard content, and export it to PDF",
+        "enabled": true,
+        "id": "PPR3I00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Begin recording the PowerPoint paste and PDF-export phase",
+        "enabled": true,
+        "id": "PPR3I01",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Switch to the open PowerPoint deck and paste the clipboard content",
+        "enabled": true,
+        "id": "PPR3C01",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Switch to the open PowerPoint window",
+        "enabled": true,
+        "id": "PPR3I02",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "Paste the previously copied content into the current slide (Ctrl+V)",
+        "enabled": true,
+        "id": "PPR3T01",
+        "text": "\ue009v",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Export the presentation using PowerPoint Create PDF/XPS",
+        "enabled": true,
+        "id": "PPR3C02",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "6",
+        "description": "Open the Publish as PDF or XPS dialog (Alt+F, E, A)",
+        "enabled": true,
+        "id": "PPR3T02",
+        "text": "\ue00afea",
+        "type": "Type",
+        "typing_delay": "800"
+    },
+    {
+        "children": [],
+        "delay": "15",
+        "description": "Enter the PDF path and publish the presentation (Enter)",
+        "enabled": true,
+        "id": "PPR3T03",
+        "text": "[userprofile]\\abl_docs\\sample.pdf\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "End recording the PowerPoint paste and PDF-export phase",
+        "enabled": true,
+        "id": "PPR3I03",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_powerpoint"
+            }
+        ],
+        "type": "Include"
+    }
+]
