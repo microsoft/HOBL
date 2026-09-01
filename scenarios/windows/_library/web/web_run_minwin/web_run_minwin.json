@@ -1015,8 +1015,15 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1LCH9YN",
+        "id": "1U7VFC3",
         "include_path": "scenarios\\windows\\_library\\enterprise_collab\\type_to_search",
+        "params": [
+            {
+                "name": "[app_name]",
+                "val_options": "",
+                "value": "Microsoft 365 Copilot"
+            }
+        ],
         "type": "Include"
     },
     {
@@ -1088,6 +1095,22 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VE2F",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run_r1",
+        "params": [
+            {
+                "name": "[short_typing]",
+                "val_options": "0,1",
+                "value": "0"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R1 Excel Revisit",
         "enabled": true,
@@ -1101,6 +1124,15 @@
         "enabled": true,
         "id": "1T4XP31",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VE76",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run_r1",
         "type": "Include"
     },
     {
@@ -1135,6 +1167,22 @@
         "enabled": true,
         "id": "1T4XR8R",
         "include_path": "scenarios\\windows\\_library\\misc\\switchto_file_explorer",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VK8V",
+        "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
+        "params": [
+            {
+                "name": "[file_name]",
+                "val_options": "",
+                "value": "test_long_doc.docx"
+            }
+        ],
         "type": "Include"
     },
     {
@@ -1214,6 +1262,27 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VLVC",
+        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
+        "params": [
+            {
+                "name": "[duration]",
+                "val_options": "",
+                "value": "30"
+            },
+            {
+                "name": "[etw_tag]",
+                "val_options": "",
+                "value": "Youtoube_TOS_r1"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R1 Tab3 Amazon BSG Revisit",
         "enabled": true,
@@ -1239,6 +1308,24 @@
                 "value": "R1 Tab 3 Amazon BSG Revisit"
             }
         ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VMAE",
+        "include_path": "scenarios\\windows\\_library\\misc\\taskmanager_launch",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VN00",
+        "include_path": "scenarios\\windows\\_library\\misc\\terminate_app",
         "type": "Include"
     },
     {
@@ -1276,6 +1363,22 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VNP0",
+        "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
+        "params": [
+            {
+                "name": "[file_name]",
+                "val_options": "",
+                "value": "BigFamilyBudget.xlsx"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R2 Word Revisit",
         "enabled": true,
@@ -1293,6 +1396,15 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VPAL",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run_r2",
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R2 Excel Revisit",
         "enabled": true,
@@ -1306,6 +1418,15 @@
         "enabled": true,
         "id": "1T8V1H8",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VPH8",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run_r2",
         "type": "Include"
     },
     {
@@ -1411,6 +1532,27 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VY3L",
+        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
+        "params": [
+            {
+                "name": "[duration]",
+                "val_options": "",
+                "value": "30"
+            },
+            {
+                "name": "[etw_tag]",
+                "val_options": "",
+                "value": "video"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R2 Tab 3 Amazon BSG",
         "enabled": true,
@@ -1436,6 +1578,45 @@
                 "value": "R2 Amazon BSG Tab Revisit"
             }
         ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7W242",
+        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
+        "params": [
+            {
+                "name": "[duration]",
+                "val_options": "",
+                "value": "30"
+            },
+            {
+                "name": "[etw_tag]",
+                "val_options": "",
+                "value": "video"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7W29W",
+        "include_path": "scenarios\\windows\\_library\\misc\\taskmanager_launch",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7W2CT",
+        "include_path": "scenarios\\windows\\_library\\misc\\terminate_app",
         "type": "Include"
     },
     {
@@ -1473,6 +1654,15 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7W2X8",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run_r3",
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R3 Excel Revisit",
         "enabled": true,
@@ -1486,6 +1676,24 @@
         "enabled": true,
         "id": "1T8VFXJ",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7W31F",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run_r3",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7W33R",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run_r4",
         "type": "Include"
     },
     {
@@ -1591,6 +1799,27 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7W3F6",
+        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
+        "params": [
+            {
+                "name": "[duration]",
+                "val_options": "",
+                "value": "30"
+            },
+            {
+                "name": "[etw_tag]",
+                "val_options": "",
+                "value": "video"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R3 Tab3 Amazon BSG Revisit",
         "enabled": true,
@@ -1616,6 +1845,15 @@
                 "value": "R3 Tab 3 AmazonBSG Revisit"
             }
         ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7W3LJ",
+        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\snipping_tool",
         "type": "Include"
     },
     {
