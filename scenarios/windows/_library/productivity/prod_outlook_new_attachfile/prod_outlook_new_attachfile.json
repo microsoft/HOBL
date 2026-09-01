@@ -1,0 +1,98 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-25",
+        "description": "Attach a specified file to an open email draft in New Outlook",
+        "enabled": true,
+        "id": "1TX82AU",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Choose whether to attach the file from OneDrive or the local user profile",
+        "enabled": true,
+        "id": "PONAFS01",
+        "name": "[file_source]",
+        "type": "Set Default",
+        "val_options": "OneDrive,Local",
+        "value": "Local"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Set the path of the file to attach",
+        "enabled": true,
+        "id": "1TY2MVN",
+        "name": "[file_path]",
+        "type": "Set Default",
+        "val_options": "abl_docs\\asample.pptx,abl_docs\\FamilyBudget.xlsx,abl_docs\\test_long_doc.docx",
+        "value": "abl_docs\\asample.pptx"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Open the attachment file picker and select the requested file",
+        "enabled": true,
+        "id": "PONAFC00",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Open the attachment file picker (Alt+N, A, F, B)",
+        "enabled": true,
+        "id": "PONAFT01",
+        "text": "\ue00a\ue00anafb",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "8",
+                "description": "Enter the OneDrive file path and attach the file (Enter)",
+                "enabled": true,
+                "id": "PONAFT03",
+                "text": "[userprofile]\\onedrive\\[file_path]\ue007",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Use the OneDrive attachment path",
+        "enabled": true,
+        "id": "PONAFT02",
+        "eval_method": "==",
+        "left_term": "[file_source]",
+        "right_term": "OneDrive",
+        "type": "If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "8",
+                "description": "Enter the local file path and attach the file (Enter)",
+                "enabled": true,
+                "id": "PONAFT04",
+                "text": "[userprofile]\\[file_path]\ue007",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Use the local attachment path",
+        "enabled": true,
+        "id": "PONAFE01",
+        "type": "Else"
+    },
+    {
+        "children": [],
+        "description": "End attachment path selection",
+        "enabled": true,
+        "id": "PONAFN01",
+        "type": "End If"
+    }
+]
