@@ -85,7 +85,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[web_site_load_time]",
@@ -156,7 +156,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[web_site_load_time]",
@@ -227,7 +227,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     }
                 ],
                 "type": "Include"
@@ -293,7 +293,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     }
                 ],
                 "type": "Include"
@@ -429,7 +429,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[web_site_load_time]",
@@ -500,7 +500,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     }
                 ],
                 "type": "Include"
@@ -572,7 +572,7 @@
                     {
                         "name": "[duration]",
                         "val_options": "",
-                        "value": "120"
+                        "value": "50"
                     }
                 ],
                 "type": "Include"
@@ -691,7 +691,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[web_site_load_time]",
@@ -753,7 +753,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[web_site_load_time]",
@@ -851,7 +851,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     }
                 ],
                 "type": "Include"
@@ -917,7 +917,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[web_site_load_time]",
@@ -979,7 +979,7 @@
                     {
                         "name": "[load_only]",
                         "val_options": "0,1",
-                        "value": "0"
+                        "value": "1"
                     }
                 ],
                 "type": "Include"
