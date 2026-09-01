@@ -32,7 +32,7 @@
         "description": "Attach the PowerPoint presentation",
         "enabled": true,
         "id": "1TX8HXX",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_atttachfile",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_attachfile",
         "params": [
             {
                 "name": "[file_source]",
@@ -61,7 +61,7 @@
         "description": "Attach the Excel workbook",
         "enabled": true,
         "id": "1TX8J1E",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_atttachfile",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_attachfile",
         "params": [
             {
                 "name": "[file_source]",

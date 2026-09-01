@@ -98,7 +98,7 @@
         "description": "Attach test_long_doc.docx using the reusable New Outlook attachment flow",
         "enabled": true,
         "id": "PONR3I03",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_atttachfile",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_attachfile",
         "params": [
             {
                 "name": "[file_source]",

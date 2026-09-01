@@ -10,6 +10,6 @@ def run():
     return
 
 def run_user_only():
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_new_atttachfile')
+    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_new_attachfile')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_new_switchto')
     return
