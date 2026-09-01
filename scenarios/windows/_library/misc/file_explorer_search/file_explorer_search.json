@@ -81,5 +81,14 @@
         "text": "\ue003",
         "type": "Type",
         "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VNCC",
+        "include_path": "scenarios\\windows\\_library\\misc\\terminate_app",
+        "type": "Include"
     }
 ]
