@@ -1,0 +1,137 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-29",
+        "description": "Compose an email and attach a Word document in New Outlook",
+        "enabled": true,
+        "id": "PONR3I00",
+        "type": "Information"
+    },
+    {  
+        "children": [],
+        "delay": "0",
+        "description": "Begin recording the New Outlook compose and attachment phase",
+        "enabled": true,
+        "id": "PONR3I01",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "Open New Outlook",
+        "enabled": true,
+        "id": "PONR2I01",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_open",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Compose a new email message",
+        "enabled": true,
+        "id": "PONR3C01",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Open a new email compose form in New Outlook",
+        "enabled": true,
+        "id": "PONR3I02",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_create_email",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Type the recipient email address",
+        "enabled": true,
+        "id": "PONR3T01",
+        "text": "bogus@outlook.com",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1.5",
+        "description": "Move focus from the recipient field to the subject field (Tab twice)",
+        "enabled": true,
+        "id": "PONR3T02",
+        "text": "\ue004\ue004",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Type the email subject",
+        "enabled": true,
+        "id": "PONR3T03",
+        "text": "Manarola\ue00dtrip!\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "10",
+        "description": "Type the email body requesting review of the attached Word document",
+        "enabled": true,
+        "id": "PONR3T04",
+        "text": "Please\ue00dreview\ue00dthe\ue00dattached\ue00dWord\ue00ddocument\ue00dfor\ue00dthe\ue00dManarola\ue00dtrip.\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Attach the Word document to the open email draft",
+        "enabled": true,
+        "id": "PONR3C02",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Attach test_long_doc.docx using the reusable New Outlook attachment flow",
+        "enabled": true,
+        "id": "PONR3I03",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_atttachfile",
+        "params": [
+            {
+                "name": "[file_source]",
+                "val_options": "OneDrive,Local",
+                "value": "Local"
+            },
+            {
+                "name": "[file_path]",
+                "val_options": "",
+                "value": "abl_docs\\test_long_doc.docx"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "End recording the New Outlook compose and attachment phase",
+        "enabled": true,
+        "id": "PONR3I04",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_outlook"
+            }
+        ],
+        "type": "Include"
+    }
+]
