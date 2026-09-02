@@ -1,0 +1,32 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-09-02",
+        "description": "Discard an open email draft in New Outlook",
+        "enabled": true,
+        "id": "PONDEI00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Open the discard confirmation dialog (Escape)",
+        "enabled": true,
+        "id": "PONDET01",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Confirm discarding the email (Enter)",
+        "enabled": true,
+        "id": "PONDET02",
+        "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "400"
+    }
+]
