@@ -50,5 +50,13 @@
             }
         ],
         "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "",
+        "enabled": true,
+        "id": "1U9514F",
+        "type": "Window Maximize"
     }
 ]
