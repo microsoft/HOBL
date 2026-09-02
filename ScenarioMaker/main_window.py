@@ -42,6 +42,7 @@ class MainWindow(QtWidgets.QMainWindow, main_form):
         central_layout.addWidget(self.tab_widget)
         self.tab_widget.setTabsClosable(True)
         self.tab_widget.currentChanged.connect(self.update_title)
+        self.tab_widget.currentChanged.connect(self.update_dpi_controls)
         # tab_count = self.tab_widget.count()
         # tab_title = "Untitled-"+str(tab_count)
         # self.tab_widget.addTab(Tab(app, settings_data, self, tab_count), tab_title)
@@ -198,6 +199,28 @@ class MainWindow(QtWidgets.QMainWindow, main_form):
         self.ui.okButton.setStyleSheet(stylesheet)
         self.ui.okButton.clicked.connect(self.ok_pressed)
         self.ui.okButton.hide()
+
+        # DPI override controls docked to the tab bar's top-right corner so they sit
+        # under the OK/Cancel buttons without crowding them.
+        self.dpiLabel = QtWidgets.QLabel("DPI:")
+        self.dpiEdit = QtWidgets.QLineEdit("")
+        self.dpiEdit.setFixedWidth(30)
+        self.dpiEdit.setValidator(QtGui.QIntValidator(1, 9999, self))
+        self.dpiEdit.setEnabled(True)
+        # self.dpiCheckbox = QtWidgets.QCheckBox("Override")
+        # self.dpiCheckbox.setChecked(False)
+        # self.dpiCheckbox.toggled.connect(self.dpiEdit.setEnabled)
+        self.dpiCornerWidget = QtWidgets.QWidget()
+        dpi_corner_layout = QtWidgets.QHBoxLayout(self.dpiCornerWidget)
+        dpi_corner_layout.setContentsMargins(0, 0, 6, 0)
+        dpi_corner_layout.setSpacing(4)
+        dpi_corner_layout.addWidget(self.dpiLabel)
+        dpi_corner_layout.addWidget(self.dpiEdit)
+        # dpi_corner_layout.addWidget(self.dpiCheckbox)
+        self.tab_widget.setCornerWidget(self.dpiCornerWidget, Qt.Corner.TopRightCorner)
+        self.dpiLabel.hide()
+        self.dpiEdit.hide()
+        # self.dpiCheckbox.hide()
 
         self.connection_manager.connection_available_signal.connect(self.connection_available)
         self.connection_manager.connection_attempt_signal.connect(self.connection_attempt)
@@ -677,6 +700,23 @@ class MainWindow(QtWidgets.QMainWindow, main_form):
         if not w:
             return
         w.open_image()
+
+    def show_dpi_controls(self):
+        self.dpiLabel.show()
+        self.dpiEdit.show()
+        # self.dpiCheckbox.show()
+
+    def hide_dpi_controls(self):
+        self.dpiLabel.hide()
+        self.dpiEdit.hide()
+        # self.dpiCheckbox.hide()
+
+    def update_dpi_controls(self):
+        w = self.tab_widget.currentWidget()
+        if w and getattr(w, "capture_mode", None) == "image":
+            self.show_dpi_controls()
+        else:
+            self.hide_dpi_controls()
 
     def remote_connect(self):
         w = self.tab_widget.currentWidget()
