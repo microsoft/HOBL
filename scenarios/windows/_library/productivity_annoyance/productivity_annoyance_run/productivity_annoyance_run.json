@@ -1,0 +1,23 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-19",
+        "description": "Run a loaded-Office idle phase with annoyance hook support",
+        "enabled": true,
+        "id": "PARUN001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Run the loaded-Office annoyance phase",
+        "enabled": true,
+        "file_name": [
+            "code_run.py"
+        ],
+        "id": "PARUN002",
+        "type": "Code"
+    }
+]
