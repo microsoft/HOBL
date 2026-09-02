@@ -17,8 +17,10 @@ class Tool(Scenario):
     module = __module__.split('.')[-1]
     # Set default parameters
     Params.setDefault(module, 'provider', 'perf_utc.wprp', desc="WPRP file to use for UTC Perftrack traces.", valOptions=["@\\providers"])
+    Params.setDefault(module, 'cm', '0', desc="Use the ConsumerMultitaskerPTs.xml manifest.")
     # Get parameters
     provider = Params.get(module, 'provider')
+    cm = Params.get(module, 'cm')
 
     def initCallback(self, scenario):
         # Keep a pointer to the scenario that this tools is being run with
@@ -47,9 +49,12 @@ class Tool(Scenario):
         perf_output = self.scenario.result_dir + "\\" + self.scenario.testname + "_PerfMetrics.csv"
         manifest_file = "utilities\\proprietary\\ParseUtc\\UtcPerftrack.xml"
 
+        if self.cm == '1':
+            manifest_file = "utilities\\proprietary\\ParseUtc\\ConsumerMultitaskerPTs.xml"
+
         logging.info("Perf Tool - Running PerfParser on " + etl_trace)
 
-        self._host_call("utilities\\proprietary\\ParseUtc\\PerfParser.exe " + etl_trace + " " + manifest_file + " " + perf_output)
+        self._host_call("utilities\\proprietary\\ParseUtc\\PerfParser.exe " + etl_trace + " " + manifest_file + " " + perf_output )
 
     def testTimeoutCallback(self):
         self.conn_timeout = True
