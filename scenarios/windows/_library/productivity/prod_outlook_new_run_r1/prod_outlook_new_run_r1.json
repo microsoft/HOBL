@@ -75,5 +75,14 @@
             }
         ],
         "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Discard the open email draft",
+        "enabled": true,
+        "id": "PONR1I03",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_discard_email",
+        "type": "Include"
     }
 ]

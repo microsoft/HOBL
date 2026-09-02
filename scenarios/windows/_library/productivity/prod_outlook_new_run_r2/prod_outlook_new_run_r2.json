@@ -115,6 +115,15 @@
     },
     {
         "children": [],
+        "delay": "2",
+        "description": "Discard the open email draft",
+        "enabled": true,
+        "id": "PONR3I05",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_discard_email",
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0",
         "description": "End recording the New Outlook compose and attachment phase",
         "enabled": true,
