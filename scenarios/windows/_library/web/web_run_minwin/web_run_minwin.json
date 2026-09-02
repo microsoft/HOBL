@@ -1039,7 +1039,7 @@
         "children": [],
         "delay": "0",
         "description": "",
-        "enabled": true,
+        "enabled": false,
         "id": "1U8X8PP",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_open",
         "type": "Include"
@@ -1233,6 +1233,27 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U950TP",
+        "include_path": "scenarios\\windows\\_library\\misc\\scroll_loop",
+        "params": [
+            {
+                "name": "[up_count]",
+                "val_options": "",
+                "value": "0"
+            },
+            {
+                "name": "[down_count]",
+                "val_options": "",
+                "value": "3"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R1 Tab7 Youtube TOS Revisit",
         "enabled": true,
@@ -1306,6 +1327,27 @@
                 "name": "[tab_name]",
                 "val_options": "",
                 "value": "R1 Tab 3 Amazon BSG Revisit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U95246",
+        "include_path": "scenarios\\windows\\_library\\misc\\scroll_loop",
+        "params": [
+            {
+                "name": "[up_count]",
+                "val_options": "",
+                "value": "0"
+            },
+            {
+                "name": "[down_count]",
+                "val_options": "",
+                "value": "3"
             }
         ],
         "type": "Include"
@@ -1468,8 +1510,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U8X7T9",
-        "include_path": "scenarios\\windows\\_library\\misc\\terminate_app",
+        "id": "1U91676",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_close",
         "type": "Include"
     },
     {
@@ -1506,6 +1548,27 @@
                 "name": "[tab_name]",
                 "val_options": "",
                 "value": "R2 Reddit Tab Revisit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U95376",
+        "include_path": "scenarios\\windows\\_library\\misc\\scroll_loop",
+        "params": [
+            {
+                "name": "[up_count]",
+                "val_options": "",
+                "value": "0"
+            },
+            {
+                "name": "[down_count]",
+                "val_options": "",
+                "value": "3"
             }
         ],
         "type": "Include"
@@ -1585,6 +1648,27 @@
                 "name": "[tab_name]",
                 "val_options": "",
                 "value": "R2 Amazon BSG Tab Revisit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U953AN",
+        "include_path": "scenarios\\windows\\_library\\misc\\scroll_loop",
+        "params": [
+            {
+                "name": "[up_count]",
+                "val_options": "",
+                "value": "0"
+            },
+            {
+                "name": "[down_count]",
+                "val_options": "",
+                "value": "3"
             }
         ],
         "type": "Include"
@@ -1788,6 +1872,27 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U953U6",
+        "include_path": "scenarios\\windows\\_library\\misc\\scroll_loop",
+        "params": [
+            {
+                "name": "[up_count]",
+                "val_options": "",
+                "value": "3"
+            },
+            {
+                "name": "[down_count]",
+                "val_options": "",
+                "value": "0"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "R3 Tab7 YouTube TOS Revisit",
         "enabled": true,
@@ -1861,6 +1966,27 @@
                 "name": "[tab_name]",
                 "val_options": "",
                 "value": "R3 Tab 3 AmazonBSG Revisit"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U95405",
+        "include_path": "scenarios\\windows\\_library\\misc\\scroll_loop",
+        "params": [
+            {
+                "name": "[up_count]",
+                "val_options": "",
+                "value": "3"
+            },
+            {
+                "name": "[down_count]",
+                "val_options": "",
+                "value": "0"
             }
         ],
         "type": "Include"

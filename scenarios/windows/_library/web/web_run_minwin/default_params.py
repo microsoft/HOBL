@@ -16,6 +16,7 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\snipping_tool')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\type_to_search')
     import_run_user_only('scenarios\\windows\\_library\\misc\\file_explorer_search')
+    import_run_user_only('scenarios\\windows\\_library\\misc\\scroll_loop')
     import_run_user_only('scenarios\\windows\\_library\\misc\\switchto_file_explorer')
     import_run_user_only('scenarios\\windows\\_library\\misc\\taskmanager_launch')
     import_run_user_only('scenarios\\windows\\_library\\misc\\terminate_app')
