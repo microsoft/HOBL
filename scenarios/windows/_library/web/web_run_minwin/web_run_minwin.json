@@ -1039,15 +1039,6 @@
         "children": [],
         "delay": "0",
         "description": "",
-        "enabled": false,
-        "id": "1U8X8PP",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_open",
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
         "enabled": true,
         "id": "1U8X8AR",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_cm",
@@ -1271,7 +1262,7 @@
             {
                 "name": "[tab_number]",
                 "val_options": "",
-                "value": "1"
+                "value": "7"
             },
             {
                 "name": "[tab_name]",
@@ -1592,7 +1583,7 @@
             {
                 "name": "[tab_number]",
                 "val_options": "",
-                "value": "3"
+                "value": "7"
             },
             {
                 "name": "[tab_name]",
@@ -1642,7 +1633,7 @@
             {
                 "name": "[tab_number]",
                 "val_options": "",
-                "value": "7"
+                "value": "3"
             },
             {
                 "name": "[tab_name]",

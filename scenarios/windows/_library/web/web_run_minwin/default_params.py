@@ -29,7 +29,6 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_run_r4')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_switchto')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_new_close')
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_new_open')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_cm')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_r1')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_r2')
