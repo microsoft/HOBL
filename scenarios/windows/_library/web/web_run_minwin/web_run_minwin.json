@@ -1040,8 +1040,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1L8MYJU",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_open",
+        "id": "1U8X8PP",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_open",
         "type": "Include"
     },
     {
@@ -1049,8 +1049,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T60E55",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_run_minwin",
+        "id": "1U8X8AR",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_cm",
         "params": [
             {
                 "name": "[short_typing]",
@@ -1148,8 +1148,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T7TLKU",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "id": "1U8X2CN",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run_r1",
         "type": "Include"
     },
     {
@@ -1442,8 +1442,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8V1M0",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "id": "1U8X2UH",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run_r2",
         "type": "Include"
     },
     {
@@ -1459,8 +1459,17 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8V1RF",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
+        "id": "1U8X6CL",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_r1",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U8X7T9",
+        "include_path": "scenarios\\windows\\_library\\misc\\terminate_app",
         "type": "Include"
     },
     {
@@ -1709,8 +1718,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8VH1N",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "id": "1U8X3LA",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run_r3",
         "type": "Include"
     },
     {
@@ -1728,6 +1737,15 @@
         "enabled": true,
         "id": "1T8VHAM",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U8X6XM",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_r2",
         "type": "Include"
     },
     {
@@ -1956,6 +1974,24 @@
         "enabled": true,
         "id": "1T80AE2",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_close",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U8XA8M",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U8XAK5",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_close",
         "type": "Include"
     }
 ]
