@@ -106,8 +106,6 @@ class Tab(QtWidgets.QWidget):
         self.region_h = 0
         self.action_type = ""
         self.pending_dialog = None
-        # DPI (x, y) tuple read from the currently opened image, or None if unknown / not in image mode.
-        self.image_dpi = None
         self.hostPixelRatio = self.screen().devicePixelRatio()
 
         # Connect action list view
@@ -1127,23 +1125,9 @@ class Tab(QtWidgets.QWidget):
         if not os.path.exists(self.working_dir):
             os.makedirs(self.working_dir)
 
-        # DPI precedence for image mode: user override > embedded image DPI > (fallback TBD).
-        dpi = None
         if self.capture_mode == "image":
-            if self.main_win.dpiCheckbox.isChecked():
-                try:
-                    override = int(self.main_win.dpiEdit.text())
-                    dpi = (override, override)
-                    print(f"Saving template with override dpi {override}")
-                except ValueError:
-                    print(f"Invalid DPI override '{self.main_win.dpiEdit.text()}'; saving without DPI metadata.")
-            elif self.image_dpi is not None:
-                dpi = self.image_dpi
-                print(f"Saving template with source image dpi {self.image_dpi}")
-            else:
-                dut_dpi = int(96 * self.main_win.dutPixelRatio)
-                dpi = (dut_dpi, dut_dpi)
-                print(f"Didn't detect any DPI using dut dpi {dut_dpi} as a fallback.")
+            dpi_value = int(self.main_win.dpiEdit.text())
+            dpi = (dpi_value, dpi_value)
         else:
             dut_dpi = int(96 * self.main_win.dutPixelRatio)
             dpi = (dut_dpi, dut_dpi)
@@ -1344,7 +1328,7 @@ class Tab(QtWidgets.QWidget):
         if not image_dpi:
             prompt = (
                 f"No DPI metadata found in image:\n{os.path.basename(image_path)}\n\n"
-                "Enter a DPI value (72-300).\n\n"
+                "Enter a DPI value (96-192).\n\n"
                 "This should match the Windows display scaling of the DUT\n"
                 "that produced the image:\n"
                 "    96  = 100%\n"
@@ -1364,18 +1348,17 @@ class Tab(QtWidgets.QWidget):
                     dpi_value = int(text)
                 except ValueError:
                     dpi_value = None
-                if dpi_value is not None and 72 <= dpi_value <= 300:
+                if dpi_value is not None and 96 <= dpi_value <= 192:
                     break
             image_dpi = (dpi_value, dpi_value)
 
         self.capture_mode = "image"
-        self.image_dpi = image_dpi
         img = QtGui.QPixmap(image_path).toImage()
         img.setDevicePixelRatio(self.screen().devicePixelRatio())
         self.labelImage.setImage(img)
         self.last_capture_pil = Image.fromqimage(img)
-        print(f"Opened image DPI: {self.image_dpi}")
-        self.main_win.dpiEdit.setText(str(round(self.image_dpi[0])))
+        print(f"Opened image DPI: {image_dpi}")
+        self.main_win.dpiEdit.setText(str(round(image_dpi[0])))
         self.main_win.update_dpi_controls()
 
     def remote_connect(self):
