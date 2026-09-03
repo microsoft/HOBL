@@ -1810,15 +1810,6 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8VHAM",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
         "id": "1U8X6XM",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_r2",
         "type": "Include"
