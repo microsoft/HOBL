@@ -1759,9 +1759,9 @@ class Scenario(unittest.TestCase):
                         if self.platform.lower() == "windows":
                             # Check if file exists and is the same
                             dest_file = os.path.basename(source)
-                            result = self._call(["cmd.exe", f'/c forfiles /P "{dest}" /M "{dest_file}" /C "cmd /c echo @fdate @ftime"'], expected_exit_code="")
+                            result = self._call(["cmd.exe", f'/c forfiles /P "{dest}" /M "{dest_file}" /C "cmd /c echo @fdate @ftime"'], expected_exit_code="", log_output=False)
 
-                            logging.debug("RESULT: " + result)
+                            # logging.debug("RESULT: " + result)
                             if "not found" in result or "not exist" in result:
                                 logging.info("Dest file doesn't exist, uploading: " + source)
                                 rpc.upload(self.dut_ip, self.rpc_port, source, dest)
