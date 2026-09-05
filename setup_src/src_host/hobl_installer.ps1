@@ -17,7 +17,7 @@ try {
 
     Write-Host "Checking if $extractedPath exists"
     if (Test-Path -LiteralPath $extractedPath) {
-        throw "The extraction path already exists: $extractedPath"
+        Remove-Item -LiteralPath $extractedPath -Recurse -Force
     }
 
     Write-Host "Downloading $downloadUrl"
@@ -35,6 +35,7 @@ try {
 }
 catch {
     Write-Host " ERROR - Failed to install HOBL: $($_.Exception.Message)" -ForegroundColor Red
+    Read-Host -Prompt "-- Press Enter to exit"
     exit 1
 }
 finally {
