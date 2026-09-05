@@ -291,9 +291,9 @@ if ($ui) {
 
     "-- Install complete, it may take about a minute for the UI to auto-launch for the first time." | log
     #"-- Waiting ~30 seconds for first time app launch" | log
-    #Start-Sleep -seconds 30
+    Start-Sleep -seconds 15
     # Press any key to exit
-    Read-Host -Prompt "-- Press Enter to exit"
+    # Read-Host -Prompt "-- Press Enter to exit"
 }
 
 Exit 0
