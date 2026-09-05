@@ -31,21 +31,21 @@ SetupArchitecture=x64
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Components]
-Name: "Local"; Description: "Local setup (Includes test framework, User interface, and device setup)"; Types: Full; Flags: exclusive
-Name: "Host"; Description: "Host setup (Incudes test framework and User Interface)"; Types: Full; Flags: exclusive
-Name: "Framework"; Description: "Test framework only (for command-line operation or getting updates)"; Types: Full; Flags: exclusive
-Name: "UI"; Description: "User interface only (for getting updates)"; Types: Full; Flags: exclusive
+Name: "local"; Description: "Local setup (Includes test framework, User interface, and device setup)"; Types: Custom; Flags: exclusive
+Name: "host"; Description: "Host setup (Incudes test framework and User Interface)"; Types: Custom; Flags: exclusive
+Name: "framework"; Description: "Test framework only (for command-line operation or getting updates)"; Types: Custom; Flags: exclusive
+Name: "ui"; Description: "User interface only (for getting updates)"; Types: Custom; Flags: exclusive
 
 [Files]
 Source: "hobl_installer.ps1"; DestDir: "{tmp}"; Flags: ignoreversion 
 
 [Run]
-Filename: "{win}\syswow64\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "set-executionpolicy unrestricted -Force"; Flags: waituntilterminated
-Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "set-executionpolicy unrestricted -Force"; Flags: waituntilterminated
-Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path {tmp}\hobl_installer.ps1"; Flags: waituntilterminated
-Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "{tmp}\hobl_installer.ps1"; Flags: shellexec waituntilterminated
-Filename: "{win}\syswow64\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path c:\hobl\setup_src\src_host\host_setup.ps1"; Flags: shellexec waituntilterminated
-Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path c:\hobl\setup_src\src_host\host_setup.ps1"; Flags: shellexec waituntilterminated
+Filename: "{win}\syswow64\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "set-executionpolicy unrestricted -Force"; Flags: waituntilterminated runhidden
+Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "set-executionpolicy unrestricted -Force"; Flags: waituntilterminated runhidden
+Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path {tmp}\hobl_installer.ps1"; Flags: waituntilterminated runhidden
+Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "{tmp}\hobl_installer.ps1"; Flags: waituntilterminated
+Filename: "{win}\syswow64\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path c:\hobl\setup_src\src_host\host_setup.ps1"; Flags: waituntilterminated runhidden
+Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path c:\hobl\setup_src\src_host\host_setup.ps1"; Flags: waituntilterminated runhidden
 Filename: "{win}\system32\reg.exe"; Parameters: "/?"; StatusMsg: "Running installation. Please wait."; AfterInstall: ExecuteRealProgram
 
 [Code]
@@ -128,19 +128,19 @@ var
   Line: String;
 begin
   Args := '';
-  if WizardIsComponentSelected('Local') then
+  if WizardIsComponentSelected('local') then
     begin
       Args := '-framework -local -ui';
     end;
-  if WizardIsComponentSelected('Host') then
+  if WizardIsComponentSelected('host') then
     begin
       Args := '-framework -ui';
     end;
-  if WizardIsComponentSelected('Framework') then
+  if WizardIsComponentSelected('framework') then
     begin
       Args := '-framework';
     end;
-  if WizardIsComponentSelected('UI') then
+  if WizardIsComponentSelected('ui') then
     begin
       Args := ' -ui';
     end;
@@ -157,6 +157,14 @@ begin
     begin
       MsgBox('Exec failed! Error: ' + SysErrorMessage(ResultCode), mbCriticalError, MB_OK);
     end;
+end;
+
+procedure InitializeWizard();
+var
+  component: String;
+begin
+  component := ExpandConstant('{param:COMPONENTS|local}');
+  WizardSelectComponents(component);
 end;
 
 

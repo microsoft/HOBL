@@ -60,6 +60,7 @@ New-Item -ItemType Directory -Force -Path c:\hobl_results > $null
 Set-Content -Path $logFile -encoding utf8 "-- HOBL Install started"
 "Install framework: $framework" | log
 "Install ui: $ui" | log
+"Install local: $local" | log
 
 if ($framework -eq $false -and $ui -eq $false) {
     "No components specifed. Aborting." | log
@@ -152,19 +153,24 @@ if ($framework) {
     # Move-Item "$PSScriptRoot\..\..\downloads\ffmpeg-N-123073-g743df5ded9-winarm64-gpl" "$PSScriptRoot\..\..\downloads\ffmpeg_arm64" -Force 2>&1 | log
     # Remove-Item $ffmpegZip 2>&1 | log
 
-    # Set git hooks if git exists
-    if (Get-Command git.exe -ErrorAction SilentlyContinue) {
-        "-- Setting git hooks path" | log
-        pushd $PSScriptRoot\..\.. > $null
-        git.exe config core.hooksPath git_hooks 2>&1 | log
-        # check($lastexitcode)
+    if (Test-Path -Path ".git") {
+        # Set git hooks if git exists
+        if (Get-Command git.exe -ErrorAction SilentlyContinue) {
+            "-- Setting git hooks path" | log
+            pushd $PSScriptRoot\..\.. > $null
+            git.exe config core.hooksPath git_hooks 2>&1 | log
+            # check($lastexitcode)
 
-        "-- Updating hobl version" | log
-        git.exe hook run post-checkout 2>&1 | log
-        popd > $null
+            "-- Updating hobl version" | log
+            git.exe hook run post-checkout 2>&1 | log
+            popd > $null
+        }
+        else {
+            "-- git not found, skipping git hook setup" | log
+        }
     }
     else {
-        "-- git not found, skipping git hook setup" | log
+        "-- Not a git repository, skipping git hook setup" | log
     }
 
     # Disable error reporting UI
@@ -291,9 +297,32 @@ if ($ui) {
 
     "-- Install complete, it may take about a minute for the UI to auto-launch for the first time." | log
     #"-- Waiting ~30 seconds for first time app launch" | log
-    Start-Sleep -seconds 15
+    # Start-Sleep -seconds 15
     # Press any key to exit
     # Read-Host -Prompt "-- Press Enter to exit"
+    
+    # Wait up to 60 seconds for the UI to become available.
+    $uiUrl = "http://localhost/support/Contact"
+    $deadline = (Get-Date).AddSeconds(60)
+    $uiReady = $false
+    while ((Get-Date) -lt $deadline) {
+        try {
+            $response = Invoke-WebRequest -Uri $uiUrl -UseBasicParsing -TimeoutSec 5 -ErrorAction Stop
+            if ($response.StatusCode -eq 200) {
+                $uiReady = $true
+                break
+            }
+        } catch {
+            # The UI may still be starting; retry until the deadline.
+        }
+        Start-Sleep -Seconds 1
+    }
+    if ($uiReady) {
+        "-- HOBLweb is ready" | log
+    } else {
+        "-- Timed out after 60 seconds waiting for $uiUrl" | log
+    }
+    
 }
 
 Exit 0
