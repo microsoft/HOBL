@@ -170,8 +170,12 @@ source ~/.zprofile
 check_command "pyenv" || exit 1
 
 log "-- Installing Python 3.12.10"
-pyenv install 3.12.10 -f
-check_status "Python 3.12.10 installation"
+if ! pyenv versions --bare | sed 's/^[*[:space:]]*//;s/[[:space:]]*$//' | grep -qx "3.12.10"; then
+    pyenv install 3.12.10
+    check_status "Python 3.12.10 installation"
+else
+    log "Python 3.12.10 already installed via pyenv - preserving existing install"
+fi
 
 log "-- Setting Python version"
 pyenv global 3.12.10
@@ -203,13 +207,40 @@ log "✓ requirements.txt found"
 # Services policy). Install through the approved Microsoft package feed proxy instead.
 # Same pinned versions are served, so there is no functional or performance change.
 PYPI_INDEX_URL="https://packagefeedproxy.microsoft.io/pypi/simple"
+export UV_DEFAULT_INDEX="$PYPI_INDEX_URL"
 log "-- Using approved PyPI feed proxy: $PYPI_INDEX_URL"
 
-pip install --index-url "$PYPI_INDEX_URL" -r requirements.txt
+PYENV_PYTHON="$(pyenv which python 2>/dev/null)"
+if [ ! -x "$PYENV_PYTHON" ]; then
+    log " ERROR - pyenv python not found at: $PYENV_PYTHON"
+    exit 1
+fi
+
+VENV_DIR="$BIN_DIR/mac_fast_api_resources/.venv"
+rm -rf "$VENV_DIR"
+"$PYENV_PYTHON" -m venv "$VENV_DIR"
+check_status "FastAPI venv creation"
+
+VENV_PYTHON="$VENV_DIR/bin/python"
+VENV_PIP="$VENV_DIR/bin/pip"
+
+"$VENV_PIP" install --index-url "$PYPI_INDEX_URL" -r requirements.txt
 check_status "FastAPI requirements installation"
 
-pip install --index-url "$PYPI_INDEX_URL" build
+"$VENV_PIP" install --index-url "$PYPI_INDEX_URL" build "uv==0.9.5"
 check_status "Build package installation"
+
+VENV_UV="$VENV_DIR/bin/uv"
+if [ ! -x "$VENV_UV" ]; then
+    log " ERROR - uv executable missing after installation: $VENV_UV"
+    exit 1
+fi
+
+UV_PRIME_DIR="$BIN_DIR/mac_fast_api_resources/uv_build_prime"
+rm -rf "$UV_PRIME_DIR"
+"$VENV_UV" build --out-dir "$UV_PRIME_DIR"
+check_status "uv build cache priming"
+rm -rf "$UV_PRIME_DIR"
 
 # Final verification
 log ""
@@ -218,11 +249,13 @@ check_command "git" || exit 1
 check_command "brew" || exit 1
 check_command "npm" || exit 1
 check_command "pyenv" || exit 1
-check_command "python" || exit 1
-check_command "pip" || exit 1
+if [ ! -x "$VENV_PYTHON" ]; then
+    log " ERROR - FastAPI venv python is missing: $VENV_PYTHON"
+    exit 1
+fi
 
 # Verify FastAPI can be imported
-python -c "import fastapi" 2>/dev/null
+"$VENV_PYTHON" -c "import build, coverage, fastapi, pytest" 2>/dev/null
 if [ $? -eq 0 ]; then
     log "✓ FastAPI module can be imported"
 else
