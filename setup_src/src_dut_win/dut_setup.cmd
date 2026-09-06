@@ -1,4 +1,4 @@
-set dut_setup_version=2.3
+set dut_setup_version=2.4
 
 REM Copyright (c) Microsoft. All rights reserved.
 REM Licensed under the MIT license. See LICENSE file in the project root for full license information.
@@ -45,9 +45,9 @@ set dut_setup_folder=dut_setup
 
 rem system prep
 
-set dut_architecture = "x64"
-for /f "tokens=3 delims= " %%a in ('reg.exe query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Processor_Architecture ^| find "Processor_Architecture"') do set "dut_architecture=%%a"
-if "%dut_architecture%" EQU "ARM64" (
+set dut_architecture=x64
+for /f "tokens=3 delims= " %%a in ('reg.exe query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Processor_Architecture ^| find "Processor_Architecture"') do set "arch_temp=%%a"
+if "!arch_temp%!" EQU "ARM64" (
     set dut_architecture=arm64
 )
 echo Dut Architecture: !dut_architecture!
@@ -213,7 +213,7 @@ REM reg add %this_reg% /v AutoAdminlogon /t REG_SZ /d 1 /f > null 2>&1
 echo Copy DeskTopImages to dut hobl_bin folder
 robocopy %usb_drive%\%dut_setup_folder%\DeskTopImages %hobl_bin_path%\DesktopImages /S /E
 echo Copy HOBLStatusWindow to dut hobl_bin folder
-robocopy %usb_drive%\%dut_setup_folder%\HOBLStatusWindow %hobl_bin_path%\HOBLStatusWindow /S /E
+robocopy %usb_drive%\%dut_setup_folder%\HOBLStatusWindow-!dut_architecture! %hobl_bin_path%\HOBLStatusWindow /S /E
 echo Copy WindowsApplicationDrivers to dut hobl_bin folder
 robocopy %usb_drive%\%dut_setup_folder%\WindowsApplicationDriver %hobl_bin_path%\WindowsApplicationDriver /S /E
 @REM if "!dut_architecture!" EQU "arm64" (
