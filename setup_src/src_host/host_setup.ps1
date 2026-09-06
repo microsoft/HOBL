@@ -62,12 +62,48 @@ Set-Content -Path $logFile -encoding utf8 "-- HOBL Install started"
 "Install ui: $ui" | log
 "Install local: $local" | log
 
+# Validate args
 if ($framework -eq $false -and $ui -eq $false) {
     "No components specifed. Aborting." | log
     "`nYou must specify at least one of: " | log
     "  -framework" | log
     "  -ui" | log
     exit 1
+}
+
+# Check sector size for SQL Server LocalDB.  If the sector size is greater than 4K, SQL Server LocalDB will not work.
+if ($ui) {
+    $bigSectorFlag = $false
+    try {
+        # Get all disks and their physical sector sizes
+        $disks = Get-Disk | Select-Object Number, FriendlyName, PhysicalSectorSize
+
+        if (-not $disks) {
+            "ERROR: No disks found or insufficient permissions." | log
+            exit 1
+        }
+
+        foreach ($disk in $disks) {
+            $sectorSize = [int64]$disk.PhysicalSectorSize
+
+            if ($sectorSize -gt 4096) {
+                $bigSectorFlag = $true
+                "ERROR: Disk $($disk.Number) [$($disk.FriendlyName)]: Physical sector size ($sectorSize bytes) is > 4096." | log
+            }
+        }
+    }
+    catch {
+        "ERROR: Error retrieving disk information: $_" | log
+    }
+
+    if ($bigSectorFlag) {
+        reg add "HKLM\SYSTEM\CurrentControlSet\Services\stornvme\Parameters\Device" /v "ForcedPhysicalSectorSizeInBytes" /t REG_MULTI_SZ /d "* 4096" /f
+        "ERROR: One or more disks have a physical sector size greater than 4K, which will prevent SQL Server from working." | log
+        "ERROR: I've set the sector size to 4K in the registry to resolve this, but a reboot is needed for it to take effect." | log
+        "ERROR: Please reboot and rerun the installer." | log
+        Read-Host -Prompt "-- Press Enter to exit"
+        exit 1
+    }
 }
 
 ##
@@ -300,7 +336,7 @@ if ($ui) {
     # Start-Sleep -seconds 15
     # Press any key to exit
     # Read-Host -Prompt "-- Press Enter to exit"
-    
+
     # Wait up to 60 seconds for the UI to become available.
     $uiUrl = "http://localhost/support/Contact"
     $deadline = (Get-Date).AddSeconds(60)

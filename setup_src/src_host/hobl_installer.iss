@@ -48,6 +48,11 @@ Filename: "{win}\syswow64\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "U
 Filename: "{win}\system32\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "Unblock-File -Path c:\hobl\setup_src\src_host\host_setup.ps1"; Flags: waituntilterminated runhidden
 Filename: "{win}\system32\reg.exe"; Parameters: "/?"; StatusMsg: "Running installation. Please wait."; AfterInstall: ExecuteRealProgram
 
+[UninstallRun]
+Filename: "schtasks"; Parameters: "/Delete /TN ""Launch HOBL UI"" /F"; Flags: runhidden; RunOnceId: "HOBL_installer"
+Filename: "schtasks"; Parameters: "/Delete /TN ""ConnectWiFi"" /F"; Flags: runhidden; RunOnceId: "HOBL_installer"
+Filename: "schtasks"; Parameters: "/Delete /TN ""StartSimpleRemote"" /F"; Flags: runhidden; RunOnceId: "HOBL_installer"
+
 [Code]
 const
   CP_UTF8 = 65001;
