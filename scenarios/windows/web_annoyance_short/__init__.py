@@ -1,0 +1,1 @@
+from .web_annoyance_short import *
