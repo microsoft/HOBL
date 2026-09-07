@@ -1,0 +1,25 @@
+[project]
+name = "fastapi-app-workload"
+version = "0.1.0"
+requires-python = "==3.12.10"
+dependencies = [
+    "fastapi[standard]==0.119.1",
+]
+
+[dependency-groups]
+dev = [
+    "psutil>=7,<8",
+    "pytest>=8.4,<8.5",
+]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "microsoft"
+url = "https://packagefeedproxy.microsoft.io/pypi/simple"
+default = true
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers"]
+testpaths = ["tests"]
