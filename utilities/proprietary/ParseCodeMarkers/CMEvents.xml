@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<InstrumentationManifest>
+  <Instrumentation>
+    <Regions>
+      <RegionRoot Guid="{51492ddb-962f-a417-b4d3-c11aa37b2c29}" Name="Code Markers" FriendlyName="Office Code Markers">
+        <Region Guid="{ad67aa07-e877-1300-3ad6-61b613d299f6}" Name="PrintStart_PrintEnd" FriendlyName="Print">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001f9" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fa" />
+          </Stop>
+        </Region>
+      </RegionRoot>
+    </Regions>
+  </Instrumentation>
+</InstrumentationManifest>
