@@ -11,8 +11,16 @@ from . import default_params
 #   Automatically generated standard scenario.
 
 class CmBase(core.app_scenario.Scenario):
+    prep_scenarios = ["edge_install", "web_prep", "teams_install", "office_install", "onedrive_prep", "productivity_prep"]
+
     # Set default parameters:
     default_params.run()
+
+    module = __module__.split('.')[-1]
+
+    if Params.get(module, "perf_run") == "1":
+        logging.info("Adding perf_utc tool for parsing perf metrics")
+        Params.setParam("global", "tools", "+perf_utc")
 
     actions = None
 
