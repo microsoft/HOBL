@@ -18,6 +18,36 @@
             <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fa" />
           </Stop>
         </Region>
+        <Region Guid="{c9787a3f-b6e9-006e-5bb6-03aad2f9b161}" Name="ExcelApplyTableStyleStart_ExcelApplyTableStyleStop" FriendlyName="ExcelApplyTableStyle">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x0000097f" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000980" />
+          </Stop>
+        </Region>
+        <Region Guid="{5ceca737-a752-5994-1e8a-e5f6f78bd44a}" Name="SaveStart_SaveEnd" FriendlyName="Save">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fb" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fc" />
+          </Stop>
+        </Region>
       </RegionRoot>
     </Regions>
   </Instrumentation>
