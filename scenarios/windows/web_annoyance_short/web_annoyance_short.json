@@ -1,0 +1,194 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-19",
+        "description": "Short Wikipedia demonstration with serialized native annoyance probes",
+        "enabled": true,
+        "id": "WAS0001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Number of demonstration iterations",
+        "enabled": true,
+        "id": "WAS0002",
+        "name": "[loops]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Annoyance probes to run",
+        "enabled": true,
+        "id": "WAS0003",
+        "multiple": true,
+        "name": "[probes]",
+        "type": "Set Default",
+        "val_options": "mute_unmute,start_menu_show_apps,explorer_windows_scroll,explorer_pictures_thumbnails",
+        "value": "mute_unmute start_menu_show_apps explorer_windows_scroll explorer_pictures_thumbnails"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Collect whole-run ETW power and 1 Hz per-probe Energy Meter power",
+        "enabled": true,
+        "id": "WAS0004",
+        "name": "[power_reporting]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Enable web replay",
+        "enabled": true,
+        "id": "WAS0005",
+        "name": "[web_replay_run]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Enable phase reporting",
+        "enabled": true,
+        "id": "WAS0006",
+        "name": "[phase_reporting]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Set up stock web replay and browser",
+                "enabled": true,
+                "id": "WAS0101",
+                "include_path": "scenarios\\windows\\_library\\web\\web_setup",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "WAS0100",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Clear browser state",
+                        "enabled": true,
+                        "id": "WAS0202",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_clear_cache",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Run the Wikipedia four-probe demonstration",
+                        "enabled": true,
+                        "id": "WAS0203",
+                        "include_path": "scenarios\\windows\\_library\\web_annoyance\\web_site_wikipedia_annoyance",
+                        "params": [
+                            {
+                                "name": "[new_tab]",
+                                "val_options": "0, 1",
+                                "value": "0"
+                            },
+                            {
+                                "name": "[load_only]",
+                                "val_options": "0,1",
+                                "value": "0"
+                            },
+                            {
+                                "name": "[web_site_load_time]",
+                                "val_options": "",
+                                "value": "15"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Check web replay output",
+                        "enabled": true,
+                        "id": "WAS0204",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_check",
+                        "params": [
+                            {
+                                "name": "[youtube_duration]",
+                                "val_options": "",
+                                "value": "0"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Iteration settling time",
+                        "enabled": true,
+                        "id": "WAS0205",
+                        "type": "Delay"
+                    }
+                ],
+                "count": "[loops]",
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "WAS0201",
+                "type": "Loop"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAS0206",
+                "type": "End Loop"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "WAS0200",
+        "type": "Run Test"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Close the foreground browser via Alt+F4",
+                "enabled": true,
+                "id": "WAS0301",
+                "text": "\ue00a\ue034",
+                "type": "Type",
+                "typing_delay": "100"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Stop browser and web replay processes",
+                "enabled": true,
+                "id": "WAS0302",
+                "include_path": "scenarios\\windows\\_library\\web\\web_kill",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "WAS0300",
+        "type": "Teardown"
+    }
+]

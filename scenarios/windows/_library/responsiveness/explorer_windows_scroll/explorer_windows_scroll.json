@@ -1,0 +1,537 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "Open Explorer, navigate to the Windows folder, scroll, close, and return to web",
+        "enabled": true,
+        "id": "WAEX001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAEX002",
+        "name": "[probe_name]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "explorer_windows_scroll"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAEX003",
+        "name": "[return_x]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "0.850"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAEX004",
+        "name": "[return_y]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "0.020"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start probe occupancy timing",
+        "enabled": true,
+        "id": "WAEX010",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "probe_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record probe start",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAEX011",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Capture the taskbar",
+        "enabled": true,
+        "file_name": [
+            "capture_explorer_taskbar.png"
+        ],
+        "h": "0.100",
+        "id": "WAEXCAP",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.900"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Explorer-open interaction",
+        "enabled": true,
+        "id": "WAEX020",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "open_file_explorer"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Explorer-open latency timing",
+        "enabled": true,
+        "id": "WAEX021",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Explorer-open input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAEX022",
+        "type": "Code"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAEXCAP",
+                "children": [],
+                "delay": "0",
+                "description": "Open File Explorer from the taskbar",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "exception_on": "No match",
+                "file_name": [
+                    "image_1T70W9T.png"
+                ],
+                "id": "WAEX023",
+                "match_threshold": "0.65",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAEX023IMAGEIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "image",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAEX023IMAGEEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open File Explorer using the caller-provided coordinate",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAEX023",
+                "type": "Click Coord",
+                "x": "[open_taskbar_x]",
+                "y": "[open_taskbar_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAEX023COORDIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAEX023COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open File Explorer via Win+E",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAEX023",
+                "text": "\ue03de",
+                "type": "Type",
+                "typing_delay": "50"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAEX023KEYIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "keyboard",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAEX023KEYEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture Explorer chrome",
+        "enabled": true,
+        "file_name": [
+            "capture_explorer_state.png"
+        ],
+        "h": "1.000",
+        "id": "WAEXSTATE",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAEXSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for Explorer toolbar chrome",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_explorer_view_control.png"
+        ],
+        "h": "1.000",
+        "id": "WAEX024",
+        "match_threshold": "0.68",
+        "timeout": "30",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Explorer-open latency timing",
+        "enabled": true,
+        "id": "WAEX025",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record Explorer-open visible result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAEX026",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Windows-folder navigation interaction",
+        "enabled": true,
+        "id": "WAEX030",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "navigate_windows_folder"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Windows-folder navigation timing",
+        "enabled": true,
+        "id": "WAEX031",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record navigation input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAEX032",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0.25",
+        "description": "Focus the Explorer address bar",
+        "enabled": true,
+        "id": "WAEX033",
+        "text": "\ue009l",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Navigate to the Windows folder",
+        "enabled": true,
+        "annoyance_timing_role": "stimulus",
+        "id": "WAEX034",
+        "text": "C:\\Windows\ue007",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "capture_id": "WAEXSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the Windows breadcrumb",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_explorer_windows_breadcrumb_xps13.png",
+            "image_explorer_windows_breadcrumb.png"
+        ],
+        "h": "1.000",
+        "id": "WAEX035",
+        "match_threshold": "0.75",
+        "timeout": "30",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Windows-folder navigation timing",
+        "enabled": true,
+        "id": "WAEX036",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record Windows-folder visible result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAEX037",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Scroll down through the Windows folder",
+        "direction": "down",
+        "enabled": true,
+        "id": "WAEX040",
+        "type": "Scroll",
+        "x": "0.633",
+        "y": "0.400"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Scroll back to the top",
+        "direction": "up",
+        "enabled": true,
+        "id": "WAEX041",
+        "type": "Scroll",
+        "x": "0.633",
+        "y": "0.400"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Explorer-close interaction",
+        "enabled": true,
+        "id": "WAEX050",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "close_file_explorer"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Explorer-close latency timing",
+        "enabled": true,
+        "id": "WAEX051",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Explorer-close input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAEX052",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Close File Explorer via Alt+F4",
+        "enabled": true,
+        "annoyance_timing_role": "stimulus",
+        "id": "WAEX053",
+        "text": "\ue00a\ue034",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "capture_id": "WAEXSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for Explorer to close",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_explorer_windows_breadcrumb_xps13.png",
+            "image_explorer_windows_breadcrumb.png"
+        ],
+        "h": "1.000",
+        "id": "WAEX054",
+        "match_threshold": "0.75",
+        "timeout": "8",
+        "type": "Check Until Not Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Explorer-close latency timing",
+        "enabled": true,
+        "id": "WAEX055",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Explorer-close visible result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAEX056",
+        "type": "Code"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Click the caller-provided safe coordinate to restore focus",
+                "enabled": true,
+                "id": "WAEX057",
+                "type": "Click Coord",
+                "x": "[return_x]",
+                "y": "[return_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAEX057COORDIF",
+        "left_term": "[return_focus_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAEX057COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Allow the previous foreground window to resume after Explorer closes",
+                "enabled": true,
+                "id": "WAEX057",
+                "type": "Delay"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAEX057NONEIF",
+        "left_term": "[return_focus_mode]",
+        "right_term": "none",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAEX057NONEEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish probe occupancy timing",
+        "enabled": true,
+        "id": "WAEX060",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "probe_end"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record probe end",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAEX061",
+        "type": "Code"
+    }
+]

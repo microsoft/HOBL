@@ -1,0 +1,1 @@
+"""Start menu responsiveness actions."""
