@@ -71,15 +71,5 @@
         "enabled": true,
         "id": "1LCH5KX",
         "type": "Delay"
-    },
-    {
-        "children": [],
-        "delay": "2",
-        "description": "Kill Alt+F4",
-        "enabled": true,
-        "id": "1LCH53U",
-        "text": "\ue00a\ue034",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
     }
 ]
