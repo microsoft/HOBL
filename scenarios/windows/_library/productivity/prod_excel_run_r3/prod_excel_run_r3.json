@@ -11,24 +11,44 @@
     },
     {
         "children": [],
+        "delay": "2",
+        "description": "Select Cells",
+        "enabled": true,
+        "id": "1TK60UT",
+        "text": "\ue009g",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Range (E2:E400001)",
+        "enabled": true,
+        "id": "1TK615K",
+        "text": "E2:E400001",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1TK6KXU",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon",
+        "id": "1TK64KJ",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_top_ribbon",
         "type": "Include"
     },
     {
-        "capture_id": "1TK5L73",
+        "capture_id": "1TK64CP",
         "children": [],
         "delay": "2",
-        "description": "",
+        "description": "Data Tab",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1TLJTYF.png"
+            "image_1TK6538.png"
         ],
-        "id": "1TLJTYF",
+        "id": "1TK6538",
         "match_threshold": "",
         "primary": true,
         "scale": "",
@@ -38,41 +58,37 @@
     },
     {
         "children": [],
-        "delay": "2",
-        "description": "Accesibilty Mode",
+        "delay": "0.5",
+        "description": "Sort Button",
         "enabled": true,
-        "id": "1TLK2MC",
-        "text": "\ue00a",
+        "file_name": [
+            "image_1TK68PR.png"
+        ],
+        "h": "0.270",
+        "id": "1TK68PR",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.340",
+        "x": "0.372",
+        "y": "0.013"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Select Current Data only",
+        "enabled": true,
+        "id": "1TK6ALU",
+        "text": "\ue015",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
         "delay": "2",
-        "description": "File Menu",
+        "description": "Enter",
         "enabled": true,
-        "id": "1TLK30F",
-        "text": "f",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "2",
-        "description": "Export Menu",
-        "enabled": true,
-        "id": "1TLK38W",
-        "text": "e",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "2",
-        "description": "Print to PDF",
-        "enabled": true,
-        "id": "1TLK7WA",
-        "text": "a",
+        "id": "1TK6AX8",
+        "text": "\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
@@ -87,7 +103,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "export_to_pdf_start"
+                "value": "sort_start"
             }
         ],
         "type": "Include"
@@ -97,8 +113,8 @@
         "delay": "2",
         "description": "Enter",
         "enabled": true,
-        "id": "1TK6AX8",
-        "text": "[userprofile]\\abl_docs\\BigFamilyBudgetReport.pdf\ue007",
+        "id": "1TK6C84",
+        "text": "\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },

@@ -11,5 +11,5 @@ def run():
 
 def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\misc\\etw_event_tag')
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_capture_top_ribbon')
+    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon')
     return

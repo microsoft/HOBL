@@ -147,7 +147,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "excel_table_format_start"
+                "value": "excel_table_format"
             }
         ],
         "type": "Include"
@@ -179,22 +179,6 @@
         "text": "\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1TWMTCK",
-        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "excel_format_table_end"
-            }
-        ],
-        "type": "Include"
     },
     {
         "children": [],
@@ -237,7 +221,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "excel_vlookup_start"
+                "value": "excel_vlookup"
             }
         ],
         "type": "Include"
@@ -257,29 +241,13 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1TK6EKY",
-        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "excel_vlookup_end"
-            }
-        ],
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
         "id": "1TWN79H",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
         "params": [
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": ""
+                "value": "excel_save"
             }
         ],
         "type": "Include"

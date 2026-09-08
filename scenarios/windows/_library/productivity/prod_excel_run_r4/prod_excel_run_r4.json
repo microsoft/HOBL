@@ -11,6 +11,33 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6KXU",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon",
+        "type": "Include"
+    },
+    {
+        "capture_id": "1TK5L73",
+        "children": [],
+        "delay": "2",
+        "description": "Big Data Sheet",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TK6LJM.png"
+        ],
+        "id": "1TK6LJM",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
         "delay": "2",
         "description": "Select Cells",
         "enabled": true,
@@ -25,70 +52,47 @@
         "description": "Range (E2:E400001)",
         "enabled": true,
         "id": "1TK615K",
-        "text": "E2:E400001",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1TK64KJ",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_top_ribbon",
-        "type": "Include"
-    },
-    {
-        "capture_id": "1TK64CP",
-        "children": [],
-        "delay": "2",
-        "description": "Data Tab",
-        "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_1TK6538.png"
-        ],
-        "id": "1TK6538",
-        "match_threshold": "",
-        "primary": true,
-        "scale": "",
-        "type": "Click",
-        "x": "0.500",
-        "y": "0.500"
-    },
-    {
-        "children": [],
-        "delay": "0.5",
-        "description": "Sort Button",
-        "enabled": true,
-        "file_name": [
-            "image_1TK68PR.png"
-        ],
-        "h": "0.270",
-        "id": "1TK68PR",
-        "recapture": false,
-        "type": "Capture",
-        "w": "0.340",
-        "x": "0.372",
-        "y": "0.013"
-    },
-    {
-        "children": [],
-        "delay": "2",
-        "description": "Select Current Data only",
-        "enabled": true,
-        "id": "1TK6ALU",
-        "text": "\ue015",
+        "text": "A2:E400001",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
         "delay": "2",
-        "description": "Enter",
+        "description": "Select Range",
         "enabled": true,
-        "id": "1TK6AX8",
+        "id": "1TVP571",
         "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Select Top Ribbon",
+        "enabled": true,
+        "id": "1TVNRX0",
+        "text": "\ue00a",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Insert Button",
+        "enabled": true,
+        "id": "1TVNT0L",
+        "text": "n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "From Pivot",
+        "enabled": true,
+        "id": "1TVNTPC",
+        "text": "v",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
@@ -103,7 +107,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "sort_start"
+                "value": "pivot_insert_start"
             }
         ],
         "type": "Include"
@@ -111,20 +115,22 @@
     {
         "children": [],
         "delay": "2",
-        "description": "Enter",
+        "description": "From Table",
         "enabled": true,
-        "id": "1TK6C84",
-        "text": "\ue007",
+        "id": "1TVNTRK",
+        "text": "t",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
-        "delay": "5",
-        "description": "",
+        "delay": "2",
+        "description": "Enter",
         "enabled": true,
-        "id": "1TK6EWW",
-        "type": "Delay"
+        "id": "1TVNU50",
+        "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
@@ -137,9 +143,17 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "sort_end"
+                "value": "pivot_insert_end"
             }
         ],
         "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6EWW",
+        "type": "Delay"
     }
 ]
