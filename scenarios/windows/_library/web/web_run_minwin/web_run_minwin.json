@@ -405,6 +405,22 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U7VFC3",
+        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\type_to_search",
+        "params": [
+            {
+                "name": "[app_name]",
+                "val_options": "",
+                "value": "Microsoft 365 Copilot"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "0.0",
         "description": "Tab 5",
         "enabled": true,
@@ -790,33 +806,6 @@
         "type": "End If"
     },
     {
-        "children": [
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1NA645R",
-                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\file_explorer_launch",
-                "type": "Include"
-            }
-        ],
-        "description": "",
-        "enabled": true,
-        "eval_method": "in",
-        "id": "1L8PHXP",
-        "left_term": "file_explorer",
-        "right_term": "[minwin_workloads]",
-        "type": "If"
-    },
-    {
-        "children": [],
-        "description": "",
-        "enabled": true,
-        "id": "1L8PHXR",
-        "type": "End If"
-    },
-    {
         "children": [],
         "delay": "0.0",
         "description": "Tab 10",
@@ -880,6 +869,57 @@
         "description": "",
         "enabled": true,
         "id": "13JWCAY",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1NA645R",
+                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\file_explorer_launch",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "Search Excel Doc FamilyBudget.xlsx",
+                "enabled": true,
+                "id": "1ULEWPH",
+                "type": "Comment"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1U7VK8V",
+                "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
+                "params": [
+                    {
+                        "name": "[file_name]",
+                        "val_options": "",
+                        "value": "FamilyBudget.xlsx"
+                    }
+                ],
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "in",
+        "id": "1L8PHXP",
+        "left_term": "file_explorer",
+        "right_term": "[minwin_workloads]",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1L8PHXR",
         "type": "End If"
     },
     {
@@ -1015,15 +1055,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7VFC3",
-        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\type_to_search",
-        "params": [
-            {
-                "name": "[app_name]",
-                "val_options": "",
-                "value": "Microsoft 365 Copilot"
-            }
-        ],
+        "id": "1ULET98",
+        "include_path": "scenarios\\windows\\_library\\Teams\\teams_switch_to",
         "type": "Include"
     },
     {
@@ -1162,10 +1195,18 @@
     },
     {
         "children": [],
+        "delay": "0.0",
+        "description": "Search Word Document test_long_doc.docx",
+        "enabled": true,
+        "id": "1ULEXRH",
+        "type": "Comment"
+    },
+    {
+        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7VK8V",
+        "id": "1ULETYU",
         "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
         "params": [
             {
@@ -1345,6 +1386,14 @@
     },
     {
         "children": [],
+        "delay": "0.0",
+        "description": "Task Manager launch (pressure: 12 tabs + R1)",
+        "enabled": true,
+        "id": "1ULF0JF",
+        "type": "Comment"
+    },
+    {
+        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
@@ -1405,9 +1454,18 @@
             {
                 "name": "[file_name]",
                 "val_options": "",
-                "value": "BigFamilyBudget.xlsx"
+                "value": "Report"
             }
         ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1ULF89M",
+        "include_path": "scenarios\\windows\\_library\\misc\\terminate_app",
         "type": "Include"
     },
     {
@@ -1684,6 +1742,38 @@
             }
         ],
         "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Search Microsoft Store",
+        "enabled": true,
+        "id": "1ULF4FW",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1ULF3LR",
+        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\type_to_search",
+        "params": [
+            {
+                "name": "[app_name]",
+                "val_options": "",
+                "value": "Microsoft Store"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Task Manager launch (pressure: 12 tabs + R1 + R2)",
+        "enabled": true,
+        "id": "1ULF1TM",
+        "type": "Comment"
     },
     {
         "children": [],
