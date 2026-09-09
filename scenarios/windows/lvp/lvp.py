@@ -53,7 +53,9 @@ class LVP(core.app_scenario.Scenario):
         
         self.airplane_enabled_duration = int(self.duration) + 15
 
-        core.app_scenario.Scenario.setUp(self, callback_test_begin="")
+        # Call tool early callbacks, particularly to get video recording of the setup
+        self.toolCallBacks("testBeginEarlyCallback")
+
         logging.info("Launching WinAppDriver.exe on DUT.")
 
         self._call([(self.dut_exec_path + "\\WindowsApplicationDriver\\WinAppDriver.exe"), (self.dut_resolved_ip + " " + self.app_port)], blocking=False)
@@ -63,6 +65,13 @@ class LVP(core.app_scenario.Scenario):
         self.driver = self.launchApp()
         self.driver.maximize_window()
         self.playMovie()
+
+        if self.airplane_mode != '1':
+            # match the timing of the airplane mode case.
+            time.sleep(10)
+
+        # Call base class setUp() to dump config, and start tools
+        core.app_scenario.Scenario.setUp(self, callback_test_begin="")
 
         if self.airplane_mode == '1':
             try:
@@ -80,8 +89,8 @@ class LVP(core.app_scenario.Scenario):
             except:
                 pass
 
-        # Delay to let airplane mode enable
-        time.sleep(10)
+            # Delay to let airplane mode enable
+            time.sleep(10)
 
         # Start recording power
         self._callback(Params.get('global', 'callback_test_begin'))

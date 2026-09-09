@@ -15,10 +15,9 @@ class AdaptiveColorDisable(core.app_scenario.Scenario):
     module = __module__.split('.')[-1]
 
     is_prep = True
-    hide_ui = False
 
     def runTest(self):
-        self._status_window(f"Disabling Adaptive Color setting for testing consistency.")
+        self._status_window(f"Disabling Adaptive Color setting for testing consistency.\nClosing UI for this.")
         logging.info("Launching WinAppDriver.exe on DUT")
 
         self._call([

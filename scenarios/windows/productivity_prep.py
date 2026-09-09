@@ -772,6 +772,13 @@ class ProductivityPrep(core.app_scenario.Scenario):
             time.sleep(0.5)
             ActionChains(self.onenote_driver).send_keys("i").perform()
 
+            try:
+                logging.info("Checking if sidebar is collapsed")
+                self.onenote_driver.find_element_by_name("Expand sidebar").click()
+                time.sleep(2)
+            except:
+                pass
+
             # Check whether a notebook is already open.
             # The Pages list element exists even when no notebook is open (just empty),
             # so we must confirm it contains at least one ListItem.

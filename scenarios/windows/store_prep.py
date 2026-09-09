@@ -29,7 +29,6 @@ class StorePrep(core.app_scenario.Scenario):
 
     # Override collection of config data, traces, and execution of callbacks 
     is_prep = True
-    hide_ui = False
 
     new_store = True
     store_prep_enabled = Params.get(module, 'store_prep_enabled')

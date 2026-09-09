@@ -54,39 +54,23 @@ function checkCmd {
     }
 }
 
-New-Item -ItemType Directory -Force -Path c:\temp > $null
-New-Item -ItemType Directory -Force -Path c:\hobl_results > $null
+function downloadAndInstallDotNet {
+    param(
+        [string]$runtimeVersion,
+        [string]$architecture
+    )
 
-Set-Content -Path $logFile -encoding utf8 "-- HOBL Install started"
-"Install framework: $framework" | log
-"Install ui: $ui" | log
-
-if ($framework -eq $false -and $ui -eq $false) {
-    "No components specifed. Aborting." | log
-    "`nYou must specify at least one of: " | log
-    "  -framework" | log
-    "  -ui" | log
-    exit 1
-}
-
-##
-## HOBL
-##
-
-if ($framework) {
-
-    $runtimeVersion = "8.0.29"
-    $runtimeX64DownloadUrl = "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/$runtimeVersion/windowsdesktop-runtime-$runtimeVersion-win-x86.exe"
-    $vcRedistUrl = "https://aka.ms/vs/17/release/vc_redist.x86.exe"
+    $downloadUrl = "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/$runtimeVersion/windowsdesktop-runtime-$runtimeVersion-win-$architecture.exe"
 
     # Create downloads directory structure if it doesn't exist
     New-Item -ItemType Directory -Force -Path "$PSScriptRoot\..\..\downloads\setup\assets" > $null
 
     # Download .NET Windows Desktop Runtime installers
-    $runtimeFilePath = "$PSScriptRoot\..\..\downloads\setup\assets\windowsdesktop-runtime-$runtimeVersion-win-x86.exe"
+    $runtimeFilePath = "$PSScriptRoot\..\..\downloads\setup\assets\windowsdesktop-runtime-$runtimeVersion-win-$architecture.exe"
     if (-not (Test-Path $runtimeFilePath)) {
         "-- Downloading .NET Windows Desktop Runtime $runtimeVersion" | log
-        Invoke-WebRequest -Uri $runtimeX64DownloadUrl -OutFile $runtimeFilePath 2>&1 | log
+        "-- Download URL: $downloadUrl" | log
+        Invoke-WebRequest -Uri $downloadUrl -OutFile $runtimeFilePath 2>&1 | log
         checkCmd($?)
         "-- Installing .NET Windows Desktop Runtime $runtimeVersion" | log
         & "$runtimeFilePath" /quiet 2>&1 | log
@@ -95,7 +79,72 @@ if ($framework) {
         "   $runtimeFilePath already exists, skipping download" | log
     }
 
+}
+
+New-Item -ItemType Directory -Force -Path c:\temp > $null
+New-Item -ItemType Directory -Force -Path c:\hobl_results > $null
+
+Set-Content -Path $logFile -encoding utf8 "-- HOBL Install started"
+"Install framework: $framework" | log
+"Install ui: $ui" | log
+"Install local: $local" | log
+
+# Validate args
+if ($framework -eq $false -and $ui -eq $false -and $local -eq $false) {
+    "No components specified. Aborting." | log
+    "`nYou must specify at least one of: " | log
+    "  -framework" | log
+    "  -ui" | log
+    "  -local" | log
+    exit 1
+}
+
+# Check sector size for SQL Server LocalDB.  If the sector size is greater than 4K, SQL Server LocalDB will not work.
+if ($ui) {
+    $bigSectorFlag = $false
+    try {
+        # Get all disks and their physical sector sizes
+        $disks = Get-Disk | Select-Object Number, FriendlyName, PhysicalSectorSize
+
+        if (-not $disks) {
+            "ERROR: No disks found or insufficient permissions." | log
+            exit 1
+        }
+
+        foreach ($disk in $disks) {
+            $sectorSize = [int64]$disk.PhysicalSectorSize
+
+            if ($sectorSize -gt 4096) {
+                $bigSectorFlag = $true
+                "ERROR: Disk $($disk.Number) [$($disk.FriendlyName)]: Physical sector size ($sectorSize bytes) is > 4096." | log
+            }
+        }
+    }
+    catch {
+        "ERROR: Error retrieving disk information: $_" | log
+    }
+
+    if ($bigSectorFlag) {
+        reg add "HKLM\SYSTEM\CurrentControlSet\Services\stornvme\Parameters\Device" /v "ForcedPhysicalSectorSizeInBytes" /t REG_MULTI_SZ /d "* 4096" /f
+        "ERROR: One or more disks have a physical sector size greater than 4K, which will prevent SQL Server from working." | log
+        "ERROR: I've set the sector size to 4K in the registry to resolve this, but a reboot is needed for it to take effect." | log
+        "ERROR: Please reboot and rerun the installer." | log
+        Read-Host -Prompt "-- Press Enter to exit"
+        exit 1
+    }
+}
+
+##
+## HOBL
+##
+
+if ($framework) {
+    # Download and install .NET runtimes
+    downloadAndInstallDotNet -runtimeVersion "8.0.29" -architecture "x86"
+    downloadAndInstallDotNet -runtimeVersion "10.0.11" -architecture "x64"
+
     # Download Visual C++ Redistributable
+    $vcRedistUrl = "https://aka.ms/vs/17/release/vc_redist.x86.exe"
     $vcRedistPath = "$PSScriptRoot\..\..\downloads\setup\assets\vc_redist.x86.exe"
     if (-not (Test-Path $vcRedistPath)) {
         "-- Downloading Visual C++ Redistributable" | log
@@ -152,19 +201,24 @@ if ($framework) {
     # Move-Item "$PSScriptRoot\..\..\downloads\ffmpeg-N-123073-g743df5ded9-winarm64-gpl" "$PSScriptRoot\..\..\downloads\ffmpeg_arm64" -Force 2>&1 | log
     # Remove-Item $ffmpegZip 2>&1 | log
 
-    # Set git hooks if git exists
-    if (Get-Command git.exe -ErrorAction SilentlyContinue) {
-        "-- Setting git hooks path" | log
-        pushd $PSScriptRoot\..\.. > $null
-        git.exe config core.hooksPath git_hooks 2>&1 | log
-        # check($lastexitcode)
+    if (Test-Path -Path ".git") {
+        # Set git hooks if git exists
+        if (Get-Command git.exe -ErrorAction SilentlyContinue) {
+            "-- Setting git hooks path" | log
+            pushd $PSScriptRoot\..\.. > $null
+            git.exe config core.hooksPath git_hooks 2>&1 | log
+            # check($lastexitcode)
 
-        "-- Updating hobl version" | log
-        git.exe hook run post-checkout 2>&1 | log
-        popd > $null
+            "-- Updating hobl version" | log
+            git.exe hook run post-checkout 2>&1 | log
+            popd > $null
+        }
+        else {
+            "-- git not found, skipping git hook setup" | log
+        }
     }
     else {
-        "-- git not found, skipping git hook setup" | log
+        "-- Not a git repository, skipping git hook setup" | log
     }
 
     # Disable error reporting UI
@@ -291,9 +345,32 @@ if ($ui) {
 
     "-- Install complete, it may take about a minute for the UI to auto-launch for the first time." | log
     #"-- Waiting ~30 seconds for first time app launch" | log
-    #Start-Sleep -seconds 30
+    # Start-Sleep -seconds 15
     # Press any key to exit
-    Read-Host -Prompt "-- Press Enter to exit"
+    # Read-Host -Prompt "-- Press Enter to exit"
+
+    # Wait up to 60 seconds for the UI to become available.
+    $uiUrl = "http://localhost/support/Contact"
+    $deadline = (Get-Date).AddSeconds(60)
+    $uiReady = $false
+    while ((Get-Date) -lt $deadline) {
+        try {
+            $response = Invoke-WebRequest -Uri $uiUrl -UseBasicParsing -TimeoutSec 5 -ErrorAction Stop
+            if ($response.StatusCode -eq 200) {
+                $uiReady = $true
+                break
+            }
+        } catch {
+            # The UI may still be starting; retry until the deadline.
+        }
+        Start-Sleep -Seconds 1
+    }
+    if ($uiReady) {
+        "-- HOBLweb is ready" | log
+    } else {
+        "-- Timed out after 60 seconds waiting for $uiUrl" | log
+    }
+    
 }
 
 Exit 0

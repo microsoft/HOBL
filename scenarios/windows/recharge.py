@@ -91,10 +91,11 @@ class Recharge(core.app_scenario.Scenario):
                 else:
                     logging.info(f"Delaying for {delay} seconds. This delay is configurable by adding the 'post_charge_delay' parameter in the device profile.")
                     units = "seconds"
+                    print_delay = delay
                     if delay > 60:
-                        delay = int(delay / 60)
+                        print_delay = int(delay / 60)
                         units = "minutes"
-                    self._status_window(f"Charging complete.\nDelaying for {delay} {units} before disconnecting charger.")
+                    self._status_window(f"Charging complete.\nDelaying for {print_delay} {units} before disconnecting charger.")
                     time.sleep(delay)
                 if (self.leave_on_ac == '0'):
                     self.chargeOff()
