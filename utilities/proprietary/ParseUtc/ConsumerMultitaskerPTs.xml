@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <diagrules>
   <scenarios>
     <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{dae017f3-cc0a-4875-b2eb-a383c4eaca4c}" scenarioname="PT_9412_Edge Navigation To First Paint _Stable__dae017" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="oldest" maxinflightinstances="1" ptscenarioname="Edge Navigation To First Paint _Stable_" ptdurationfield="Duration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -2047,6 +2047,274 @@
         </state>
         <final id="_complete" />
         <final id="_cancel" />
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{8a0fb036-32b4-4746-bb69-8fb139b5d585}" scenarioname="PT_9088_TaskManagerTabSwitch_8a0fb0" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="TaskManagerTabSwitch" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Windows.Taskmgr.StartTabSwitch">
+          <etwtrigger>
+            <provider>{2e635d8e-1107-4555-9319-32eeb895aaae}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.Windows.Taskmgr.StopTabSwitch">
+          <etwtrigger>
+            <provider>{2e635d8e-1107-4555-9319-32eeb895aaae}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.Windows.Taskmgr.StartTabSwitch" target="1" name="T1" uploadtrigger="false"/>
+        </state>
+        <state id="1">
+          <transition event="Microsoft.Windows.Taskmgr.StopTabSwitch" target="_complete" name="T2" uploadtrigger="false"/>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{e0ffb54a-30f7-4656-8bd6-18aae93a104c}" scenarioname="PT_9589_Test_TaskManagerAppLaunch_e0ffb5" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Test_TaskManagerAppLaunch" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess">
+          <etwtrigger>
+            <provider>{e305fb0f-da8e-52b5-a918-7a4f17a2531a}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.Windows.Taskmgr.StopAppLaunch">
+          <etwtrigger>
+            <provider>{2e635d8e-1107-4555-9319-32eeb895aaae}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match12990ProcessCreateProcesse8729_appid">
+          <dualtriggerpropertyfilter>
+            <triggercriterion strict="true">
+              <triggername>Microsoft.Windows.Taskmgr.StopAppLaunch</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ProcessCreateProcess</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_appid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="1" name="T1" uploadtrigger="false">
+            <filter strict="false">match12990ProcessCreateProcesse8729_appid</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="Microsoft.Windows.Taskmgr.StopAppLaunch" target="_complete" name="T2" uploadtrigger="false">
+            <filter>match12990ProcessCreateProcesse8729_appid</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{8c6a9509-1099-49e8-a6f0-f9c59fa66c82}" scenarioname="PT_9087_TaskManagerAppLaunch_8c6a95" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="TaskManagerAppLaunch" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess">
+          <etwtrigger>
+            <provider>{e305fb0f-da8e-52b5-a918-7a4f17a2531a}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.Windows.Taskmgr.StopAppLaunch">
+          <etwtrigger>
+            <provider>{2e635d8e-1107-4555-9319-32eeb895aaae}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match12990ProcessCreateProcesse8729_appid">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>Microsoft.Windows.Taskmgr.StopAppLaunch</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ProcessCreateProcess</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_appid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.Windows.Shell.DefaultAssoc.CreateAssociatedProcess" target="1" name="T1" uploadtrigger="false">
+            <filter strict="false">match12990ProcessCreateProcesse8729_appid</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="Microsoft.Windows.Taskmgr.StopAppLaunch" target="_complete" name="T2" uploadtrigger="false">
+            <filter>match12990ProcessCreateProcesse8729_appid</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
       </scxml>
     </scenario>
   </scenarios>
