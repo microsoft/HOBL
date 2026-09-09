@@ -89,9 +89,12 @@ def _call_rpc(host, port, payload, log = True, timeout = 1800): # 1800
             if i == 2:
                 raise e
             time.sleep(2)
-        except:
+        except Exception as e:
             if log:
-                logging.error(f"RPC connection failed. payload {payload}")
+                logging.error(
+                    f"RPC connection failed: {e}. payload {payload}",
+                    exc_info=True,
+                )
                 # print(f"RPC connection failed. payload {payload}")
             raise
 
