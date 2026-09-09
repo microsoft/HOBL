@@ -92,6 +92,7 @@ class Scenario(unittest.TestCase):
         self.bare = False
         self.component = None
         self.current_screen = 0
+        self.run_action_phase = "setup" # Used so if negative delay is seen on "setup", "teardown", or prep scenario then it will not honor negative delay and will reset the delay and have a static delay amount.
 
         # Reset tooCallback values on each attempt
         self.reset_toolCallBacks_result()
@@ -652,6 +653,9 @@ class Scenario(unittest.TestCase):
         else:
             self._callback(callback_test_begin)
 
+        # Update the phase from setup -> runtest so it will know to handle negative delay by immediately going to run the next action to catch up.
+        self.run_action_phase = "runtest"
+
     def runScenario(self):
         self.scenario_start_time = time.time()
         self.scenario_prev_time = self.scenario_start_time
@@ -1169,6 +1173,7 @@ class Scenario(unittest.TestCase):
 
     def tearDown(self, callback_test_end=None, callback_data_ready=None):
         logging.info("Entered teardown")
+        self.run_action_phase = "teardown" # Updating run action phase from runtest -> teardown. Will handle negative delay by adding a static delay value.
         try:
             # Quit driver(s)
             for driver in self.drivers:
@@ -3307,6 +3312,9 @@ class Scenario(unittest.TestCase):
             action["traceId"] = f"{action['traceId']}_{self.traceId_dict[action['traceId']]}"    
         ###########################################
 
+        # Check for and handle negative delay before running the action.
+        self._check_and_handle_negative_delay(action["type"])
+
         # Find the template in the screenshot and click on it on the DUT
         if action["type"] == "Click":
             filename = action["file_name"]
@@ -3744,20 +3752,25 @@ class Scenario(unittest.TestCase):
             return
         self.inputInject_startTime[image_name] = [json_name, start_time]
 
-    def _sleep_to(self, t):
+    def _sleep_to(self, t, negative_delay=False):
         self.scenario_prev_time = self.daq_prev_time = time.time()
         delta = t - (self.scenario_prev_time - self.scenario_start_time)
-        
+
         self.scenario_accumulated_time = t
         self.daq_accumulated_time = t
 
-        logging.info(f"Sleeping for {delta:.2f} to {t:.2f}")
-        if delta < 0:
-            delta = 0
-        time.sleep(delta)
+        # Checking if there is negative delay and if so then handle it.
+        if self._check_and_handle_negative_delay():
+            return
 
-    def _sleep_by(self, t):
-        self._sleep_to(self.scenario_accumulated_time + t)
+        # Normal path or runtest phase. In runtest a negative delta is logged as-is (so you can see how far
+        # behind schedule we were) but clamped to 0 so we run the next action immediately.
+        if not negative_delay:
+            logging.info(f"Sleeping for {delta:.2f} to {t:.2f}")
+        time.sleep(max(delta, 0))
+
+    def _sleep_by(self, t, negative_delay=False):
+        self._sleep_to(self.scenario_accumulated_time + t, negative_delay=negative_delay)
 
     def _sleep_to_now(self):
         # Advance t to the current time
@@ -3765,6 +3778,26 @@ class Scenario(unittest.TestCase):
         # round up t to the nearest second
         t = math.ceil(t)
         self._sleep_to(t)
+
+    def _check_and_handle_negative_delay(self, action_type=None):
+        # Helper function for handling negative delay in the process_action function. The goal is to check for
+        # negative delay and remove it. Depending on what phase it's in it will print a warning message telling
+        # the user to look into the delay and consider increasing it. It will only print warnings if in runtest,
+        # otherwise it will not care.
+        logging.info(self.run_action_phase)
+        delta = self.scenario_accumulated_time - (self.scenario_prev_time - self.scenario_start_time)
+        if delta < 0.00:
+            if action_type in ["Click", "Type", "Code"] and self.run_action_phase == "runtest":
+                logging.warning(f"Negative delay detected: {delta:.2f}. Consider increasing the delay for previous action to not be in negative delay. Removing negative delay and proceeding with next action.")
+                new_delta = abs(delta)
+                self._sleep_by(new_delta, True)
+            elif self.is_prep or (self.run_action_phase in ["setup", "teardown"]):
+                logging.debug(f"its either setup or teardown and got negative delay of {delta:.2f}.")
+                logging.warning(f"NEGATIVE_DELAY DETECTED: {delta:.2f}")
+                new_delta = abs(delta)
+                self._sleep_by(new_delta)
+                return True
+        return False
 
     def _write_events_file(self, json_name, start_time):
         if self.daq_start_time == 0:
