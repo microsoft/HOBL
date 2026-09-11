@@ -1,0 +1,85 @@
+[
+    {
+        "author": "dasashutosh",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-05-07",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH4M9",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH4U8",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LEKJTH",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "FileExplorerLaunch"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH514",
+        "include_path": "scenarios\\windows\\_library\\misc\\switchto_file_explorer",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH4WE",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "invalid"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "invalid"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1LCH5KX",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Kill Alt+F4",
+        "enabled": true,
+        "id": "1LCH53U",
+        "text": "\ue00a\ue034",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    }
+]
