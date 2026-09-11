@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <diagrules>
   <scenarios>
     <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{dae017f3-cc0a-4875-b2eb-a383c4eaca4c}" scenarioname="PT_9412_Edge Navigation To First Paint _Stable__dae017" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="oldest" maxinflightinstances="1" ptscenarioname="Edge Navigation To First Paint _Stable_" ptdurationfield="Duration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -2311,6 +2311,754 @@
         <state id="1">
           <transition event="Microsoft.Windows.Taskmgr.StopAppLaunch" target="_complete" name="T2" uploadtrigger="false">
             <filter>match12990ProcessCreateProcesse8729_appid</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{16bf7b51-3bc6-4173-8bb9-aaeafad04b4a}" scenarioname="PT_8784_Office_PPT_FileOpen v3_16bf7b" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_PPT_FileOpen v3" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Office.PowerPoint.OpenDocumentBegin">
+          <etwtrigger>
+            <provider>{71b8ac9b-04b7-4216-82c0-dd54fee06d2c}</provider>
+            <keywords>0x1</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.Office.PowerPoint.OpenDocumentSuccess">
+          <etwtrigger>
+            <provider>{71b8ac9b-04b7-4216-82c0-dd54fee06d2c}</provider>
+            <keywords>0x1</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.Office.PowerPoint.OpenDocumentError">
+          <etwtrigger>
+            <provider>{71b8ac9b-04b7-4216-82c0-dd54fee06d2c}</provider>
+            <keywords>0x1</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match11060_pide11061_pid">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>Microsoft.Office.PowerPoint.OpenDocumentBegin</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>Microsoft.Office.PowerPoint.OpenDocumentSuccess</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match11060_pide11062_pid">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>Microsoft.Office.PowerPoint.OpenDocumentBegin</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>Microsoft.Office.PowerPoint.OpenDocumentError</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.Office.PowerPoint.OpenDocumentBegin" target="1" name="T1">
+            <filter strict="false">match11060_pide11061_pid</filter>
+            <filter strict="false">match11060_pide11062_pid</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="Microsoft.Office.PowerPoint.OpenDocumentSuccess" target="_complete" name="T2">
+            <filter>match11060_pide11061_pid</filter>
+          </transition>
+          <transition event="Microsoft.Office.PowerPoint.OpenDocumentError" target="_cancel" name="T3">
+            <filter>match11060_pide11062_pid</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{0e3fbfaa-4fb2-4360-b3d3-7d0c2f1ace21}" scenarioname="PT_8920_Office_Word_FileOpen_WCOS_VAIL_0e3fbf" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_Word_FileOpen_WCOS_VAIL" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0">
+          <etwtrigger>
+            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
+            <id>1501</id>
+            <version>0</version>
+            <keywords>0x1000000000000</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0">
+          <etwtrigger>
+            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
+            <id>1503</id>
+            <version>0</version>
+            <keywords>0x1000000000000</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="trigger" filtername="match63ScenarioIde_18920">
+          <singletriggerpropertyfilter>
+            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ScenarioId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>8920</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match64ScenarioIde_18920">
+          <singletriggerpropertyfilter>
+            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ScenarioId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>8920</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match63MatchKeye64MatchKey">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>MatchKey</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>MatchKey</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match63ScenarioIde64ScenarioId">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ScenarioId</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ScenarioId</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0" target="1" name="T0" triggersource="agent">
+            <filter>match63ScenarioIde_18920</filter>
+            <filter strict="false">match63MatchKeye64MatchKey</filter>
+            <filter strict="false">match63ScenarioIde64ScenarioId</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0" target="_complete" name="T1" triggersource="agent">
+            <filter>match64ScenarioIde_18920</filter>
+            <filter>match63MatchKeye64MatchKey</filter>
+            <filter>match63ScenarioIde64ScenarioId</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{a037e3c3-5dc5-4caf-88a1-b28a5bbf5ad9}" scenarioname="PT_8786_Office_XL_FileOpen v2_a037e3" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_XL_FileOpen v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Office.Excel.OpenDocumentBegin">
+          <etwtrigger>
+            <provider>{6fd91573-4abc-43a5-84ee-acb8dc42888f}</provider>
+            <keywords>0x1</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.Office.Excel.OpenDocumentSuccess">
+          <etwtrigger>
+            <provider>{6fd91573-4abc-43a5-84ee-acb8dc42888f}</provider>
+            <keywords>0x1</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Microsoft.Office.Excel.OpenDocumentError">
+          <etwtrigger>
+            <provider>{6fd91573-4abc-43a5-84ee-acb8dc42888f}</provider>
+            <keywords>0x1</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match11066_pide11067_pid">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>Microsoft.Office.Excel.OpenDocumentBegin</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>Microsoft.Office.Excel.OpenDocumentSuccess</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match11066_pide11068_pid">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>Microsoft.Office.Excel.OpenDocumentBegin</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>Microsoft.Office.Excel.OpenDocumentError</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>_pid</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.Office.Excel.OpenDocumentBegin" target="1" name="T1">
+            <filter strict="false">match11066_pide11067_pid</filter>
+            <filter strict="false">match11066_pide11068_pid</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="Microsoft.Office.Excel.OpenDocumentSuccess" target="_complete" name="T2">
+            <filter>match11066_pide11067_pid</filter>
+          </transition>
+          <transition event="Microsoft.Office.Excel.OpenDocumentError" target="_cancel" name="T3">
+            <filter>match11066_pide11068_pid</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{db679776-8c31-49e0-be9a-4e4447d9d9d8}" scenarioname="PT_505_Office_PPT_FileSave_db6797" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_PPT_FileSave" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0">
+          <etwtrigger>
+            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
+            <id>1501</id>
+            <version>0</version>
+            <keywords>0x1000000000000</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0">
+          <etwtrigger>
+            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
+            <id>1503</id>
+            <version>0</version>
+            <keywords>0x1000000000000</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="trigger" filtername="match63ScenarioIde_1505">
+          <singletriggerpropertyfilter>
+            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ScenarioId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>505</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match64ScenarioIde_1505">
+          <singletriggerpropertyfilter>
+            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ScenarioId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>505</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match63MatchKeye64MatchKey">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>MatchKey</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>MatchKey</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match63ScenarioIde64ScenarioId">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ScenarioId</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ScenarioId</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0" target="1" name="T0">
+            <filter>match63ScenarioIde_1505</filter>
+            <filter strict="false">match63MatchKeye64MatchKey</filter>
+            <filter strict="false">match63ScenarioIde64ScenarioId</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0" target="_complete" name="T1">
+            <filter>match64ScenarioIde_1505</filter>
+            <filter>match63MatchKeye64MatchKey</filter>
+            <filter>match63ScenarioIde64ScenarioId</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{748af3e9-d1d0-455b-9838-cfb7e735015a}" scenarioname="PT_504_Office_XL_FileSave_748af3" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_XL_FileSave" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0">
+          <etwtrigger>
+            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
+            <id>1501</id>
+            <version>0</version>
+            <keywords>0x1000000000000</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0">
+          <etwtrigger>
+            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
+            <id>1503</id>
+            <version>0</version>
+            <keywords>0x1000000000000</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="trigger" filtername="match63ScenarioIde_1504">
+          <singletriggerpropertyfilter>
+            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ScenarioId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>504</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match64ScenarioIde_1504">
+          <singletriggerpropertyfilter>
+            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ScenarioId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>504</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match63MatchKeye64MatchKey">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>MatchKey</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>MatchKey</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match63ScenarioIde64ScenarioId">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ScenarioId</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ScenarioId</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0" target="1" name="T0">
+            <filter>match63ScenarioIde_1504</filter>
+            <filter strict="false">match63MatchKeye64MatchKey</filter>
+            <filter strict="false">match63ScenarioIde64ScenarioId</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0" target="_complete" name="T1">
+            <filter>match64ScenarioIde_1504</filter>
+            <filter>match63MatchKeye64MatchKey</filter>
+            <filter>match63ScenarioIde64ScenarioId</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{f98178a5-2b3d-488e-8041-3774cf218684}" scenarioname="PT_503_Office_Word_FileSave_f98178" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="oldest" maxinflightinstances="1" ptscenarioname="Office_Word_FileSave" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0">
+          <etwtrigger>
+            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
+            <id>1501</id>
+            <version>0</version>
+            <keywords>0x1000000000000</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0">
+          <etwtrigger>
+            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
+            <id>1503</id>
+            <version>0</version>
+            <keywords>0x1000000000000</keywords>
+            <level>4</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="trigger" filtername="match63ScenarioIde_1504">
+          <singletriggerpropertyfilter>
+            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ScenarioId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>504</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match64ScenarioIde_1504">
+          <singletriggerpropertyfilter>
+            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>ScenarioId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>504</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match63ScenarioIde64ScenarioId">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ScenarioId</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>ScenarioId</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match63MatchKeye64MatchKey">
+          <dualtriggerpropertyfilter>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>MatchKey</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <triggercriterion>
+              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
+              <propertyselector>
+                <propertykey>
+                  <name>MatchKey</name>
+                </propertykey>
+              </propertyselector>
+              <mathoperation>add</mathoperation>
+              <constant>0</constant>
+            </triggercriterion>
+            <operation>equal</operation>
+          </dualtriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0" target="1" name="T0" uploadtrigger="false">
+            <filter>match63ScenarioIde_1504</filter>
+            <filter strict="false">match63MatchKeye64MatchKey</filter>
+            <filter strict="false">match63ScenarioIde64ScenarioId</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0" target="_complete" name="T1" uploadtrigger="false">
+            <filter>match64ScenarioIde_1504</filter>
+            <filter>match63MatchKeye64MatchKey</filter>
+            <filter>match63ScenarioIde64ScenarioId</filter>
           </transition>
         </state>
         <final id="_complete"/>
