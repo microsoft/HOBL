@@ -499,10 +499,10 @@ namespace InputInject
         {
             if (moveCursor)
             {
-                // Move the cursor using SetCursorPos()
                 MoveCursorToTargetAsync(x, y, screenIndex).GetAwaiter().GetResult();
             }
-            else {
+            else 
+            {
                 // SetPhysicalCursorPos((int)(ScreenX[screenIndex] + x),  (int)(ScreenY[screenIndex] + y));
                 // Move the mouse using SendInput()
                 INPUT[] data = new INPUT[1];
@@ -528,7 +528,6 @@ namespace InputInject
 
         private async Task MoveCursorToTargetAsync(Int64 x, Int64 y, Int64 screenIndex = 0)
         {
-
             INPUT[] data = new INPUT[1];
             data[0] = new INPUT();
             data[0].type = 0; // mouse input
@@ -539,7 +538,6 @@ namespace InputInject
             // Normalize coordinates to 0..65535
             int virtualScreenWidth = GetSystemMetrics(SystemMetric.VirtualScreenWidth);
             int virtualScreenHeight = GetSystemMetrics(SystemMetric.VirtualScreenHeight);
-
 
             Point start = Cursor.Position;
             Point target = new Point((int)(ScreenX[screenIndex] + x), (int)(ScreenY[screenIndex] + y));
@@ -560,14 +558,10 @@ namespace InputInject
                         timer.WaitForNextTick();
                     }
 
-
                     ms.dx = (int)Math.Round((65535.0 * (ScreenX[screenIndex] + path[index].X - SystemInformation.VirtualScreen.Left)) / virtualScreenWidth);
                     ms.dy = (int)Math.Round((65535.0 * (ScreenY[screenIndex] + path[index].Y - SystemInformation.VirtualScreen.Top)) / virtualScreenHeight);
                     data[0].ms = ms;
                     SendInput(1, data, Marshal.SizeOf(typeof(INPUT)));
-
-
-                    // Cursor.Position = path[index];
                 }
             });
         }
@@ -583,7 +577,8 @@ namespace InputInject
                 Int64 ay = Cursor.Position.Y + y;
                 MoveCursorToTargetAsync(ax, ay, 0).GetAwaiter().GetResult();
             }
-            else {
+            else 
+            {
                 INPUT[] data = new INPUT[1];
                 data[0] = new INPUT();
                 data[0].type = 0; // mouse input
