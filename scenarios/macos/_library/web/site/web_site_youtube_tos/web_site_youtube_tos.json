@@ -48,7 +48,7 @@
         "description": "",
         "enabled": true,
         "id": "UE5XLM",
-        "include_path": "..\\..\\..\\misc\\recording_phase_begin",
+        "include_path": "scenarios\\macos\\_library\\misc\\recording_phase_begin",
         "type": "Include"
     },
     {
@@ -68,7 +68,7 @@
         "description": "",
         "enabled": true,
         "id": "UC5PAR",
-        "include_path": "..\\..\\web_enter_address",
+        "include_path": "scenarios\\macos\\_library\\web\\web_enter_address",
         "params": [
             {
                 "name": "[web_site_address]",
@@ -134,8 +134,8 @@
                 "enabled": true,
                 "exception_on": "No match",
                 "file_name": [
-                    "image_UCKVEM.png",
-                    "image_10XMNT6.png"
+                    "image_1UV2UA3.png",
+                    "image_1UVE3RP.png"
                 ],
                 "id": "UCKVEM",
                 "primary": true,
@@ -145,7 +145,7 @@
             },
             {
                 "children": [],
-                "delay": "1.0",
+                "delay": "2",
                 "description": "10 down",
                 "enabled": true,
                 "id": "UCKWY3",
@@ -155,7 +155,7 @@
             },
             {
                 "children": [],
-                "delay": "1",
+                "delay": "3",
                 "description": "6 up",
                 "enabled": true,
                 "id": "UCKX4E",
@@ -294,7 +294,7 @@
         "description": "",
         "enabled": true,
         "id": "UE5XV7",
-        "include_path": "..\\..\\..\\misc\\recording_phase_end",
+        "include_path": "scenarios\\macos\\_library\\misc\\recording_phase_end",
         "params": [
             {
                 "name": "[phase_category]",
