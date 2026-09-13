@@ -37,7 +37,7 @@
         "description": "",
         "enabled": true,
         "id": "UE5XLM",
-        "include_path": "..\\..\\..\\misc\\recording_phase_begin",
+        "include_path": "scenarios\\macos\\_library\\misc\\recording_phase_begin",
         "type": "Include"
     },
     {
@@ -57,7 +57,7 @@
         "description": "",
         "enabled": true,
         "id": "UC5PAR",
-        "include_path": "..\\..\\web_enter_address",
+        "include_path": "scenarios\\macos\\_library\\web\\web_enter_address",
         "params": [
             {
                 "name": "[web_site_address]",
@@ -91,13 +91,23 @@
             },
             {
                 "children": [],
+                "delay": "1",
+                "description": "0",
+                "enabled": true,
+                "id": "1UVEJFU",
+                "text": "0",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            },
+            {
+                "children": [],
                 "delay": "2",
                 "description": "NASA Settings",
                 "enabled": true,
                 "file_name": [
                     "image_UEJKHN.png"
                 ],
-                "h": "0.300",
+                "h": "0.400",
                 "id": "UEJKHN",
                 "type": "Capture",
                 "w": "0.500",
@@ -112,8 +122,8 @@
                 "enabled": true,
                 "exception_on": "No match",
                 "file_name": [
-                    "image_UEJ8ET.png",
-                    "image_V8FEX4.png"
+                    "image_1UVFTA9.png",
+                    "image_1UVFMKR.png"
                 ],
                 "id": "UEJ8ET",
                 "match_threshold": "0.3",
@@ -124,7 +134,7 @@
             },
             {
                 "children": [],
-                "delay": "1.0",
+                "delay": "2",
                 "description": "10 down",
                 "enabled": true,
                 "id": "UCKWY3",
@@ -134,7 +144,7 @@
             },
             {
                 "children": [],
-                "delay": "1",
+                "delay": "2",
                 "description": "6 up",
                 "enabled": true,
                 "id": "UCKX4E",
@@ -155,7 +165,7 @@
             },
             {
                 "children": [],
-                "delay": "87",
+                "delay": "80",
                 "description": "Watch video",
                 "enabled": true,
                 "id": "UCL4U1",
@@ -163,7 +173,7 @@
             },
             {
                 "children": [],
-                "delay": "0",
+                "delay": "1",
                 "description": "k to pause video",
                 "enabled": true,
                 "id": "UCL478",
@@ -173,7 +183,7 @@
             },
             {
                 "children": [],
-                "delay": "2.5",
+                "delay": "2",
                 "description": "Final delay",
                 "enabled": true,
                 "id": "UC6L36",
@@ -201,7 +211,7 @@
         "description": "",
         "enabled": true,
         "id": "UE5XV7",
-        "include_path": "..\\..\\..\\misc\\recording_phase_end",
+        "include_path": "scenarios\\macos\\_library\\misc\\recording_phase_end",
         "params": [
             {
                 "name": "[phase_category]",
