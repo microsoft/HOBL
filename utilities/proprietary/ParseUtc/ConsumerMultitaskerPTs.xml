@@ -3065,5 +3065,74 @@
         <final id="_cancel"/>
       </scxml>
     </scenario>
+    <scenario schemaversion="2" scenarioid="{604b6ab6-1266-4d42-8cf2-10f97fe55827}" scenarioname="PT_9169_KeyEventLatencyGreaterThan200ms_604b6a" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="KeyEventLatencyGreaterThan200ms" ptdurationfield="Latency" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Win32kTraceLogging.KeyEventLatencyGreaterThan200ms">
+          <etwtrigger>
+            <provider>{487d6e37-1b9d-46d3-a8fd-54ce8bdf8a53}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="deployment" filtername="verbldgreaterthanequal19611">
+          <telemetryprotocolfilter>
+            <property>verbld</property>
+            <value>19611</value>
+            <operation>greaterthanequal</operation>
+            <type>Numeric</type>
+            <section>os</section>
+          </telemetryprotocolfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Win32kTraceLogging.KeyEventLatencyGreaterThan200ms" target="_complete" name="T0"/>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
   </scenarios>
 </diagrules>
