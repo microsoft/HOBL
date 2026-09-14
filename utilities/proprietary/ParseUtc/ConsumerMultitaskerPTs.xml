@@ -3134,5 +3134,178 @@
         <final id="_cancel"/>
       </scxml>
     </scenario>
+    <scenario schemaversion="2" scenarioid="{8b39a73c-e74a-497b-b127-4a3f9af70512}" scenarioname="PT_9106_AppSwitch_8b39a7" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="oldest" maxinflightinstances="1" ptscenarioname="AppSwitch" ptdurationfield="" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Windows.AppLifeCycle.UI.AppSwitch">
+          <etwtrigger>
+            <provider>{ee97cdc4-b095-5c70-6e37-a541eb74c2b5}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.Windows.AppLifeCycle.UI.AppSwitch" target="1" name="T1"/>
+        </state>
+        <state id="1">
+          <transition event="Microsoft.Windows.AppLifeCycle.UI.AppSwitch" target="_complete" name="T2"/>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{2b7bcced-d3bd-4bbf-b24b-fc3905762307}" scenarioname="PT_9843_FileExplorer Last Keypress to All Search Results _2b7bcc" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="FileExplorer Last Keypress to All Search Results Seen" ptdurationfield="totalDuration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Windows.Shell.SessionWatcherTelemetry.FESearch_Complete">
+          <etwtrigger>
+            <provider>{3a04cbc1-2a42-4e22-a67d-65c11f95fd39}</provider>
+            <keywords>0x2</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match14597directSearchNavigatee_1false">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Windows.Shell.SessionWatcherTelemetry.FESearch_Complete</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>directSearchNavigate</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>false</value>
+          </singletriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.Windows.Shell.SessionWatcherTelemetry.FESearch_Complete" target="_complete" name="T0">
+            <filter>match14597directSearchNavigatee_1false</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{bdbdb136-b616-4ec0-8cf9-fe52455c8258}" scenarioname="PT_9832_FileExplorer Last Keypress to First Search Result_bdbdb1" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="FileExplorer Last Keypress to First Search Result Seen" ptdurationfield="durationMs" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft.Windows.Health.TestInProduction.TestResult56040994">
+          <etwtrigger>
+            <provider>{50109fbd-6d85-5815-731e-c907eca1607b}</provider>
+            <keywords>0x2</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match14624completionKinde_11">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft.Windows.Health.TestInProduction.TestResult56040994</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>completionKind</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>1</value>
+          </singletriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft.Windows.Health.TestInProduction.TestResult56040994" target="_complete" name="T0">
+            <filter>match14624completionKinde_11</filter>
+          </transition>
+        </state>
+        <final id="_cancel"/>
+        <final id="_complete"/>
+      </scxml>
+    </scenario>
   </scenarios>
 </diagrules>
