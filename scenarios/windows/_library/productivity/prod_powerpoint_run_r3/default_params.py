@@ -14,5 +14,6 @@ def run():
 def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\misc\\recording_phase_begin')
     import_run_user_only('scenarios\\windows\\_library\\misc\\recording_phase_end')
+    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_insertnewslide')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto')
     return
