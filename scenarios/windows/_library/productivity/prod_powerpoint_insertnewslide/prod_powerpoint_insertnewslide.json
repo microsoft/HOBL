@@ -1,0 +1,22 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-09-14",
+        "description": "Insert a new slide into an open PowerPoint deck",
+        "enabled": true,
+        "id": "PPNSI00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "Insert a new slide (Ctrl+M)",
+        "enabled": true,
+        "id": "PPNST01",
+        "text": "\ue009m",
+        "type": "Type",
+        "typing_delay": "400"
+    }
+]
