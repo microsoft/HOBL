@@ -382,6 +382,21 @@ class ProductivityPrep(core.app_scenario.Scenario):
             except:
                 pass
 
+            # Check for copilot popup
+            try:
+                logging.info("Checking for Copilot popup")
+                self.desktop.find_element_by_xpath('//*[contains(@Name, "Copilot included")]')
+                try:
+                    self.desktop.find_element_by_name('Got it').click()
+                    logging.info("Clicked 'Got it' on Copilot popup.")
+                    time.sleep(3)
+                except:
+                    self.desktop.find_element_by_name('Close').click()
+                    logging.info("Clicked 'Close' on Copilot popup.")
+                    time.sleep(3)
+            except:
+                pass
+
             try:
                 logging.info("Checking for privacy pop up")
                 self.desktop.find_element_by_name('Getting better together')
@@ -574,6 +589,22 @@ class ProductivityPrep(core.app_scenario.Scenario):
                 logging.info("Account is added window is present")
                 open_windows += 1
                 self.desktop.find_element_by_name("Done").click()
+                time.sleep(10) # Wait for outlook to fully launch
+
+            # Check for copilot popup
+            try:
+                logging.info("Checking for Copilot popup")
+                self.desktop.find_element_by_xpath('//*[contains(@Name, "Copilot included")]')
+                try:
+                    self.desktop.find_element_by_name('Got it').click()
+                    logging.info("Clicked 'Got it' on Copilot popup.")
+                    time.sleep(3)
+                except:
+                    self.desktop.find_element_by_name('Close').click()
+                    logging.info("Clicked 'Close' on Copilot popup.")
+                    time.sleep(3)
+            except:
+                pass
             
             # Check for Theme popup
             try:
@@ -678,6 +709,16 @@ class ProductivityPrep(core.app_scenario.Scenario):
             except:
                 pass
 
+            # See if Copilot popup appears
+            try:
+                logging.info("Checking for Copilot popup")
+                self.desktop.find_element_by_xpath('//*[contains(@Name, "Copilot included")]')
+                self.desktop.find_element_by_name('Close').click()
+                logging.info("Clicked 'Close' on Copilot popup.")
+                time.sleep(3)
+            except:
+                pass
+            
             # See if the "Sign in" popup is there.
             try:
                 logging.info("Checking for 'Sign In' pop up")
