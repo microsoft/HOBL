@@ -23,10 +23,44 @@
         "children": [],
         "delay": "2",
         "description": "Confirm discarding the email (Enter)",
-        "enabled": true,
+        "enabled": false,
         "id": "PONDET02",
         "text": "\ue007",
         "type": "Type",
         "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Discard OK",
+        "enabled": true,
+        "file_name": [
+            "image_1UY9HRN.png"
+        ],
+        "h": "0.206",
+        "id": "1UY9HRN",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.230",
+        "x": "0.480",
+        "y": "0.427"
+    },
+    {
+        "capture_id": "1UY9HRN",
+        "children": [],
+        "delay": "2",
+        "description": "Discard OK",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1UY9JU0.png"
+        ],
+        "id": "1UY9JU0",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     }
 ]
