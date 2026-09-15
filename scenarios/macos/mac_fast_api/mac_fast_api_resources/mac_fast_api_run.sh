@@ -3,220 +3,119 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 LOG_DIR="/Users/Shared/hobl_data"
+BIN_DIR="/Users/Shared/hobl_bin"
+SOURCE_DIR="$BIN_DIR/fastapi"
+VENV_DIR="$BIN_DIR/mac_fast_api_resources/.venv"
+VENV_PYTHON="$VENV_DIR/bin/python"
+VENV_UV="$VENV_DIR/bin/uv"
 METRICS_FILE="$LOG_DIR/mac_fast_api_results.csv"
 LOG_FILE="$LOG_DIR/mac_fast_api_run.log"
 
-# Create log directory if it doesn't exist
-if [ ! -d "$LOG_DIR" ]; then
-    mkdir -p "$LOG_DIR"
-fi
+mkdir -p "$LOG_DIR"
 
 log() {
     echo "$1"
     echo "$1" >> "$LOG_FILE"
 }
 
-# Helper function for error checking
-check_status() {
-    if [ $? -ne 0 ]; then
-        log " ERROR - $1 failed"
-        exit 1
-    fi
-    log "✓ $1 successful"
+fail() {
+    log " ERROR - $1"
+    exit 1
 }
 
-# Helper function to verify command exists
-check_command() {
-    if command -v "$1" >/dev/null 2>&1; then
-        log "✓ $1 is available"
-        return 0
-    else
-        log " ERROR - $1 is not available"
-        return 1
-    fi
-}
-
-# Helper function to parse time output and calculate cputime
-# Args: $1 = time log file, $2 = phase name prefix (e.g., "build" or "test")
-# Sets: <prefix>_real, <prefix>_user, <prefix>_sys, <prefix>_cputime
-#
-# Time metrics explained:
-#   Real - Wall clock time from start to finish of the call. This is all elapsed time
-#          including time slices used by other processes and time the process spends
-#          blocked (for example if it is waiting for I/O to complete).
-#
-#   User - The amount of CPU time spent in user-mode code (outside the kernel) within
-#          the process. This is only actual CPU time used in executing the process.
-#          Other processes and time the process spends blocked do not count towards
-#          this figure.
-#
-#   Sys  - The amount of CPU time spent in the kernel within the process. This means
-#          executing CPU time spent in system calls within the kernel, as opposed to
-#          library code, which is still running in user-space. Like 'user', this is
-#          only CPU time used by the process.
-#
-#   User+Sys (cputime) - How much actual CPU time your process used. Note that this is
-#          across all CPUs, so if the process has multiple threads on a multi-processor
-#          system, it could potentially exceed the wall clock time reported by 'Real'.
-#          These figures include the 'User' and 'Sys' time of all child processes when
-#          they could have been collected (e.g., by wait(2) or waitpid(2)).
-#
 parse_time_output() {
-    local time_file="$1"
-    local prefix="$2"
-    
-    if [ ! -f "$time_file" ]; then
-        log " ERROR - Time log file not found: $time_file"
-        return 1
-    fi
-    
-    # Parse the -p format output (real, user, sys on separate lines)
-    local real_val=$(grep "^real" "$time_file" | awk '{print $2}')
-    local user_val=$(grep "^user" "$time_file" | awk '{print $2}')
-    local sys_val=$(grep "^sys" "$time_file" | awk '{print $2}')
-    
-    # Calculate cputime = user + sys
-    local cputime=$(echo "$user_val + $sys_val" | bc)
-    
-    # Export values using eval for dynamic variable names
-    eval "${prefix}_real=$real_val"
-    eval "${prefix}_user=$user_val"
-    eval "${prefix}_sys=$sys_val"
-    eval "${prefix}_cputime=$cputime"
-    
-    log "✓ Parsed $prefix phase: real=${real_val}s, user=${user_val}s, sys=${sys_val}s, cputime=${cputime}s"
+    time_file="$1"
+    prefix="$2"
+    [ -f "$time_file" ] || fail "Time log file not found: $time_file"
+    real_val=$(awk '/^real / {print $2}' "$time_file")
+    user_val=$(awk '/^user / {print $2}' "$time_file")
+    sys_val=$(awk '/^sys / {print $2}' "$time_file")
+    cputime=$(awk -v user="$user_val" -v sys="$sys_val" 'BEGIN {printf "%.2f", user + sys}')
+    eval "${prefix}_time=\$real_val"
+    eval "${prefix}_user=\$user_val"
+    eval "${prefix}_sys=\$sys_val"
+    eval "${prefix}_cputime=\$cputime"
 }
 
-echo "-- mac_fast_api_run.sh started $(date)" > "$LOG_FILE"
-log "-- fast_api run started"
-
-# Source profile
-if [ -f ~/.zprofile ]; then
-    source ~/.zprofile
-    check_status "Loading profile"
-else
-    echo " ERROR - ~/.zprofile not found"
-    exit 1
-fi
-
-# Verify required commands are available
-log "-- Verifying required commands"
-check_command "pyenv" || exit 1
-check_command "python" || exit 1
-check_command "bash" || exit 1
-
-# Set BIN_DIR to /Users/Shared/hobl_bin
-BIN_DIR="/Users/Shared/hobl_bin/fastapi"
-
-# Set Python version
-log "-- Setting Python version"
-pyenv global 3.12.10
-check_status "Setting Python global version"
-
-# Verify Python version
-PYTHON_VERSION=$(python --version 2>&1 | awk '{print $2}')
-if [ "$PYTHON_VERSION" != "3.12.10" ]; then
-    log " ERROR - Python version is $PYTHON_VERSION, expected 3.12.10"
-    pyenv versions
-    exit 1
-fi
-log "✓ Python version confirmed: $PYTHON_VERSION"
-
-log "-- Changing directory to: $BIN_DIR"
-
-# Change to fastapi directory
-if [ ! -d "$BIN_DIR" ]; then
-    log " ERROR - Fast API directory not found: $BIN_DIR"
-    log "Please run mac_fast_api_prep.sh first"
-    exit 1
-fi
-log "✓ FastAPI directory exists"
-
-cd $BIN_DIR || {
-    log " ERROR - Failed to change to $BIN_DIR"
-    exit 1
+run_timed() {
+    phase="$1"
+    time_file="$2"
+    output_file="$3"
+    shift 3
+    /usr/bin/time -p -o "$time_file" "$@" > "$output_file" 2>&1
+    code=$?
+    [ "$code" -eq 0 ] || fail "$phase failed. See $output_file for details."
 }
-log "✓ Current directory: $(pwd)"
 
-# Verify test script exists
-if [ ! -f "scripts/test.sh" ]; then
-    log " ERROR - Test script not found: scripts/test.sh"
-    exit 1
-fi
-log "✓ Test script found"
+echo "-- mac_fast_api maintainer validation started $(date)" > "$LOG_FILE"
 
-# Verify build module is available
-python -c "import build" 2>/dev/null
-if [ $? -ne 0 ]; then
-    log " ERROR - Python build module is not installed"
-    log "Please run mac_fast_api_prep.sh first"
-    exit 1
-fi
-log "✓ Build module is available"
+[ -d "$SOURCE_DIR" ] || fail "FastAPI source directory not found: $SOURCE_DIR"
+[ -x "$VENV_PYTHON" ] || fail "FastAPI venv missing at $VENV_PYTHON. Re-prep required."
+[ -x "$VENV_UV" ] || fail "uv missing at $VENV_UV. Re-prep required."
 
-# Route PEP 517 build isolation (and any pip invoked by scripts/test.sh) through the
-# approved Microsoft PyPI feed proxy. `python -m build` spins up its own isolated
-# environment and pip-installs the build backend (pdm-backend) on every run; that
-# isolated pip honors PIP_INDEX_URL. Without this it targets public PyPI, which is
-# blocked/SSL-inspected on Microsoft-managed devices (CISO Central Feed Services
-# policy) and injects network variability into build time.
+"$VENV_PYTHON" -c "import build, coverage, pytest" >/dev/null 2>&1 ||
+    fail "FastAPI maintainer venv has missing or broken packages. Re-prep required."
+
 export PIP_INDEX_URL="https://packagefeedproxy.microsoft.io/pypi/simple"
-log "-- Set PIP_INDEX_URL for build isolation: $PIP_INDEX_URL"
+export UV_DEFAULT_INDEX="$PIP_INDEX_URL"
+export PYTHONPATH="./docs_src"
+export PYTHONIOENCODING="utf-8"
 
-log "-- fast_api build started"
+cd "$SOURCE_DIR" || fail "Failed to change to $SOURCE_DIR"
 
-# Redirect output to a per-phase log so it is preserved in the results share.
-# Without redirection, stdout goes only to the RPC buffer and is lost on timeout.
+rm -rf dist
 BUILD_LOG="$LOG_DIR/mac_fast_api_build.log"
-log "-- Build output: $BUILD_LOG"
-/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_build_time.log" python -m build > "$BUILD_LOG" 2>&1
-check_status "Building Fast API"
+BUILD_TIME_LOG="$LOG_DIR/mac_fast_api_build_time.log"
+log "-- Legacy python -m build output: $BUILD_LOG"
+run_timed "python -m build" "$BUILD_TIME_LOG" "$BUILD_LOG" "$VENV_PYTHON" -m build
+parse_time_output "$BUILD_TIME_LOG" "build"
 
-# Parse build phase timing
-parse_time_output "$LOG_DIR/mac_fast_api_build_time.log" "build"
-
-log "-- fast_api build ended"
-
-log "-- fast_api tests started"
+rm -rf dist_uv
+UV_BUILD_LOG="$LOG_DIR/mac_fast_api_uv_build.log"
+UV_BUILD_TIME_LOG="$LOG_DIR/mac_fast_api_uv_build_time.log"
+log "-- Modern uv build output: $UV_BUILD_LOG"
+run_timed "uv build" "$UV_BUILD_TIME_LOG" "$UV_BUILD_LOG" \
+    "$VENV_UV" build --out-dir dist_uv
+parse_time_output "$UV_BUILD_TIME_LOG" "uv_build"
 
 TEST_LOG="$LOG_DIR/mac_fast_api_test.log"
-log "-- Test output: $TEST_LOG"
-/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_test_time.log" bash scripts/test.sh > "$TEST_LOG" 2>&1
-check_status "Running Fast API tests"
+TEST_TIME_LOG="$LOG_DIR/mac_fast_api_test_time.log"
+log "-- Full coverage test output: $TEST_LOG"
+run_timed "FastAPI full coverage tests" "$TEST_TIME_LOG" "$TEST_LOG" \
+    "$VENV_PYTHON" -m coverage run -m pytest tests
+parse_time_output "$TEST_TIME_LOG" "test"
 
-# Parse test phase timing
-parse_time_output "$LOG_DIR/mac_fast_api_test_time.log" "test"
-
-log "-- fast_api tests completed"
-
-# ============================================================================
-# Calculate scenario_runtime and save metrics
-# ============================================================================
-# Use real (wall clock) time for scenario_runtime as it represents actual elapsed time
-scenario_runtime=$(echo "$build_real + $test_real" | bc)
+scenario_runtime=$(awk \
+    -v build="$build_time" -v uv="$uv_build_time" -v test="$test_time" \
+    'BEGIN {printf "%.2f", build + uv + test}')
+architecture=$(uname -m)
 
 log ""
 log "========================================"
-log "Fast API Metrics Summary"
+log "FastAPI Maintainer Release Validation Metrics"
 log "========================================"
-log "Build Phase: real=${build_real}s, user=${build_user}s, sys=${build_sys}s, cputime=${build_cputime}s"
-log "Test Phase:  real=${test_real}s, user=${test_user}s, sys=${test_sys}s, cputime=${test_cputime}s"
-log "scenario_runtime (total real time): ${scenario_runtime}s"
+log "Legacy python -m build: ${build_time}s"
+log "Modern uv build:        ${uv_build_time}s"
+log "Full coverage tests:    ${test_time}s"
+log "scenario_runtime:       ${scenario_runtime}s"
 log "========================================"
 
-# Write metrics CSV file (key,value format)
 cat > "$METRICS_FILE" << EOF
 scenario_runtime,$scenario_runtime
-build_real,$build_real
+build_time,$build_time
+uv_build_time,$uv_build_time
+test_time,$test_time
+architecture,$architecture
 build_user,$build_user
 build_sys,$build_sys
 build_cputime,$build_cputime
-test_real,$test_real
+uv_build_user,$uv_build_user
+uv_build_sys,$uv_build_sys
+uv_build_cputime,$uv_build_cputime
 test_user,$test_user
 test_sys,$test_sys
 test_cputime,$test_cputime
 EOF
 
-log "✓ Metrics saved to: $METRICS_FILE"
-
+log "Metrics saved to: $METRICS_FILE"
 exit 0
