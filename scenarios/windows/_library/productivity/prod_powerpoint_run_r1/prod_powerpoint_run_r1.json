@@ -49,11 +49,45 @@
         "children": [],
         "delay": "2",
         "description": "Open the Animations tab (Alt+A)",
-        "enabled": true,
+        "enabled": false,
         "id": "PPR1T02",
         "text": "\ue00aa",
         "type": "Type",
         "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Animations Tab",
+        "enabled": true,
+        "file_name": [
+            "image_1UY8KEX.png"
+        ],
+        "h": "0.194",
+        "id": "1UY8KEX",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.168",
+        "x": "0.203",
+        "y": "0.002"
+    },
+    {
+        "capture_id": "1UY8KEX",
+        "children": [],
+        "delay": "2",
+        "description": "Animations Tab",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1UY8KW6.png"
+        ],
+        "id": "1UY8KW6",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     },
     {
         "children": [],
