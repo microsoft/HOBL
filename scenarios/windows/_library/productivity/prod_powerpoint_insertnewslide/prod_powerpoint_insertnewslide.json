@@ -13,10 +13,44 @@
         "children": [],
         "delay": "3",
         "description": "Insert a new slide (Ctrl+M)",
-        "enabled": true,
+        "enabled": false,
         "id": "PPNST01",
         "text": "\ue009m",
         "type": "Type",
         "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "New Slide",
+        "enabled": true,
+        "file_name": [
+            "image_1UY87T6.png"
+        ],
+        "h": "0.150",
+        "id": "1UY87T6",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.218",
+        "x": "0.000",
+        "y": "0.044"
+    },
+    {
+        "capture_id": "1UY87T6",
+        "children": [],
+        "delay": "2",
+        "description": "New Slide",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1UY88CX.png"
+        ],
+        "id": "1UY88CX",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     }
 ]
