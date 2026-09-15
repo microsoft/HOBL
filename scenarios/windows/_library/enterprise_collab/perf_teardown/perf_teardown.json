@@ -24,15 +24,6 @@
         "children": [],
         "delay": "0",
         "description": "",
-        "enabled": false,
-        "id": "1HX852F",
-        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable",
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
         "enabled": true,
         "id": "1HX84YP",
         "include_path": "scenarios\\windows\\_library\\enterprise_collab\\restart_diagtrack",

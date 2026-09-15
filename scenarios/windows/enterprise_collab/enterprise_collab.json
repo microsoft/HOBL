@@ -58,6 +58,18 @@
         "delay": "0.0",
         "description": "",
         "enabled": true,
+        "id": "1N9VK08",
+        "multiple": true,
+        "name": "[minwin_workloads]",
+        "type": "Set User Default",
+        "val_options": "live_captions,copilot_query,semantic_search,click_todo,studioeffect_blur,productivity,snipping_tool,file_explorer",
+        "value": ""
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
         "id": "19K7X90",
         "name": "[web_replay_run]",
         "type": "Set",
@@ -118,6 +130,16 @@
         "value": "0"
     },
     {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1RMA581",
+        "name": "[teams:collect_MSTeams_Logs]",
+        "type": "Set",
+        "value": "0"
+    },
+    {
         "children": [
             {
                 "children": [
@@ -133,32 +155,12 @@
                     },
                     {
                         "children": [],
-                        "delay": "0.0",
-                        "description": "Upload Perf Files",
-                        "enabled": true,
-                        "file_name": [
-                            "code_1EN194J.py"
-                        ],
-                        "id": "1EN194J",
-                        "type": "Code"
-                    },
-                    {
-                        "children": [],
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1EN18UV",
-                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable",
+                        "id": "1N9W8VE",
+                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_setup",
                         "type": "Include"
-                    },
-                    {
-                        "children": [],
-                        "command": "cmd /c net stop DiagTrack && net start DiagTrack",
-                        "delay": "2",
-                        "description": "Restart DiagTrack",
-                        "enabled": true,
-                        "id": "1EPL382",
-                        "type": "Command"
                     }
                 ],
                 "description": "",
@@ -322,6 +324,33 @@
                 "enabled": true,
                 "id": "19MUF2R",
                 "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1N9WNHN",
+                        "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "in",
+                "id": "1N9WMX0",
+                "left_term": "productivity",
+                "right_term": "[minwin_workloads]",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1N9WMX1",
+                "type": "End If"
             }
         ],
         "description": "",
@@ -396,20 +425,62 @@
                 "type": "Include"
             },
             {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "19K57MP",
-                "include_path": "scenarios\\windows\\_library\\web\\web_run_12",
-                "params": [
+                "children": [
                     {
-                        "name": "[load_only]",
-                        "val_options": "0,1",
-                        "value": "0"
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1NA525H",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_run_minwin",
+                        "params": [
+                            {
+                                "name": "[load_only]",
+                                "val_options": "0,1",
+                                "value": "0"
+                            }
+                        ],
+                        "type": "Include"
                     }
                 ],
-                "type": "Include"
+                "description": "",
+                "enabled": true,
+                "eval_method": "!=",
+                "id": "1NA50YH",
+                "left_term": "[minwin_workloads]",
+                "right_term": "",
+                "type": "If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "19K57MP",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_run_12",
+                        "params": [
+                            {
+                                "name": "[load_only]",
+                                "val_options": "0,1",
+                                "value": "0"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "id": "1NA51PH",
+                "type": "Else"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1NA50YJ",
+                "type": "End If"
             },
             {
                 "children": [],
@@ -504,8 +575,8 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "2D1002",
-                        "include_path": "scenarios\\windows\\_library\\misc\\click_file_explorer",
+                        "id": "1P62T2V",
+                        "include_path": "scenarios\\windows\\_library\\misc\\switchto_file_explorer",
                         "type": "Include"
                     },
                     {
@@ -1055,40 +1126,12 @@
                 "children": [
                     {
                         "children": [],
-                        "delay": "20",
-                        "description": "15",
-                        "enabled": true,
-                        "id": "1EUEFL4",
-                        "type": "Delay"
-                    },
-                    {
-                        "children": [],
-                        "delay": "0.0",
-                        "description": "Delete Perf Files",
-                        "enabled": true,
-                        "file_name": [
-                            "code_1EN1A44.py"
-                        ],
-                        "id": "1EN1A44",
-                        "type": "Code"
-                    },
-                    {
-                        "children": [],
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1EN1A1W",
-                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable",
+                        "id": "1N9WCU8",
+                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_teardown",
                         "type": "Include"
-                    },
-                    {
-                        "children": [],
-                        "command": "cmd /c net stop DiagTrack && net start DiagTrack",
-                        "delay": "2",
-                        "description": "Restart DiagTrack",
-                        "enabled": true,
-                        "id": "1EPL51E",
-                        "type": "Command"
                     }
                 ],
                 "description": "",
