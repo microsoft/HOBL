@@ -2551,7 +2551,7 @@ class Scenario(unittest.TestCase):
         Image.fromarray(rgb_image).save(save_path) # Convert for PIL
 
 
-    def _click_by_template(self, template, id=None, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, primary=True, delay=100, x=0.5, y=0.5, edge_detect_thresholds=[], traceId=None, traceX=None, traceY=None, traceW=None, traceH=None, traceMs=None, traceFramerate=None):
+    def _click_by_template(self, template, id=None, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, primary=True, delay=100, x=0.5, y=0.5, edge_detect_thresholds=[], traceId=None, traceX=None, traceY=None, traceW=None, traceH=None, traceMs=None, traceFramerate=None, timing_action=None):
         # Get the screenshot from the capture_id
         if capture_id is not None:
             screenshot = self.captures[capture_id]
@@ -2586,6 +2586,9 @@ class Scenario(unittest.TestCase):
         # Click the point
         x = (point[0] + x_adj) * self.dut_coord_scaler
         y = (point[1] + y_adj) * self.dut_coord_scaler
+        timing_callback = getattr(self, "_annoyance_input_dispatched", None)
+        if callable(timing_callback) and timing_action is not None:
+            timing_callback(timing_action)
         rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), delay, primary, self.current_screen, self.cursor_movement_enable, traceId, traceX, traceY, traceW, traceH, traceMs, traceFramerate)
         # time.sleep(sleep/1000) # Sleep is handled by the plugin
         # return the point for use or recording
@@ -3327,7 +3330,7 @@ class Scenario(unittest.TestCase):
                 # Convert it to a list of floats
                 scale_str = action["scale"]
                 scale = [float(x) for x in scale_str.split(',')]
-            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, traceId=action["traceId"], traceX=action["traceX"], traceY=action["traceY"], traceW=action["traceW"], traceH=action["traceH"], traceMs=action["traceMs"], traceFramerate=action["traceFramerate"]):
+            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, traceId=action["traceId"], traceX=action["traceX"], traceY=action["traceY"], traceW=action["traceW"], traceH=action["traceH"], traceMs=action["traceMs"], traceFramerate=action["traceFramerate"], timing_action=action):
                 logging.debug("Click successful")
             else:
                 except_flag = True
@@ -3342,7 +3345,18 @@ class Scenario(unittest.TestCase):
             x = int(float(x_frac) * screen_width * self.dut_coord_scaler)
             y = int(float(y_frac) * screen_height * self.dut_coord_scaler)
             # Click the point
+            timing_callback = getattr(self, "_annoyance_input_dispatched", None)
+            if callable(timing_callback):
+                timing_callback(action)
             rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), 100, primary, self.current_screen, self.cursor_movement_enable, action["traceId"], action["traceX"], action["traceY"], action["traceW"], action["traceH"], action["traceMs"], action["traceFramerate"])
+
+        elif action["type"] == "Move Coord":
+            # Move the cursor to a coordinate without clicking (e.g. to park it away from a glyph before capture)
+            screen_width, screen_height = self._get_screen_size(self.current_screen)
+            x = int(float(action['x']) * screen_width * self.dut_coord_scaler)
+            y = int(float(action['y']) * screen_height * self.dut_coord_scaler)
+            logging.debug(f"Moving cursor to coordinates: {action['x']}, {action['y']}")
+            rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "MoveTo", int(x), int(y), self.current_screen, self.cursor_movement_enable)
 
         # Find the template in the screenshot and move the mouse to it on the DUT
         elif action["type"] == "Move":
@@ -3363,6 +3377,9 @@ class Scenario(unittest.TestCase):
         elif action["type"] == "Type":
             logging.debug(f"Typing: {action['description']}")
             typing_delay = int(action["typing_delay"]) if "typing_delay" in action else self.typing_delay
+            timing_callback = getattr(self, "_annoyance_input_dispatched", None)
+            if callable(timing_callback):
+                timing_callback(action)
             self._send_text(action["text"], typing_delay=typing_delay, traceId=action["traceId"], traceX=action["traceX"], traceY=action["traceY"], traceW=action["traceW"], traceH=action["traceH"], traceMs=action["traceMs"], traceFramerate=action["traceFramerate"])
             if "delay" in action:
                 calculated_delay_time = (typing_delay / 1000.0) * len(action["text"])
@@ -3373,6 +3390,9 @@ class Scenario(unittest.TestCase):
         # Inject a scroll event
         elif action["type"] == "Scroll":
             logging.debug("Scrolling: " + str(action["direction"]))
+            timing_callback = getattr(self, "_annoyance_input_dispatched", None)
+            if callable(timing_callback):
+                timing_callback(action)
             self._scroll(x_frac=float(action["x"]), y_frac=float(action["y"]), direction=action["direction"], traceId=action["traceId"], traceX=action["traceX"], traceY=action["traceY"], traceW=action["traceW"], traceH=action["traceH"], traceMs=action["traceMs"], traceFramerate=action["traceFramerate"])
 
         # Check for a template match in a screenshot. Returns True if the template is found, False if it is not
@@ -3439,6 +3459,7 @@ class Scenario(unittest.TestCase):
                 edge_thresholds = [int(x) for x in threshold_str.split(',')]
 
             # Loop until the timeout is reached or the template is found/ not found
+            condition_met = False
             while (datetime.now() - start_time).total_seconds() < float(action["timeout"]):
                 self.captures[action["capture_id"]]=self._capture_screen("check.png", x=float(action["x"]), y=float(action["y"]), w=float(action["w"]), h=float(action["h"]))
                 # Template found
@@ -3446,6 +3467,10 @@ class Scenario(unittest.TestCase):
                     # If we are checking until found, return success
                     if action["type"] == "Check Until Found":
                         logging.info("Match present, returning success")
+                        condition_met = True
+                        timing_callback = getattr(self, "_annoyance_visual_detected", None)
+                        if callable(timing_callback):
+                            timing_callback(action)
                         break
                     # If we are checking until not found, sleep and check again
                     else:
@@ -3456,13 +3481,17 @@ class Scenario(unittest.TestCase):
                     # If we are checking until not found, return success
                     if action["type"] == "Check Until Not Found":
                         logging.info("Match not present, returning success")
+                        condition_met = True
+                        timing_callback = getattr(self, "_annoyance_visual_detected", None)
+                        if callable(timing_callback):
+                            timing_callback(action)
                         break
                     # If we are checking until found, sleep and check again
                     else:
                         logging.info("Match not present, sleeping")
                         self._sleep_by(float(action["delay"]))
-            # Check if the timeout was reached
-            if (datetime.now() - start_time).total_seconds() >= float(action["timeout"]):
+            # A match on the final poll iteration must count as success, not a timeout failure
+            if not condition_met:
                 logging.warning("Timeout reached, returning failure")
                 except_flag = True
         

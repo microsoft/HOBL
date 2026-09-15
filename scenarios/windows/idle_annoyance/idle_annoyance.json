@@ -1,0 +1,117 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-19",
+        "description": "Connected idle-desktop baseline for paired annoyance responsiveness measurements",
+        "enabled": true,
+        "id": "IA00001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Baseline schedule to run",
+        "enabled": true,
+        "id": "IA00002",
+        "name": "[schedule]",
+        "type": "Set Default",
+        "val_options": "paired_web",
+        "value": "paired_web"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Number of complete paired schedules to run",
+        "enabled": true,
+        "id": "IA00003",
+        "name": "[cycles]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Annoyance probes to run",
+        "enabled": true,
+        "id": "IA00004",
+        "multiple": true,
+        "name": "[probes]",
+        "type": "Set Default",
+        "val_options": "mute_unmute,start_menu_show_apps,explorer_windows_scroll,explorer_pictures_thumbnails",
+        "value": "mute_unmute start_menu_show_apps explorer_windows_scroll explorer_pictures_thumbnails"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Seconds to settle after minimizing to the connected desktop",
+        "enabled": true,
+        "id": "IA00005",
+        "name": "[desktop_settle_seconds]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "5"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Collect whole-run ETW power and 1 Hz per-probe Energy Meter power",
+        "enabled": true,
+        "id": "IA00006",
+        "name": "[power_reporting]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Begin paired idle-desktop phase",
+                "enabled": true,
+                "id": "IA00101",
+                "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Run the paired web annoyance schedule on the connected idle desktop",
+                "enabled": true,
+                "file_name": [
+                    "code_schedule.py"
+                ],
+                "id": "IA00102",
+                "type": "Code"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "End paired idle-desktop phase",
+                "enabled": true,
+                "id": "IA00103",
+                "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+                "params": [
+                    {
+                        "name": "[phase_category]",
+                        "val_options": "",
+                        "value": "idle"
+                    },
+                    {
+                        "name": "[phase_name]",
+                        "val_options": "",
+                        "value": "paired_web_annoyance"
+                    }
+                ],
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "IA00100",
+        "type": "Run Test"
+    }
+]

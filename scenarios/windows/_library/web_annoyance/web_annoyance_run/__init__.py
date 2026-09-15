@@ -1,0 +1,1 @@
+"""Full stock web workload adapter for annoyance hooks."""
