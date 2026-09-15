@@ -13,10 +13,44 @@
         "children": [],
         "delay": "2",
         "description": "Open new email (Ctrl+N)",
-        "enabled": true,
+        "enabled": false,
         "id": "PONCEI01",
         "text": "\ue009n",
         "type": "Type",
         "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "New Email",
+        "enabled": true,
+        "file_name": [
+            "image_1UY8XEA.png"
+        ],
+        "h": "0.215",
+        "id": "1UY8XEA",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.149",
+        "x": "0.000",
+        "y": "0.044"
+    },
+    {
+        "capture_id": "1UY8XEA",
+        "children": [],
+        "delay": "2",
+        "description": "New Email",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1UY8XMF.png"
+        ],
+        "id": "1UY8XMF",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     }
 ]
