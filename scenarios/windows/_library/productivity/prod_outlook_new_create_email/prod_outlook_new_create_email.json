@@ -25,27 +25,27 @@
         "description": "New Email",
         "enabled": true,
         "file_name": [
-            "image_1UY8XEA.png"
+            "image_1V0LYVH.png"
         ],
-        "h": "0.215",
-        "id": "1UY8XEA",
+        "h": "0.248",
+        "id": "1V0LYVH",
         "recapture": false,
         "type": "Capture",
-        "w": "0.149",
-        "x": "0.000",
-        "y": "0.044"
+        "w": "0.182",
+        "x": "0.001",
+        "y": "0.002"
     },
     {
-        "capture_id": "1UY8XEA",
+        "capture_id": "1V0LYVH",
         "children": [],
         "delay": "2",
         "description": "New Email",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1UY8XMF.png"
+            "image_1V0M03R.png"
         ],
-        "id": "1UY8XMF",
+        "id": "1V0M03R",
         "match_threshold": "",
         "primary": true,
         "scale": "",
