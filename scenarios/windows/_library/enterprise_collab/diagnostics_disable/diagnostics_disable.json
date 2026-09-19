@@ -32,27 +32,27 @@
         "description": "Account Section",
         "enabled": true,
         "file_name": [
-            "image_1ALL9MN.png"
+            "image_1NA0KEK.png"
         ],
-        "h": "0.144",
-        "id": "19X3TY0",
+        "h": "0.323",
+        "id": "1NA0KEK",
         "recapture": false,
         "type": "Capture",
-        "w": "0.073",
-        "x": "0.017",
-        "y": "0.779"
+        "w": "0.329",
+        "x": "0.001",
+        "y": "0.626"
     },
     {
-        "capture_id": "19X3TY0",
+        "capture_id": "1NA0KEK",
         "children": [],
         "delay": "2",
         "description": "",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1ALLJR1.png"
+            "image_1NA0KXT.png"
         ],
-        "id": "1ALLJR1",
+        "id": "1NA0KXT",
         "match_threshold": "",
         "primary": true,
         "scale": "",
@@ -77,17 +77,33 @@
         "y": "0.090"
     },
     {
-        "capture_id": "1CE9365",
+        "children": [],
+        "delay": "0.5",
+        "description": "",
+        "enabled": true,
+        "file_name": [
+            "image_1NA0LRM.png"
+        ],
+        "h": "0.398",
+        "id": "1NA0LRM",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.334",
+        "x": "0.001",
+        "y": "0.043"
+    },
+    {
+        "capture_id": "1NA0LRM",
         "children": [],
         "delay": "2",
         "description": "Manage Settings Button",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_19WRX02.png"
+            "image_1NA0NW0.png"
         ],
-        "id": "19WRX02",
-        "match_threshold": "0.5",
+        "id": "1NA0NW0",
+        "match_threshold": "",
         "primary": true,
         "scale": "",
         "type": "Click",
