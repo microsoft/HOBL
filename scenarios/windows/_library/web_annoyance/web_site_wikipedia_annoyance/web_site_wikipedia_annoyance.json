@@ -1,0 +1,519 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-19",
+        "description": "Browse Wikipedia and run four native annoyance probes",
+        "enabled": true,
+        "id": "WAW0001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAW0002",
+        "name": "[new_tab]",
+        "type": "Set Default",
+        "val_options": "0, 1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAW0003",
+        "name": "[load_only]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAW0004",
+        "name": "[web_site_load_time]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "15"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Begin Wikipedia phase",
+        "enabled": true,
+        "id": "WAW0010",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Switch to the Wikipedia replay archive",
+        "enabled": true,
+        "file_name": [
+            "code_switch_wikipedia_archive.py"
+        ],
+        "id": "WAW0011",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Load Wikipedia",
+        "enabled": true,
+        "id": "WAW0012",
+        "include_path": "scenarios\\windows\\_library\\web\\web_enter_address",
+        "params": [
+            {
+                "name": "[web_site_address]",
+                "val_options": "",
+                "value": "aka.ms/watb03"
+            },
+            {
+                "name": "[new_tab]",
+                "val_options": "0, 1",
+                "value": "[new_tab]"
+            },
+            {
+                "name": "[web_site_load_time]",
+                "val_options": "",
+                "value": "[web_site_load_time]"
+            },
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "Wikipedia"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "4",
+                        "description": "Scroll Wikipedia",
+                        "direction": "down",
+                        "enabled": true,
+                        "id": "WAW0022",
+                        "type": "Scroll",
+                        "x": "0.1",
+                        "y": "0.3"
+                    }
+                ],
+                "count": "5",
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "WAW0021",
+                "type": "Loop"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAW0023",
+                "type": "End Loop"
+            },
+            {
+                "children": [],
+                "delay": "5",
+                "description": "Idle before annoyance probes",
+                "enabled": true,
+                "id": "WAW0024",
+                "type": "Delay"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Run mute and unmute annoyance probe",
+                        "enabled": true,
+                        "id": "WAW0025",
+                        "include_path": "scenarios\\windows\\_library\\responsiveness\\mute_unmute",
+                        "params": [
+                            {
+                                "name": "[probe_name]",
+                                "val_options": "",
+                                "value": "mute_unmute"
+                            },
+                            {
+                                "name": "[web_phase]",
+                                "val_options": "",
+                                "value": "wikipedia"
+                            },
+                            {
+                                "name": "[slot_id]",
+                                "val_options": "",
+                                "value": "wikipedia_UC6L36"
+                            },
+                            {
+                                "name": "[open_taskbar_mode]",
+                                "val_options": "",
+                                "value": "keyboard"
+                            },
+                            {
+                                "name": "[audio_toggle_mode]",
+                                "val_options": "",
+                                "value": "image"
+                            },
+                            {
+                                "name": "[audio_toggle_x]",
+                                "val_options": "",
+                                "value": "0.792"
+                            },
+                            {
+                                "name": "[audio_toggle_y]",
+                                "val_options": "",
+                                "value": "0.868"
+                            },
+                            {
+                                "name": "[volume_row_x]",
+                                "val_options": "",
+                                "value": "0.770"
+                            },
+                            {
+                                "name": "[volume_row_y]",
+                                "val_options": "",
+                                "value": "0.840"
+                            },
+                            {
+                                "name": "[dismiss_action_mode]",
+                                "val_options": "",
+                                "value": "escape"
+                            },
+                            {
+                                "name": "[return_x]",
+                                "val_options": "",
+                                "value": "0.850"
+                            },
+                            {
+                                "name": "[return_y]",
+                                "val_options": "",
+                                "value": "0.020"
+                            },
+                            {
+                                "name": "[dismiss_check_mode]",
+                                "val_options": "",
+                                "value": "delay"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "in",
+                "id": "WAW0025IF",
+                "left_term": "mute_unmute",
+                "right_term": "[web_annoyance_short:probes]",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAW0025END",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Idle between annoyance probes",
+                "enabled": true,
+                "id": "WAW0026",
+                "type": "Delay"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Run Start and Show all annoyance probe",
+                        "enabled": true,
+                        "id": "WAW0028",
+                        "include_path": "scenarios\\windows\\_library\\responsiveness\\start_menu_show_apps",
+                        "params": [
+                            {
+                                "name": "[probe_name]",
+                                "val_options": "",
+                                "value": "start_menu_show_apps"
+                            },
+                            {
+                                "name": "[web_phase]",
+                                "val_options": "",
+                                "value": "wikipedia"
+                            },
+                            {
+                                "name": "[slot_id]",
+                                "val_options": "",
+                                "value": "wikipedia_UC6L36"
+                            },
+                            {
+                                "name": "[return_x]",
+                                "val_options": "",
+                                "value": "0.850"
+                            },
+                            {
+                                "name": "[return_y]",
+                                "val_options": "",
+                                "value": "0.020"
+                            },
+                            {
+                                "name": "[open_taskbar_mode]",
+                                "val_options": "",
+                                "value": "keyboard"
+                            },
+                            {
+                                "name": "[open_taskbar_x]",
+                                "val_options": "",
+                                "value": "0.017"
+                            },
+                            {
+                                "name": "[open_taskbar_y]",
+                                "val_options": "",
+                                "value": "0.978"
+                            },
+                            {
+                                "name": "[dismiss_mode]",
+                                "val_options": "",
+                                "value": "escape"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "in",
+                "id": "WAW0028IF",
+                "left_term": "start_menu_show_apps",
+                "right_term": "[web_annoyance_short:probes]",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAW0028END",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Idle between annoyance probes",
+                "enabled": true,
+                "id": "WAW0029",
+                "type": "Delay"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Run Explorer Windows-folder scroll probe",
+                        "enabled": true,
+                        "id": "WAWEX01",
+                        "include_path": "scenarios\\windows\\_library\\responsiveness\\explorer_windows_scroll",
+                        "params": [
+                            {
+                                "name": "[probe_name]",
+                                "val_options": "",
+                                "value": "explorer_windows_scroll"
+                            },
+                            {
+                                "name": "[web_phase]",
+                                "val_options": "",
+                                "value": "wikipedia"
+                            },
+                            {
+                                "name": "[slot_id]",
+                                "val_options": "",
+                                "value": "wikipedia_UC6L36"
+                            },
+                            {
+                                "name": "[return_x]",
+                                "val_options": "",
+                                "value": "0.850"
+                            },
+                            {
+                                "name": "[return_y]",
+                                "val_options": "",
+                                "value": "0.020"
+                            },
+                            {
+                                "name": "[open_taskbar_mode]",
+                                "val_options": "",
+                                "value": "keyboard"
+                            },
+                            {
+                                "name": "[open_taskbar_x]",
+                                "val_options": "",
+                                "value": "0.101"
+                            },
+                            {
+                                "name": "[open_taskbar_y]",
+                                "val_options": "",
+                                "value": "0.978"
+                            },
+                            {
+                                "name": "[return_focus_mode]",
+                                "val_options": "",
+                                "value": "coordinate"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "in",
+                "id": "WAWEXIF",
+                "left_term": "explorer_windows_scroll",
+                "right_term": "[web_annoyance_short:probes]",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAWEXEND",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Idle between annoyance probes",
+                "enabled": true,
+                "id": "WAWEX02",
+                "type": "Delay"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Run Pictures thumbnail-size probe",
+                        "enabled": true,
+                        "id": "WAWPT01",
+                        "include_path": "scenarios\\windows\\_library\\responsiveness\\explorer_pictures_thumbnails",
+                        "params": [
+                            {
+                                "name": "[probe_name]",
+                                "val_options": "",
+                                "value": "explorer_pictures_thumbnails"
+                            },
+                            {
+                                "name": "[web_phase]",
+                                "val_options": "",
+                                "value": "wikipedia"
+                            },
+                            {
+                                "name": "[slot_id]",
+                                "val_options": "",
+                                "value": "wikipedia_UC6L36"
+                            },
+                            {
+                                "name": "[return_x]",
+                                "val_options": "",
+                                "value": "0.850"
+                            },
+                            {
+                                "name": "[return_y]",
+                                "val_options": "",
+                                "value": "0.020"
+                            },
+                            {
+                                "name": "[open_taskbar_mode]",
+                                "val_options": "",
+                                "value": "keyboard"
+                            },
+                            {
+                                "name": "[open_taskbar_x]",
+                                "val_options": "",
+                                "value": "0.101"
+                            },
+                            {
+                                "name": "[open_taskbar_y]",
+                                "val_options": "",
+                                "value": "0.978"
+                            },
+                            {
+                                "name": "[return_focus_mode]",
+                                "val_options": "",
+                                "value": "coordinate"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "in",
+                "id": "WAWPTIF",
+                "left_term": "explorer_pictures_thumbnails",
+                "right_term": "[web_annoyance_short:probes]",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAWPTEND",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "5",
+                "description": "Residual Wikipedia slot time",
+                "enabled": true,
+                "id": "WAWPT02",
+                "type": "Delay"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAW0020",
+        "left_term": "[load_only]",
+        "right_term": "0",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAW0027",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "End Wikipedia phase",
+        "enabled": true,
+        "id": "WAW0030",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "web"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "wikipedia_annoyance"
+            }
+        ],
+        "type": "Include"
+    }
+]

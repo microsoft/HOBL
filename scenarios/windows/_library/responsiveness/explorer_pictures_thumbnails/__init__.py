@@ -1,0 +1,1 @@
+"""Explorer Pictures-thumbnail responsiveness actions."""
