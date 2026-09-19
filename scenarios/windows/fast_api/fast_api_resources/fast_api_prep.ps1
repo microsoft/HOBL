@@ -44,7 +44,6 @@ if ($arch -eq "64-bit" -and $processorArch -eq "AMD64") {
     $pythonVersion = "3.12.10"
     $vsArchParam = "x64"
     $vsHostArchParam = "x64"
-    $vsInstallPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2022"
     $vsProduct = "BuildTools"
 } elseif ($arch -match "ARM" -or $processorArch -match "ARM") {
     $isARM64 = $true
@@ -52,7 +51,6 @@ if ($arch -eq "64-bit" -and $processorArch -eq "AMD64") {
     $pythonVersion = "3.12.10-arm"
     $vsArchParam = "arm64"
     $vsHostArchParam = "arm64"
-    $vsInstallPath = "${env:ProgramFiles}\Microsoft Visual Studio\2022"
     $vsProduct = "Community"
 } else {
     Write-Host " ERROR - Unsupported architecture: $arch (Processor: $processorArch)" -ForegroundColor Red
@@ -369,9 +367,12 @@ function diagnoseVSInstallation {
     }
     
     # Check for architecture-specific VS components
-    $vsDevCmdPath = "$vsInstallPath\$vsProduct\Common7\Tools\VsDevCmd.bat"
-    if (Test-Path $vsDevCmdPath) {
-        "Found VsDevCmd.bat at: $vsDevCmdPath" | log
+    $vsInfo = getVSVersion -product $vsProduct
+    if ($vsInfo -and $vsInfo.Path) {
+        $vsDevCmdPath = Join-Path $vsInfo.Path "Common7\Tools\VsDevCmd.bat"
+        if (Test-Path $vsDevCmdPath) {
+            "Found VsDevCmd.bat at: $vsDevCmdPath" | log
+        }
     }
     
     # Check processor architecture
@@ -799,18 +800,19 @@ check($lastexitcode)
 function Find-AllPython {
     "=== Python Detection Report ===" | log
     
-    # Check PATH
-    "`n1. Python in PATH:" | log
+    # Resolve the real interpreter through pyenv, not its batch-file shim.
+    "`n1. Python selected by pyenv:" | log
     try {
-        $pathPython = Get-Command python -ErrorAction SilentlyContinue
-        if ($pathPython) {
-            "  Found: $($pathPython.Source)" | log
-            & python --version 2>&1 | log
+        $pathPythonRaw = pyenv which python 2>$null
+        $pathPython = if ($pathPythonRaw) { $pathPythonRaw.Trim() } else { $null }
+        if ($pathPython -and (Test-Path $pathPython)) {
+            "  Found: $pathPython" | log
+            & $pathPython --version 2>&1 | log
         } else {
-            "  No python in PATH" | log
+            "  pyenv did not resolve python.exe" | log
         }
     } catch {
-        "  No python in PATH" | log
+        "  pyenv did not resolve python.exe" | log
     }
     
     # Check pyenv
@@ -826,19 +828,14 @@ function Find-AllPython {
 # Run the detection
 Find-AllPython
 
-# Verify pyenv Python is being used
+# Verify the real pyenv Python is available
 "`n=== Python Resolution Verification ===" | log
-$whichPython = Get-Command python -ErrorAction SilentlyContinue
-if ($whichPython) {
-    "Resolved python.exe: $($whichPython.Source)" | log
-    if ($whichPython.Source -like "*pyenv*") {
-        "SUCCESS: pyenv Python is being used" | log
-    } else {
-        "WARNING: Non-pyenv Python is being used" | log
-        "This may cause version conflicts" | log
-    }
+$whichPythonRaw = pyenv which python 2>$null
+$whichPython = if ($whichPythonRaw) { $whichPythonRaw.Trim() } else { $null }
+if ($whichPython -and (Test-Path $whichPython)) {
+    "Resolved python.exe: $whichPython" | log
 } else {
-    " ERROR - No python found in PATH" | log
+    " ERROR - pyenv did not resolve a valid python.exe path" | log
     Exit 1
 }
 
@@ -850,7 +847,7 @@ checkSetLocation "$scriptDrive\FastAPI"
 
 # Final verification that correct Python version is active
 "Final Python version verification before installing dependencies..." | log
-$currentPythonVersion = & python --version 2>&1
+$currentPythonVersion = & $whichPython --version 2>&1
 "Current Python version: $currentPythonVersion" | log
 
 $expectedVersionPattern = $pythonVersion -replace "-arm", ""
@@ -899,6 +896,7 @@ if (-not (Test-Path $venvPython)) {
 # Services policy). Install through the approved Microsoft package feed proxy instead.
 # Same pinned versions are served, so there is no functional or performance change.
 $pypiIndexUrl = "https://packagefeedproxy.microsoft.io/pypi/simple"
+$env:UV_DEFAULT_INDEX = $pypiIndexUrl
 "Using approved PyPI feed proxy: $pypiIndexUrl" | log
 
 "Installing requirements.txt into venv..." | log
@@ -908,6 +906,31 @@ check($lastexitcode)
 "Installing build tool into venv..." | log
 & $venvPip install --index-url $pypiIndexUrl build
 check($lastexitcode)
+
+"Installing pinned uv tool into venv..." | log
+$uvVersion = "0.9.5"
+& $venvPip install --index-url $pypiIndexUrl "uv==$uvVersion"
+check($lastexitcode)
+
+$venvUv = Join-Path $venvDir "Scripts\uv.exe"
+if (-not (Test-Path $venvUv)) {
+    " ERROR - uv executable missing after installation: $venvUv" | log
+    Exit 1
+}
+"Venv uv: $venvUv" | log
+
+# Warm the uv build path outside the measured run while preserving its normal
+# isolated sdist-then-wheel behavior.
+$uvPrimeDir = "$scriptDrive\hobl_bin\fast_api_resources\uv_build_prime"
+if (Test-Path $uvPrimeDir) {
+    Remove-Item -Recurse -Force $uvPrimeDir
+}
+"Priming uv build cache..." | log
+& $venvUv build --out-dir $uvPrimeDir
+check($lastexitcode)
+if (Test-Path $uvPrimeDir) {
+    Remove-Item -Recurse -Force $uvPrimeDir
+}
 
 "-- FastAPI prep completed ($logSuffix version)" | log
 "Python version: $pythonVersion installed successfully" | log
