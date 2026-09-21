@@ -9,6 +9,7 @@ def run():
     run_user_only()
     Params.setDefault('web_tab_switch', 'tab_number', '1', desc='', valOptions=[])
     Params.setDefault('web_tab_switch', 'tab_name', '', desc='', valOptions=[])
+    Params.setDefault('web_tab_switch', 'archive_name', '', desc='', valOptions=[])
     return
 
 def run_user_only():
