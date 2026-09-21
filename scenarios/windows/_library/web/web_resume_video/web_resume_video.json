@@ -50,12 +50,20 @@
     {
         "children": [],
         "delay": "2",
-        "description": "Reload Page",
+        "description": "Reload",
         "enabled": true,
-        "id": "1V23WFJ",
+        "id": "1V87VAY",
         "text": "\ue009r",
         "type": "Type",
         "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1V87VMN",
+        "type": "Delay"
     },
     {
         "children": [],
@@ -66,22 +74,6 @@
         "text": "k",
         "type": "Type",
         "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1U67916",
-        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "[etw_tag]_end"
-            }
-        ],
-        "type": "Include"
     },
     {
         "children": [],
