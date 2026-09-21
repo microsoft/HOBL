@@ -434,13 +434,22 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
+                "id": "1V0XW12",
+                "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
                 "id": "1LA9T2N",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_images_apollo",
                 "params": [
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "1"
+                        "value": "0"
                     },
                     {
                         "name": "[load_only]",
@@ -1247,7 +1256,7 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8W99F",
+        "id": "1V80JA9",
         "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
@@ -1258,7 +1267,12 @@
             {
                 "name": "[tab_name]",
                 "val_options": "",
-                "value": "R1 Tab 7 Youtube TOS Revisit"
+                "value": "R1_Reddit"
+            },
+            {
+                "name": "[archive_name]",
+                "val_options": "",
+                "value": "reddit"
             }
         ],
         "type": "Include"
@@ -1297,39 +1311,13 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8WA3N",
-        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "id": "1V7WATM",
+        "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_youtube_tos_revisit",
         "params": [
             {
-                "name": "[tab_number]",
+                "name": "[revisit_tag]",
                 "val_options": "",
-                "value": "7"
-            },
-            {
-                "name": "[tab_name]",
-                "val_options": "",
-                "value": "R1 Tab7 Youtube TOS revisit"
-            }
-        ],
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1U7VLVC",
-        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
-        "params": [
-            {
-                "name": "[duration]",
-                "val_options": "",
-                "value": "30"
-            },
-            {
-                "name": "[etw_tag]",
-                "val_options": "",
-                "value": "Youtoube_TOS_r1"
+                "value": "R1_YoutubeTOS"
             }
         ],
         "type": "Include"
@@ -1347,7 +1335,7 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8WC11",
+        "id": "1V80HP6",
         "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
@@ -1358,7 +1346,12 @@
             {
                 "name": "[tab_name]",
                 "val_options": "",
-                "value": "R1 Tab 3 Amazon BSG Revisit"
+                "value": "R1_AmazonBSG"
+            },
+            {
+                "name": "[archive_name]",
+                "val_options": "",
+                "value": "amazonbsg"
             }
         ],
         "type": "Include"
@@ -1585,7 +1578,7 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8V2XE",
+        "id": "1V80FPK",
         "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
@@ -1596,7 +1589,12 @@
             {
                 "name": "[tab_name]",
                 "val_options": "",
-                "value": "R2 Reddit Tab Revisit"
+                "value": "R2_Reddit"
+            },
+            {
+                "name": "[archive_name]",
+                "val_options": "",
+                "value": "reddit"
             }
         ],
         "type": "Include"
@@ -1635,39 +1633,13 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8V31R",
-        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "id": "1V7WE3J",
+        "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_youtube_tos_revisit",
         "params": [
             {
-                "name": "[tab_number]",
+                "name": "[revisit_tag]",
                 "val_options": "",
-                "value": "7"
-            },
-            {
-                "name": "[tab_name]",
-                "val_options": "",
-                "value": "R2 YoutubeTOS Tab Revisit"
-            }
-        ],
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1U7VY3L",
-        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
-        "params": [
-            {
-                "name": "[duration]",
-                "val_options": "",
-                "value": "30"
-            },
-            {
-                "name": "[etw_tag]",
-                "val_options": "",
-                "value": "video"
+                "value": "R2_YoutubeTOS"
             }
         ],
         "type": "Include"
@@ -1685,7 +1657,7 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8V38Y",
+        "id": "1V7WW3U",
         "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
@@ -1696,7 +1668,12 @@
             {
                 "name": "[tab_name]",
                 "val_options": "",
-                "value": "R2 Amazon BSG Tab Revisit"
+                "value": "R2_AmazonBSG"
+            },
+            {
+                "name": "[archive_name]",
+                "val_options": "",
+                "value": "amazonbsg"
             }
         ],
         "type": "Include"
@@ -1718,27 +1695,6 @@
                 "name": "[down_count]",
                 "val_options": "",
                 "value": "3"
-            }
-        ],
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1U7W242",
-        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
-        "params": [
-            {
-                "name": "[duration]",
-                "val_options": "",
-                "value": "30"
-            },
-            {
-                "name": "[etw_tag]",
-                "val_options": "",
-                "value": "video"
             }
         ],
         "type": "Include"
@@ -1926,7 +1882,7 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8VJ24",
+        "id": "1V7WU8U",
         "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
@@ -1937,7 +1893,12 @@
             {
                 "name": "[tab_name]",
                 "val_options": "",
-                "value": "R3 Tab 1 Revisit Reddit"
+                "value": "R3_Reddit"
+            },
+            {
+                "name": "[archive_name]",
+                "val_options": "",
+                "value": "reddit"
             }
         ],
         "type": "Include"
@@ -1976,39 +1937,13 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8VJ4F",
-        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "id": "1V7WF6R",
+        "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_youtube_tos_revisit",
         "params": [
             {
-                "name": "[tab_number]",
+                "name": "[revisit_tag]",
                 "val_options": "",
-                "value": "7"
-            },
-            {
-                "name": "[tab_name]",
-                "val_options": "",
-                "value": "R3 Tab 7 Youtube TOS Revisit"
-            }
-        ],
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1U7W3F6",
-        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
-        "params": [
-            {
-                "name": "[duration]",
-                "val_options": "",
-                "value": "30"
-            },
-            {
-                "name": "[etw_tag]",
-                "val_options": "",
-                "value": "video"
+                "value": "R3_YoutubeTOS"
             }
         ],
         "type": "Include"
@@ -2026,7 +1961,7 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T8VJ72",
+        "id": "1V7WV82",
         "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
         "params": [
             {
@@ -2037,7 +1972,12 @@
             {
                 "name": "[tab_name]",
                 "val_options": "",
-                "value": "R3 Tab 3 AmazonBSG Revisit"
+                "value": "R3_AmazonBSG"
+            },
+            {
+                "name": "[archive_name]",
+                "val_options": "",
+                "value": "amazonbsg"
             }
         ],
         "type": "Include"
