@@ -50,6 +50,16 @@
     {
         "children": [],
         "delay": "2",
+        "description": "Reload Page",
+        "enabled": true,
+        "id": "1V23WFJ",
+        "text": "\ue009r",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
         "description": "Resume Playback",
         "enabled": true,
         "id": "1U677PL",
