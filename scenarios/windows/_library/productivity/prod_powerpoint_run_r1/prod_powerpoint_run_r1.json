@@ -99,11 +99,21 @@
     },
     {
         "children": [],
-        "delay": "4",
-        "description": "Activate Animations KeyTips, expand the animation gallery, and apply Fly In (Alt+A, S, Down, Right twice, Enter)",
+        "delay": "2",
+        "description": "Activate Animations KeyTips and expand the animation gallery (Alt+A, S)",
         "enabled": true,
         "id": "PPR1T04",
-        "text": "\ue00aas\ue015\ue014\ue014\ue007",
+        "text": "\ue00aas",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Apply Fly In from the animation gallery (Home, Down, Right twice, Enter)",
+        "enabled": true,
+        "id": "PPR1T04B",
+        "text": "\ue011\ue015\ue014\ue014\ue007",
         "type": "Type",
         "typing_delay": "600"
     },
