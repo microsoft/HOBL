@@ -100,10 +100,10 @@
     {
         "children": [],
         "delay": "4",
-        "description": "Expand the animation gallery and apply Fly In (S, Down, Right twice, Enter)",
+        "description": "Activate Animations KeyTips, expand the animation gallery, and apply Fly In (Alt+A, S, Down, Right twice, Enter)",
         "enabled": true,
         "id": "PPR1T04",
-        "text": "s\ue015\ue014\ue014\ue007",
+        "text": "\ue00aas\ue015\ue014\ue014\ue007",
         "type": "Type",
         "typing_delay": "600"
     },
