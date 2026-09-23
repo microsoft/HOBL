@@ -26,7 +26,6 @@ class ChargeOn(core.app_scenario.Scenario):
     Params.setOverride('global', 'prep_tools', '')
 
     # Get parameters
-    charge_on_call = Params.get('global', 'charge_on_call')
 
     widgets = Widgets()
 
@@ -38,20 +37,28 @@ class ChargeOn(core.app_scenario.Scenario):
         return
 
     def runTest(self):
+        charge_on_call = Params.get('global', 'charge_on_call')
+        is_local = Params.get('global', 'dut_ip') in ['127.0.0.1', 'localhost']
         logging.info("Attempting to turn on charger...")
-        self._status_window("Attempting to turn on charger...")
-        if self.charge_on_call == '':      
+        if is_local:
+            logging.info("Running on local machine.")
+            self._status_window("Attempting to turn on charger...")
+        if charge_on_call == '':
+            logging.info("No charge_on_call specified.")
             if self.checkState() == 2:
                 logging.info("Already on AC power.")
-                self._status_window("Already on AC power.")
+                if is_local:
+                    self._status_window("Already on AC power.")
                 return
             logging.warning("No charge_on_call specified.  Manually turn on charger to continue.")
-            self._status_window("Attempting to turn on charger...\nAutomated charging not set up.\nManually connect charger to continue.")
+            if is_local:
+                self._status_window("Attempting to turn on charger...\nAutomated charging not set up.\nManually connect charger to continue.")
             self.widgets.about("Connect Charger", "Manually connect charger.", break_callback=self.onAC)
         else:
-            self._host_call(self.charge_on_call)
+            self._host_call(charge_on_call)
             logging.info("Charger turned on.")
-            self._status_window("Charger turned on.")
+            if is_local:
+                self._status_window("Charger turned on.")
             # Don't check status with automation because DUT may be offline.
 
     def tearDown(self):

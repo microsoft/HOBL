@@ -26,8 +26,15 @@ class Tool(Scenario):
     Params.setDefault(module, 'backlight', '')
     Params.setDefault(module, 'display', '')
     Params.setDefault(module, 'storage', '')
+    Params.setDefault(module, 'camera', '')
+    Params.setDefault(module, 'audio', '')
+    Params.setDefault(module, 'display_light', '')
+    Params.setDefault(module, 'display_logic', '')
     Params.setDefault(module, 'sam', '')
+    Params.setDefault(module, 'touch', '')
+    Params.setDefault(module, 'trackpad', '')
     Params.setDefault(module, 'blade', '')
+    Params.setDefault(module, 'keyboard', '')
     Params.setDefault(module, 'retimers', '')
     Params.setDefault(module, 'total', '')
     Params.setDefault(module, 'total_active', '')
@@ -92,8 +99,15 @@ class Tool(Scenario):
                 backlight = self.calculateSubsystemPower(Params.get(self.module, 'backlight'), rails_group)
                 storage = self.calculateSubsystemPower(Params.get(self.module, 'storage'), rails_group)
                 sam = self.calculateSubsystemPower(Params.get(self.module, 'sam'), rails_group)
+                touch = self.calculateSubsystemPower(Params.get(self.module, 'touch'), rails_group)
+                trackpad = self.calculateSubsystemPower(Params.get(self.module, 'trackpad'), rails_group)
                 retimers = self.calculateSubsystemPower(Params.get(self.module, 'retimers'), rails_group)
                 blade = self.calculateSubsystemPower(Params.get(self.module, 'blade'), rails_group)
+                keyboard = self.calculateSubsystemPower(Params.get(self.module, 'keyboard'), rails_group)
+                camera = self.calculateSubsystemPower(Params.get(self.module, 'camera'), rails_group)
+                audio = self.calculateSubsystemPower(Params.get(self.module, 'audio'), rails_group)
+                display_light = self.calculateSubsystemPower(Params.get(self.module, 'display_light'), rails_group)
+                display_logic = self.calculateSubsystemPower(Params.get(self.module, 'display_logic'), rails_group)
                 rop, total_subsystem = 0, 0
 
                 results = {
@@ -105,8 +119,15 @@ class Tool(Scenario):
                     "PM Display Power (W)": display,
                     "PM Storage Power (W)": storage,
                     "PM SAM Power (W)": sam,
+                    "PM Touch Power (W)": touch,
+                    "PM Trackpad Power (W)": trackpad,
                     "PM Retimers Power (W)": retimers,
                     "PM Blade Power (W)": blade,
+                    "PM Camera Power (W)": camera,
+                    "PM Keyboard Power (W)": keyboard,
+                    "PM Audio Power (W)": audio,
+                    "PM Display Light Power (W)": display_light,
+                    "PM Display Logic Power (W)": display_logic,
                     # "PM Total Power (W)": total,
                     # "PM Total Active Power (W)": total_active,
                     # "PM Total Standby Power (W)": total_standby

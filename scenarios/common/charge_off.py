@@ -43,7 +43,6 @@ class ChargeOff(core.app_scenario.Scenario):
         if is_local:
             self._status_window("Attempting to turn off charger...")
         if charge_off_call == '':
-            logging.info("No charge_off_call specified.")
             if self.checkState() == 1:
                 logging.info("Already on DC power.")
                 if is_local:

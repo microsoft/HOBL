@@ -39,12 +39,14 @@ timeout_s = float(args.timeout)
 send_msg = " ".join(args.message)
 command = args.message[0] if args.message else ""
 
-# Quick commands reply almost instantly, so cap them at a short timeout. This
+# Start and stop reply almost instantly, so cap them at a short timeout. This
 # makes a misconfigured/unreachable DAQ (wrong IP, app down, firewall) fail in
-# seconds instead of hanging for the full -timeout window. Long-running commands
-# (Calibrate_Device) and data transfer keep the full -timeout.
+# seconds instead of hanging for the full -timeout window. Reset has a dedicated
+# timeout for active-transfer waiting and cleanup. Calibrate_Device and data
+# transfer keep the full -timeout.
 QUICK_COMMAND_TIMEOUT = 15.0
-QUICK_COMMANDS = {"DAQ_Start", "DAQ_Stop", "DAQ_Reset"}
+DAQ_RESET_TIMEOUT = 375.0
+QUICK_COMMANDS = {"DAQ_Start", "DAQ_Stop"}
 
 
 class Unreachable(Exception):
@@ -229,10 +231,15 @@ try:
         rcvd_msg = "OK"
     else:
         # All other commands (including the long-running Calibrate_Device) send
-        # one command and get back a single status reply. Quick commands use a
-        # short timeout so an unreachable DAQ fails fast; Calibrate_Device keeps
-        # the full -timeout window.
-        cmd_timeout = QUICK_COMMAND_TIMEOUT if command in QUICK_COMMANDS else timeout_s
+        # one command and get back a single status reply. Start and stop use a
+        # short timeout, reset allows the server's transfer wait plus cleanup,
+        # and Calibrate_Device keeps the full -timeout window.
+        if command == "DAQ_Reset":
+            cmd_timeout = DAQ_RESET_TIMEOUT
+        elif command in QUICK_COMMANDS:
+            cmd_timeout = QUICK_COMMAND_TIMEOUT
+        else:
+            cmd_timeout = timeout_s
         rcvd_msg = send_command(host, port, send_msg, cmd_timeout)
 except Unreachable as exc:
     rcvd_msg = "unreachable: {}".format(exc)

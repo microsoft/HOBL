@@ -47,12 +47,15 @@ def run(scenario):
     # TODO: Enable with parameters
     # period = 600
     period = 45
-    loops = int(float(duration) / period)
-    logging.info("Checking Loops: " + str(loops))
+    # loops = int(float(duration) / period)
+    # logging.info("Checking Loops: " + str(loops))
 
-    logging.info("uris before loop: " + str(scenario.bot_uris))
+    stop_time = time.time() + int(duration)
+
+    logging.info("Starting URIs: " + str(scenario.bot_uris))
     logging.info("First bot uri: " + str(scenario.bot_uris[0]))
-    for i in range(loops):
+    # for i in range(loops):
+    while time.time() < stop_time:
         # Get participant list
         result = get_participant_list(scenario, scenario.bot_uris[0])
         # If list is empty, or any bot is missing
@@ -75,6 +78,15 @@ def run(scenario):
             # get the missing bots
             missing = [bot for bot in scenario.bot_names if bot not in result]
             logging.warning(f"Bots missing from meeting: {missing}")
+
+            logging.debug(f"Number of participants in meeting: {len(result)}")
+
+            if len(result) >= (len(scenario.bot_names) + 1):  # +1 for the DUT
+                logging.warning("Correct or more participants than expected. Unable to determine missing bot, possible bot misconfiguration.")
+                logging.warning(f"Expected bots: {scenario.bot_names}, Actual participants: {result}")
+                logging.warning("Skipping re-addition of missing bots.")
+                continue
+
             # Re-Add the missing bots
             new_uris = add_bots_to_meeting(scenario, missing)
 
@@ -86,6 +98,9 @@ def run(scenario):
 
             if scenario.bots_force_subscribe_resolution != "0":
                     force_subscribe_bots(scenario)
+
+        # Reset Sleep timer
+        scenario._sleep_to_now()
 
         # sleep for period
         scenario._sleep_by(period)

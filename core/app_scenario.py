@@ -686,6 +686,11 @@ class Scenario(unittest.TestCase):
                         rpc.call_rpc(self.dut_ip, self.rpc_port,
                                      "GetVersion", [])
 
+                    # Load InputInject plugin since device may have rebooted or scneario forced is_alive to 0.
+                    if self.platform.lower() == 'macos':
+                        result = rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "/Users/Shared/hobl_bin/InputInject/InputInject.dll")
+                    else:
+                        result = rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "C:\\hobl_bin\\InputInject\\InputInject.dll")
                     self._screenshot(name="failedscreen.png")
                     logging.debug(
                         "Copying data from DUT due to test exception.")
