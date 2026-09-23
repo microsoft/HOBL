@@ -629,6 +629,15 @@
         "type": "End If"
     },
     {
+        "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1V9CTMV",
+        "include_path": "scenarios\\windows\\_library\\Teams\\teams_switch_to",
+        "type": "Include"
+    },
+    {
         "children": [
             {
                 "children": [],
@@ -646,15 +655,6 @@
                 "enabled": true,
                 "id": "1H28KCM",
                 "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1H6JM1M",
-                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
                 "type": "Include"
             },
             {
@@ -680,6 +680,15 @@
         "enabled": true,
         "id": "1FUNWTH",
         "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1H6JM1M",
+        "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+        "type": "Include"
     },
     {
         "children": [],
