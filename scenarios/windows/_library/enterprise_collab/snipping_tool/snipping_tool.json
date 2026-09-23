@@ -46,6 +46,14 @@
     },
     {
         "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1VAFL05",
+        "type": "Delay"
+    },
+    {
+        "children": [],
         "delay": "0",
         "description": "Top Half",
         "enabled": true,
@@ -63,7 +71,7 @@
     {
         "capture_id": "1L9NXAM",
         "children": [],
-        "delay": "2",
+        "delay": "3",
         "description": "Screen Select",
         "enabled": true,
         "exception_on": "No match",
@@ -132,5 +140,13 @@
             }
         ],
         "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "Save Snippet",
+        "enabled": true,
+        "id": "1VAFJ5R",
+        "type": "Delay"
     }
 ]
