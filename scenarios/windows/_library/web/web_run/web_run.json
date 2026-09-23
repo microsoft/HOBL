@@ -179,7 +179,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V8X4",
+                "id": "WEB_RUN@AMAZON_BSG",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_amazon_bsg",
                 "params": [
                     {

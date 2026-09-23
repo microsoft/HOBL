@@ -238,7 +238,7 @@ class Tab(QtWidgets.QWidget):
 
     def update_mouse_press(self, event, primary):
         # self.labelImage.setFocus()
-        if self.mode_select or self.mode_record or self.action_type == "Capture" or self.action_type == "Check":  # Save coordinates for selection
+        if self.mode_select or self.mode_record or self.action_type == "Capture" or self.action_type == "PerfCapture" or self.action_type == "Check":  # Save coordinates for selection
             dut_x, dut_y = self.image_to_dut_coords_e(event)
             w = self.selection_width * self.screen().devicePixelRatio()
             h = self.selection_height * self.screen().devicePixelRatio()
@@ -289,7 +289,7 @@ class Tab(QtWidgets.QWidget):
                 self.actionModel.setIcon(self.working_dir, action)
                 self.mode_select = False
                 self.labelImage.clearSelect()
-            if self.action_type == "Capture" or self.action_type == "Check":
+            if self.action_type == "Capture" or self.action_type == "PerfCapture" or self.action_type == "Check":
                 self.region_x = int(event.position().x())
                 self.region_y = int(event.position().y())
                 self.mode_region = True
@@ -482,7 +482,7 @@ class Tab(QtWidgets.QWidget):
     ###
 
     def cancel_pressed(self):
-        if self.action_type in ["Capture", "Check", "Typing", "Scroll"]:
+        if self.action_type in ["Capture", "PerfCapture", "Check", "Typing", "Scroll"]:
             self.action_type = ""
             self.action_typing_str = ""
             self.mode_typing = False
@@ -509,6 +509,8 @@ class Tab(QtWidgets.QWidget):
     def ok_pressed(self):
         if self.action_type == "Capture":
             self.region_capture_pressed()
+        elif self.action_type == "PerfCapture":
+            self.register_perf_capture()
         elif self.action_type == "Check":
             self.region_check_pressed()
         elif self.action_type == "Typing":
@@ -675,6 +677,34 @@ class Tab(QtWidgets.QWidget):
         if self.mode_record == False:
             # self.unhighlight_button(self.ui.screenCapButton)
             pass
+
+    def register_perf_capture(self):
+        self.labelImage.setFocus()
+        if self.action_type == "PerfCapture":
+            dut_x, dut_y = self.image_to_dut_coords(self.region_x, self.region_y)
+            dut_w = self.region_w * self.hostPixelRatio / self.labelImage.r
+            dut_h = self.region_h * self.hostPixelRatio / self.labelImage.r
+            x_frac = max(0, dut_x / self.main_win.dut_screen_width)
+            y_frac = max(0, dut_y / self.main_win.dut_screen_height)
+            w_frac = min(1.0, dut_w / self.main_win.dut_screen_width)
+            h_frac = min(1.0, dut_h / self.main_win.dut_screen_height)
+
+            action = self.actionModel.appendAction(self.working_dir, type="Register Perf Capture", x="{:.3f}".format(x_frac), y="{:.3f}".format(y_frac), w="{:.3f}".format(w_frac), h="{:.3f}".format(h_frac), delay="0")
+            self.capture_screen(action[u'file_name'][0], x=int(dut_x), y=int(dut_y), w=int(dut_w), h=int(dut_h), thumbnail=True)
+            self.actionModel.setIcon(self.working_dir, action)
+
+            self.action_type = ""
+            self.mode_region = False
+            self.labelImage.clearSelect()
+            self.app.restoreOverrideCursor()
+            self.main_win.ui.okButton.hide()
+            self.main_win.ui.cancelButton.hide()
+
+        else:
+            self.action_type = "PerfCapture"
+            self.app.setOverrideCursor(Qt.CursorShape.CrossCursor)
+            self.main_win.ui.okButton.show()
+            self.main_win.ui.cancelButton.show()
 
     def typing_pressed(self):
         self.labelImage.setFocus()
@@ -891,7 +921,15 @@ class Tab(QtWidgets.QWidget):
             # Append action
             # relative_path = os.path.relpath(folder, self.working_dir)
             action = self.actionModel.appendAction(self.working_dir, type="Include", include_path=folder, params=params)
-    
+
+    def insert_action_pressed(self):
+        insert_action = self.actionModel.appendAction(self.working_dir, type="Insert Actions", relationship="during", target_id="<INVALID>", delay="0.0")
+        self.actionModel.appendAction(self.working_dir, type="End Insert", delay="0.0")
+        self.actionList.expandAll()
+        index = self.actionModel.getIndexFromAction(self.actionModel.root.index(), insert_action)
+        self.actionModel.setInsertionPoint(index)
+        self.actionModel.layoutChanged.emit()
+
     def new_pressed(self):
         # Prompt for folder
         new_dir, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Enter new name scenario name', self.settings.get("last_folder"), options=QtWidgets.QFileDialog.Option.ShowDirsOnly)

@@ -109,6 +109,7 @@ class MainWindow(QtWidgets.QMainWindow, main_form):
         menu.setToolTipsVisible(True)
         menu.addAction(self.menu_action("Full Screen", "Capture the full screen.", self.screen_capture_pressed))
         menu.addAction(self.menu_action("Screen Region", "Drag a region of the screen to capture.", self.region_capture_pressed))
+        menu.addAction(self.menu_action("Register Perf Capture", "Indicate a portion of the screen to record for responsiveness measurement.", self.register_perf_capture))
         menu.setStyleSheet(stylesheet)
         self.ui.captureButton.setMenu(menu)
         self.ui.captureButton.setStyleSheet(stylesheet)
@@ -173,6 +174,7 @@ class MainWindow(QtWidgets.QMainWindow, main_form):
         menu.addSeparator()
         menu.addAction(self.menu_action("Try", "Insert an Try/Except block.", self.try_block_pressed))
         menu.addAction(self.menu_action("Include", "Insert another module.", self.include_pressed))
+        menu.addAction(self.menu_action("Insert Actions", "Inserts actions relative to an action in another scenario.", self.insert_action_pressed))
         menu.addAction(self.menu_action("Delay", "Wait for specified seconds.", self.delay_pressed))
         menu.addAction(self.menu_action("Delay To", "Wait until specified seconds from beginning of test.", self.delay_to_pressed))
         menu.addAction(self.menu_action("End", "Return control to parent.", self.end_pressed))
@@ -473,6 +475,12 @@ class MainWindow(QtWidgets.QMainWindow, main_form):
             return
         w.screen_capture_pressed()
 
+    def register_perf_capture(self):
+        w = self.tab_widget.currentWidget()
+        if not w:
+            return
+        w.register_perf_capture()
+
     def typing_pressed(self):
         w = self.tab_widget.currentWidget()
         if not w:
@@ -634,7 +642,13 @@ class MainWindow(QtWidgets.QMainWindow, main_form):
         if not w:
             return
         w.include_pressed()
-    
+
+    def insert_action_pressed(self):
+        w = self.tab_widget.currentWidget()
+        if not w:
+            return
+        w.insert_action_pressed()
+
     def new_pressed(self):
         tab_count = self.tab_widget.count()
         tab_title = "Untitled-"+str(tab_count)

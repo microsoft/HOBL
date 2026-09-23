@@ -150,6 +150,8 @@ class Scenario(unittest.TestCase):
         if self.bare:
             return
 
+        self.action_id_dict = Singleton()
+
         logging.debug("ORDER app_scenario __init__ for: " + self._module)
 
         if "is_tool" in kwargs:
@@ -3144,11 +3146,59 @@ class Scenario(unittest.TestCase):
             # For setting the scope of parameters
             action["component"] = component
 
+            # old_component_path = action["component_path"] if "component_path" in action else None
+            # if "component_path" not in action:
+            #     action["component_path"] = component
+            # else:
+            #     action["component_path"] += "/" + component
+
+            old_id_path = action["id_path"] if "id_path" in action else None
+            if "id_path" not in action:
+                action["id_path"] = action["id"]
+            else:
+                action["id_path"] += "." + action["id"]
+
             if directory_offset == None:
                 directory_offset = self.json_parent_dir
                 if log_output:
                     logging.debug("Using json_parent_dir as directory_offset: " + str(directory_offset))
             # logging.debug("Directory offset: " + directory_offset)
+
+            if action["type"] == "Insert Actions":
+                target_id = action["target_id"] if "target_id" in action else None
+                if target_id:
+                    self.action_id_dict[target_id] = {"action_type": "insert", "relationship": action["relationship"], "actions": action["children"]}
+                continue
+
+            # TODO: check more of the id path
+            append_after = False
+            if action["id"] in self.action_id_dict:
+                for child_action in self.action_id_dict[action["id"]]["actions"]:
+                    child_action["id_path"] = old_id_path
+
+                if self.action_id_dict[action["id"]]["action_type"] == "insert":
+                    relationship = self.action_id_dict[action["id"]]["relationship"]
+                    if relationship == "during":
+                        # Wrap the inserted actions with an "Insert Actions Begin" and "Insert Actions End" which will manage the appropriate delay.
+                        new_action = {}
+                        new_action["type"] = "Insert Actions Begin"
+                        new_action["description"] = f"Inserting actions during {action['id']}"
+                        new_action["id"] = "AUTO"
+                        new_action["component"] = component
+                        flat_json.append(new_action)
+                        flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+                        new_action = {}
+                        new_action["type"] = "Insert Actions End"
+                        new_action["description"] = f"Finished inserting actions during {action['id']}"
+                        new_action["id"] = "AUTO"
+                        new_action["delay"] = action["delay"]
+                        new_action["component"] = component
+                        flat_json.append(new_action)
+                        continue
+                    if relationship == "before":
+                        flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+                    if relationship == "after":
+                        append_after = True
 
             # If the action is an include, read the json from the file and flatten it into the current json object
             if action["type"] == "Include":
@@ -3177,6 +3227,9 @@ class Scenario(unittest.TestCase):
                 # logging.debug("Including: " + full_path)
                 with open(full_path, 'r') as file:
                     data = json.load(file)
+                    for include_action in data:
+                        # include_action["component_path"] = action["component_path"]
+                        include_action["id_path"] = action["id_path"]
                 flat_json = flat_json + self._flatten_json(data, os.path.dirname(full_path), component=base_folder)
 
                 # Add in delete params action here
@@ -3194,12 +3247,19 @@ class Scenario(unittest.TestCase):
 
             # Add the action to the flat json
             flat_json.append(action)
-
+                
             # # If the action has children, flatten them in the same way
             if "children" in action:
                 # logging.debug("Flattening children of: " + str(action["id"]))
+                for child_action in action["children"]:
+                    # if old_component_path is not None:
+                    #     child_action["component_path"] = old_component_path
+                    child_action["id_path"] = old_id_path
                 action["children"] = self._flatten_json(action["children"], directory_offset, component=component)
-            
+
+            if append_after:
+                flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+    
             # If the templates are located in a different directory, adjust the path of the image
             # This is used for include to adjust the image paths to the correct directory
             if directory_offset is not None and 'file_name' in action:
@@ -3238,15 +3298,16 @@ class Scenario(unittest.TestCase):
         component = None
         if "component" in action:
             component = action["component"]
-        
+
+        # component_path = None
+        # if "component_path" in action:
+        #     component_path = action["component_path"]
+
         caller = None
         if "caller" in action:
             caller = action["caller"]
 
-        if log_output:
-            logging.debug(f"Processing action: {component}:{action}")
-
-        if action["type"] in ["Information", "Comment", "Setup", "Run Test", "Teardown", "Set Default", "Set User Default", "Loop", "End Loop", "If", "Else If", "Else", "End If", "Try", "Except", "End Try", "On Success"]:
+        if action["type"] in ["Information", "Comment", "Setup", "Run Test", "Teardown", "Set Default", "Set User Default", "Loop", "End Loop", "If", "Else If", "Else", "End If", "Try", "Except", "End Try", "End Insert", "On Success"]:
             return 0
         
         self.component = component
@@ -3254,11 +3315,11 @@ class Scenario(unittest.TestCase):
 
         if action['id'] != "AUTO":
             if action['type'] in ["Set", "Set Default", "Increment", "Decrement"]:
-                logging.info(f"[{self.daq_accumulated_time}] Action {action['id']}: {action['type']} {action['name']}, {action['value']}")
+                logging.info(f"[{self.daq_accumulated_time}] ({action['component']}) Action {action['id']}: {action['type']} {action['name']}, {action['value']}")
             elif action['type'] in ["Set Display", "Window Move"]:
-                logging.info(f"[{self.daq_accumulated_time}] Action {action['id']}: {action['type']}, {action['screen']}")
+                logging.info(f"[{self.daq_accumulated_time}] ({action['component']}) Action {action['id']}: {action['type']}, {action['screen']}")
             else:
-                logging.info(f"[{self.daq_accumulated_time}] Action {action['id']}: {action['type']} {action['description']}")
+                logging.info(f"[{self.daq_accumulated_time}] [{action['component']}] Action {action['id']}: {action['type']} {action['description']}")
 
             # Append the action to the csv of actions
             if self.log_scenario_events:
@@ -3512,6 +3573,17 @@ class Scenario(unittest.TestCase):
 
         elif action["type"] == "Window Maximize":
             self._send_window_maximize()
+
+        elif action["type"] == "Insert Actions Begin":
+            self.insert_actions_time = self.scenario_accumulated_time
+            logging.debug(f"Inserting actions begin: {self.scenario_accumulated_time}")
+            return 0
+        
+        elif action["type"] == "Insert Actions End":
+            t = float(action["delay"]) + self.insert_actions_time
+            self._sleep_to(t)
+            logging.debug(f"Inserting actions end: Delaying to {t}")
+            return 0
 
         # Delete the parameters from the params dictionary
         elif action["type"] == "Delete Params":
@@ -4396,3 +4468,9 @@ class thread_with_exception(threading.Thread):
     def force_exception(self):
         sys.exit()
 
+
+class Singleton(dict):
+  def __new__(cls):
+    if not hasattr(cls, 'instance'):
+      cls.instance = super(Singleton, cls).__new__(cls)
+    return cls.instance

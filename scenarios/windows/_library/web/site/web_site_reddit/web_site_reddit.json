@@ -139,7 +139,7 @@
                 "delay": "60",
                 "description": "Watch video 60s",
                 "enabled": true,
-                "id": "UC69K4",
+                "id": "WEB_SITE_REDDIT@VIDEO",
                 "type": "Delay"
             },
             {
