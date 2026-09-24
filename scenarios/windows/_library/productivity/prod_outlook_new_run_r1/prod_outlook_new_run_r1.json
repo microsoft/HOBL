@@ -78,6 +78,14 @@
     },
     {
         "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1VAY8AM",
+        "type": "Delay"
+    },
+    {
+        "children": [],
         "delay": "2",
         "description": "Discard the open email draft",
         "enabled": true,
