@@ -33,21 +33,6 @@
             <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000980" />
           </Stop>
         </Region>
-        <Region Guid="{4b4df1a2-a556-1f64-5de4-a1753d428dda}" Name="ExcelRecalcBegin_ExcelRecalcEnd" FriendlyName="ExcelRecalc">
-          <Match>
-            <Event TID="true" PID="true">
-              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
-            </Event>
-          </Match>
-          <Start>
-            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
-            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000232" />
-          </Start>
-          <Stop>
-            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
-            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000233" />
-          </Stop>
-        </Region>
         <Region Guid="{f508bd27-4b45-6dd5-f8cc-9b83a9d044ec}" Name="ExcelInsertSheetStart_ExcelInsertSheetEnd" FriendlyName="ExcelInsertSheet">
           <Match>
             <Event TID="true" PID="true">
