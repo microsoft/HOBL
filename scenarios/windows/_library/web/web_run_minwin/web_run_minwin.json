@@ -705,22 +705,13 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1CAHJ72",
-                "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
                 "id": "1LA9U5E",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_wikipedia",
                 "params": [
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[load_only]",
@@ -838,22 +829,13 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1CAHJP9",
-                "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
                 "id": "1LA9VLW",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_search_belgium",
                 "params": [
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[load_only]",
@@ -964,22 +946,13 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1CAHKA2",
-                "include_path": "scenarios\\windows\\_library\\web\\web_new_tab",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
                 "id": "1LA9VTY",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_the_verge",
                 "params": [
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[load_only]",
