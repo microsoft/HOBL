@@ -2050,7 +2050,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "ExcelSave"
+                "value": "ExcelClose"
             }
         ],
         "type": "Include"
@@ -2084,7 +2084,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "WordSave"
+                "value": "WordClose"
             }
         ],
         "type": "Include"
@@ -2118,7 +2118,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "PPT_Save"
+                "value": "PPTClose"
             }
         ],
         "type": "Include"
