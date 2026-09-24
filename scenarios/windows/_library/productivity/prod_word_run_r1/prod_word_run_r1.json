@@ -11,15 +11,6 @@
     },
     {
         "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "V2N2MH",
-        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
-        "type": "Include"
-    },
-    {
-        "children": [],
         "delay": "0.0",
         "description": "",
         "enabled": true,
@@ -110,18 +101,13 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "V2N2PW",
-        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "id": "1VAV26N",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
         "params": [
             {
-                "name": "[phase_category]",
+                "name": "[event_tag]",
                 "val_options": "",
-                "value": "prod"
-            },
-            {
-                "name": "[phase_name]",
-                "val_options": "",
-                "value": "run_word"
+                "value": "WordR1"
             }
         ],
         "type": "Include"
