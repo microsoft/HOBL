@@ -56,6 +56,22 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1VE3P24",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "PowerPointR2PasteContent"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "5",
         "description": "Paste the previously copied content into the new slide (Ctrl+V)",
         "enabled": true,
@@ -107,13 +123,19 @@
     },
     {
         "children": [],
-        "delay": "5",
-        "description": "Save the PowerPoint deck (Ctrl+S)",
+        "delay": "0",
+        "description": "",
         "enabled": true,
-        "id": "PPR2T04",
-        "text": "\ue009s",
-        "type": "Type",
-        "typing_delay": "400"
+        "id": "1VE3PH4",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "PowerPointR2"
+            }
+        ],
+        "type": "Include"
     },
     {
         "children": [],

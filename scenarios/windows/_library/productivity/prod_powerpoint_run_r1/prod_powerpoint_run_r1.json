@@ -109,6 +109,22 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1VE3M8N",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "PowerPointR1AddAnimation"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "4",
         "description": "Apply Fly In from the animation gallery (Home, Down, Right twice, Enter)",
         "enabled": true,
@@ -137,13 +153,19 @@
     },
     {
         "children": [],
-        "delay": "5",
-        "description": "Save the PowerPoint deck (Ctrl+S)",
+        "delay": "0",
+        "description": "",
         "enabled": true,
-        "id": "PPR1T03",
-        "text": "\ue009s",
-        "type": "Type",
-        "typing_delay": "400"
+        "id": "1VE3NE1",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "PowerPointR1"
+            }
+        ],
+        "type": "Include"
     },
     {
         "children": [],

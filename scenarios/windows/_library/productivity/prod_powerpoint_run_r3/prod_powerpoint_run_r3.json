@@ -46,6 +46,22 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1VE3R9X",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "PowerPointR3PasteContent"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "5",
         "description": "Paste the previously copied content into the new slide (Ctrl+V)",
         "enabled": true,
@@ -71,6 +87,22 @@
         "text": "\ue00afea",
         "type": "Type",
         "typing_delay": "800"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1VE3RMH",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "PowerPointR3ExportPDF"
+            }
+        ],
+        "type": "Include"
     },
     {
         "children": [],
