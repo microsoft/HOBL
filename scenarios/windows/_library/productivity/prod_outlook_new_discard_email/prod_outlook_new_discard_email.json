@@ -21,6 +21,14 @@
     },
     {
         "children": [],
+        "delay": "3",
+        "description": "",
+        "enabled": true,
+        "id": "1VAY815",
+        "type": "Delay"
+    },
+    {
+        "children": [],
         "delay": "2",
         "description": "Confirm discarding the email (Enter)",
         "enabled": false,
@@ -49,13 +57,13 @@
         "capture_id": "1UY9HRN",
         "children": [],
         "delay": "2",
-        "description": "Discard OK",
+        "description": "",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1UY9JU0.png"
+            "image_1VC496Y.png"
         ],
-        "id": "1UY9JU0",
+        "id": "1VC496Y",
         "match_threshold": "",
         "primary": true,
         "scale": "",
