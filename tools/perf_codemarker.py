@@ -37,7 +37,7 @@ class Tool(Scenario):
             return
 
         etl_trace = self.scenario.result_dir + "\\" + self.scenario.testname + ".etl"
-        metrics_output = self.scenario.result_dir + "\\" + self.scenario.testname + "_CodeMarkerMetrics.csv"
+        metrics_output = self.scenario.result_dir + "\\" + self.scenario.testname + "_PerfMetrics.csv"
         parser = "utilities\\proprietary\\ParseCodeMarkers\\cmparser.exe"
         manifest = "utilities\\proprietary\\ParseCodeMarkers\\CMEvents.xml"
 
