@@ -1014,7 +1014,7 @@
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "1"
                     },
                     {
                         "name": "[load_only]",
