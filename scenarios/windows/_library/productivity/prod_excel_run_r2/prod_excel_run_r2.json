@@ -147,7 +147,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "excel_table_format"
+                "value": "ExcelFormatTable"
             }
         ],
         "type": "Include"
@@ -247,7 +247,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "excel_save"
+                "value": "ExcelR2"
             }
         ],
         "type": "Include"

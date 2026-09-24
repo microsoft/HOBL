@@ -22,10 +22,10 @@
     {
         "children": [],
         "delay": "2",
-        "description": "Range (E2:E400001)",
+        "description": "Range (C2:C400001)",
         "enabled": true,
         "id": "1TK615K",
-        "text": "E2:E400001",
+        "text": "C2:C400001\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
@@ -74,26 +74,6 @@
     },
     {
         "children": [],
-        "delay": "2",
-        "description": "Select Current Data only",
-        "enabled": true,
-        "id": "1TK6ALU",
-        "text": "\ue015",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "2",
-        "description": "Enter",
-        "enabled": true,
-        "id": "1TK6AX8",
-        "text": "\ue007",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
@@ -103,20 +83,28 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "sort_start"
+                "value": "ExcelSortData"
             }
         ],
         "type": "Include"
     },
     {
+        "capture_id": "1TK68PR",
         "children": [],
         "delay": "2",
-        "description": "Enter",
+        "description": "",
         "enabled": true,
-        "id": "1TK6C84",
-        "text": "\ue007",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VAMWNY.png"
+        ],
+        "id": "1VAMWNY",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     },
     {
         "children": [],
@@ -125,21 +113,5 @@
         "enabled": true,
         "id": "1TK6EWW",
         "type": "Delay"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1TK6EKY",
-        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "sort_end"
-            }
-        ],
-        "type": "Include"
     }
 ]

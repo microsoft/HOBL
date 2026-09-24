@@ -107,7 +107,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "pivot_insert_start"
+                "value": "ExcelPivotInsert"
             }
         ],
         "type": "Include"
@@ -131,22 +131,6 @@
         "text": "\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1TK6EKY",
-        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "pivot_insert_end"
-            }
-        ],
-        "type": "Include"
     },
     {
         "children": [],

@@ -87,7 +87,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "excel_export_to_pdf"
+                "value": "ExcelPdfExport"
             }
         ],
         "type": "Include"
