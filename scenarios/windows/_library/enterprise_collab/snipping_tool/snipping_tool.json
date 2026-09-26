@@ -1,0 +1,136 @@
+[
+    {
+        "author": "idc",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-01-28",
+        "description": "",
+        "enabled": true,
+        "id": "1EE6FE8",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1R60F61",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1LEKCYH",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "SnippingToolLaunch"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Launch Snipping Tool",
+        "enabled": true,
+        "id": "1LEHK1R",
+        "text": "\ue03d\ue008s",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Top Half",
+        "enabled": true,
+        "file_name": [
+            "image_1L9NXAM.png"
+        ],
+        "h": "0.489",
+        "id": "1L9NXAM",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.998",
+        "x": "0.000",
+        "y": "0.003"
+    },
+    {
+        "capture_id": "1L9NXAM",
+        "children": [],
+        "delay": "2",
+        "description": "Screen Select",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1L9NY43.png"
+        ],
+        "id": "1L9NY43",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Top Half",
+        "enabled": true,
+        "file_name": [
+            "image_1L9P0VY.png"
+        ],
+        "h": "0.391",
+        "id": "1L9P0VY",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.995",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "1L9P0VY",
+        "children": [],
+        "delay": "2",
+        "description": "Capture Save to Clipboard",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1L9P14M.png"
+        ],
+        "id": "1L9P14M",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1R60F9N",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "invalid"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "invalid"
+            }
+        ],
+        "type": "Include"
+    }
+]
