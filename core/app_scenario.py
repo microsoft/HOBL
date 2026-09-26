@@ -43,6 +43,7 @@ import cv2 as cv
 import numpy as np
 import qoi
 import imutils
+from core.template_match import TemplateMatcher
 from PIL import Image
 from urllib.parse import (
     urlparse,
@@ -50,7 +51,6 @@ from urllib.parse import (
 )
 import zipfile
 import re
-import copy
 from datetime import datetime
 from pathlib import Path
 
@@ -2300,228 +2300,51 @@ class Scenario(unittest.TestCase):
     dialation = True                                # Apply dialation to the screenshot and template after edge detection and before blur
     dialation_kernel = (3,3)                        # Dialation kernel size
 
+    # Build a TemplateMatcher configured from this scenario's current template-matching settings.
+    def _build_template_matcher(self):
+        # Resolve the device display scale (used for DPI standardization).
+        if self.dut_scaling_override != "":
+            device_scale = float(self.dut_scaling_override)
+            logging.debug(f"Overriding DUT scale to: {device_scale}")
+        else:
+            device_scale = self._get_screen_scale(self.current_screen)
+
+        debug_dir = os.path.join(self.result_dir, "image_matching")
+        return TemplateMatcher(
+            json_parent_dir=self.json_parent_dir,
+            device_scale=device_scale,
+            threshold=self.default_threshold,
+            scale_factors=self.default_scale,
+            edge_detect=self.edge_detect,
+            edge_detect_thresholds=self.edge_detect_thresholds,
+            edge_blur=self.edge_blur,
+            edge_blur_kernel=self.edge_blur_kernel,
+            upscale=self.upscale,
+            template_edge_crop=self.template_edge_crop,
+            template_edge_crop_amount=self.template_edge_crop_amount,
+            standardize_dpi=self.standardize_dpi,
+            dialation=self.dialation,
+            dialation_kernel=self.dialation_kernel,
+            debug_dir=debug_dir,
+            output_images=self.output_images,
+        )
+
     # Get the point of the template in the screenshot
     def _get_point_by_template(self, template, screenshot=None, threshold=None, method=default_template_method, scale_factors=default_scale, offsets=(0.5, 0.5), edge_detect_thresholds=[]):
-        # Check if the threshold is provided
-        if threshold is None:
-            threshold = self.default_threshold
-        
-        if edge_detect_thresholds == []:
-            edge_detect_thresholds = self.edge_detect_thresholds
-        logging.debug(f"Using edge detect thresholds: {edge_detect_thresholds}")
-
         # Load the screenshot in opencv
         if screenshot is None:
             # Capture the screen if no screenshot is provided
-            screen_img = self._capture_screen()
+            screenshot = self._capture_screen()
             assert False # TODO: Just making sure we don't go here for now.
         elif isinstance(screenshot, str):
             # Load the screenshot from a file if a string is provided
-            screen_img = cv.imread(os.path.join(self.json_parent_dir, str(screenshot)), cv.IMREAD_GRAYSCALE)
+            screenshot = cv.imread(os.path.join(self.json_parent_dir, str(screenshot)), cv.IMREAD_GRAYSCALE)
             assert False # TODO: Just making sure we don't go here for now.
-        else:
-            # Use the provided screenshot if it is a numpy array already
-            screen_img = copy.deepcopy(screenshot)
-        screen_img = cv.cvtColor(screen_img, cv.COLOR_BGR2GRAY)
 
-        if self.upscale != 1.0:
-            screen_img = cv.resize(screen_img, (int(screen_img.shape[1] * (self.upscale)), int(screen_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR)
+        # Delegate the actual matching to the shared TemplateMatcher.
+        matcher = self._build_template_matcher()
+        return matcher.get_point(template, screenshot, threshold=threshold, method=method, scale_factors=scale_factors, offsets=offsets, edge_detect_thresholds=edge_detect_thresholds)
 
-        screen_gray_img = screen_img
-
-        # Load the recorded template in opencv
-        if isinstance(template, str):
-            # logging.debug("Loading template: " + str(template))
-            # Load the template from a file if a string is provided
-            template_img = cv.imread(os.path.join(self.json_parent_dir, template))
-            template_img = cv.cvtColor(template_img, cv.COLOR_BGR2GRAY)
-        else:
-            # Use the provided template if it is a numpy array already
-            raise Exception("Template must be file path in order to read dpi! Unable to use preloaded template.")
-            template_img = template
-
-        # Check if the template and screenshot are valid and that the template is smaller than the screenshot
-        assert template_img is not None, "Template not found"
-        assert screen_img is not None, "Screenshot not found"
-
-        if self.upscale != 1.0:
-            start_time = datetime.now()
-            template_img = cv.resize(template_img, (int(template_img.shape[1] * (self.upscale)), int(template_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR)
-            # logging.debug(f"Template upscale took: {(datetime.now() - start_time).total_seconds()}")
-
-        if self.standardize_dpi:
-            start_time = datetime.now()
-            # Adjust the scale of the template to match the device Windows scaling
-            template_dpi = int(Image.open(os.path.join(self.json_parent_dir, template)).info['dpi'][0])
-            if (template_dpi == 0):
-                logging.warning(f"Template DPI is 0, defaulting to 96")
-                template_dpi = 96
-            factor = round(template_dpi / 24)
-            template_dpi = factor * 24
-            device_dpi = int(self._get_screen_scale(self.current_screen) * 96)
-            if (self.dut_scaling_override != ""):
-                device_dpi = int(float(self.dut_scaling_override) * 96)
-                logging.debug(f"Overrideing DUT DPI to: {device_dpi}")
-            logging.debug(f"DPI - Template: {template_dpi}, Device: {device_dpi}")
-            # logging.info(f"Screen res before: {screen_img.shape[1]} x {screen_img.shape[0]}")
-            # logging.info(f"template res before: {template_img.shape[1]} x {template_img.shape[0]}")
-            if template_dpi > device_dpi:
-                scale_factor = template_dpi / device_dpi
-                logging.debug(f"Scaling screen capture by {scale_factor:.2f} to match template DPI")
-                screen_img = cv.resize(screen_img, (int(screen_img.shape[1] * scale_factor), int(screen_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR)
-            elif template_dpi < device_dpi:
-                scale_factor = device_dpi / template_dpi
-                logging.debug(f"Scaling template by {scale_factor:.2f} to match device DPI")
-                template_img = cv.resize(template_img, (int(template_img.shape[1] * scale_factor), int(template_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR)
-            else:
-                # They are the same DPI and no need to resize
-                pass
-            # logging.info(f"Screen res after: {screen_img.shape[1]} x {screen_img.shape[0]}")
-            # logging.info(f"template res after: {template_img.shape[1]} x {template_img.shape[0]}")
-
-            template_resize_img = template_img
-            # logging.debug(f"Template DPI standardization took: {(datetime.now() - start_time).total_seconds()}")
-
-        if self.edge_blur:
-            start_time = datetime.now()
-            screen_img = cv.GaussianBlur(screen_img,(3, 3),0)
-            # logging.debug(f"Screen blur took: {(datetime.now() - start_time).total_seconds()}")
-
-        # Adjust the screenshot (outside of loop to avoid multiple adjustments)
-        if self.edge_detect:
-            start_time = datetime.now()
-            screen_img = cv.Canny(screen_img, edge_detect_thresholds[0], edge_detect_thresholds[1])
-            screen_edge_img = screen_img
-            # logging.debug(f"Screen edge detection took: {(datetime.now() - start_time).total_seconds()}")
-
-        # Apply dilation
-        if self.dialation:
-            start_time = datetime.now()
-            kernel = cv.getStructuringElement(cv.MORPH_RECT, self.dialation_kernel)
-            screen_img = cv.dilate(screen_img, kernel, iterations=1)
-            # logging.debug(f"Screen dialation took: {(datetime.now() - start_time).total_seconds()}")
-
-        if self.edge_blur:
-            start_time = datetime.now()
-            screen_img = cv.GaussianBlur(screen_img,( self.edge_blur_kernel, self.edge_blur_kernel),0)
-            # logging.debug(f"Screen blur took: {(datetime.now() - start_time).total_seconds()}")
-
-        # Make sure the scale factors are in a list even if only one is provided
-        if not isinstance(scale_factors, list):
-            scale_factors = [scale_factors]
-
-        best_match = (False, 0)
-        next_best_match_val = 0
-        # Loop through the scaled templates and find the best match
-        for scale in scale_factors:
-            resized_template = imutils.resize(template_img, width=int(template_img.shape[1] * scale))
-            h_screen = screen_img.shape[0]
-            w_screen = screen_img.shape[1]
-            h_template = int(template_img.shape[0] * scale)
-            w_template = int(template_img.shape[1] * scale)
-            # if (screen_img.shape[0] < int(template_img.shape[0] * scale)) or (screen_img.shape[1] < int(template_img.shape[1] * scale)):
-            if (h_screen < h_template) or (w_screen < w_template):
-                # Skip loop, template is larger than screenshot
-                continue
-
-            # Crop the edges of the template
-            if self.template_edge_crop:
-                resized_template = resized_template[self.template_edge_crop_amount:-self.template_edge_crop_amount, self.template_edge_crop_amount:-self.template_edge_crop_amount]
-                h_template -= (self.template_edge_crop_amount * 2)
-                w_template -= (self.template_edge_crop_amount * 2)
-
-            # Convert the offsets to pixel values in the template
-            # logging.debug(f"Original click point: {offsets}")
-            pixel_offsets = (float(offsets[0]) * resized_template.shape[1], float(offsets[1]) * resized_template.shape[0])
-
-            # Blur Edge detection images
-            if self.edge_blur:
-                start_time = datetime.now()
-                resized_template = cv.GaussianBlur(resized_template, (3, 3), 0)
-                # logging.debug(f"Template blur took: {(datetime.now() - start_time).total_seconds()}")
-
-            # Edge detection
-            if self.edge_detect:
-                start_time = datetime.now()
-                resized_template = cv.Canny(resized_template, edge_detect_thresholds[0], edge_detect_thresholds[1])
-                resized_edge_template = resized_template
-                # logging.debug(f"Template dge detection took: {(datetime.now() - start_time).total_seconds()}")
-
-            # Apply dilation
-            if self.dialation:
-                start_time = datetime.now()
-                kernel = cv.getStructuringElement(cv.MORPH_RECT, self.dialation_kernel)
-                resized_template = cv.dilate(resized_template, kernel, iterations=1)
-                # logging.debug(f"Template dialation took: {(datetime.now() - start_time).total_seconds()}")
-
-            # Blur Edge detection images
-            if self.edge_blur:
-                start_time = datetime.now()
-                resized_template = cv.GaussianBlur(resized_template, (self.edge_blur_kernel, self.edge_blur_kernel), 0)
-                # logging.debug(f"Template blur took: {(datetime.now() - start_time).total_seconds()}")
-
-            if self.output_images:
-                template_basename = os.path.basename(template)
-                # self._save_screen("resized_template_" + "_scale_" + str(scale) + str(template_basename), template_resize_img)
-                self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), resized_template)
-                # self._save_screen("scaled_edge_template_" + "_scale_" + str(scale) + str(template_basename), resized_edge_template)
-                # self._save_screen("screen_gray_img_for_matching_with_" + str(template_basename), screen_gray_img)
-                self._save_screen("capture_img_" + str(template_basename), screen_img)
-                # self._save_screen("screen_edge_img_for_matching_with_" + str(template_basename), screen_edge_img)
-
-            # Apply template matching
-            start_time = datetime.now()
-            result = cv.matchTemplate(screen_img, resized_template, method)
-            # min_match_val, max_match_val, min_location, max_location = cv.minMaxLoc(result)
-
-            # Determine the top 2 matches (best and 2nd best)
-            num_matches = 2
-            min_location = [0] * num_matches
-            min_val = [0.0] * num_matches
-            for i in range(num_matches):
-                min_val[i], max_val, min_location[i], max_location = cv.minMaxLoc(result)
-                val = result[min_location[i][1], min_location[i][0]]
-                # Set the matched template area in the result matrix to worst value (1.0), so that it won't be considered in the next loop
-                y_end = min(h_screen, min_location[i][1]+h_template//2+1)
-                x_end = min(w_screen, min_location[i][0]+w_template//2+1)
-                y_start = max(0, min_location[i][1]-h_template//2)
-                x_start = max(0, min_location[i][0]-w_template//2)
-                result[y_start:y_end, x_start:x_end] = 1.0
-            # logging.debug(f"Matching took: {(datetime.now() - start_time).total_seconds()}")
-
-            # Calculate the click point
-            if template_dpi > device_dpi:
-                # Adjust click point if screen shot is scaled up as thats not the same click point as the device's current scale factor
-                point = int((min_location[0][0] + pixel_offsets[0]) / self.upscale / scale_factor), int((min_location[0][1] + pixel_offsets[1]) / self.upscale / scale_factor)
-            else:
-                point = int((min_location[0][0] + pixel_offsets[0]) / self.upscale), int((min_location[0][1] + pixel_offsets[1]) / self.upscale)
-            logging.debug(f"Matched template: {template} at scale: {scale} confidence: {(1 - min_val[0])}")
-            # logging.debug(f"Click point: {point}")
-
-            # Save the new best match
-            if (1 - min_val[1]) > next_best_match_val:
-                next_best_match_val = 1 - min_val[1]
-            if (1 - min_val[0]) > best_match[1]:
-                best_match = (point, (1 - min_val[0]), next_best_match_val)
-                # logging.info(best_match, str(scale))
-            
-        logging.debug(f"Best Match: {best_match}")
-        # Check if the match is above the threshold
-        if best_match[1] < threshold:
-            # logging.warning("Best match below threshold!")
-            logging.debug(f"Match: {best_match[1]}, below threshold: {threshold}")
-            template_basename = os.path.basename(template)
-            self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), resized_template)
-            self._save_screen("capture_img_" + str(template_basename), screen_img)
-            return  (False, best_match[1], next_best_match_val)
-
-        # Uncomment below for debugging
-        template_basename = os.path.basename(template)
-        self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), resized_template)
-        self._save_screen("capture_img_" + str(template_basename), screen_img)
-
-        # return the click point and the confidence of the match
-        return best_match
 
     # Capture a region of the screen and return it. Optionally save the image to a file as well
     def _capture_screen(self, filename=None, x=0, y=0, w=1, h=1):
@@ -2558,7 +2381,7 @@ class Scenario(unittest.TestCase):
         Image.fromarray(rgb_image).save(save_path) # Convert for PIL
 
 
-    def _click_by_template(self, template, id=None, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, primary=True, delay=100, x=0.5, y=0.5, edge_detect_thresholds=[], traceId=None, traceX=None, traceY=None, traceW=None, traceH=None, traceMs=None, traceFramerate=None):
+    def _click_by_template(self, template, id=None, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, primary=True, delay=100, x=0.5, y=0.5, edge_detect_thresholds=[], trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_ms=None, trace_framerate=None):
         # Get the screenshot from the capture_id
         if capture_id is not None:
             screenshot = self.captures[capture_id]
@@ -2593,7 +2416,7 @@ class Scenario(unittest.TestCase):
         # Click the point
         x = (point[0] + x_adj) * self.dut_coord_scaler
         y = (point[1] + y_adj) * self.dut_coord_scaler
-        rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), delay, primary, self.current_screen, self.cursor_movement_enable, traceId, traceX, traceY, traceW, traceH, traceMs, traceFramerate)
+        rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), delay, primary, self.current_screen, self.cursor_movement_enable, trace_label, trace_x, trace_y, trace_w, trace_h, trace_ms, trace_framerate)
         # time.sleep(sleep/1000) # Sleep is handled by the plugin
         # return the point for use or recording
         return point
@@ -2638,10 +2461,10 @@ class Scenario(unittest.TestCase):
     
     # TODO: Pipe in the typing speed
     # Send typing to the DUT
-    def _send_text(self, text, typing_delay=None, traceId=None, traceX=None, traceY=None, traceW=None, traceH=None, traceMs=None, traceFramerate=None):
+    def _send_text(self, text, typing_delay=None, trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_ms=None, trace_framerate=None):
         # Get the typing delay from the class if it is not provided
         typing_delay = self.typing_delay if typing_delay is None else typing_delay
-        rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Type", text, typing_delay, traceId, traceX, traceY, traceW, traceH, traceMs, traceFramerate)
+        rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Type", text, typing_delay, trace_label, trace_x, trace_y, trace_w, trace_h, trace_ms, trace_framerate)
 
     def _send_window_move(self, typing_delay, screen):
         typing_delay = self.typing_delay if typing_delay is None else typing_delay
@@ -2650,11 +2473,11 @@ class Scenario(unittest.TestCase):
     def _send_window_maximize(self):
         rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "WindowMaximize")
 
-    def _scroll(self, x_frac, y_frac, direction, traceId=None, traceX=None, traceY=None, traceW=None, traceH=None, traceMs=None, traceFramerate=None):
+    def _scroll(self, x_frac, y_frac, direction, trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_ms=None, trace_framerate=None):
         w_screen, h_screen = self._get_screen_size(self.current_screen)
         x = w_screen * x_frac * self.dut_coord_scaler
         y = h_screen * y_frac * self.dut_coord_scaler
-        rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Scroll", int(x), int(y), 720, direction, self.current_screen, self.cursor_movement_enable, traceId, traceX, traceY, traceW, traceH, traceMs, traceFramerate)
+        rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Scroll", int(x), int(y), 720, direction, self.current_screen, self.cursor_movement_enable, trace_label, trace_x, trace_y, trace_w, trace_h, trace_ms, trace_framerate)
 
     # Check for a template match in a screenshot. Returns True if the template is found, False if it is not
     def _check_by_template(self, template, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, edge_detect_thresholds=[]):
@@ -3139,7 +2962,7 @@ class Scenario(unittest.TestCase):
 
     # Flatten the json to make it easier to process
     # Directory offset is used to adjust the image paths for include sequences, leave as None for the top level json
-    def _flatten_json(self, json_object, directory_offset=None, component=None, log_output=False):
+    def _flatten_json(self, json_object, directory_offset=None, component=None, log_output=True):
         if log_output:
             logging.debug("Flattening JSON, directory_offset: " + str(directory_offset) + ", component: " + str(component))
         flat_json = []
@@ -3158,9 +2981,11 @@ class Scenario(unittest.TestCase):
             #     action["component_path"] += "/" + component
 
             old_id_path = action["id_path"] if "id_path" in action else None
-            if "id_path" not in action:
+            if "id_path" not in action or action["id_path"] is None:
                 action["id_path"] = action["id"]
             else:
+                logging.debug(f"id_path is of type: {type(old_id_path)}")
+                logging.debug(f"Old id_path: {old_id_path}, new id_path: {old_id_path}.{action['id']}")
                 action["id_path"] += "." + action["id"]
 
             if directory_offset == None:
@@ -3175,35 +3000,69 @@ class Scenario(unittest.TestCase):
                     self.action_id_dict[target_id] = {"action_type": "insert", "relationship": action["relationship"], "actions": action["children"]}
                 continue
 
+            # Handle Register Perf Capture
+            if action["type"] == "Register Perf Capture":
+                target_id = action["target_id"] if "target_id" in action else None
+                if target_id:
+                    # Set default values for trace parameters if they are not specified in the action
+                    if "trace_threshold" not in action:
+                        action["trace_threshold"] = 0.03
+                    if "trace_image" not in action:
+                        action["trace_image"] = None
+                    if "trace_process" not in action:
+                        # TODO: Determine the appropriate default trace process if not specified
+                        action["trace_process"] = "settle"
+                    # Store the trace parameters in the action_id_dict for the target_id
+                    self.action_id_dict[target_id] = {"action_type": "register_perf_capture", "trace_label": action["trace_label"], "trace_x": action["x"], "trace_y": action["y"], "trace_w": action["w"], "trace_h": action["h"], "trace_ms": action["trace_ms"], "trace_framerate": action["trace_framerate"], "trace_process": action["trace_process"], "trace_threshold": action["trace_threshold"], "trace_image": action["trace_image"]}
+                continue
+
+
             # TODO: check more of the id path
             append_after = False
-            if action["id"] in self.action_id_dict:
-                for child_action in self.action_id_dict[action["id"]]["actions"]:
-                    child_action["id_path"] = old_id_path
+            for target_action_id in self.action_id_dict:
+                if target_action_id in action["id_path"]:
+                    logging.debug(f"Found action_id {target_action_id} in action['id_path']: {action['id_path']}")
+                # if action["id"] in self.action_id_dict:
+                    if self.action_id_dict[target_action_id]["action_type"] == "insert":
+                    # if self.action_id_dict[action["id"]]["action_type"] == "insert":
+                        for child_action in self.action_id_dict[target_action_id]["actions"]:
+                        # for child_action in self.action_id_dict[action["id"]]["actions"]:
+                            child_action["id_path"] = old_id_path
 
-                if self.action_id_dict[action["id"]]["action_type"] == "insert":
-                    relationship = self.action_id_dict[action["id"]]["relationship"]
-                    if relationship == "during":
-                        # Wrap the inserted actions with an "Insert Actions Begin" and "Insert Actions End" which will manage the appropriate delay.
-                        new_action = {}
-                        new_action["type"] = "Insert Actions Begin"
-                        new_action["description"] = f"Inserting actions during {action['id']}"
-                        new_action["id"] = "AUTO"
-                        new_action["component"] = component
-                        flat_json.append(new_action)
-                        flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
-                        new_action = {}
-                        new_action["type"] = "Insert Actions End"
-                        new_action["description"] = f"Finished inserting actions during {action['id']}"
-                        new_action["id"] = "AUTO"
-                        new_action["delay"] = action["delay"]
-                        new_action["component"] = component
-                        flat_json.append(new_action)
-                        continue
-                    if relationship == "before":
-                        flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
-                    if relationship == "after":
-                        append_after = True
+                        relationship = self.action_id_dict[target_action_id]["relationship"]
+                        # relationship = self.action_id_dict[action["id"]]["relationship"]
+                        if relationship == "during":
+                            # Wrap the inserted actions with an "Insert Actions Begin" and "Insert Actions End" which will manage the appropriate delay.
+                            new_action = {}
+                            new_action["type"] = "Insert Actions Begin"
+                            new_action["description"] = f"Inserting actions during {action['id']}"
+                            new_action["id"] = "AUTO"
+                            new_action["component"] = component
+                            flat_json.append(new_action)
+                            flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
+                            # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+                            new_action = {}
+                            new_action["type"] = "Insert Actions End"
+                            new_action["description"] = f"Finished inserting actions during {action['id']}"
+                            new_action["id"] = "AUTO"
+                            new_action["delay"] = action["delay"]
+                            new_action["component"] = component
+                            flat_json.append(new_action)
+                            continue
+                        if relationship == "before":
+                            flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
+                            # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+                        if relationship == "after":
+                            append_after = True
+
+                    # If the action type is "register_perf_capture", copy all relevant keys from the action_id_dict entry to the current action.
+                    elif self.action_id_dict[target_action_id]["action_type"] == "register_perf_capture":
+                    # elif self.action_id_dict[action["id"]]["action_type"] == "register_perf_capture":
+                        for key, value in self.action_id_dict[target_action_id].items():
+                        # for key, value in self.action_id_dict[action["id"]].items():
+                            if key != "action_type":
+                                logging.debug(f"Register: Copying key {key} with value {value} to action {action['id']} in action_id_path {action['id_path']}")
+                                action[key] = value
 
             # If the action is an include, read the json from the file and flatten it into the current json object
             if action["type"] == "Include":
@@ -3294,6 +3153,59 @@ class Scenario(unittest.TestCase):
     def _cleanup_captures(self):
         self.captures = {}
 
+    # A trace label becomes a folder name on the DUT and on the host, so restrict it to
+    # characters that are safe in a path segment.  This also neutralizes separators and
+    # traversal sequences that could otherwise arrive through a scenario parameter.
+    def _sanitize_trace_label(self, label):
+        safe = re.sub(r'[^A-Za-z0-9.-]+', '_', str(label)).strip('._')
+        if not safe:
+            logging.warning(f"Trace label '{label}' is empty after sanitizing. Using 'trace'.")
+            safe = "trace"
+        if safe != str(label):
+            logging.debug(f"Sanitized trace label '{label}' to '{safe}'")
+        return safe
+
+    # Record the resolved trace settings for a traced action.  Scenario parameters are already
+    # substituted by the time an action is processed, but the on-disk action JSON still holds the
+    # unresolved placeholders, so offline processing (utilities/open_source/perf_process.py)
+    # relies on this manifest to know what was actually captured and how to measure it.
+    def _record_trace_manifest(self, action, trace_label, instance):
+        if not hasattr(self, 'trace_manifest'):
+            self.trace_manifest = []
+
+        entry = {
+            "clip": action["trace_label"],
+            "label": trace_label,
+            "action_id": action.get("id", ""),
+            "instance": instance,
+            # When the clip was requested, captured just before the action dispatches the RPC that
+            # starts the recording (so a hair earlier than the clip's first frame).
+            # scenario_time_s shares the timeline used by scenario_events.csv, phase_time.csv and
+            # the "[t] Action ..." log lines; timestamp lines the clip up with the ETL trace.
+            "scenario_time_s": self.daq_accumulated_time,
+            "timestamp": datetime.now().isoformat(),
+            "capture": {
+                "x": action.get("trace_x", 0),
+                "y": action.get("trace_y", 0),
+                "w": action.get("trace_w", 0),
+                "h": action.get("trace_h", 0),
+                "ms": action.get("trace_ms", 0),
+                "framerate": action.get("trace_framerate", 0),
+            },
+            # trace_process selects the offline measurement ("settle", "pixel_change" or
+            # "template"); threshold and template carry that measurement's settings.
+            "trace_process": action.get("trace_process", "settle"),
+            "threshold": action.get("trace_threshold"),
+            "template": action.get("trace_image"),
+        }
+        self.trace_manifest.append(entry)
+
+        try:
+            with open(os.path.join(self.result_dir, "trace_manifest.json"), 'w') as file:
+                json.dump(self.trace_manifest, file, indent=2)
+        except OSError as exp:
+            logging.warning(f"Unable to write trace manifest: {exp}")
+
     # Process a particular action
     def process_action(self, action, log_output=False):
         # Skip disabled actions
@@ -3351,26 +3263,40 @@ class Scenario(unittest.TestCase):
 
         except_flag = False         # Initialize the exception flag to false
         
-        ### Handle traceId for typing actions. ###
-        if not "traceId" in action: 
-            action["traceId"] = ""
-            action["traceX"]= 0
-            action["traceY"]= 0
-            action["traceW"]= 0
-            action["traceH"]= 0
-            action["traceMs"] = 0
-            action["traceFramerate"]= 0
-            logging.debug("No traceId found in action, setting to empty string and trace dimensions to 0")
+        ### Handle trace_label for typing actions. ###
+        # The recorded clip folder is named "<label>_<action id>_<instance>".  The label is
+        # whatever the scenario put in "trace_label" and is usually a parameter (e.g. "[traceLabel]"
+        # resolved to "reddit_page_load"), so the same library sequence can be included by
+        # several scenarios and still produce distinguishable clips.  The action id is always
+        # appended because it is the stable key offline processing uses to find the action's
+        # trace_process instructions.
+        trace_label = ""
+        if not "trace_label" in action or str(action["trace_label"]).strip() == "":
+            action["trace_label"] = ""
+            action["trace_x"]= 0
+            action["trace_y"]= 0
+            action["trace_w"]= 0
+            action["trace_h"]= 0
+            action["trace_ms"] = 0
+            action["trace_framerate"]= 0
+            logging.debug("No trace_label found in action, setting to empty string and trace dimensions to 0")
+        else:
+            # Capture the scenario-supplied label once so repeated executions (loops, reused
+            # includes) never compound the suffixes appended below.
+            trace_label = action.setdefault("_traceLabel", self._sanitize_trace_label(action["trace_label"]))
+            action["trace_label"] = f"{trace_label}_{action['id']}"
+            logging.info(f"Found trace_label in action: {action['trace_label']}")
+            logging.debug(f"Trace dimensions: X={action['trace_x']}, Y={action['trace_y']}, W={action['trace_w']}, H={action['trace_h']}, Ms={action['trace_ms']}, Framerate={action['trace_framerate']}")
 
-        # create traceId dictionary if it doesn't exist
-        if not hasattr(self, 'traceId_dict'):
-            self.traceId_dict = {}
-        if action["traceId"] != "":
-            if action["traceId"] in self.traceId_dict:
-                self.traceId_dict[action["traceId"]] += 1
-            else:
-                self.traceId_dict[action["traceId"]] = 1
-            action["traceId"] = f"{action['traceId']}_{self.traceId_dict[action['traceId']]}"    
+        # create trace_label dictionary if it doesn't exist
+        if not hasattr(self, 'trace_label_dict'):
+            self.trace_label_dict = {}
+        if action["trace_label"] != "":
+            base_trace_id = action["trace_label"]
+            # Next available instance number for this base id.
+            self.trace_label_dict[base_trace_id] = self.trace_label_dict.get(base_trace_id, 0) + 1
+            action["trace_label"] = f"{base_trace_id}_{self.trace_label_dict[base_trace_id]}"
+            self._record_trace_manifest(action, trace_label, self.trace_label_dict[base_trace_id])
         ###########################################
 
         # Find the template in the screenshot and click on it on the DUT
@@ -3393,7 +3319,7 @@ class Scenario(unittest.TestCase):
                 # Convert it to a list of floats
                 scale_str = action["scale"]
                 scale = [float(x) for x in scale_str.split(',')]
-            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, traceId=action["traceId"], traceX=action["traceX"], traceY=action["traceY"], traceW=action["traceW"], traceH=action["traceH"], traceMs=action["traceMs"], traceFramerate=action["traceFramerate"]):
+            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"])):
                 logging.debug("Click successful")
             else:
                 except_flag = True
@@ -3408,7 +3334,7 @@ class Scenario(unittest.TestCase):
             x = int(float(x_frac) * screen_width * self.dut_coord_scaler)
             y = int(float(y_frac) * screen_height * self.dut_coord_scaler)
             # Click the point
-            rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), 100, primary, self.current_screen, self.cursor_movement_enable, action["traceId"], action["traceX"], action["traceY"], action["traceW"], action["traceH"], action["traceMs"], action["traceFramerate"])
+            rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), 100, primary, self.current_screen, self.cursor_movement_enable, action["trace_label"], int(action["trace_x"]), action["trace_y"], action["trace_w"], action["trace_h"], action["trace_ms"], action["trace_framerate"])
 
         # Find the template in the screenshot and move the mouse to it on the DUT
         elif action["type"] == "Move":
@@ -3429,7 +3355,7 @@ class Scenario(unittest.TestCase):
         elif action["type"] == "Type":
             logging.debug(f"Typing: {action['description']}")
             typing_delay = int(action["typing_delay"]) if "typing_delay" in action else self.typing_delay
-            self._send_text(action["text"], typing_delay=typing_delay, traceId=action["traceId"], traceX=action["traceX"], traceY=action["traceY"], traceW=action["traceW"], traceH=action["traceH"], traceMs=action["traceMs"], traceFramerate=action["traceFramerate"])
+            self._send_text(action["text"], typing_delay=typing_delay, trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"]))
             if "delay" in action:
                 calculated_delay_time = (typing_delay / 1000.0) * len(action["text"])
                 if float(action["delay"]) < calculated_delay_time:
@@ -3439,7 +3365,7 @@ class Scenario(unittest.TestCase):
         # Inject a scroll event
         elif action["type"] == "Scroll":
             logging.debug("Scrolling: " + str(action["direction"]))
-            self._scroll(x_frac=float(action["x"]), y_frac=float(action["y"]), direction=action["direction"], traceId=action["traceId"], traceX=action["traceX"], traceY=action["traceY"], traceW=action["traceW"], traceH=action["traceH"], traceMs=action["traceMs"], traceFramerate=action["traceFramerate"])
+            self._scroll(x_frac=float(action["x"]), y_frac=float(action["y"]), direction=action["direction"], trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"]))
 
         # Check for a template match in a screenshot. Returns True if the template is found, False if it is not
         elif action["type"] == "Check":
