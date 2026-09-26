@@ -106,7 +106,7 @@ class ActionModel(QtGui.QStandardItemModel):
             return True
         return False
 
-    def appendAction(self, working_dir, type="", x="", y="", w="", h="", text="", command="", id="", description="", relationship="", typing_delay="[typing_delay]", delay="0", file_name="", include_path="", params=[], direction="", val_options="", count="", target_id="",primary=True):
+    def appendAction(self, working_dir, type="", x="", y="", w="", h="", text="", command="", id="", description="", relationship="", typing_delay="[typing_delay]", delay="0", file_name="", include_path="", params=[], direction="", val_options="", count="", target_id="",primary=True, trace_framerate="", trace_label="", trace_ms="", trace_process=""):
         action = collections.OrderedDict()
         action[u'id'] = id
         action[u'type'] = type
@@ -136,6 +136,14 @@ class ActionModel(QtGui.QStandardItemModel):
             action[u'relationship'] = relationship
         if target_id != "":
             action[u'target_id'] = target_id
+        if trace_framerate != "":
+            action[u'trace_framerate'] = trace_framerate
+        if trace_label != "":
+            action[u'trace_label'] = trace_label
+        if trace_ms != "":
+            action[u'trace_ms'] = trace_ms
+        if trace_process != "":
+            action[u'trace_process'] = trace_process
         if params != []:
             action[u'params'] = params
         if id == "":
@@ -543,6 +551,15 @@ class ActionDialog(QDialog):
                     self.relationshipCombo.setCurrentIndex(index)
                     break
             layout.addRow(QLabel("Relationship"), self.relationshipCombo)
+        if 'trace_process' in self.action:
+            self.traceProcessCombo = QComboBox()
+            self.traceProcessCombo.addItems(['settle', 'pixel_change', 'template'])
+            trace_process = self.action[u'trace_process']
+            for index in range(self.traceProcessCombo.count()):
+                if self.traceProcessCombo.itemText(index).startswith(trace_process):
+                    self.traceProcessCombo.setCurrentIndex(index)
+                    break
+            layout.addRow(QLabel("Trace Process"), self.traceProcessCombo)
         if 'eval_method' in self.action:
             self.evalMethodCombo = QComboBox()
             self.evalMethodCombo.addItems(['==', '!=', '<', '<=', '>', '>=', 'in', 'not in'])
@@ -624,6 +641,15 @@ class ActionDialog(QDialog):
         if 'target_id' in self.action:
             self.targetEdit = QLineEdit(self, text=self.action[u'target_id'])
             layout.addRow(QLabel("Target ID"), self.targetEdit)
+        if 'trace_framerate' in self.action:
+            self.traceFramerateEdit = QLineEdit(self, text=self.action[u'trace_framerate'])
+            layout.addRow(QLabel("Trace Framerate"), self.traceFramerateEdit)
+        if 'trace_label' in self.action:
+            self.traceLabelEdit = QLineEdit(self, text=self.action[u'trace_label'])
+            layout.addRow(QLabel("Trace Label"), self.traceLabelEdit)
+        if 'trace_ms' in self.action:
+            self.traceMsEdit = QLineEdit(self, text=self.action[u'trace_ms'])
+            layout.addRow(QLabel("Trace MS"), self.traceMsEdit)
         if 'exception_on' in self.action:
             self.exceptionCombo = QComboBox()
             self.exceptionCombo.addItems(['No match', 'Match', 'Never'])
@@ -754,6 +780,14 @@ class ActionDialog(QDialog):
             self.action[u'relationship'] = self.relationshipCombo.currentText()
             if "during" in self.action[u'relationship']:
                 self.action[u'relationship'] = "during"
+        if 'trace_process' in self.action:
+            self.action[u'trace_process'] = self.traceProcessCombo.currentText()
+        if 'trace_framerate' in self.action:
+            self.action[u'trace_framerate'] = self.traceFramerateEdit.text()
+        if 'trace_label' in self.action:
+            self.action[u'trace_label'] = self.traceLabelEdit.text()
+        if 'trace_ms' in self.action:
+            self.action[u'trace_ms'] = self.traceMsEdit.text()
         if 'right_term' in self.action:
             self.action[u'right_term'] = self.rightTermEdit.text()
         if 'val_options' in self.action:

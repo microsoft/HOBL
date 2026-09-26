@@ -689,7 +689,7 @@ class Tab(QtWidgets.QWidget):
             w_frac = min(1.0, dut_w / self.main_win.dut_screen_width)
             h_frac = min(1.0, dut_h / self.main_win.dut_screen_height)
 
-            action = self.actionModel.appendAction(self.working_dir, type="Register Perf Capture", x="{:.3f}".format(x_frac), y="{:.3f}".format(y_frac), w="{:.3f}".format(w_frac), h="{:.3f}".format(h_frac), delay="0")
+            action = self.actionModel.appendAction(self.working_dir, type="Register Perf Capture", x="{:.3f}".format(x_frac), y="{:.3f}".format(y_frac), w="{:.3f}".format(w_frac), h="{:.3f}".format(h_frac), target_id="<INVALID>", trace_framerate="60", trace_label="Perf Capture", trace_ms="5000", trace_process="settle", delay="0")
             self.capture_screen(action[u'file_name'][0], x=int(dut_x), y=int(dut_y), w=int(dut_w), h=int(dut_h), thumbnail=True)
             self.actionModel.setIcon(self.working_dir, action)
 
