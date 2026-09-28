@@ -6,12 +6,13 @@ from core.parameters import Params
 import logging
 import os
 from . import default_params
+import time
 
 # Description:
 #   Automatically generated standard scenario.
 
 class CmBase(core.app_scenario.Scenario):
-    prep_scenarios = ["edge_install", "web_prep", "teams_install", "office_install", "onedrive_prep", "productivity_prep"]
+    prep_scenarios = ["edge_install", "web_prep", "office_install", "onedrive_prep", "productivity_prep"]
 
     # Set default parameters:
     default_params.run()
@@ -122,7 +123,7 @@ class CmBase(core.app_scenario.Scenario):
 
         # Kill office apps
         try:
-            self._kill("Outlook.exe Excel.exe Powerpnt.exe Winword.exe OneNote.exe")
+            self._kill("olk.exe Excel.exe Powerpnt.exe Winword.exe")
         except:
             pass
 
