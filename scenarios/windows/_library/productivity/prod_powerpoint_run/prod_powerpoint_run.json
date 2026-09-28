@@ -124,7 +124,7 @@
         "children": [],
         "delay": "1",
         "description": "Slide content",
-        "enabled": false,
+        "enabled": true,
         "exception_on": "No match",
         "file_name": [
             "image_1VHFCJN.png"
@@ -140,7 +140,7 @@
         "children": [],
         "delay": "4.5",
         "description": "Delete content and paste",
-        "enabled": false,
+        "enabled": true,
         "id": "UR969J",
         "text": "\ue009a\ue009\ue017\ue009v",
         "type": "Type",
