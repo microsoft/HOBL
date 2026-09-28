@@ -45,9 +45,17 @@
         "description": "Open the attachment file picker (Alt+N, A, F, B)",
         "enabled": true,
         "id": "PONAFT01",
-        "text": "\ue00a\ue00anafb",
+        "text": "\ue00anafb",
         "type": "Type",
         "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "",
+        "enabled": true,
+        "id": "1VHP12W",
+        "type": "Delay"
     },
     {
         "children": [
@@ -64,8 +72,8 @@
         ],
         "description": "Use the OneDrive attachment path",
         "enabled": true,
-        "id": "PONAFT02",
         "eval_method": "==",
+        "id": "PONAFT02",
         "left_term": "[file_source]",
         "right_term": "OneDrive",
         "type": "If"
