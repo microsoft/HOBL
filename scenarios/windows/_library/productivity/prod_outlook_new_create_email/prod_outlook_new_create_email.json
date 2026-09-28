@@ -12,12 +12,12 @@
     {
         "children": [],
         "delay": "2",
-        "description": "Open new email (Ctrl+N)",
-        "enabled": false,
-        "id": "PONCEI01",
-        "text": "\ue009n",
+        "description": "Goto Home",
+        "enabled": true,
+        "id": "1VFK1RT",
+        "text": "\ue00ah\ue00a",
         "type": "Type",
-        "typing_delay": "400"
+        "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
