@@ -1,0 +1,1 @@
+"""Stock web-site adapter that replaces verified idle delays with probes."""
