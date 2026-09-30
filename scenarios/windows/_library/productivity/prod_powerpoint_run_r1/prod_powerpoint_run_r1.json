@@ -1,0 +1,191 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-29",
+        "description": "Switch to an open PowerPoint deck, apply a Fly In animation from the bottom, and save the deck",
+        "enabled": true,
+        "id": "PPR1I00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Begin recording the PowerPoint animation phase",
+        "enabled": true,
+        "id": "PPR1I01",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Switch to the open PowerPoint deck and select the first object",
+        "enabled": true,
+        "id": "PPR1C01",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Switch to the open PowerPoint window",
+        "enabled": true,
+        "id": "PPR1I02",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Move focus to the current slide and select the first object (F6, Tab)",
+        "enabled": true,
+        "id": "PPR1T01",
+        "text": "\ue036\ue004",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Open the Animations tab (Alt+A)",
+        "enabled": false,
+        "id": "PPR1T02",
+        "text": "\ue00aa",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Animations Tab",
+        "enabled": true,
+        "file_name": [
+            "image_1UY8KEX.png"
+        ],
+        "h": "0.194",
+        "id": "1UY8KEX",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.168",
+        "x": "0.203",
+        "y": "0.002"
+    },
+    {
+        "capture_id": "1UY8KEX",
+        "children": [],
+        "delay": "2",
+        "description": "Animations Tab",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1UY8KW6.png"
+        ],
+        "id": "1UY8KW6",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Animation gallery and Effect Options KeyTip sequences depend on the PowerPoint version; the following sequences target PowerPoint 2602",
+        "enabled": true,
+        "id": "PPR1C02",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Activate Animations KeyTips and expand the animation gallery (Alt+A, S)",
+        "enabled": true,
+        "id": "PPR1T04",
+        "text": "\ue00aas",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1VE3M8N",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "PowerPointR1AddAnimation"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Apply Fly In from the animation gallery (Home, Down, Right twice, Enter)",
+        "enabled": true,
+        "id": "PPR1T04B",
+        "text": "\ue011\ue015\ue014\ue014\ue007",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Set the Fly In direction to From Bottom (Alt+A, O, B)",
+        "enabled": false,
+        "id": "PPR1T05",
+        "text": "\ue00aaob",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Save the updated PowerPoint deck",
+        "enabled": true,
+        "id": "PPR1C04",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1VE3NE1",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "PowerPointR1"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "End recording the PowerPoint animation phase",
+        "enabled": true,
+        "id": "PPR1I03",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_powerpoint"
+            }
+        ],
+        "type": "Include"
+    }
+]

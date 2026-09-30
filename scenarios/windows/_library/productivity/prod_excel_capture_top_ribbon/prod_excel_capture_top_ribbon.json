@@ -1,0 +1,28 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6456",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "",
+        "enabled": true,
+        "file_name": [
+            "image_1TK64CP.png"
+        ],
+        "h": "0.144",
+        "id": "1TK64CP",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.678",
+        "x": "0.006",
+        "y": "0.019"
+    }
+]

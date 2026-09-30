@@ -297,6 +297,15 @@ Trace specified performance counters that report utilization.
 
 `npu_counter` - NPU counter to use (per process, per instance) **Default:** `\GPU Engine(*engtype_Compute)\Utilization Percentage` 
 
+## perf_codemarker
+
+Collects and processes code marker performance metrics.
+
+
+<u>Parameters:</u>
+
+`provider` - WPRP file to use for code marker traces. **Default:** `utc_codemarkers.wprp`
+
 ## perf_screen_capture
 
 A template that can be used for creating new tools.
@@ -681,4 +690,3 @@ Record a video of the scenario using a camera attached to the Host USB, or an RT
 `rotation` -  **Default:** `0` 
 
 `show` -  **Default:** `0` 
-
