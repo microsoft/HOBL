@@ -17,20 +17,21 @@ def run():
     Params.setDefault('enterprise_collab', 'file_explorer', '0', desc='', valOptions=['0', '1'])
     Params.setDefault('enterprise_collab', 'snipping_tool', '0', desc='', valOptions=['0', '1'])
     Params.setDefault('enterprise_collab', 'settings_app', '0', desc='', valOptions=['0', '1'])
+    Params.setParam('teams', 'collect_MSTeams_Logs', '0')
     return
 
 def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_setup')
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_teardown')
-    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable')
-    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable')
+    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\perf_setup')
+    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\perf_teardown')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\timers_setup')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\timers_teardown')
-    import_run_user_only('scenarios\\windows\\_library\\misc\\click_file_explorer')
     import_run_user_only('scenarios\\windows\\_library\\misc\\click_settings')
     import_run_user_only('scenarios\\windows\\_library\\misc\\etw_event_tag')
     import_run_user_only('scenarios\\windows\\_library\\misc\\recording_phase_begin')
     import_run_user_only('scenarios\\windows\\_library\\misc\\recording_phase_end')
+    import_run_user_only('scenarios\\windows\\_library\\misc\\switchto_file_explorer')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_close')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_kill')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_open')
@@ -39,6 +40,8 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\web\\web_close_tabs')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_kill')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_run_12')
+    import_run_user_only('scenarios\\windows\\_library\\web\\web_run_minwin')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_setup')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_switchto')
+    Params.setUserDefault(None, 'minwin_workloads', '', desc='', valOptions=['live_captions', 'copilot_query', 'semantic_search', 'click_todo', 'studioeffect_blur', 'productivity', 'snipping_tool', 'file_explorer'], multiple=True)
     return

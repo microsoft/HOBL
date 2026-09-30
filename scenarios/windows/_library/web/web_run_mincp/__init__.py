@@ -1,1 +1,0 @@
-from .web_run_mincp import *
