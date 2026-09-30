@@ -137,7 +137,7 @@
         "children": [],
         "delay": "4",
         "description": "Set the Fly In direction to From Bottom (Alt+A, O, B)",
-        "enabled": true,
+        "enabled": false,
         "id": "PPR1T05",
         "text": "\ue00aaob",
         "type": "Type",
