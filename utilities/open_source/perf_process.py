@@ -307,12 +307,11 @@ def write_outputs(results, out_dir):
     '''Write a summary CSV and a details JSON for all processed clips.'''
     os.makedirs(out_dir, exist_ok=True)
     csv_path = os.path.join(out_dir, "perf_process_results.csv")
-    json_path = os.path.join(out_dir, "perf_process_results.json")
+    json_path = os.path.join(out_dir, "perf_process_detailed_results.json")
 
-    fieldnames = ["clip", "label", "action_id", "instance", "scenario_time_s", "measure",
-                  "frame_index", "time_ms", "value", "status"]
+    fieldnames = ["clip", "time_ms"]
     with open(csv_path, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
         writer.writeheader()
         for row in results:
             writer.writerow(row)
