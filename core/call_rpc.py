@@ -219,15 +219,15 @@ def plugin_load(host, port, dll_id, dll_class, dll_path):
     return result
 
 
-def plugin_call(host, port, dll_id, method, *arg):
+def plugin_call(host, port, dll_id, method, *args, **kwargs):
     # Store details in dictionary
     payload = {
         "method":"PluginCallMethod",
-        "params": [dll_id, method, *arg],
+        "params": [dll_id, method, *args],
         "jsonrpc": "2.0",
         "id": "1",
     }
-    result = _call_rpc(host, port, payload)
+    result = _call_rpc(host, port, payload, **kwargs)
     return result
 
 

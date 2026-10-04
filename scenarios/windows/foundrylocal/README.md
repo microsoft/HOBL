@@ -2,37 +2,26 @@
 
 Edge LLM inference benchmark built on
 [Microsoft Foundry Local](https://learn.microsoft.com/azure/ai-foundry/foundry-local/).
-It starts the Foundry Local service, ensures a model is cached (default
-`Phi-3.5-mini-instruct-generic-cpu`), runs a single-prompt inference, and reports the
+It uses the Foundry Local 2.0 SDK, ensures a model is cached (default
+`qwen2.5-0.5b`), runs a single-prompt inference, and reports the
 end-to-end runtime.
 
 ## What HOBL sets up (from `foundrylocal_resources/*.ps1`)
 
-- `Microsoft.FoundryLocal` (winget)
-- Model downloaded on demand via `foundry model download` (several GB, cached locally)
+- .NET 8 SDK (`Microsoft.DotNet.SDK.8` via winget)
+- `Microsoft.AI.Foundry.Local` 2.0.1 and its native runtime (NuGet)
+- Model downloaded on demand through the SDK (cached locally)
 
 ## Run it standalone (Windows)
 
 ```powershell
-winget install --id Microsoft.FoundryLocal --source winget
-
-# Refresh PATH so `foundry` resolves in this session
-$env:Path = [Environment]::GetEnvironmentVariable("Path","Machine") + ";" + `
-            [Environment]::GetEnvironmentVariable("Path","User")
-
-foundry service start
-foundry model download "Phi-3.5-mini-instruct-generic-cpu"
-foundry cache list
-
-# Timed workload
-foundry model run "Phi-3.5-mini-instruct-generic-cpu" --prompt "What is the meaning of life?"
-
-# Cleanup (avoids disk bloat — models are not auto-expired)
-foundry cache remove "Phi-3.5-mini-instruct-generic-cpu" --yes
-foundry service stop
+pwsh .\foundrylocal_resources\foundrylocal_prep.ps1
+dotnet .\foundrylocal_resources\foundrylocal_app\publish\FoundryLocalWorkload.dll `
+    run qwen2.5-0.5b "What is the meaning of life?"
 ```
 
 ## Notes
 
+- The Foundry Local SDK is pinned to version 2.0.1.
 - Default: 1 loop. Works on x64 and ARM64.
 - First run downloads the model; the HOBL teardown removes it afterward.

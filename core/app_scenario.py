@@ -283,11 +283,8 @@ class Scenario(unittest.TestCase):
                 if dut_version != host_version:
                     logging.warning(f"DUT Setup version {dut_version} does not match expected version {host_version}. It is recommended to run the dut_setup scenario to update the DUT to the right version.")
 
-            # Load InputInject plugin to SimpleRemote
-            if self.platform.lower() == 'macos':
-                result = rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "/Users/Shared/hobl_bin/InputInject/InputInject.dll")
-            else:
-                result = rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "C:\\hobl_bin\\InputInject\\InputInject.dll")
+            # Load plugins to SimpleRemote
+            self.load_plugins()
 
             if Params.get('global', 'local_execution') == '0':
                 # Create and/or delete contents of hobl_data
@@ -379,6 +376,13 @@ class Scenario(unittest.TestCase):
         self.rundown_mode = Params.get('global', 'rundown_mode')
         self.poll_rate = "360" # 6 minutes, gives us battery life hours in 0.1 increments.
 
+    def load_plugins(self):
+        if self.platform.lower() == 'macos':
+            rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "/Users/Shared/hobl_bin/InputInject/InputInject.dll")
+        else:
+            rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "C:\\hobl_bin\\InputInject\\InputInject.dll")
+            rpc.plugin_load(self.dut_ip, self.rpc_port, "PowerManager", "PowerManager.Application", "C:\\hobl_bin\\PowerManager\\PowerManager.dll")
+
     def _getDutSetupVersionOfDut(self):
         if self.platform.lower() == 'windows':
             # Read last line of dut_setup.log on DUT to get actual DUT setup version
@@ -458,6 +462,7 @@ class Scenario(unittest.TestCase):
 
     def setUp(self, callback_test_begin=None):
         if self.tool_failure_reason is not None:
+            logging.error(self.tool_failure_reason)
             self.fail(self.tool_failure_reason)
 
         logging.debug("ORDER app_scenario setUp: " + self._module)
@@ -521,8 +526,9 @@ class Scenario(unittest.TestCase):
                 logging.warning(f"Failed to read hobl_version.txt: {e}")
 
             override_dict = {}
-            override_dict["Hardware Version"] = Params.get('global', 'hardware_version', log = False)
-            # override_dict["Accessories"] = Params.get('global', 'accessories', log = False)
+            override_dict["Hardware Version"] = Params.get('global', 'hardware_version', log = False).upper()
+            override_dict["Screen Size (in)"] = Params.get('global', 'screen_size', log = False)
+            override_dict["Accessories"] = Params.get('global', 'accessories', log = False)
             override_dict['HOBL Version'] = hobl_ver.strip()
             override_dict['Study Type'] = Params.get('global', 'study_type', log = False)
             override_dict['Product'] = Params.get('global', 'product', log = False)
@@ -686,12 +692,15 @@ class Scenario(unittest.TestCase):
                         rpc.call_rpc(self.dut_ip, self.rpc_port,
                                      "GetVersion", [])
 
-                    # Load InputInject plugin since device may have rebooted or scneario forced is_alive to 0.
-                    if self.platform.lower() == 'macos':
-                        result = rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "/Users/Shared/hobl_bin/InputInject/InputInject.dll")
-                    else:
-                        result = rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "C:\\hobl_bin\\InputInject\\InputInject.dll")
+                    # Load plugins since device may have rebooted or scenario forced is_alive to 0
+                    self.load_plugins()
                     self._screenshot(name="failedscreen.png")
+                    if self.dashboard_url:
+                        hobl_url = self.dashboard_url.split('/')[0] + "//" + self.dashboard_url.split('/')[2] + '/'
+                        img_path = os.path.join(self.result_dir, "failedscreen.png")
+                        url = f"{hobl_url}result/Results?path={self.result_dir}&amp;currentFiles={img_path}&amp;currentViews=/result/ImageView"
+                        logging.error(r'[HOBL Results - Failedscreen link](' + url + r')')
+
                     logging.debug(
                         "Copying data from DUT due to test exception.")
                     self._copy_data_from_remote(self.result_dir)
@@ -1173,6 +1182,15 @@ class Scenario(unittest.TestCase):
         # exit_code = p.returncode
         logging.info("Battery level: " + str(int(out)))
         return (int(out))
+
+    def power_manager_call(self, method, *args, **kwargs):
+        out = json.loads(rpc.plugin_call(self.dut_ip, self.rpc_port, "PowerManager", method, *args, **kwargs))
+
+        if "result" in out:
+            return out["result"]
+
+        if "error" in out:
+            raise Exception(f"PowerManager call {method} failed")
 
     def tearDown(self, callback_test_end=None, callback_data_ready=None):
         logging.info("Entered teardown")
@@ -2259,9 +2277,14 @@ class Scenario(unittest.TestCase):
         # elif self.platform.lower() == 'windows':
         # I believe windows and mac use same method.
         else:
+            # Embed device DPI to image
+            if self.dut_scaling_override != "":
+                device_dpi = int(float(self.dut_scaling_override) * 96)
+            else:
+                device_dpi = int(self._get_screen_scale(self.current_screen) * 96)
             img = self._capture_screen()
             rgb_image = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-            Image.fromarray(rgb_image).save(name)
+            Image.fromarray(rgb_image).save(name, dpi=(device_dpi, device_dpi))
 
 
             # screenshot_path = os.path.join(self.dut_exec_path, "ScreenShot.exe")
@@ -2297,8 +2320,8 @@ class Scenario(unittest.TestCase):
     standardize_dpi = True                         # Standardize the DPI of the template to 96dpi for 100% Windows scaling
     json_parent_dir = ""                            # Directory where the json file and all the images are stored
     output_images = False                            # Output images for debugging. Saved to the results directory
-    dialation = True                                # Apply dialation to the screenshot and template after edge detection and before blur
-    dialation_kernel = (3,3)                        # Dialation kernel size
+    dilation = True                                # Apply dilation to the screenshot and template after edge detection and before blur
+    dilation_kernel = (3,3)                        # Dilation kernel size
 
     # Build a TemplateMatcher configured from this scenario's current template-matching settings.
     def _build_template_matcher(self):
@@ -2323,8 +2346,8 @@ class Scenario(unittest.TestCase):
             template_edge_crop=self.template_edge_crop,
             template_edge_crop_amount=self.template_edge_crop_amount,
             standardize_dpi=self.standardize_dpi,
-            dialation=self.dialation,
-            dialation_kernel=self.dialation_kernel,
+            dilation=self.dilation,
+            dilation_kernel=self.dilation_kernel,
             debug_dir=debug_dir,
             output_images=self.output_images,
         )
@@ -2345,7 +2368,6 @@ class Scenario(unittest.TestCase):
         matcher = self._build_template_matcher()
         return matcher.get_point(template, screenshot, threshold=threshold, method=method, scale_factors=scale_factors, offsets=offsets, edge_detect_thresholds=edge_detect_thresholds)
 
-
     # Capture a region of the screen and return it. Optionally save the image to a file as well
     def _capture_screen(self, filename=None, x=0, y=0, w=1, h=1):
         # If the filename is a list, then grab the first element as the filename
@@ -2360,8 +2382,8 @@ class Scenario(unittest.TestCase):
         rgb_image = cv.cvtColor(img, cv.COLOR_RGB2BGR)
 
         # Save the image if a filename is provided
-        if filename is not None:
-            self._save_screen(os.path.basename(str(filename)), rgb_image)
+        # if filename is not None:
+        #     self._save_screen(os.path.basename(str(filename)), rgb_image)             # commentting out to have a cleaner image matching folder. Will add back if there needs to be good image for scenario maker adding template from existing image feature
             # save_path = os.path.join(str(self.result_dir), os.path.basename(str(filename)))
             # logging.debug("Saving screenshot: " + str(save_path))
             # Image.fromarray(img).save(save_path)
@@ -2378,7 +2400,12 @@ class Scenario(unittest.TestCase):
         else:
             # Don't try to convert grayscale images
             rgb_image = img
-        Image.fromarray(rgb_image).save(save_path) # Convert for PIL
+        # Embed device DPI so downstream viewers can render at the correct scale.
+        if self.dut_scaling_override != "":
+            device_dpi = int(float(self.dut_scaling_override) * 96)
+        else:
+            device_dpi = int(self._get_screen_scale(self.current_screen) * 96)
+        Image.fromarray(rgb_image).save(save_path, dpi=(device_dpi, device_dpi)) # Convert for PIL
 
 
     def _click_by_template(self, template, id=None, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, primary=True, delay=100, x=0.5, y=0.5, edge_detect_thresholds=[], trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_ms=None, trace_framerate=None):
@@ -2793,8 +2820,31 @@ class Scenario(unittest.TestCase):
             # If the action failed, stop processing and return 1 to indicate failure
             if action_result == 1:
                 if fail_on_error:
-                    logging.error(f"Action failed: {action['id']}")
-                    self.fail("Failure to run action: " + str(action["id"]))
+                    logging.error(f"Failed {self.failed_action['type']} (id: {self.failed_action['id']}). Failed for {self.failed_action['description']}")
+                    # logging.error(f"Action failed: {action['id']}")
+                    if "capture_id" in self.failed_action:
+                        img_path = os.path.join(self.result_dir, "image_matching")
+                        # scaled_images was cleared at the start of this action, so it only holds images saved while matching this action's templates.
+                        # Pick the highest-scoring template so the dashboard opens with the closest match, not an arbitrary one.
+                        templates = self.scaled_images.get("template", [])
+                        best_template = max(templates, key=lambda t: t["score"]) if templates else None
+                        capture_image_name = self.scaled_images.get("capture_image")
+
+                        # Log a dashboard link so the failure line is clickable to the image compare view
+                        if not best_template or not capture_image_name:
+                            logging.warning(f"Skipping dashboard link for failed action {self.failed_action['id']}: missing capture image or template (capture_image={capture_image_name}, templates={len(templates)}).")
+                        elif self.dashboard_url:
+                            hobl_url = self.dashboard_url.split('/')[0] + "//" + self.dashboard_url.split('/')[2] + '/'
+                            capture_path = os.path.join(img_path, capture_image_name)
+                            scaled_template_paths = [os.path.join(img_path, best_template["filename"])]
+                            # failedscreen.png lives in self.result_dir and is written later by runTestWrapper after the fail propagates up.
+                            failed_screen_path = os.path.join(self.result_dir, "failedscreen.png")
+                            files = ";".join([failed_screen_path, capture_path] + scaled_template_paths)
+                            views = ";".join(["/result/ImageView"] * (2 + len(scaled_template_paths)))
+                            url = f"{hobl_url}result/Results?path={img_path}&amp;currentFiles={files}&amp;currentViews={views}&amp;imageViewScale=80"
+                            logging.error(r'[HOBL Results - Image Match Failure ' + str(self.failed_action["id"]) + r'](' + url + r')')
+                    # self.fail("Failure to run action: " + str(self.failed_action["id"]))
+                    self.fail(f"Failed {self.failed_action['type']} (id: {self.failed_action['id']}). Failed for {self.failed_action['description']}")
                 return 1
 
             # If the action was exit loop and was nested in another action such as If statement, return -1 to exit the loop
@@ -3226,6 +3276,9 @@ class Scenario(unittest.TestCase):
 
         if action["type"] in ["Information", "Comment", "Setup", "Run Test", "Teardown", "Set Default", "Set User Default", "Loop", "End Loop", "If", "Else If", "Else", "End If", "Try", "Except", "End Try", "End Insert", "On Success"]:
             return 0
+
+        # Reset so scaled_images only contains images saved while matching this action's templates. The templates will be a list of dictionaries to keep track of match scores so it will choose the best matched template. Capture id will be used to link the capture image to the corresponding template.
+        self.scaled_images = {"template":[], "capture_image": None}
         
         self.component = component
         # logging.info(f"Setting self.component to {self.component}")
@@ -3253,6 +3306,7 @@ class Scenario(unittest.TestCase):
         if "capture_id" in action:
             if action["capture_id"] not in self.captures:
                 logging.debug("Capture not in memory. Loading capture: " + str(action["capture_id"]))
+                logging.error(f"Capture image {action['capture_id']} not found in memory. Check if proper capture id was associated to template.")
                 action["capture_id"] = cv.imread(os.path.join(self.json_parent_dir, "image_" + str(action["capture_id"]) + ".png" ), cv.IMREAD_GRAYSCALE)
                 self.fail("Shouldn't reach here") 
 
@@ -3564,6 +3618,7 @@ class Scenario(unittest.TestCase):
         # Save the screen if the action failed
         if except_flag:
             logging.warning("Action failed: " + str(action["id"]))
+            self.failed_action = action # Saving the true failed action in case the action is in a try block and it failed on success or except block
             if "capture_id" in action:
                 self._save_screen("exception_" + str(action["id"] + ".png"), self.captures[action["capture_id"]])
             
@@ -4174,7 +4229,8 @@ class Scenario(unittest.TestCase):
             title = yt_entry["title"]
             dur = yt_entry["end"] - yt_entry["start"]
 
-            logging.debug(f"Checking YouTube playback log entry '{title}'.  Comparing expected duration {youtube_duration}s with actual duration {dur:.2f}s")
+            logging.debug(f"Checking YouTube playback log entry '{title}'. Comparing expected duration {youtube_duration}s with actual duration {dur:.2f}s")
+
             if not youtube_duration - 15 <= dur <= youtube_duration + 15:
                 err_str = f"Unexpected YouTube {title} playback duration {dur}"
                 logging.error(err_str)

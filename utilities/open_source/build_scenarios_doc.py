@@ -24,7 +24,7 @@ def main():
     from utilities.open_source.dump_scenarios import scenario_docs
 
     with open(doc_path, "w", encoding="utf-8") as doc_file:
-        doc_file.write("# HOBL Scenarios\n\n")
+        doc_file.write("# Scenarios\n\n")
         for scenario, docstring in scenario_docs.items():
             if docstring is not None:
                 # write scenario heading and docstring

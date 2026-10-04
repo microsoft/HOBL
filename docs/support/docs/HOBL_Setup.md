@@ -6,7 +6,7 @@
 * The Hosts and DUTs should be on a local network that has internet access.
 * The host should be connected with ethernet, but the DUT should be on Wi-Fi, to be representative of a user operating a device on battery.  Ethernet dongles often prevent devices from getting to lower power states.
 ### Wi-Fi
-* The Wi-Fi network should be set up to provide each device with **50 Mbps**, again for representativeness.  Significantly more or less BW has power consumption impact.  Not all AP's are good at controlling this, but we have found the HPE Aruba line of access points adept at it, but they now require a centralized controller.  RUCKUS AP's that supprot "RUCKUS Unleashed" have also been tested to work well and don't require a central controller.  50 Mbps is also the minimum bandwidth requirement for correct functionality.
+* The Wi-Fi network should be set up to provide each device with **50 Mbps**, again for representativeness.  Significantly more or less BW has power consumption impact.  Not all AP's are good at controlling this, but we have found the HPE Aruba line of access points adept at it, but they now require a centralized controller.  RUCKUS AP's that support "RUCKUS Unleashed" have also been tested to work well and don't require a central controller.  50 Mbps is also the minimum bandwidth requirement for correct functionality.
 * 5 GHz channels should be used for connecting to DUTs.
 * Do not domain-join the DUTs.
 * Corporate network traffic can be intense, so it is recommended to deploy a firewall between the lab LAN and corporate networks that will filter out corporate traffic but still allow access to the internet.  This will improve representativeness and reduce test variability.
@@ -16,8 +16,8 @@
     1. <a href="https://dlidirect.com/products/new-pro-switch" target="_blank">Digital-Loggers Pro Switch</a>.
     1. An iBoot controlled by either ethernet or relay.
     1. Shelly Smart Plugs.
-### Display Brigthness
-* A luminance meter should be used to determine the DUT brightness setting that corresponds to 150 nits.  Measure and average all 4 corners plus center of a pure white screen.  All tests are expected to run at this brightness except JEITA-related tests (which are at 200 nits).  A nits map should be specified in the profile to associate the appropriate slider postiions to 150 and 200 nits respectively.  <TODO: Add section on profle setup and tools>
+### Display Brightness
+* A luminance meter should be used to determine the DUT brightness setting that corresponds to 150 nits.  Measure and average all 4 corners plus center of a pure white screen.  All tests are expected to run at this brightness except JEITA-related tests (which are at 200 nits).  A nits map should be specified in the profile to associate the appropriate slider positions to 150 and 200 nits respectively.  <TODO: Add section on profile setup and tools>
 ### Audio Volume
 * Tests are run with audio volume set to the out-of-box default level.  To ensure consistency, once this value is determined, it should also be specified in the device profile.
 
@@ -26,10 +26,10 @@ The following accounts need to be created for the DUT:
 
 1. <a href="https://outlook.live.com/owa/" target="_blank">MSA (Microsoft Account)</a> for logging into Windows, Teams, OneDrive, Office, and the Store.  Each DUT needs its own account, otherwise files syncing across devices will not only cause variability but can break tests.  It is critical to set security for the account, otherwise it will require a phone number from you in about a week.  To secure the account, go to <a href="https://account.microsoft.com" target="_blank">https://account.microsoft.com</a> and sign in with the newly created MSA.  Then select the "Security" menu item at the top.  Then click "Get Started" on the "Advanced Security Options" card.  Select to add a verification email account (so that you don't have to use a phone number), then you will be prompted to send verification codes twice.  You can use the same verification account for all MSA's that you create.  Log into the verification account using a different web browser or computer (so you don't log out of your MSA), to retrieve the codes.  Be sure to NOT set 2FA (MFA) in order to get full automation.
 
-1. Office - To run scenarios that involve Microsoft OFfice (i.e. productivity, abl_active) you will need to purchase a subscription to Microsft 365 Personal or Family (not Business), otherwise you will only have a 5-day grace period for testing after install.  The subscription needs to be tied to the MSA.  There is a limit to how many devices can use a single m365 subscription, so you may need to release the subscription on devices no longer used.  This can be managed at
+1. Office - To run scenarios that involve Microsoft OFfice (i.e. productivity, abl_active) you will need to purchase a subscription to Microsoft 365 Personal or Family (not Business), otherwise you will only have a 5-day grace period for testing after install.  The subscription needs to be tied to the MSA.  There is a limit to how many devices can use a single m365 subscription, so you may need to release the subscription on devices no longer used.  This can be managed at
 <a href="https://account.microsoft.com/services/office/install" target="_blank">https://account.microsoft.com/services/office/install</a>.  Click "Sign out of Office" on devices no longer being used.  You may also have to do this for prior OS images on an active DUT, since new OS images may be considered a different "device".
 
-1. Teams - The MSA account needs to be one-time associated with a Teams Organization set up for testing.  Also make sure it's only associated with one organization, otherwise the DUT will prompt for which Org to execute with, which will break the automation.  The Teams org can be shared across any number of MSA's, so generally only one Teams org needs to be set up per test house.  Once the org is set up, you assocociate the MSA by clicking the provided URL and entering the MSA email.
+1. Teams - The MSA account needs to be one-time associated with a Teams Organization set up for testing.  Also make sure it's only associated with one organization, otherwise the DUT will prompt for which Org to execute with, which will break the automation.  The Teams org can be shared across any number of MSA's, so generally only one Teams org needs to be set up per test house.  Once the org is set up, you associate the MSA by clicking the provided URL and entering the MSA email.
     * Creating a Teams Test Organization:
 
         1. Go to MS Teams Page:  <a href="https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/group-chat-software" target="_blank">https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/group-chat-software</a>
@@ -55,18 +55,18 @@ The host computer houses the HOBL test framework and UI.  Through this, users ex
 
 Host computer system requirements are:  Intel or AMD processor running Windows 11.  For large labs, factor approximately 1 host core per 10 devices, and 16 GB of RAM + (0.5 GB * number of DUTs).
 
-1. Make sure Git is intalled on your Host computer.
+1. Make sure Git is installed on your Host computer.
 1. Clone the HOBL repo to your preferred location, but note that putting it at "c:\hobl" will simplify things.  You might want to do a shallow clone if your organization has download capacity limits.
 1. Run the host_setup.exe in the root folder.  This will:
     1. Download various items into the /Downloads folder.  These include:
-        - The approipriate dut_setup executables.
+        - The appropriate dut_setup executables.
         - ffmpeg.
         - Windows runtime libraries.
         - Set git hooks to automatically update the HOBL version on pulls.
         - Disable the Windows error reporting UI (to prevent halting automation in case of an error).
     1. Install embedded python.
     1. Download and install the HOBL UI in c:\HOBLweb.
-        - If you installed hobl in a folder other than "c:\hobl", then you need to hand-edit c:\hoblweb\appsettings.json and modify the "DocsPath" paramter accordingly.
+        - If you installed hobl in a folder other than "c:\hobl", then you need to hand-edit c:\hoblweb\appsettings.json and modify the "DocsPath" parameter accordingly.
         - Likewise, if you intend to have your results go to a different base folder than "c:\hobl_results", modify the "ResultsPath" parameter accordingly.  Make sure that the "results_dir" parameter in your profile includes this base path.
 
 To get future updates to the HOBL source code, do a "git pull" in the hobl folder.  To get future updates to the HOBL UI, rerun host_setup.exe and just select "HOBL User Interface" item.
@@ -89,20 +89,20 @@ Set up a Device Profile for each DUT in the HOBLweb UI, giving it a unique name 
     1. Run the "comm_check" scenario to make sure that all communications needs are met.
 
 ## DUT Setup For macOS
-1. Manually set up the Mac with an account and connect the device to the appropriate Wi-Fi netowrk, on the same subnet as the Host.
+1. Manually set up the Mac with an account and connect the device to the appropriate Wi-Fi network, on the same subnet as the Host.
 2. If Global Secure Access app exists, disable it.  It prevents peer-to-peer communication.
 3. Change settings to do auto-login:
-    a. System Settings -> Users & Groups -> Automatically log in as: specify account and password
+    1. System Settings -> Users & Groups -> Automatically log in as: specify account and password
 4. Copy hobl\downloads\setup\dut_setup_<ver>.sh to Mac using a FAT32 formatted USB stick, and execute from terminal window.  You will be prompted for password and access permissions multiple times.  Be sure to enable everything.  If you don't see dut_setup_\<ver>\.sh in the hobl\downloads\setup folder, then do [Host Setup](#host-setup).
 5. Either disable firewall, or disable "Stealth Mode" in Firewall Options (to allow pings to go through)
 6. Use light meter to adjust screen brightness to 150 nits, on DC with white background.  Then run /users/Shared/hobl_bin/brightness -l to report setting level.  Multiply that fraction by 100 to turn to percentage, to set display:brightness in profile.
 7. Leave audio level at out-of-box setting.
 8. The first time you run some tests or tools there may be various permissions popups.  Manually allow them all. Then subsequent runs should work without interference.
 10. Set keyboard shortcut Shift-Cmd-H to Safari "Clear History…"
-    a. Settings -> Keyboard -> Keyboard Shortcuts -> App Shortcuts
-    b. Application: "Safari"
-    c. Menu title: "Clear History…" (the three dots are critical)
-    d. Keyboard shortcut: "Shift-Cmd-H"
+    1. Settings -> Keyboard -> Keyboard Shortcuts -> App Shortcuts
+    1. Application: "Safari"
+    1. Menu title: "Clear History…" (the three dots are critical)
+    1. Keyboard shortcut: "Shift-Cmd-H"
 11. Set Safari history clear to "All History"
 12. Test network connection to the DUT:
     1. Host and DUT need to be on the same subnet (first 2 octets of the IP address).
@@ -114,9 +114,10 @@ One thing to be aware of on Mac is that as icon count in the dock increases, mac
 
 
 Verify these settings have been set in  System Settings -> Privacy & Security:
-- Files & Folders -> SimpleRemoteconsole:
-  - Documents Folder
-  - Downloads Folder
+
+- Files & Folders -> SimpleRemoteConsole:
+    - Documents Folder
+    - Downloads Folder
 - Accessibility -> SimpleRemoteConsole
 - Local Network -> SimpleRemoteConsole
 - Screen & System Audio Recording -> SimpleRemoteConsole

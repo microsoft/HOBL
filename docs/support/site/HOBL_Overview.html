@@ -1,0 +1,759 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="HOBL_Design_Philosophy.html">
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>Introduction - Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.26e3688c.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hobl" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Docs" class="md-header__button md-logo" aria-label="Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introduction
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Docs" class="md-nav__button md-logo" aria-label="Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Introduction
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="HOBL_Overview.html" class="md-nav__link md-nav__link--active">
+        Introduction
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start-for-local-web-browsing-battery-life-testing" class="md-nav__link">
+    Quick Start for Local Web Browsing Battery Life Testing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-start-for-experienced-hobl-users-novice-users-please-read-full-setup-instructions" class="md-nav__link">
+    Quick Start for experienced HOBL users (novice users please read full Setup instructions)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    Further reading:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    Security
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Design_Philosophy.html" class="md-nav__link">
+        Design Philosophy
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          User Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          User Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Setup.html" class="md-nav__link">
+        Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Usage.html" class="md-nav__link">
+        Usage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_UI.html" class="md-nav__link">
+        User Interface
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Support.html" class="md-nav__link">
+        Support
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Developer Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Developer Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Contributing.html" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_ScenarioMaker.html" class="md-nav__link">
+        Scenario Maker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_UI_Scenario_Guide.html" class="md-nav__link">
+        Developing UI-based Scenarios
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Command_Scenario_Guide.html" class="md-nav__link">
+        Developing Command-based Scenarios
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Scenarios.html" class="md-nav__link">
+        Scenarios
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Tools.html" class="md-nav__link">
+        Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Parameters.html" class="md-nav__link">
+        Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Prep.html" class="md-nav__link">
+        Prep Details
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start-for-local-web-browsing-battery-life-testing" class="md-nav__link">
+    Quick Start for Local Web Browsing Battery Life Testing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-start-for-experienced-hobl-users-novice-users-please-read-full-setup-instructions" class="md-nav__link">
+    Quick Start for experienced HOBL users (novice users please read full Setup instructions)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    Further reading:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    Security
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="hobl">HOBL</h1>
+<h2 id="introduction">Introduction</h2>
+<ul>
+<li>"HOBL" (Hours Of Battery Life) is a test framework and set of test scenarios for the purpose of measuring power, performance, and thermal characteristics of Windows and (to a lesser extent) macOS devices.</li>
+<li>The intent of HOBL is to support fully-automated and scaled out user-representative test execution and analysis, to enable computer system and component manufacturers to validate and tune products during development.</li>
+<li>Power is expected to be primarily measured with external DAQ equipment, but internal power monitor chips and battery rundown measurements are also supported.</li>
+<li>The HOBL test framework runs on a "Host" Windows 10/11 PC.  Test scenarios execute on the Host and send commands to the DUT (Device Under Test) over a local network to replicate user interactions.</li>
+<li>To ensure standardized and representative measurements, testers must not kill or disable processes or services.  "Prep scenarios" will be automatically executed to put the system in a controlled state suitable for testing.</li>
+<li><strong>Make sure your DUT is a computer that is ONLY logged in with a dedicated test account.</strong>  Files, emails, etc, may be deleted.  A work or personal computer may be used as a "Host", but not a "DUT".</li>
+<li>For questions or issues, send mail to <a href="mailto:HOBLsupport@microsoft.com">HOBLsupport@microsoft.com</a>.  Attach the hobl.log file and relevant screen shots for any problematic test run.</li>
+</ul>
+<h3 id="quick-start-for-local-web-browsing-battery-life-testing">Quick Start for Local Web Browsing Battery Life Testing</h3>
+<ul>
+<li>Running locally (meaning HOBL is executing on the device directly with no host) can be useful for short term, one-off testing.  For long-term repeated testing, it's highly recommended to <a href="HOBL_Setup.html">set up</a> a dedicated HOBL Host computer on a private network.</li>
+<li>For official results, adjust the screen brightness to 150 nits, set Wi-Fi AP to 50 Mbps per client on 5 Ghz, and out-of-box audio volume.  Detailed instructions <a href="HOBL_Setup.html#lab-setup">here</a>.  For quick results, a free app for iPhone and Android called, "Screen Brightness Nits Meter" seems to do reasonably well for measuring screen brightness (be sure to set a white background for measurement).</li>
+<li>Download the <a href="https://github.com/microsoft/HOBL/releases/download/hobl_installer/hobl_installer.exe">HOBL Installer</a> to the test device (DUT) and execute it.  Select the "Local setup" option.</li>
+<li>After installation, the HOBL UI will open with a <code>Default</code> profile that is set up for local rundown testing.</li>
+<li>With the profile selected, select <code>Web Rundown</code> from the Quick Launch menu, which can be found either by right-clicking on the profile, or opening the arrow on the <code>Launch Job</code> button on the top-right of the window.</li>
+<li>
+<p>The <code>rundown_web</code> test plan will execute and does the following:</p>
+<ul>
+<li>The <code>prep</code> scenario will run some scenarios to prepare the system for web testing.  This includes freshly installing the latest Edge.  Details on system prep can be found <a href="HOBL_Prep.html">here</a>.</li>
+<li><code>charge_on</code> will turn the charger on if charger automation is set up, or prompt you if not.</li>
+<li><code>wait_for_dut_comm</code> will wait for communication with DUT.  In case the device is unresponsive in a hosted setup we don't want to continue with the plan.</li>
+<li><code>process_idle_tasks</code> will let any currently scheduled Windows background tasks complete.  This puts the device in a consistent state at the beginning of any study and is particularly crucial for a freshly installed image which triggers a lot of unrepresentative background tasks, such as Defender and Search indexing.  Normal, representative Defender and Search activity will still occur during the study.  A 2-hour (7200s) timeout is specified, but it shouldn't take more than a few minutes normally.</li>
+<li>The <code>recharge</code> scenario will turn on the charger, wait until battery reaches 100%, wait an additionally 30 minutes (1800s), then turn off the charger to start the rundown.  The 30 min delay can be adjusted with the <code>post_charge_delay</code> parameter as desired.</li>
+<li>The <code>web</code> scenario does the actual web browsing, opening 12 different web sites across 7 tabs and interacting with them.  It will loop continually until the device goes into hibernate.  The plan also specifies a screen shot tool that will take screen shots every hour.  This can be helpful to review and make sure pages loaded properly.</li>
+<li><code>charge_on</code> will again turn on the charger after the rundown, or prompt you to.</li>
+<li><code>study_report</code> will roll up the results of multiple runs into a single Excel report generated from a template.  A basic template is used by default.  The report will be saved to the specified result directory of the study.</li>
+</ul>
+</li>
+<li>
+<p>If you need to stop the rundown:</p>
+<ul>
+<li>If the HOBL UI is up, click the "Stop Plan" button on the top.</li>
+<li>If the "web" scenario is running, close the browser and wait a few minutes.  It will detect that it can't navigate the browser, FAIL the test accordingly, and bring up the HOBL UI.</li>
+</ul>
+</li>
+<li>
+<p>At the end of the rundown the device will go into hibernate.  Manually reconnect the charger and after about 2 minutes press the power button to bring the device back online.  The device needs to remain in hibernate for at least 2 minutes for it to be detected properly.</p>
+</li>
+<li>Let the test execution continue.  After a couple minutes the browser should close and the HOB UI will open showing the executing test plan.</li>
+<li>When the plan is completed, you can view detailed result files of the <code>web</code> scenario you by clicking on the blue <code>RunDir</code> link on that line.  Or, to view a summary of all runs click the <code>Result Summary</code> button at the top.  Look for the "Metric &gt; Full Run Duration" for the measured battery life.</li>
+</ul>
+<h3 id="quick-start-for-experienced-hobl-users-novice-users-please-read-full-setup-instructions">Quick Start for experienced HOBL users (novice users please read full <a href="HOBL_Setup.html">Setup</a> instructions)</h3>
+<ul>
+<li>Make sure Git for Windows is installed on HOBL Host.</li>
+<li>Clone repo (preferably to c:\hobl, to avoid appsettings.json tweaks).</li>
+<li>Run host_setup.exe, located in the root folder.  Select both options.</li>
+<li>Copy downloads\setup\dut_setup_\&lt;ver&gt;.exe to a flash drive and run it on the DUT.  This will install SimpleRemote and configure the DUT for communication with the HOBL Host.  HOBL can't communicate without this, and you will see errors about failed remote directory creation and communication timeouts.</li>
+<li>Verify network connectivity by pinging the DUT from the Host and vice versa.  Then run the comm_check scenario and make sure all checks pass.</li>
+<li>To get HOBL updates, do a "git pull".</li>
+<li>To get HOBL UI updates, run host_setup.exe and only select the "User Interface" option.</li>
+</ul>
+<h3 id="further-reading">Further reading:</h3>
+<ul>
+<li><a href="HOBL_Setup.html">Setup</a></li>
+<li><a href="HOBL_Usage.html">Usage</a></li>
+<li><a href="HOBL_Prep.html">System Preparation</a></li>
+<li><a href="HOBL_Scenarios.html">Scenarios</a></li>
+<li><a href="HOBL_Tools.html">Tools</a></li>
+<li><a href="HOBL_ScenarioMaker.html">Creating Scenarios</a></li>
+<li><a href="HOBL_Design_Philosophy.html">HOBL Design Philosophy</a></li>
+</ul>
+<h2 id="security">Security</h2>
+<p>HOBL uses <a href="https://github.com/Microsoft/SimpleRemote">SimpleRemote</a> for communicating with devices, which allows users to run programs and access files on the computer where it is run, with no authentication whatsoever. It was designed to be run on test machines on closed, lab networks.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["search.highlight", "navigation.expand", "navigation.sections"], "search": "assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

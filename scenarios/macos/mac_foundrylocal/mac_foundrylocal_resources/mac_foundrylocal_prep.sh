@@ -1,21 +1,25 @@
-#!/bin/sh
+#!/bin/zsh
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 # AI Foundry Local prep script for macOS
-# Installs Foundry Local from GitHub release (version-controlled)
+# Installs the pinned Foundry Local SDK and publishes the workload app.
 
 BIN_DIR="/Users/Shared/hobl_bin"
 LOG_DIR="/Users/Shared/hobl_data"
 LOG_FILE="$LOG_DIR/mac_foundrylocal_prep.log"
-FOUNDRY_DIR="$HOME/foundry"
-FOUNDRY_VERSION="${1:-0.8.117}"
-export SUDO_ASKPASS=$BIN_DIR/get_password.sh
+FOUNDRY_VERSION="${1:-2.0.1}"
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+APP_DIR="$SCRIPT_DIR/foundrylocal_app"
+DOTNET_DIR="$APP_DIR/.dotnet"
+DOTNET="$DOTNET_DIR/dotnet"
+PACKAGE_DIR="$APP_DIR/packages"
+PUBLISH_DIR="$APP_DIR/publish"
+PROJECT_FILE="$APP_DIR/FoundryLocalWorkload.csproj"
+NUGET_CONFIG="$APP_DIR/NuGet.config"
+RUNTIME_IDENTIFIER="osx-arm64"
 
-# Create log directory if it doesn't exist
-if [ ! -d "$LOG_DIR" ]; then
-    mkdir -p "$LOG_DIR"
-fi
+mkdir -p "$LOG_DIR"
 
 log() {
     echo "$1"
@@ -23,24 +27,21 @@ log() {
 }
 
 check() {
-    if [ $1 -ne 0 ]; then
+    if [ "$1" -ne 0 ]; then
         log " ERROR - Last command failed with exit code: $1"
-        exit $1
+        exit "$1"
     fi
 }
 
-# Clear log file
 echo "-- Foundry Local prep started" > "$LOG_FILE"
-
 log "-- Foundry Local prep started"
 
-# Detect architecture
 ARCH=$(uname -m)
 log "Detected architecture: $ARCH"
 
 if [ "$ARCH" != "arm64" ]; then
     log " ERROR - Foundry Local for macOS is only available for Apple Silicon (arm64)"
-    log "Current architecture: $ARCH"
+    log " ERROR - Current architecture: $ARCH"
     exit 1
 fi
 
@@ -49,109 +50,104 @@ if [ ! -d "$BIN_DIR" ]; then
     exit 1
 fi
 
-log "Target Foundry version: $FOUNDRY_VERSION"
-
-# ============================================================================
-# Step 1: Ensure Xcode command-line tools are installed
-# ============================================================================
-log "Step 1: Checking for Xcode command-line tools..."
-
-if ! xcode-select -p &> /dev/null; then
-    log "Installing Xcode command-line tools..."
-    xcode-select --install
-    # Wait for installation to complete
-    log "Waiting for Xcode tools installation..."
-    until xcode-select -p &> /dev/null; do
-        sleep 5
-    done
-    log "Xcode command-line tools installed"
-else
-    log "Xcode command-line tools already installed"
+if [ ! -f "$PROJECT_FILE" ]; then
+    log " ERROR - Foundry Local workload project not found: $PROJECT_FILE"
+    exit 1
 fi
 
-# ============================================================================
-# Step 2: Download and install Foundry Local from GitHub release
-# ============================================================================
-log "Step 2: Installing AI Foundry Local version $FOUNDRY_VERSION..."
-
-# Create foundry directory
-if [ ! -d "$FOUNDRY_DIR" ]; then
-    log "Creating directory: $FOUNDRY_DIR"
-    mkdir -p "$FOUNDRY_DIR"
-fi
-
-cd "$FOUNDRY_DIR"
-
-# Define download URL and filename
-ZIP_FILENAME="FoundryLocal-osx-arm64-${FOUNDRY_VERSION}.zip"
-DOWNLOAD_URL="https://github.com/microsoft/Foundry-Local/releases/download/v${FOUNDRY_VERSION}/${ZIP_FILENAME}"
-EXTRACT_DIR="FoundryLocal-osx-arm64"
-
-log "Downloading from: $DOWNLOAD_URL"
-curl -Ls "$DOWNLOAD_URL" -o "$ZIP_FILENAME"
-check $?
-
-log "Download complete. Extracting..."
-unzip -o "$ZIP_FILENAME" -d "$FOUNDRY_DIR" 2>&1 | while read line; do log "  $line"; done
-check $?
+log "Target Foundry SDK version: $FOUNDRY_VERSION"
 
 # ============================================================================
-# Step 3: Run the install script
+# Step 1: Install a per-scenario .NET 8 SDK
 # ============================================================================
-log "Step 3: Running Foundry Local installer..."
+log "Step 1: Installing per-scenario .NET 8 SDK..."
 
-INSTALL_DIR="$FOUNDRY_DIR/$EXTRACT_DIR"
-if [ -d "$INSTALL_DIR" ]; then
-    cd "$INSTALL_DIR"
-    log "Running: ./install-foundry.command"
-    ./install-foundry.command 2>&1 | while read line; do log "  $line"; done
+mkdir -p "$DOTNET_DIR"
+if [ ! -x "$DOTNET" ]; then
+    DOTNET_INSTALL="$APP_DIR/dotnet-install.sh"
+    log "Downloading the official dotnet-install script..."
+    /usr/bin/curl -fL --retry 3 https://dot.net/v1/dotnet-install.sh -o "$DOTNET_INSTALL"
     check $?
+    chmod 700 "$DOTNET_INSTALL"
+
+    log "Installing .NET 8 SDK to: $DOTNET_DIR"
+    "$DOTNET_INSTALL" --channel 8.0 --architecture arm64 --install-dir "$DOTNET_DIR"
+    check $?
+    rm -f "$DOTNET_INSTALL"
 else
-    log " ERROR - Install directory not found: $INSTALL_DIR"
+    log "Using existing per-scenario dotnet installation: $DOTNET"
+fi
+
+if [ ! -x "$DOTNET" ]; then
+    log " ERROR - dotnet executable not found after installation: $DOTNET"
     exit 1
 fi
 
-# ============================================================================
-# Step 4: Verify installation
-# ============================================================================
-log "Step 4: Verifying Foundry Local installation..."
+DOTNET_VERSION=$("$DOTNET" --version 2>&1)
+check $?
+log "Using dotnet SDK: $DOTNET_VERSION"
 
-# Source .zshrc to pick up PATH changes made by install-foundry.command
-if [ -f "$HOME/.zshrc" ]; then
-    log "Sourcing ~/.zshrc to refresh PATH..."
-    source "$HOME/.zshrc"
+case "$DOTNET_VERSION" in
+    8.*) ;;
+    *)
+        log " ERROR - Expected a .NET 8 SDK, found: $DOTNET_VERSION"
+        exit 1
+        ;;
+esac
+
+# ============================================================================
+# Step 2: Download the Foundry Local 2.0.1 packages
+# ============================================================================
+log "Step 2: Downloading Foundry Local SDK version $FOUNDRY_VERSION..."
+
+mkdir -p "$PACKAGE_DIR"
+for PACKAGE in Microsoft.AI.Foundry.Local Microsoft.AI.Foundry.Local.Runtime; do
+    PACKAGE_FILE="$PACKAGE_DIR/$PACKAGE.$FOUNDRY_VERSION.nupkg"
+    PACKAGE_URL="https://www.nuget.org/api/v2/package/$PACKAGE/$FOUNDRY_VERSION"
+    log "Downloading $PACKAGE $FOUNDRY_VERSION from: $PACKAGE_URL"
+    /usr/bin/curl -fL --retry 3 "$PACKAGE_URL" -o "$PACKAGE_FILE"
+    check $?
+
+    if [ ! -s "$PACKAGE_FILE" ]; then
+        log " ERROR - Downloaded package is missing or empty: $PACKAGE_FILE"
+        exit 1
+    fi
+done
+
+# ============================================================================
+# Step 3: Restore and publish the workload app
+# ============================================================================
+log "Step 3: Publishing Foundry Local workload for $RUNTIME_IDENTIFIER..."
+
+if [ -d "$PUBLISH_DIR" ]; then
+    rm -rf "$PUBLISH_DIR"
 fi
+mkdir -p "$PUBLISH_DIR"
 
-# Also add the path directly in case sourcing doesn't work in sh
-export PATH="$HOME/bin:$PATH"
+"$DOTNET" restore "$PROJECT_FILE" \
+    --runtime "$RUNTIME_IDENTIFIER" \
+    --configfile "$NUGET_CONFIG" 2>&1 | while IFS= read -r line; do log "  $line"; done
+check ${pipestatus[1]}
 
-if command -v foundry &> /dev/null; then
-    FOUNDRY_PATH=$(which foundry)
-    log "Foundry command found at: $FOUNDRY_PATH"
-    
-    # Get version info
-    log "Getting Foundry version..."
-    VERSION_OUTPUT=$(foundry --version 2>&1)
-    log "  $VERSION_OUTPUT"
-else
-    log " ERROR - Foundry command not found after installation"
-    log "Please ensure Foundry Local is installed correctly"
+"$DOTNET" publish "$PROJECT_FILE" \
+    --configuration Release \
+    --runtime "$RUNTIME_IDENTIFIER" \
+    --self-contained false \
+    --no-restore \
+    --output "$PUBLISH_DIR" 2>&1 | while IFS= read -r line; do log "  $line"; done
+check ${pipestatus[1]}
+
+APP_DLL="$PUBLISH_DIR/FoundryLocalWorkload.dll"
+if [ ! -f "$APP_DLL" ]; then
+    log " ERROR - Published Foundry Local workload not found: $APP_DLL"
     exit 1
 fi
 
-# ============================================================================
-# Cleanup
-# ============================================================================
-log "Cleaning up downloaded files..."
-rm -f "$FOUNDRY_DIR/$ZIP_FILENAME"
-
-# ============================================================================
-# Summary
-# ============================================================================
+log "Published workload: $APP_DLL"
 log ""
 log "========================================"
 log "Foundry Local prep completed successfully"
-log "Version: $FOUNDRY_VERSION"
+log "SDK version: $FOUNDRY_VERSION"
 log "Architecture: $ARCH"
 log "========================================"
 log "Log file: $LOG_FILE"

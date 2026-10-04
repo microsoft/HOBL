@@ -1,14 +1,14 @@
-# HOBL UI
+# User Interface
 
 ## Installation
 
-The HOBL UI is installed by selecting the "User Interfaace" option in host_setup.exe, found at the root of the repository.Installation will:
+The HOBL UI is installed by selecting the "User Interface" option in host_setup.exe, found at the root of the repository.Installation will:
 1. Download the latest HOBL UI archive from the GitHub releases and unpack it at c:\hoblweb.
 1. Add a firewall rule to allow status updates to be pushed to it from clients.
 1. Install a local SQL database and start it.
 1. Attempt to launch the web app.
 
-The default settings should work in most cases, but can be modified in c:\hoblweb\appsettigns.json if not.  These include:
+The default settings should work in most cases, but can be modified in c:\hoblweb\appsettings.json if not.  These include:
   * "DocsPath": "c:\\hobl\\docs\\support"
   * "ResultsPath": "C:\\hobl_results"
 
@@ -59,7 +59,7 @@ This page lists the most recent runs that have been submitted.  They can be filt
 This page allows you to see how many passing and failing runs there have been for a particular plan for a particular study.  This useful, for example, for seeing if all the preps have passed, or if the desired number of runs of each scenario for a particular study have completed.
 
 ## Results
-The Results page works like a file explorer.  The "bread crumbs" at the top allow you to navigate back up levels of the hierarchy.  Click into a folder will take you down the hierarchy.  Run folders that are colored green are tests that have PASSed, while red ones are tests that have FAILed.  Many of the files produced by runs are directly viewable in the web interface for speed and convenience.  These include the html study report, csv files, html sleepstudy and battery reports, screen capture images, and video captures.  Files in the .trace format are a special form of CSV, that viewer show as an interactive plot, that can be combined and overlayed with other .trace files.  For example, overlaying the processes.trace onto the power.trace will show which process might have kicked up during a power spike.  Other files that are not viewable, such as .etl and .tdms files will instead be downloaded to your local computer for viewing when you click on them.
+The Results page works like a file explorer.  The "bread crumbs" at the top allow you to navigate back up levels of the hierarchy.  Click into a folder will take you down the hierarchy.  Run folders that are colored green are tests that have PASSed, while red ones are tests that have FAILed.  Many of the files produced by runs are directly viewable in the web interface for speed and convenience.  These include the html study report, csv files, html sleepstudy and battery reports, screen capture images, and video captures.  Files in the .trace format are a special form of CSV, that viewer show as an interactive plot, that can be combined and overlaid with other .trace files.  For example, overlaying the processes.trace onto the power.trace will show which process might have kicked up during a power spike.  Other files that are not viewable, such as .etl and .tdms files will instead be downloaded to your local computer for viewing when you click on them.
 
 In each run folder, the *_metrics.csv file rolls up all the key metrics from the run, including configuration information gathered before and after the run.  When the "study_report" scenario is run, a .xlsx and corresponding .html report file is produced at the study level.
 

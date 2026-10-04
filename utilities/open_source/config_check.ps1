@@ -1126,17 +1126,15 @@ elseif ($PostRun) {
 }
 # Static system configuration
 else { 
+    # Specified in profile
     # Study Type
-    # Filled in by automation
     Write-KeyVal "Study Type" ""
-
     # Accessories
-    # TODO: access from database
     Write-KeyVal "Accessories" ""
-
     # Hardware Version
-    # TODO: access from database
     Write-KeyVal "Hardware Version" ""
+    # Screen Size
+    Write-KeyVal "Screen Size (in)" ""
 
     # Product
     if (!$Win32_ComputerSystem) { $global:Win32_ComputerSystem = @(Get-WmiObject Win32_ComputerSystem) }
