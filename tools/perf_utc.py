@@ -24,7 +24,7 @@ class Tool(Scenario):
     # Get parameters
     provider = Params.get(module, 'provider')
     cm = Params.get(module, 'cm')
-    exception_metrics = ["PerfCodeMarker_ExcelPdfExport_PrintPage"]
+    exception_metrics = ["PerfCodeMarker_ExcelPdfExport_PrintPage", "PerfCodeMarker_PowerPointLaunch_Open"]
     summation_metrics = ["PerfCodeMarker_PowerPointR3ExportPDF_PrintPage"]
 
     def initCallback(self, scenario):
