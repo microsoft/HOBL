@@ -45,7 +45,7 @@ command = args.message[0] if args.message else ""
 # timeout for active-transfer waiting and cleanup. Calibrate_Device and data
 # transfer keep the full -timeout.
 QUICK_COMMAND_TIMEOUT = 15.0
-DAQ_RESET_TIMEOUT = 375.0
+RESET_TIMEOUT = 375.0
 QUICK_COMMANDS = {"DAQ_Start", "DAQ_Stop"}
 
 
@@ -234,8 +234,8 @@ try:
         # one command and get back a single status reply. Start and stop use a
         # short timeout, reset allows the server's transfer wait plus cleanup,
         # and Calibrate_Device keeps the full -timeout window.
-        if command == "DAQ_Reset":
-            cmd_timeout = DAQ_RESET_TIMEOUT
+        if command == "Reset":
+            cmd_timeout = RESET_TIMEOUT
         elif command in QUICK_COMMANDS:
             cmd_timeout = QUICK_COMMAND_TIMEOUT
         else:
