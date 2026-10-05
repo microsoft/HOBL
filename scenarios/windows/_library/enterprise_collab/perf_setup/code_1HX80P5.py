@@ -14,7 +14,7 @@ def run(scenario):
         logging.info("Setting enterprise_collab:simple_office_launch=0 because mincp_workloads has entries")
         Params.setParam("cm_base", "simple_office_launch", "0")
         logging.info("Sideloading ConsumerMultitaskerPTs.xml because mincp_workloads is set")
-        scenario._upload("utilities\\proprietary\\ParseUtc\\ConsumerMultitaskerPTs.xml", sideload_dir)
+        scenario._upload("utilities\\proprietary\\ParseUtc\\ConsumerMultitaskerPTs.xml", sideload_dir, check_modified=False)
         scenario._call(["cmd.exe", f'/C copy /Y "{sideload_dir}\\ConsumerMultitaskerPTs.xml" "{sideload_dir}\\UtcPerftrack.xml"'])
     else:
         logging.info("Sideloading UtcPerftrack.xml for enterprise _collab run")
