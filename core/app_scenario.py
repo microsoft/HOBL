@@ -92,6 +92,7 @@ class Scenario(unittest.TestCase):
         self.bare = False
         self.component = None
         self.current_screen = 0
+        self.perf_trace = False
 
         # Reset tooCallback values on each attempt
         self.reset_toolCallBacks_result()
@@ -3238,7 +3239,7 @@ class Scenario(unittest.TestCase):
             self.trace_manifest = []
 
         entry = {
-            "clip": action["trace_label"],
+            "clip": action["clip"],
             "label": trace_label,
             "action_id": action.get("id", ""),
             "instance": instance,
@@ -3339,8 +3340,8 @@ class Scenario(unittest.TestCase):
         # appended because it is the stable key offline processing uses to find the action's
         # trace_process instructions.
         trace_label = ""
-        if not "trace_label" in action or str(action["trace_label"]).strip() == "":
-            action["trace_label"] = ""
+        if not "trace_label" in action or str(action["trace_label"]).strip() == "" or self.perf_trace == False:
+            action["clip"] = ""
             action["trace_x"]= 0
             action["trace_y"]= 0
             action["trace_w"]= 0
@@ -3351,20 +3352,29 @@ class Scenario(unittest.TestCase):
         else:
             # Capture the scenario-supplied label once so repeated executions (loops, reused
             # includes) never compound the suffixes appended below.
+            original_trace_label = action["trace_label"]
             trace_label = action.setdefault("_traceLabel", self._sanitize_trace_label(action["trace_label"]))
-            action["trace_label"] = f"{trace_label}_{action['id']}"
+            action["clip"] = f"{trace_label}_{action['id']}"
+
             logging.info(f"Found trace_label in action: {action['trace_label']}")
             logging.debug(f"Trace dimensions: X={action['trace_x']}, Y={action['trace_y']}, W={action['trace_w']}, H={action['trace_h']}, Ms={action['trace_ms']}, Framerate={action['trace_framerate']}")
 
         # create trace_label dictionary if it doesn't exist
         if not hasattr(self, 'trace_label_dict'):
             self.trace_label_dict = {}
-        if action["trace_label"] != "":
-            base_trace_id = action["trace_label"]
+
+        # If the action has a trace label, update it with an instance number and record it in the manifest.
+        if action["clip"] != "":
+            base_trace_id = action["clip"]
+            trace_label = action["trace_label"]
             # Next available instance number for this base id.
-            self.trace_label_dict[base_trace_id] = self.trace_label_dict.get(base_trace_id, 0) + 1
-            action["trace_label"] = f"{base_trace_id}_{self.trace_label_dict[base_trace_id]}"
-            self._record_trace_manifest(action, trace_label, self.trace_label_dict[base_trace_id])
+            self.trace_label_dict[trace_label] = self.trace_label_dict.get(trace_label, 0) + 1
+            
+            action["clip"] = f"{base_trace_id}_{self.trace_label_dict[trace_label]}"
+            
+            self._record_trace_manifest(action, original_trace_label, self.trace_label_dict[trace_label])
+
+
         ###########################################
 
         # Find the template in the screenshot and click on it on the DUT
@@ -3387,7 +3397,7 @@ class Scenario(unittest.TestCase):
                 # Convert it to a list of floats
                 scale_str = action["scale"]
                 scale = [float(x) for x in scale_str.split(',')]
-            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, trace_label=action["trace_label"], trace_x=float(action["trace_x"]), trace_y=float(action["trace_y"]), trace_w=float(action["trace_w"]), trace_h=float(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"])):
+            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, trace_label=action["clip"], trace_x=float(action["trace_x"]), trace_y=float(action["trace_y"]), trace_w=float(action["trace_w"]), trace_h=float(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"])):
                 logging.debug("Click successful")
             else:
                 except_flag = True
@@ -3402,7 +3412,7 @@ class Scenario(unittest.TestCase):
             x = int(float(x_frac) * screen_width * self.dut_coord_scaler)
             y = int(float(y_frac) * screen_height * self.dut_coord_scaler)
             # Click the point
-            rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), 100, primary, self.current_screen, self.cursor_movement_enable, action["trace_label"], int(action["trace_x"]), action["trace_y"], action["trace_w"], action["trace_h"], action["trace_ms"], action["trace_framerate"])
+            rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), 100, primary, self.current_screen, self.cursor_movement_enable, action["clip"], int(action["trace_x"]), action["trace_y"], action["trace_w"], action["trace_h"], action["trace_ms"], action["trace_framerate"])
 
         # Find the template in the screenshot and move the mouse to it on the DUT
         elif action["type"] == "Move":
@@ -3423,7 +3433,7 @@ class Scenario(unittest.TestCase):
         elif action["type"] == "Type":
             logging.debug(f"Typing: {action['description']}")
             typing_delay = int(action["typing_delay"]) if "typing_delay" in action else self.typing_delay
-            self._send_text(action["text"], typing_delay=typing_delay, trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"]))
+            self._send_text(action["text"], typing_delay=typing_delay, trace_label=action["clip"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"]))
             if "delay" in action:
                 calculated_delay_time = (typing_delay / 1000.0) * len(action["text"])
                 if float(action["delay"]) < calculated_delay_time:
@@ -3433,7 +3443,7 @@ class Scenario(unittest.TestCase):
         # Inject a scroll event
         elif action["type"] == "Scroll":
             logging.debug("Scrolling: " + str(action["direction"]))
-            self._scroll(x_frac=float(action["x"]), y_frac=float(action["y"]), direction=action["direction"], trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"]))
+            self._scroll(x_frac=float(action["x"]), y_frac=float(action["y"]), direction=action["direction"], trace_label=action["clip"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"]))
 
         # Check for a template match in a screenshot. Returns True if the template is found, False if it is not
         elif action["type"] == "Check":

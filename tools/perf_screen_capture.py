@@ -17,6 +17,8 @@ class Tool(Scenario):
 
     def initCallback(self, scenario):
         # Initialization code
+        self.perf_trace = True
+
         if self.platform.lower() == "windows":
             if not self._check_remote_file_exists("ffmpeg.exe"):
                 self._upload("downloads\\ffmpeg_win64\\bin\\ffmpeg.exe", self.dut_exec_path)
