@@ -2349,7 +2349,6 @@ class Scenario(unittest.TestCase):
             dilation=self.dilation,
             dilation_kernel=self.dilation_kernel,
             debug_dir=debug_dir,
-            output_images=self.output_images,
         )
 
     # Get the point of the template in the screenshot
@@ -2366,7 +2365,11 @@ class Scenario(unittest.TestCase):
 
         # Delegate the actual matching to the shared TemplateMatcher.
         matcher = self._build_template_matcher()
-        return matcher.get_point(template, screenshot, threshold=threshold, method=method, scale_factors=scale_factors, offsets=offsets, edge_detect_thresholds=edge_detect_thresholds)
+        result = matcher.get_point(template, screenshot, threshold=threshold, method=method, scale_factors=scale_factors, offsets=offsets, edge_detect_thresholds=edge_detect_thresholds)
+        if result[0] is False:
+            self.scaled_images["template"].append({"filename": matcher.scaled_template_name, "score": result[1]})
+            self.scaled_images["capture_image"] = matcher.scaled_capture_name
+        return result
 
     # Capture a region of the screen and return it. Optionally save the image to a file as well
     def _capture_screen(self, filename=None, x=0, y=0, w=1, h=1):
