@@ -2440,6 +2440,15 @@ class Scenario(unittest.TestCase):
             x_adj = int(float(cap_action["x"]) * screen_width)
             y_adj = int(float(cap_action["y"]) * screen_height)
 
+        if trace_x is not None:
+            trace_x = int(float(trace_x) * screen_width * self.dut_coord_scaler)
+        if trace_y is not None:
+            trace_y = int(float(trace_y) * screen_height * self.dut_coord_scaler)
+        if trace_w is not None:
+            trace_w = int(float(trace_w) * screen_width * self.dut_coord_scaler)
+        if trace_h is not None:
+            trace_h = int(float(trace_h) * screen_height * self.dut_coord_scaler)
+
         # Click the point
         x = (point[0] + x_adj) * self.dut_coord_scaler
         y = (point[1] + y_adj) * self.dut_coord_scaler
@@ -3067,52 +3076,54 @@ class Scenario(unittest.TestCase):
                 continue
 
 
-            # TODO: check more of the id path
             append_after = False
+            found_target_id = False
             for target_action_id in self.action_id_dict:
                 if target_action_id in action["id_path"]:
                     logging.debug(f"Found action_id {target_action_id} in action['id_path']: {action['id_path']}")
-                # if action["id"] in self.action_id_dict:
-                    if self.action_id_dict[target_action_id]["action_type"] == "insert":
-                    # if self.action_id_dict[action["id"]]["action_type"] == "insert":
-                        for child_action in self.action_id_dict[target_action_id]["actions"]:
-                        # for child_action in self.action_id_dict[action["id"]]["actions"]:
-                            child_action["id_path"] = old_id_path
+                    found_target_id = True
+                    break
+            if found_target_id:
+                if self.action_id_dict[target_action_id]["action_type"] == "insert":
+                # if self.action_id_dict[action["id"]]["action_type"] == "insert":
+                    for child_action in self.action_id_dict[target_action_id]["actions"]:
+                    # for child_action in self.action_id_dict[action["id"]]["actions"]:
+                        child_action["id_path"] = old_id_path
 
-                        relationship = self.action_id_dict[target_action_id]["relationship"]
-                        # relationship = self.action_id_dict[action["id"]]["relationship"]
-                        if relationship == "during":
-                            # Wrap the inserted actions with an "Insert Actions Begin" and "Insert Actions End" which will manage the appropriate delay.
-                            new_action = {}
-                            new_action["type"] = "Insert Actions Begin"
-                            new_action["description"] = f"Inserting actions during {action['id']}"
-                            new_action["id"] = "AUTO"
-                            new_action["component"] = component
-                            flat_json.append(new_action)
-                            flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
-                            # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
-                            new_action = {}
-                            new_action["type"] = "Insert Actions End"
-                            new_action["description"] = f"Finished inserting actions during {action['id']}"
-                            new_action["id"] = "AUTO"
-                            new_action["delay"] = action["delay"]
-                            new_action["component"] = component
-                            flat_json.append(new_action)
-                            continue
-                        if relationship == "before":
-                            flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
-                            # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
-                        if relationship == "after":
-                            append_after = True
+                    relationship = self.action_id_dict[target_action_id]["relationship"]
+                    # relationship = self.action_id_dict[action["id"]]["relationship"]
+                    if relationship == "during":
+                        # Wrap the inserted actions with an "Insert Actions Begin" and "Insert Actions End" which will manage the appropriate delay.
+                        new_action = {}
+                        new_action["type"] = "Insert Actions Begin"
+                        new_action["description"] = f"Inserting actions during {action['id']}"
+                        new_action["id"] = "AUTO"
+                        new_action["component"] = component
+                        flat_json.append(new_action)
+                        flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
+                        # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+                        new_action = {}
+                        new_action["type"] = "Insert Actions End"
+                        new_action["description"] = f"Finished inserting actions during {action['id']}"
+                        new_action["id"] = "AUTO"
+                        new_action["delay"] = action["delay"]
+                        new_action["component"] = component
+                        flat_json.append(new_action)
+                        continue
+                    if relationship == "before":
+                        flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
+                        # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+                    if relationship == "after":
+                        append_after = True
 
-                    # If the action type is "register_perf_capture", copy all relevant keys from the action_id_dict entry to the current action.
-                    elif self.action_id_dict[target_action_id]["action_type"] == "register_perf_capture":
-                    # elif self.action_id_dict[action["id"]]["action_type"] == "register_perf_capture":
-                        for key, value in self.action_id_dict[target_action_id].items():
-                        # for key, value in self.action_id_dict[action["id"]].items():
-                            if key != "action_type":
-                                logging.debug(f"Register: Copying key {key} with value {value} to action {action['id']} in action_id_path {action['id_path']}")
-                                action[key] = value
+                # If the action type is "register_perf_capture", copy all relevant keys from the action_id_dict entry to the current action.
+                elif self.action_id_dict[target_action_id]["action_type"] == "register_perf_capture":
+                # elif self.action_id_dict[action["id"]]["action_type"] == "register_perf_capture":
+                    for key, value in self.action_id_dict[target_action_id].items():
+                    # for key, value in self.action_id_dict[action["id"]].items():
+                        if key != "action_type":
+                            logging.debug(f"Register: Copying key {key} with value {value} to action {action['id']} in action_id_path {action['id_path']}")
+                            action[key] = value
 
             # If the action is an include, read the json from the file and flatten it into the current json object
             if action["type"] == "Include":
@@ -3373,7 +3384,7 @@ class Scenario(unittest.TestCase):
                 # Convert it to a list of floats
                 scale_str = action["scale"]
                 scale = [float(x) for x in scale_str.split(',')]
-            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"])):
+            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, trace_label=action["trace_label"], trace_x=float(action["trace_x"]), trace_y=float(action["trace_y"]), trace_w=float(action["trace_w"]), trace_h=float(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"])):
                 logging.debug("Click successful")
             else:
                 except_flag = True
@@ -3561,13 +3572,13 @@ class Scenario(unittest.TestCase):
 
         elif action["type"] == "Insert Actions Begin":
             self.insert_actions_time = self.scenario_accumulated_time
-            logging.debug(f"Inserting actions begin: {self.scenario_accumulated_time}")
+            logging.debug(f"Insert actions begin: {self.scenario_accumulated_time}")
             return 0
         
         elif action["type"] == "Insert Actions End":
             t = float(action["delay"]) + self.insert_actions_time
             self._sleep_to(t)
-            logging.debug(f"Inserting actions end: Delaying to {t}")
+            logging.debug(f"Insert actions end: Delaying to {t}")
             return 0
 
         # Delete the parameters from the params dictionary

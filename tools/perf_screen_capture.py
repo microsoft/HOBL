@@ -44,7 +44,7 @@ class Tool(Scenario):
     def dataReadyCallback(self):
         # You can do any post processing of data here.
         logging.info("Perf Screen Capture Tool - dataReadyCallback")
-        self._host_call("python utilities\\open_source\\perf_process.py " + self.scenario.result_dir, expected_exit_code="")
+        self._host_call("downloads\\python_embed\\python.exe utilities\\open_source\\perf_process.py " + self.scenario.result_dir, expected_exit_code="")
         
         return
     

@@ -330,7 +330,7 @@ def main(argv=None):
                         help="Output folder for the results CSV and JSON (default: the run directory).")
     args = parser.parse_args(argv)
 
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(levelname)s: %(message)s")
 
     if not os.path.isdir(args.run_dir):
         parser.error(f"run_dir does not exist: {args.run_dir}")

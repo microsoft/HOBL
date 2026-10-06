@@ -260,19 +260,7 @@ def plugin_continuous_screenshot(host, port, dll_id, x=0, y=0, w=10, h=10, outpu
         "jsonrpc": "2.0",
         "id": "1",
     }
-    result = _call_rpc(host, port, payload)
-    if result == "CALLBACK":
-        print("ERROR: Timeout occurred during RPC call in plugin_continuous_screenshot()")
-        return ""
-    # print("RESULT: " + result)
-    result_dict = json.loads(result)
-    if "result" in result_dict:
-        data = result_dict["result"]
-        return data
-    else:
-        print(" ERROR Unexpected response from plugin_continuous_screenshot()")
-        print(result_dict)
-        return ""
+    _call_rpc(host, port, payload)
 
 
 def plugin_write_captures_to_disk(host, port, dll_id, capture_dir):
@@ -282,15 +270,7 @@ def plugin_write_captures_to_disk(host, port, dll_id, capture_dir):
         "jsonrpc": "2.0",
         "id": "1",
     }
-    result = _call_rpc(host, port, payload)
-    result_dict = json.loads(result)
-    if "result" in result_dict:
-        data = result_dict["result"]
-        return data
-    else:
-        print(" ERROR Unexpected response from plugin_write_capture_to_disk()")
-        print(result_dict)
-        return ""
+    _call_rpc(host, port, payload)
 
 
 def plugin_stop_performance_capture(host, port, dll_id):
@@ -300,15 +280,7 @@ def plugin_stop_performance_capture(host, port, dll_id):
         "jsonrpc": "2.0",
         "id": "1",
     }
-    result = _call_rpc(host, port, payload)
-    result_dict = json.loads(result)
-    if "result" in result_dict:
-        data = result_dict["result"]
-        return data
-    else:
-        print(" ERROR Unexpected response from plugin_stop_performance_capture()")
-        print(result_dict)
-        return ""
+    _call_rpc(host, port, payload)
 
 
 def plugin_clear_captures(host, port, dll_id):
@@ -318,13 +290,7 @@ def plugin_clear_captures(host, port, dll_id):
         "jsonrpc": "2.0",
         "id": "1",
     }
-    result = _call_rpc(host, port, payload)
-    result_dict = json.loads(result)
-    if "result" in result_dict:
-        data = result_dict["result"]
-        return data
-    else:
-        return ""
+    _call_rpc(host, port, payload)
 
 
 def plugin_screen_info(host, port, dll_id):

@@ -632,8 +632,11 @@ class ActionDialog(QDialog):
                 h_layout = QHBoxLayout()
                 for file_name in file_names:
                     image_path = os.path.join(working_dir, file_name)
-                    self.thumbnail = self.makeThumbnail(image_path)
-                    h_layout.addWidget(self.thumbnail)
+                    try:
+                        self.thumbnail = self.makeThumbnail(image_path)
+                        h_layout.addWidget(self.thumbnail)
+                    except Exception as e:
+                        pass
                 layout.addRow(QLabel("Thumbnail"), h_layout)
         if 'capture_id' in self.action:
             self.captureEdit = QLineEdit(self, text=self.action[u'capture_id'])
