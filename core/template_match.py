@@ -49,8 +49,7 @@ class TemplateMatcher(object):
                  standardize_dpi=True,
                  dilation=True,
                  dilation_kernel=(3, 3),
-                 debug_dir=None,
-                 output_images=False):
+                 debug_dir=None):
         self.json_parent_dir = json_parent_dir              # Directory where template images are stored
         self.device_scale = device_scale                    # Device display scale factor (1.0 == 96 DPI)
         self.default_threshold = threshold                   # Threshold for template matching
@@ -66,7 +65,6 @@ class TemplateMatcher(object):
         self.dilation = dilation                           # Apply dilation after edge detection and before blur
         self.dilation_kernel = dilation_kernel             # Dilation kernel size
         self.debug_dir = debug_dir                           # If set, debug images are written here
-        self.output_images = output_images                   # Output intermediate images for debugging
 
     # Save a debug image, if a debug directory has been configured.
     def _save_screen(self, filename, img):
@@ -79,7 +77,9 @@ class TemplateMatcher(object):
         else:
             # Don't try to convert grayscale images
             rgb_image = img
-        Image.fromarray(rgb_image).save(save_path)  # Convert for PIL
+        # Get the device DPI based on what was passed to template match class
+        device_dpi = int(float(self.device_scale) * 96)
+        Image.fromarray(rgb_image).save(save_path, dpi=(device_dpi, device_dpi)) # Convert for PIL
 
     # Get the point of the template in the screenshot.
     # Returns (point, confidence, next_best_confidence), where point is False if no match is above threshold.
@@ -97,22 +97,16 @@ class TemplateMatcher(object):
 
         # Use the provided screenshot (numpy array)
         screen_img = screenshot
-        screen_color_img = screen_img.copy() # TODO: optimize this away
-        screen_img = cv.cvtColor(screen_img, cv.COLOR_BGR2GRAY)
 
         if self.upscale != 1.0:
             screen_img = cv.resize(screen_img, (int(screen_img.shape[1] * (self.upscale)), int(screen_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR)
-            screen_color_img = cv.resize(screen_color_img, (int(screen_color_img.shape[1] * (self.upscale)), int(screen_color_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR) # TODO: optimize this away
 
-        screen_gray_img = screen_img
 
         # Load the recorded template in opencv
         if isinstance(template, str):
             # logging.debug("Loading template: " + str(template))
             # Load the template from a file if a string is provided
             template_img = cv.imread(os.path.join(self.json_parent_dir, template))
-            template_color_img = template_img.copy() # TODO: optimize this away
-            template_img = cv.cvtColor(template_img, cv.COLOR_BGR2GRAY)
         else:
             # Use the provided template if it is a numpy array already
             raise Exception("Template must be file path in order to read dpi! Unable to use preloaded template.")
@@ -123,7 +117,6 @@ class TemplateMatcher(object):
 
         if self.upscale != 1.0:
             template_img = cv.resize(template_img, (int(template_img.shape[1] * (self.upscale)), int(template_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR)
-            template_color_img = cv.resize(template_color_img, (int(template_color_img.shape[1] * (self.upscale)), int(template_color_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR) # TODO: optimize this away
 
         # Default the DPI comparison values in case DPI standardization is disabled.
         template_dpi = 0
@@ -147,33 +140,31 @@ class TemplateMatcher(object):
                 scale_factor = template_dpi / device_dpi
                 logging.debug(f"Scaling screen capture by {scale_factor:.2f} to match template DPI")
                 screen_img = cv.resize(screen_img, (int(screen_img.shape[1] * scale_factor), int(screen_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR)
-                screen_color_img = cv.resize(screen_color_img, (int(screen_color_img.shape[1] * scale_factor), int(screen_color_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR) # TODO: optimize this away
             elif template_dpi < device_dpi:
                 scale_factor = device_dpi / template_dpi
                 logging.debug(f"Scaling template by {scale_factor:.2f} to match device DPI")
                 template_img = cv.resize(template_img, (int(template_img.shape[1] * scale_factor), int(template_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR)
-                template_color_img = cv.resize(template_color_img, (int(template_color_img.shape[1] * scale_factor), int(template_color_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR) # TODO: optimize this away
             else:
                 # They are the same DPI and no need to resize
                 pass
 
-            template_resize_img = template_img
+        screen_img_gray = cv.cvtColor(screen_img, cv.COLOR_BGR2GRAY) # Convert to grayscale
+        template_img_gray = cv.cvtColor(template_img, cv.COLOR_BGR2GRAY) # Convert to grayscale
 
         if self.edge_blur:
-            screen_img = cv.GaussianBlur(screen_img,(3, 3),0)
+            screen_img_gray = cv.GaussianBlur(screen_img_gray,(3, 3),0)
 
         # Adjust the screenshot (outside of loop to avoid multiple adjustments)
         if self.edge_detect:
-            screen_img = cv.Canny(screen_img, edge_detect_thresholds[0], edge_detect_thresholds[1])
-            screen_edge_img = screen_img
+            screen_img_gray = cv.Canny(screen_img_gray, edge_detect_thresholds[0], edge_detect_thresholds[1])
 
         # Apply dilation
         if self.dilation:
             kernel = cv.getStructuringElement(cv.MORPH_RECT, self.dilation_kernel)
-            screen_img = cv.dilate(screen_img, kernel, iterations=1)
+            screen_img_gray = cv.dilate(screen_img_gray, kernel, iterations=1)
 
         if self.edge_blur:
-            screen_img = cv.GaussianBlur(screen_img,( self.edge_blur_kernel, self.edge_blur_kernel),0)
+            screen_img_gray = cv.GaussianBlur(screen_img_gray,( self.edge_blur_kernel, self.edge_blur_kernel),0)
 
         # Make sure the scale factors are in a list even if only one is provided
         if not isinstance(scale_factors, list):
@@ -183,11 +174,11 @@ class TemplateMatcher(object):
         next_best_match_val = 0
         # Loop through the scaled templates and find the best match
         for scale in scale_factors:
-            resized_template = imutils.resize(template_img, width=int(template_img.shape[1] * scale))
+            resized_template = imutils.resize(template_img_gray, width=int(template_img_gray.shape[1] * scale))
             h_screen = screen_img.shape[0]
             w_screen = screen_img.shape[1]
-            h_template = int(template_img.shape[0] * scale)
-            w_template = int(template_img.shape[1] * scale)
+            h_template = int(template_img_gray.shape[0] * scale)
+            w_template = int(template_img_gray.shape[1] * scale)
             if (h_screen < h_template) or (w_screen < w_template):
                 # Skip loop, template is larger than screenshot
                 continue
@@ -219,13 +210,9 @@ class TemplateMatcher(object):
             if self.edge_blur:
                 resized_template = cv.GaussianBlur(resized_template, (self.edge_blur_kernel, self.edge_blur_kernel), 0)
 
-            if self.output_images:
-                template_basename = os.path.basename(template)
-                self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), resized_template)
-                self._save_screen("capture_img_" + str(template_basename), screen_img)
 
             # Apply template matching
-            result = cv.matchTemplate(screen_img, resized_template, method)
+            result = cv.matchTemplate(screen_img_gray, resized_template, method)
 
             # Determine the top 2 matches (best and 2nd best)
             num_matches = 2
@@ -256,22 +243,19 @@ class TemplateMatcher(object):
                 best_match = (point, (1 - min_val[0]), next_best_match_val)
 
         logging.debug(f"Best Match: {best_match}")
+        template_basename = os.path.basename(template)
+        self.scaled_template_name = "scaled_template" + str(scale) + "_" + str(template_basename)
+        self.scaled_capture_name = "capture_" + str(template_basename)
+
+        self._save_screen(self.scaled_template_name, template_img)
+        self._save_screen(self.scaled_capture_name, screen_img)
+
         # Check if the match is above the threshold
         if best_match[1] < threshold:
             logging.debug(f"Match: {best_match[1]}, below threshold: {threshold}")
-            template_basename = os.path.basename(template)
-
-            scaled_template_name = "scaled_template" + str(scale) + "_" + str(template_basename)
-            self._save_screen(scaled_template_name, template_color_img)
-            # self.scaled_images["template"].append({"filename": scaled_template_name, "score": best_match[1]}) # TODO: get this working again
-            # self.scaled_images["capture_image"] = "capture_" + str(template_basename) # TODO: get this working again
-            self._save_screen("capture_" + str(template_basename), screen_color_img)
             return (False, best_match[1], next_best_match_val)
 
-        # Uncomment below for debugging
-        # template_basename = os.path.basename(template)
-        # self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), template_color_img)
-        # self._save_screen("capture_img_" + str(template_basename), screen_color_img)
+
 
         # return the click point and the confidence of the match
         return best_match
