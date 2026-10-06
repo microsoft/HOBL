@@ -312,7 +312,7 @@ def write_outputs(results, out_dir):
     fieldnames = ["clip", "time_ms"]
     with open(csv_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
-        writer.writeheader()
+        # writer.writeheader()
         for row in results:
             writer.writerow(row)
 
