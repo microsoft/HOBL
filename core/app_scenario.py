@@ -3083,7 +3083,7 @@ class Scenario(unittest.TestCase):
             append_after = False
             found_target_id = False
             for target_action_id in self.action_id_dict:
-                if target_action_id in action["id_path"]:
+                if target_action_id in action["id_path"] and target_action_id == action["id_path"].split(".")[-1]:
                     logging.debug(f"Found action_id {target_action_id} in action['id_path']: {action['id_path']}")
                     found_target_id = True
                     break
