@@ -44,11 +44,22 @@
         "children": [
             {
                 "children": [],
+                "delay": "0.0",
+                "description": "Check if Clear History Shortcut Key is set",
+                "enabled": true,
+                "file_name": [
+                    "code_1V8NJK6.py"
+                ],
+                "id": "1V8NJK6",
+                "type": "Code"
+            },
+            {
+                "children": [],
                 "delay": "0",
                 "description": "",
                 "enabled": true,
                 "id": "UC6NK7",
-                "include_path": "..\\_library\\web\\web_setup",
+                "include_path": "scenarios\\macos\\_library\\web\\web_setup",
                 "type": "Include"
             }
         ],
@@ -67,7 +78,7 @@
                         "description": "",
                         "enabled": true,
                         "id": "W9FNH0",
-                        "include_path": "..\\_library\\web\\web_run",
+                        "include_path": "scenarios\\macos\\_library\\web\\web_run",
                         "params": [
                             {
                                 "name": "[load_only]",
@@ -83,7 +94,7 @@
                         "description": "",
                         "enabled": true,
                         "id": "UEY3F2",
-                        "include_path": "..\\_library\\web\\web_close_tabs",
+                        "include_path": "scenarios\\macos\\_library\\web\\web_close_tabs",
                         "params": [
                             {
                                 "name": "[num_tabs_to_close]",
@@ -130,7 +141,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "UEY3W9",
-                "include_path": "..\\_library\\web\\web_close_browser",
+                "include_path": "scenarios\\macos\\_library\\web\\web_close_browser",
                 "type": "Include"
             },
             {
@@ -139,7 +150,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "V4JFP1",
-                "include_path": "..\\_library\\web\\web_kill",
+                "include_path": "scenarios\\macos\\_library\\web\\web_kill",
                 "type": "Include"
             }
         ],

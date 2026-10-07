@@ -3,7 +3,7 @@
 
 param(
     [string]$logFile = "",
-    [string]$model = "Phi-3.5-mini-instruct-generic-cpu",
+    [string]$model = "qwen2.5-0.5b",
     [string]$prompt = "What is the meaning of life?"
 )
 
@@ -106,20 +106,23 @@ Set-Content -Path $logFile -encoding utf8 "-- Foundry Local run started ($logSuf
 "Prompt: $prompt" | log
 Write-RunPhaseMarker "phase.run_prep.start"
 
-# Refresh PATH to ensure foundry is available
+# Refresh PATH to ensure dotnet is available
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
-# Verify required commands are findable on PATH after refresh.
-# Fail fast with a clear diagnostic instead of a chain of "term not recognized" errors.
-foreach ($cmd in @('foundry')) {
-    $resolved = Get-Command $cmd -ErrorAction SilentlyContinue
-    if (-not $resolved) {
-        " ERROR - Required command '$cmd' not found on PATH after refresh." | log
-        " ERROR - Prep may not have completed, or the RPC service has a stale PATH." | log
-        " ERROR - PATH: $env:Path" | log
-        Exit 1
-    }
-    "Found ${cmd}: $($resolved.Source)" | log
+$dotnetCmd = Get-Command dotnet -ErrorAction SilentlyContinue
+if (-not $dotnetCmd) {
+    " ERROR - Required command 'dotnet' not found on PATH after refresh." | log
+    " ERROR - Prep may not have completed, or the RPC service has a stale PATH." | log
+    " ERROR - PATH: $env:Path" | log
+    Exit 1
+}
+"Found dotnet: $($dotnetCmd.Source)" | log
+
+$appDll = Join-Path $PSScriptRoot "foundrylocal_app\publish\FoundryLocalWorkload.dll"
+if (-not (Test-Path $appDll)) {
+    " ERROR - Foundry Local workload app not found: $appDll" | log
+    " ERROR - Re-prep is required." | log
+    Exit 1
 }
 
 # Output directory for results
@@ -135,12 +138,12 @@ if (-not (Test-Path $outputDir)) {
 Write-RunPhaseMarker "phase.run_prep.end"
 Write-RunPhaseMarker "phase.run_build.start"
 "Running inference..." | log
-"Command: foundry model run $model --prompt `"$prompt`"" | log
+"Running Foundry Local SDK inference for model: $model" | log
 
 $startTime = Get-Date
 
 # Run the model and capture output
-$output = & foundry model run $model --prompt "$prompt" 2>&1
+$output = & dotnet $appDll run $model $prompt 2>&1
 $exitCode = $LASTEXITCODE
 
 $endTime = Get-Date
@@ -171,7 +174,7 @@ $resultsFile = Join-Path $outputDir "foundrylocal_results.csv"
 $resultsContent = @(
     "scenario_runtime,$scenarioRuntime"
     "architecture,$logSuffix"
-    "model,$model"
+    "ai_model,$model"
     "prompt,$prompt"
 )
 $resultsContent | Set-Content $resultsFile -Encoding UTF8

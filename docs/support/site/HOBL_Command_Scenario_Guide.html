@@ -1,0 +1,1485 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="HOBL_UI_Scenario_Guide.html">
+      
+      
+        <link rel="next" href="HOBL_Scenarios.html">
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>Developing Command-based Scenarios - Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.26e3688c.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#developing-command-based-scenarios" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Docs" class="md-header__button md-logo" aria-label="Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Developing Command-based Scenarios
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Docs" class="md-nav__button md-logo" aria-label="Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Overview.html" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Design_Philosophy.html" class="md-nav__link">
+        Design Philosophy
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          User Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          User Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Setup.html" class="md-nav__link">
+        Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Usage.html" class="md-nav__link">
+        Usage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_UI.html" class="md-nav__link">
+        User Interface
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Support.html" class="md-nav__link">
+        Support
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Developer Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Developer Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Contributing.html" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_ScenarioMaker.html" class="md-nav__link">
+        Scenario Maker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_UI_Scenario_Guide.html" class="md-nav__link">
+        Developing UI-based Scenarios
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Developing Command-based Scenarios
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="HOBL_Command_Scenario_Guide.html" class="md-nav__link md-nav__link--active">
+        Developing Command-based Scenarios
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    Table of Contents
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-structure" class="md-nav__link">
+    Scenario Structure
+  </a>
+  
+    <nav class="md-nav" aria-label="Scenario Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-orchestrator-scenariopy" class="md-nav__link">
+    Python Orchestrator (&lt;scenario&gt;.py)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#script-roles" class="md-nav__link">
+    Script Roles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-parity" class="md-nav__link">
+    Platform Parity
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powershell-coding-standards-windows" class="md-nav__link">
+    PowerShell Coding Standards (Windows)
+  </a>
+  
+    <nav class="md-nav" aria-label="PowerShell Coding Standards (Windows)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#script-template" class="md-nav__link">
+    Script Template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-policy" class="md-nav__link">
+    Execution Policy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shell-script-standards-macos" class="md-nav__link">
+    Shell Script Standards (macOS)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timing-and-metrics" class="md-nav__link">
+    Timing and Metrics
+  </a>
+  
+    <nav class="md-nav" aria-label="Timing and Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-scripts-must-produce-a-csv" class="md-nav__link">
+    Run scripts must produce a CSV
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows-timing-pattern" class="md-nav__link">
+    Windows timing pattern
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macos-timing-pattern" class="md-nav__link">
+    macOS timing pattern
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics-summary-banner" class="md-nav__link">
+    Metrics summary banner
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prep-version-bumping" class="md-nav__link">
+    Prep Version Bumping
+  </a>
+  
+    <nav class="md-nav" aria-label="Prep Version Bumping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    Rules
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    Error Handling
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-message-format" class="md-nav__link">
+    Error message format
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper-functions" class="md-nav__link">
+    Helper functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-handling" class="md-nav__link">
+    Path Handling
+  </a>
+  
+    <nav class="md-nav" aria-label="Path Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#windows-drive-relative-paths" class="md-nav__link">
+    Windows: Drive-relative paths
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macos-fixed-paths" class="md-nav__link">
+    macOS: Fixed paths
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-awareness" class="md-nav__link">
+    Architecture Awareness
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etw-phase-markers-windows" class="md-nav__link">
+    ETW Phase Markers (Windows)
+  </a>
+  
+    <nav class="md-nav" aria-label="ETW Phase Markers (Windows)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-the-manifest-for-wpa-decoding" class="md-nav__link">
+    Registering the manifest for WPA decoding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#marker-naming-convention" class="md-nav__link">
+    Marker naming convention
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emitting-markers-in-run-scripts" class="md-nav__link">
+    Emitting markers in run scripts
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-path-resolution" class="md-nav__link">
+    Python Path Resolution
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visual-studio-integration" class="md-nav__link">
+    Visual Studio Integration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist-before-submitting-a-pr" class="md-nav__link">
+    Checklist Before Submitting a PR
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Scenarios.html" class="md-nav__link">
+        Scenarios
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Tools.html" class="md-nav__link">
+        Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Parameters.html" class="md-nav__link">
+        Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Prep.html" class="md-nav__link">
+        Prep Details
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    Table of Contents
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-structure" class="md-nav__link">
+    Scenario Structure
+  </a>
+  
+    <nav class="md-nav" aria-label="Scenario Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-orchestrator-scenariopy" class="md-nav__link">
+    Python Orchestrator (&lt;scenario&gt;.py)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#script-roles" class="md-nav__link">
+    Script Roles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-parity" class="md-nav__link">
+    Platform Parity
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powershell-coding-standards-windows" class="md-nav__link">
+    PowerShell Coding Standards (Windows)
+  </a>
+  
+    <nav class="md-nav" aria-label="PowerShell Coding Standards (Windows)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#script-template" class="md-nav__link">
+    Script Template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-policy" class="md-nav__link">
+    Execution Policy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shell-script-standards-macos" class="md-nav__link">
+    Shell Script Standards (macOS)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timing-and-metrics" class="md-nav__link">
+    Timing and Metrics
+  </a>
+  
+    <nav class="md-nav" aria-label="Timing and Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-scripts-must-produce-a-csv" class="md-nav__link">
+    Run scripts must produce a CSV
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows-timing-pattern" class="md-nav__link">
+    Windows timing pattern
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macos-timing-pattern" class="md-nav__link">
+    macOS timing pattern
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics-summary-banner" class="md-nav__link">
+    Metrics summary banner
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prep-version-bumping" class="md-nav__link">
+    Prep Version Bumping
+  </a>
+  
+    <nav class="md-nav" aria-label="Prep Version Bumping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    Rules
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    Error Handling
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-message-format" class="md-nav__link">
+    Error message format
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helper-functions" class="md-nav__link">
+    Helper functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-handling" class="md-nav__link">
+    Path Handling
+  </a>
+  
+    <nav class="md-nav" aria-label="Path Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#windows-drive-relative-paths" class="md-nav__link">
+    Windows: Drive-relative paths
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macos-fixed-paths" class="md-nav__link">
+    macOS: Fixed paths
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-awareness" class="md-nav__link">
+    Architecture Awareness
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etw-phase-markers-windows" class="md-nav__link">
+    ETW Phase Markers (Windows)
+  </a>
+  
+    <nav class="md-nav" aria-label="ETW Phase Markers (Windows)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-the-manifest-for-wpa-decoding" class="md-nav__link">
+    Registering the manifest for WPA decoding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#marker-naming-convention" class="md-nav__link">
+    Marker naming convention
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emitting-markers-in-run-scripts" class="md-nav__link">
+    Emitting markers in run scripts
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-path-resolution" class="md-nav__link">
+    Python Path Resolution
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visual-studio-integration" class="md-nav__link">
+    Visual Studio Integration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist-before-submitting-a-pr" class="md-nav__link">
+    Checklist Before Submitting a PR
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="developing-command-based-scenarios">Developing Command-based Scenarios</h1>
+<p>This guide covers conventions, patterns, and requirements for modifying or creating developer scenarios in the HOBL codebase. </p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#scenario-structure">Scenario Structure</a></li>
+<li><a href="#platform-parity">Platform Parity</a></li>
+<li><a href="#powershell-coding-standards-windows">PowerShell Coding Standards (Windows)</a></li>
+<li><a href="#shell-script-standards-macos">Shell Script Standards (macOS)</a></li>
+<li><a href="#timing-and-metrics">Timing and Metrics</a></li>
+<li><a href="#prep-version-bumping">Prep Version Bumping</a></li>
+<li><a href="#error-handling">Error Handling</a></li>
+<li><a href="#path-handling">Path Handling</a></li>
+<li><a href="#architecture-awareness">Architecture Awareness</a></li>
+<li><a href="#etw-phase-markers-windows">ETW Phase Markers (Windows)</a></li>
+<li><a href="#python-path-resolution">Python Path Resolution</a></li>
+<li><a href="#visual-studio-integration">Visual Studio Integration</a></li>
+<li><a href="#checklist-before-submitting-a-pr">Checklist Before Submitting a PR</a></li>
+</ul>
+<hr />
+<h2 id="scenario-structure">Scenario Structure</h2>
+<p>Each developer scenario has both a <strong>Windows</strong> and <strong>macOS</strong> variant. The folder layout follows this pattern:</p>
+<pre><code class="language-text">scenarios/
+  windows/&lt;scenario&gt;/
+    &lt;scenario&gt;.py                    # Python class (orchestrator)
+    __init__.py
+    &lt;scenario&gt;_resources/
+      &lt;scenario&gt;_prep.ps1            # One-time setup (install deps, clone repos)
+      &lt;scenario&gt;_run.ps1             # Timed workload execution
+      &lt;scenario&gt;_teardown.ps1        # Cleanup (optional)
+  MacOS/mac_&lt;scenario&gt;/
+    mac_&lt;scenario&gt;.py
+    __init__.py
+    mac_&lt;scenario&gt;_resources/
+      mac_&lt;scenario&gt;_prep.sh
+      mac_&lt;scenario&gt;_run.sh
+</code></pre>
+<h3 id="python-orchestrator-scenariopy">Python Orchestrator (<code>&lt;scenario&gt;.py</code>)</h3>
+<p>The Python file defines a class that inherits from <code>scenarios.app_scenario.Scenario</code> and controls the scenario lifecycle:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setUp()</code></td>
+<td>Checks <code>prep_version</code>, uploads resources to DUT, runs prep script if needed</td>
+</tr>
+<tr>
+<td><code>runTest()</code></td>
+<td>Executes the run script in a loop (default iteration count set via <code>Params.setDefault</code>)</td>
+</tr>
+<tr>
+<td><code>tearDown()</code></td>
+<td>Calls base tearDown, then runs teardown script if one exists</td>
+</tr>
+<tr>
+<td><code>kill()</code></td>
+<td>Emergency cleanup of processes</td>
+</tr>
+</tbody>
+</table>
+<p>Key class attributes:</p>
+<pre><code class="language-python">module = __module__.split('.')[-1]     # Auto-derived scenario name
+prep_version = &quot;2&quot;                      # Controls prep re-execution (see below)
+resources = module + &quot;_resources&quot;       # Resource folder name
+</code></pre>
+<h3 id="script-roles">Script Roles</h3>
+<ul>
+<li><strong>Prep script</strong> — Installs dependencies (SDKs, tools, repos). Runs once per <code>prep_version</code>. Should be idempotent where possible.</li>
+<li><strong>Run script</strong> — The timed workload. Called multiple times (loop iterations). Must produce metrics CSV.</li>
+<li><strong>Teardown script</strong> — Optional cleanup after all iterations complete.</li>
+</ul>
+<hr />
+<h2 id="platform-parity">Platform Parity</h2>
+<p>Windows and macOS scripts for the same scenario must be <strong>functionally equivalent</strong>:</p>
+<ul>
+<li>Time the same phases (e.g., if Windows times <code>build</code>, macOS must also time <code>build</code>)</li>
+<li>Use the same CSV key names (e.g., both use <code>build_time</code>, not <code>build_real</code> on one and <code>build_time</code> on the other)</li>
+<li>Compute <code>scenario_runtime</code> the same way — always wall-clock time</li>
+<li>macOS scripts <strong>may</strong> capture extra detail (e.g., <code>user</code>, <code>sys</code>, <code>cputime</code> via <code>/usr/bin/time -p</code>), but <code>scenario_runtime</code> must match semantically</li>
+</ul>
+<p><strong>Before modifying one platform, check the other platform's script to keep them aligned.</strong></p>
+<hr />
+<h2 id="powershell-coding-standards-windows">PowerShell Coding Standards (Windows)</h2>
+<h3 id="script-template">Script Template</h3>
+<p>Every Windows prep/run script should follow this structure:</p>
+<pre><code class="language-powershell">param(
+    [string]$logFile = &quot;&quot;
+)
+
+$scriptDrive = Split-Path -Qualifier $PSScriptRoot
+if (-not $logFile) { $logFile = &quot;$scriptDrive\hobl_data\&lt;scenario&gt;_run.log&quot; }
+
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+function log {
+    [CmdletBinding()] Param([Parameter(ValueFromPipeline)] $msg)
+    process {
+        if ($msg -Match &quot; ERROR - &quot;) {
+            Write-Host $msg -ForegroundColor Red
+        } else {
+            Write-Host $msg
+        }
+        Add-Content -Path $logFile -encoding utf8 &quot;$msg&quot;
+    }
+}
+
+function check {
+    param($code)
+    if ($code -ne 0) {
+        &quot; ERROR - Last command failed.&quot; | log
+        Exit $code
+    }
+}
+
+function checkWinget {
+    param($code)
+    if ($code -eq 0) {
+        &quot;Winget command succeeded&quot; | log
+    } elseif ($code -eq -1978335189) {
+        &quot;Package already installed (this is OK)&quot; | log
+    } elseif ($code -eq -1978335215) {
+        &quot;No applicable upgrade found (this is OK)&quot; | log
+    } else {
+        &quot; ERROR - Winget command failed with exit code: $code&quot; | log
+        Exit $code
+    }
+}
+</code></pre>
+<h3 id="execution-policy">Execution Policy</h3>
+<p>Scripts that use <code>pyenv install</code> (which calls <code>Expand-Archive</code>) must set execution policy early:</p>
+<pre><code class="language-powershell">$executionPolicy = Get-ExecutionPolicy -Scope Process
+if ($executionPolicy -eq &quot;Restricted&quot; -or $executionPolicy -eq &quot;Undefined&quot;) {
+    Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process -Force -ErrorAction Stop
+}
+</code></pre>
+<hr />
+<h2 id="shell-script-standards-macos">Shell Script Standards (macOS)</h2>
+<p>macOS scripts use <code>/bin/sh</code> and follow this pattern:</p>
+<pre><code class="language-sh">#!/bin/sh
+
+LOG_DIR=&quot;/Users/Shared/hobl_data&quot;
+METRICS_FILE=&quot;$LOG_DIR/mac_&lt;scenario&gt;_results.csv&quot;
+
+check_status() {
+    if [ $? -ne 0 ]; then
+        echo &quot; ERROR - $1 failed&quot;
+        exit 1
+    fi
+    echo &quot;✓ $1 successful&quot;
+}
+
+check_command() {
+    if command -v &quot;$1&quot; &gt;/dev/null 2&gt;&amp;1; then
+        echo &quot;✓ $1 is available&quot;
+        return 0
+    else
+        echo &quot; ERROR - $1 is not available&quot;
+        return 1
+    fi
+}
+</code></pre>
+<hr />
+<h2 id="timing-and-metrics">Timing and Metrics</h2>
+<h3 id="run-scripts-must-produce-a-csv">Run scripts must produce a CSV</h3>
+<p>Every run script writes a <code>&lt;scenario&gt;_results.csv</code> to the <code>hobl_data</code> directory in <code>key,value</code> format:</p>
+<pre><code class="language-csv">scenario_runtime,45.23
+build_time,45.23
+</code></pre>
+<ul>
+<li><code>scenario_runtime</code> is <strong>required</strong> — it represents total wall-clock time of the timed workload</li>
+<li>Additional phase timings are encouraged (e.g., <code>build_time</code>, <code>test_time</code>)</li>
+</ul>
+<h3 id="windows-timing-pattern">Windows timing pattern</h3>
+<pre><code class="language-powershell">$buildDuration = Measure-Command {
+    dotnet build Aspire.slnx --no-restore &gt; &quot;$logDir\build.log&quot; 2&gt;&amp;1
+}
+check($lastexitcode)
+$buildTime = [math]::Round($buildDuration.TotalSeconds, 2)
+</code></pre>
+<h3 id="macos-timing-pattern">macOS timing pattern</h3>
+<pre><code class="language-sh">build_start=$(date +%s)
+# ... build commands ...
+build_end=$(date +%s)
+build_time=$((build_end - build_start))
+</code></pre>
+<h3 id="metrics-summary-banner">Metrics summary banner</h3>
+<p>Print a human-readable summary at the end of each run:</p>
+<pre><code class="language-text">========================================
+.NET Aspire Metrics Summary
+========================================
+Build Time:  45.23s
+scenario_runtime (total): 45.23s
+========================================
+</code></pre>
+<hr />
+<h2 id="prep-version-bumping">Prep Version Bumping</h2>
+<p>Each scenario's Python file contains a <code>prep_version</code> string:</p>
+<pre><code class="language-python">prep_version = &quot;2&quot;
+</code></pre>
+<p>This controls whether the prep script re-runs on the DUT. The HOBL framework checks this value and only re-runs prep when the version changes.</p>
+<h3 id="rules">Rules</h3>
+<ul>
+<li><strong>Whenever prep or run scripts are modified in a PR</strong>, increment <code>prep_version</code> by 1 in the corresponding scenario's Python file</li>
+<li>Increment for <strong>both platforms</strong> if both were changed, or just the affected one</li>
+<li>This only needs to happen <strong>once per PR</strong>, not per commit</li>
+<li>Forgetting to bump means DUTs won't pick up your script changes until someone manually clears the prep status</li>
+</ul>
+<hr />
+<h2 id="error-handling">Error Handling</h2>
+<h3 id="error-message-format">Error message format</h3>
+<p>All error messages <strong>must</strong> use this exact format:</p>
+<pre><code class="language-text"> ERROR - &lt;description&gt;
+</code></pre>
+<p>Note the spacing: leading space, <code>ERROR</code>, space, dash, space. This is required because the <code>log</code> function pattern-matches on <code>" ERROR - "</code> to colorize output.</p>
+<p>✅ Correct:</p>
+<pre><code class="language-powershell">&quot; ERROR - Last command failed.&quot; | log
+&quot; ERROR - dotnet not found on PATH&quot; | log
+Write-Host &quot; ERROR - Unsupported architecture&quot; -ForegroundColor Red
+</code></pre>
+<p>❌ Wrong:</p>
+<pre><code class="language-powershell">&quot;ERROR: something failed&quot; | log
+&quot;Error - bad path&quot; | log
+</code></pre>
+<h3 id="helper-functions">Helper functions</h3>
+<p>Use the standard helpers consistently:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>check($lastexitcode)</code></td>
+<td>After any command where <code>$LASTEXITCODE</code> indicates success/failure</td>
+</tr>
+<tr>
+<td><code>checkWinget($lastexitcode)</code></td>
+<td>After <code>winget install</code> (handles "already installed" codes)</td>
+</tr>
+<tr>
+<td><code>checkCmd($result)</code></td>
+<td>After commands returning "True"/"False" strings</td>
+</tr>
+<tr>
+<td><code>checkGitClone $code $path</code></td>
+<td>After <code>git clone</code> (handles "already exists" case)</td>
+</tr>
+<tr>
+<td><code>checkSetLocation $path</code></td>
+<td>Before <code>Set-Location</code> to verify path exists</td>
+</tr>
+<tr>
+<td><code>check_status "description"</code></td>
+<td>macOS equivalent of <code>check</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="path-handling">Path Handling</h2>
+<h3 id="windows-drive-relative-paths">Windows: Drive-relative paths</h3>
+<p><strong>Never hardcode <code>C:\</code> or any drive letter.</strong> Scripts may run from any drive.</p>
+<pre><code class="language-powershell"># Derive drive from script location
+$scriptDrive = Split-Path -Qualifier $PSScriptRoot
+
+# Use for all HOBL paths
+$logFile = &quot;$scriptDrive\hobl_data\scenario.log&quot;
+$repoDir = &quot;$scriptDrive\aspire&quot;
+</code></pre>
+<p><strong>System paths are the exception</strong> — <code>$env:ProgramFiles</code>, <code>$env:USERPROFILE</code>, <code>$env:TEMP</code>, etc., resolve correctly on their own.</p>
+<h3 id="macos-fixed-paths">macOS: Fixed paths</h3>
+<p>macOS scripts use <code>/Users/Shared/hobl_data</code> and <code>/Users/Shared/hobl_bin</code> as standard locations.</p>
+<hr />
+<h2 id="architecture-awareness">Architecture Awareness</h2>
+<p>Windows scenarios must detect and handle both x64 and ARM64:</p>
+<pre><code class="language-powershell">$osInfo = Get-CimInstance Win32_OperatingSystem
+$arch = $osInfo.OSArchitecture
+$processorArch = $env:PROCESSOR_ARCHITECTURE
+
+if ($arch -eq &quot;64-bit&quot; -and $processorArch -eq &quot;AMD64&quot;) {
+    $isARM64 = $false
+    $logSuffix = &quot;x64&quot;
+} elseif ($arch -match &quot;ARM&quot; -or $processorArch -match &quot;ARM&quot;) {
+    $isARM64 = $true
+    $logSuffix = &quot;ARM64&quot;
+} else {
+    &quot; ERROR - Unsupported architecture: $arch&quot; | log
+    Exit 1
+}
+</code></pre>
+<p>Use <code>$isARM64</code> to conditional-branch where binaries, workarounds, or configurations differ between architectures.</p>
+<hr />
+<h2 id="etw-phase-markers-windows">ETW Phase Markers (Windows)</h2>
+<p>HOBL includes a manifest for the scenario phase marker provider at:</p>
+<ul>
+<li><code>scenarios/windows/_dev_tools/HOBL-Scenario-Phases.man</code></li>
+</ul>
+<p>This manifest maps provider GUID <code>9f0f6e2e-8d06-4d2f-b8f5-6f1f2d5a1c01</code> event ID <code>1</code> to two Unicode payload fields:</p>
+<ul>
+<li><code>Marker</code></li>
+<li><code>Scenario</code></li>
+</ul>
+<h3 id="registering-the-manifest-for-wpa-decoding">Registering the manifest for WPA decoding</h3>
+<p>Run these commands in an elevated PowerShell terminal:</p>
+<pre><code class="language-powershell">$manifestPath = &quot;&lt;repo_root&gt;\scenarios\windows\_dev_tools\HOBL-Scenario-Phases.man&quot;
+wevtutil um $manifestPath
+wevtutil im $manifestPath
+wevtutil gp &quot;HOBL-Scenario-Phases&quot; /ge:true /gm:true
+</code></pre>
+<p>Then reopen WPA and reload the ETL file. Generic Events should decode payload text for this provider when metadata matches.</p>
+<h3 id="marker-naming-convention">Marker naming convention</h3>
+<p>Use this standard marker format:</p>
+<ul>
+<li><code>phase.run_prep.start</code> / <code>phase.run_prep.end</code></li>
+<li><code>phase.run_build.start</code> / <code>phase.run_build.end</code></li>
+<li><code>phase.run_test.start</code> / <code>phase.run_test.end</code></li>
+</ul>
+<p>This keeps phase attribution consistent across all developer scenarios and avoids naming collisions with prep/teardown script concepts.</p>
+<h3 id="emitting-markers-in-run-scripts">Emitting markers in run scripts</h3>
+<p>For Windows scenario run scripts, define an ETW EventSource with:</p>
+<ul>
+<li>Name: <code>HOBL-Scenario-Phases</code></li>
+<li>GUID: <code>9f0f6e2e-8d06-4d2f-b8f5-6f1f2d5a1c01</code></li>
+<li>Event ID: <code>1</code></li>
+<li>Payload: marker string and scenario name</li>
+</ul>
+<p>Emit marker pairs immediately around each timed run phase. Example:</p>
+<pre><code class="language-powershell">Write-RunPhaseMarker &quot;phase.run_build.start&quot;
+# build work
+Write-RunPhaseMarker &quot;phase.run_build.end&quot;
+</code></pre>
+<hr />
+<h2 id="python-path-resolution">Python Path Resolution</h2>
+<p>HOBL uses <strong>pyenv-win</strong> for Python version management. Do not replace it with <code>winget install</code> of Python.</p>
+<pre><code class="language-powershell"># WRONG — returns the pyenv shim, not the real .exe
+$python = Get-Command python
+
+# CORRECT — returns the actual python.exe path
+$pythonExeRaw = pyenv which python 2&gt;$null
+$pythonExe = $pythonExeRaw.Trim()
+</code></pre>
+<p>This matters when passing paths to tools like CMake (<code>-DPython3_EXECUTABLE</code>) which require the real executable.</p>
+<hr />
+<h2 id="visual-studio-integration">Visual Studio Integration</h2>
+<p>Use <code>vswhere.exe</code> to discover Visual Studio — never hardcode installation paths.</p>
+<pre><code class="language-powershell">$vsInfo = getVSVersion -product $vsProduct
+$actualVSPath = $vsInfo.Path
+$vsDevCmd = Join-Path $actualVSPath &quot;Common7\Tools\VsDevCmd.bat&quot;
+</code></pre>
+<hr />
+<h2 id="checklist-before-submitting-a-pr">Checklist Before Submitting a PR</h2>
+<ul>
+<li>[ ] Scripts use drive-relative paths (<code>$scriptDrive</code>), no hardcoded <code>C:\</code></li>
+<li>[ ] Error messages use the <code>" ERROR - "</code> format</li>
+<li>[ ] Standard helper functions (<code>check</code>, <code>log</code>, etc.) are used consistently</li>
+<li>[ ] <code>prep_version</code> incremented in affected scenario Python files (both platforms if both changed)</li>
+<li>[ ] Run script produces <code>&lt;scenario&gt;_results.csv</code> with <code>scenario_runtime</code></li>
+<li>[ ] Timing is consistent between Windows and macOS variants</li>
+<li>[ ] CSV key names match across platforms</li>
+<li>[ ] Architecture detection included for Windows scenarios</li>
+<li>[ ] Paths verified with <code>Test-Path</code> before use</li>
+<li>[ ] <code>pyenv which python</code> used instead of <code>Get-Command python</code></li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["search.highlight", "navigation.expand", "navigation.sections"], "search": "assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

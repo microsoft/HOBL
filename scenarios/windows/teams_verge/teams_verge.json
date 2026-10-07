@@ -32,7 +32,7 @@
     {
         "children": [],
         "delay": "0.0",
-        "description": "Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed.",
+        "description": "Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed.",
         "enabled": true,
         "id": "1513J8J",
         "multiple": false,

@@ -23,7 +23,7 @@ class ConfigCheck(core.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
     # Set default parameters
-    override_keys = ['Study Type', 'Comments', 'Hardware Version', 'Blade', 'Accessories', 'RTC Reserve (%)', 'Raw Data Location', 'Device Name']
+    override_keys = ['Study Type', 'Comments', 'Hardware Version', 'Screen Size (in)', 'Blade', 'Accessories', 'RTC Reserve (%)', 'Raw Data Location', 'Device Name']
     for key in override_keys:
         Params.setDefault(module, key, '')
 

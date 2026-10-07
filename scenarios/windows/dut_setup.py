@@ -165,12 +165,14 @@ class DutSetup(core.app_scenario.Scenario):
         copy_tree(source_path + "\\utilities\\open_source\\DesktopImages" , dest, verbose=0)
 
         # Copy HOBLStatusWindow folder contents to usb drive
-        dest = usb_hobl_bin + "\\HOBLStatusWindow"
-        if not os.path.exists(dest):
-            os.makedirs(dest)
-        logging.debug("Source: " + source_path + "\\utilities\\open_source\\HOBLStatusWindow\\bin\\Release\\net8.0-windows")
-        logging.debug("Dest  : " + dest)
-        copy_tree(source_path + "\\utilities\\open_source\\HOBLStatusWindow\\bin\\Release\\net8.0-windows" , dest, verbose=0)
+        src_paths = ["x64", "arm64"]
+        for src in src_paths:
+            dest = usb_hobl_bin + "\\HOBLStatusWindow-" + src
+            if not os.path.exists(dest):
+                os.makedirs(dest)
+            logging.debug("Source: " + source_path + f"\\utilities\\open_source\\HOBLStatusWindow\\bin\\{src}Release\\net8.0-windows\\win-{src}")
+            logging.debug("Dest  : " + dest)
+            copy_tree(source_path + f"\\utilities\\open_source\\HOBLStatusWindow\\bin\\{src}\\Release\\net8.0-windows\\win-{src}" , dest, verbose=0)
 
         # Copy WindowsApplicationDriver folder contents to usb drive
         if self.local_setup:
@@ -196,6 +198,18 @@ class DutSetup(core.app_scenario.Scenario):
             dest_dir = usb_hobl_bin + "\\InputInject"
             dest = dest_dir + src
             source = "\\Utilities\\open_source\\InputInject\\Output" + src
+            if not os.path.exists(dest_dir):
+                os.makedirs(dest_dir)
+            logging.debug("Source: " + source_path + source)
+            logging.debug("Dest  : " + dest)
+            shutil.copy(source_path + source , dest)
+            time.sleep(1)
+
+        src_files = ["\\PowerManager_win-x64.zip", "\\PowerManager_win-arm64.zip"]
+        for src in src_files:
+            dest_dir = usb_hobl_bin + "\\PowerManager"
+            dest = dest_dir + src
+            source = "\\Utilities\\open_source\\PowerManager\\Output" + src
             if not os.path.exists(dest_dir):
                 os.makedirs(dest_dir)
             logging.debug("Source: " + source_path + source)

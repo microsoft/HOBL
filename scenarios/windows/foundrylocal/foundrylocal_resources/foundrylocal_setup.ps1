@@ -3,7 +3,7 @@
 
 param(
     [string]$logFile = "",
-    [string]$model = "Phi-3.5-mini-instruct-generic-cpu"
+    [string]$model = "qwen2.5-0.5b"
 )
 
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
@@ -65,76 +65,30 @@ Set-Content -Path $logFile -encoding utf8 "-- Foundry Local setup started ($logS
 "Detected architecture: $arch (Processor: $processorArch)" | log
 "Model to download: $model" | log
 
-# Refresh PATH to ensure foundry is available
+# Refresh PATH to ensure dotnet is available
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
 # ============================================================================
-# Step 1: Start Foundry service
+# Download model to cache
 # ============================================================================
-"Step 1: Starting Foundry service..." | log
+"Downloading model to local cache..." | log
 
-"Running: foundry service start (in background)" | log
-Start-Process -FilePath "foundry" -ArgumentList "service", "start" -WindowStyle Hidden
-
-# Wait for service to be ready
-"Waiting for Foundry service to be ready..." | log
-$maxAttempts = 90
-$attempt = 0
-$serviceReady = $false
-
-while ($attempt -lt $maxAttempts -and -not $serviceReady) {
-    $attempt++
-    Start-Sleep -Seconds 1
-    
-    $statusOutput = & foundry service status 2>&1
-    $statusText = $statusOutput -join "`n"
-    
-    if ($statusText -match "running|Successfully|Valid EPs") {
-        $serviceReady = $true
-        "Foundry service ready after $attempt seconds" | log
-        $statusOutput | ForEach-Object { "  $_" | log }
-    } else {
-        "Waiting for service... ($attempt/$maxAttempts)" | log
-    }
-}
-
-if (-not $serviceReady) {
-    " ERROR - Foundry service did not start within $maxAttempts seconds" | log
-    "Last status output: $statusText" | log
+$appDll = Join-Path $PSScriptRoot "foundrylocal_app\publish\FoundryLocalWorkload.dll"
+if (-not (Test-Path $appDll)) {
+    " ERROR - Foundry Local workload app not found: $appDll" | log
+    " ERROR - Re-prep is required." | log
     Exit 1
 }
 
-# ============================================================================
-# Step 2: Download model to cache
-# ============================================================================
-"Step 2: Downloading model to local cache..." | log
-
-"Running: foundry model download $model" | log
+"Running SDK setup for model: $model" | log
 $startTime = Get-Date
 
-foundry model download $model 2>&1 | ForEach-Object { "  $_" | log }
+dotnet $appDll setup $model 2>&1 | ForEach-Object { "  $_" | log }
 check $LASTEXITCODE
 
 $endTime = Get-Date
 $duration = $endTime - $startTime
 "Model download completed in $($duration.TotalSeconds) seconds" | log
-
-# ============================================================================
-# Step 3: Verify model is cached
-# ============================================================================
-"Step 3: Verifying model is cached..." | log
-
-"Listing cached models:" | log
-$cacheOutput = & foundry cache list 2>&1
-$cacheOutput | ForEach-Object { "  $_" | log }
-
-$cacheText = $cacheOutput -join "`n"
-if ($cacheText -match [regex]::Escape($model)) {
-    "Model '$model' verified in cache" | log
-} else {
-    " ERROR - Model '$model' not found in cache" | log
-    Exit 1
-}
 
 # ============================================================================
 # Summary

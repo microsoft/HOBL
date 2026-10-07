@@ -8,10 +8,10 @@ BIN_DIR="/Users/Shared/hobl_bin"
 # Helper function for error checking
 check_status() {
     if [ $? -ne 0 ]; then
-        log " ERROR - $1 failed"
+        echo " ERROR - $1 failed"
         exit 1
     fi
-    log "$1 successful"
+    echo "$1 successful"
 }
 
 # Create assets folder if it does not exist
@@ -111,7 +111,7 @@ PAYLOAD1='{"method": "PluginLoad","params":["InputInject", "InputInject.Applicat
 # === PAYLOAD 2 ===
 PAYLOAD2='{"method": "StartJobWithNotification", "params": [null, null, "bash", "High", "-c \"ls ~/Documents\""], "jsonrpc": "2.0", "id": "1"}'
 # === PAYLOAD 3 ===
-PAYLOAD3='{"method": "PluginCallMethod", "params": ["InputInject", "MoveBy", 10, 10], "jsonrpc": "2.0", "id": "1"}'
+PAYLOAD3='{"method": "PluginCallMethod", "params": ["InputInject", "MoveBy", 10, 10, false], "jsonrpc": "2.0", "id": "1"}'
 # === PAYLOAD 4 ===
 PAYLOAD4='{"method": "StartJobWithNotification", "params": [null, null, "bash", "High", "-c \"ls ~/Downloads\""], "jsonrpc": "2.0", "id": "1"}'
 

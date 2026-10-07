@@ -32,7 +32,7 @@ def run(scenario):
     # logging.info("bots_test_server: " + bots_test_server)
     # logging.info("==========================================")
 
-    max_duration = 43200
+    max_duration = 64800
 
     # Validation of test params
     if access_key == "-1" and number_of_bots > 0:

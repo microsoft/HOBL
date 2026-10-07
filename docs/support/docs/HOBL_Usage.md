@@ -1,8 +1,8 @@
 # Usage
 
 The test scenarios that make up the "HOBL" suite have been pre-assembled in a "test plan", `testplans\hobl.ps1`.
-* Testplans can be run from the command line, if integrating with higher level automation, but running from the HOBL UI has a lot of benefits and is preferred.
-* Controlling which scenarios to run, such if donig re-runs of select scenarios, can be done by either commenting out lines in the test plan, or utilizing the checkboxes in the GUI interface.
+* Test plans can be run from the command line, if integrating with higher level automation, but running from the HOBL UI has a lot of benefits and is preferred.
+* Controlling which scenarios to run, such if doing re-runs of select scenarios, can be done by either commenting out lines in the test plan, or utilizing the checkboxes in the GUI interface.
 
 ## Top level
   * The HOBL framework is a general purpose test framework based on the Python UnitTest framework.  Windows Application Driver and image recognition technologies are used to remotely control the interaction of applications and web sites.
@@ -13,9 +13,9 @@ The test scenarios that make up the "HOBL" suite have been pre-assembled in a "t
  * However, this command is very limited and not supported for external use.  The HOBL UI is a much better way to run tests and plans.  For interfacing with external systems, ask HOBLsupport about the available REST API.
 
 ## Scenarios
-* The hobl/scenarios/[os] dir contains the scenarios that can be run.  Some scenarios are actual test cases, some do supporting tasks (such as turning the charger on/off), while others are jsut to prepare the device (such as installing office).  The scenarios that make up the "hobl" test plan are the best maintined.  Other scenarios may or may not still be maintained.
+* The hobl/scenarios/[os] dir contains the scenarios that can be run.  Some scenarios are actual test cases, some do supporting tasks (such as turning the charger on/off), while others are just to prepare the device (such as installing office).  The scenarios that make up the "hobl" test plan are the best maintained.  Other scenarios may or may not still be maintained.
 * A scenario, or test case, contains the code to interact with the DUT (Device Under Test) according to a specific user scenario.
-* Most scenarios require some initial preparation.  A special "prep" scenario can determine what additional preparation scenarios are need for a specified test scenario, and will automatically exeucute them.  Note that the HOBL UI will do this automatically for you.  But for command-line execution, to prepare for the "web" scenario, for example, the "prep" scenario can be run like this:
+* Most scenarios require some initial preparation.  A special "prep" scenario can determine what additional preparation scenarios are need for a specified test scenario, and will automatically execute them.  Note that the HOBL UI will do this automatically for you.  But for command-line execution, to prepare for the "web" scenario, for example, the "prep" scenario can be run like this:
 ```
     hobl.cmd -p my_profile.ini -s prep prep:scenarios_to_prep=web
 ```
@@ -32,9 +32,9 @@ There are 3 levels of parameters:
 * Descriptions of available parameters can be seen here: [Parameters](HOBL_Parameters.md)
 
 ## Tools
-* Two of the global parameters is "tools" and "prep_tools".  These are distinct because there is generally a sperate set of tools we run for measured test scenarios (such as ETL tracing) vs prep scenarios (such as screen_record).
+* Two of the global parameters is "tools" and "prep_tools".  These are distinct because there is generally a separate set of tools we run for measured test scenarios (such as ETL tracing) vs prep scenarios (such as screen_record).
 * In your profile, you can specify a space-separated default list of tools from the tools folder to run for every scenario of each type.
-* Tools can also be easily overriden per scenario when creating a new job in the HOBL UI, by clicking in the "tools" column and choosing from the drop-down.  The parameter will be populated appropriately behind the scenes.
+* Tools can also be easily overridden per scenario when creating a new job in the HOBL UI, by clicking in the "tools" column and choosing from the drop-down.  The parameter will be populated appropriately behind the scenes.
 * A tool is a python file that contains specific predefined methods called at specific phases of the test flow.  This can be used to control things like settings, tracing, measurements, or external equipment by sending specific commands at the appropriate time.
 * Create a new tool by copy/rename/editing an existing one that is most similar.
 * Tools can be added to an existing list on the command line, using a "+" symbol as the first character.  i.e.
@@ -44,7 +44,7 @@ There are 3 levels of parameters:
     * auto_recharge - Turns on the charger when battery level reaches a specified low threshold, and turns off at the specified upper threshold.
     * auto_charge - Turns off the charger before each scenario and turns on after.
     * etl_trace - Records ETL traces using WPR.  Specify .wprp providers on the "providers" parameter.
-    * power_light - Lightweight tracing that doesn't significanlty impact power consumption.  Traces and summarizes running process and the estimated power they consume.  Critical for determining variability in runs.
+    * power_light - Lightweight tracing that doesn't significantly impact power consumption.  Traces and summarizes running process and the estimated power they consume.  Critical for determining variability in runs.
     * power_heavy - Exhaustive collection and reporting of power-related activities in the system, but does have a significant impact on power itself.
     * powercfg - Runs the Windows powercfg.exe command for such things as a Sleep Study Report.
     * run\_report - Rollup a report of each run.  This is needed for the study_report scenario to rollup a report of the whole study.
@@ -57,20 +57,20 @@ There are 3 levels of parameters:
 * There are 2 folders created on the DUT:  
     * On Windows:  c:\hobl_bin and c:\hobl_data
     * On macOS:  /users/Shared/hobl_bin and /users/Shared/hobl_data
-* hobl_bin is where any scripts, excecutables, or resources that are needed for execution are copied, ususally by a prep scenario.
+* hobl_bin is where any scripts, executables, or resources that are needed for execution are copied, usually by a prep scenario.
 * hobl_data is cleared at the beginning of each scenario.  Any data produced by the scenario and tools while running on the DUT gets put there.  At the end of the scenario everything in that folder is copied back to the host computer's result directory.  Examples, include ETL traces, log files, config_check output, etc.
 
 ## Result directory
 * The global parameter "result_dir" represents the base directory on the host where results will be stored.  Default is "c:\hobl_results".  Relative paths must not be used.
 * There is also a "study_type" parameter that will automatically get appended to the result_dir.  It's optional, but is recommended for organizing test results for different studies.  This can be set in the profile, but there is also a convenient field at the top of the New Job page for overriding it.
-* For more advanced study organization, the New Job page allows use to specify Study Variables.  These are ideal for managing the variables in experiments.  The UI will automatically generate runs for all combinations of specified study variables and their values.  The variable names and values will be appeneded to the result directory for data organization, and will also be recorded in the result metadata to facilitate database filtering and querying.
-* The global parameter "run_type" allows for an additional subdirectory to be specified.  Default is "Prep" for all prep scenarios and "Power" for measured test scenarios.  This allows reporting tools to knwo which secnarios to try and roll up.
+* For more advanced study organization, the New Job page allows use to specify Study Variables.  These are ideal for managing the variables in experiments.  The UI will automatically generate runs for all combinations of specified study variables and their values.  The variable names and values will be appended to the result directory for data organization, and will also be recorded in the result metadata to facilitate database filtering and querying.
+* The global parameter "run_type" allows for an additional subdirectory to be specified.  Default is "Prep" for all prep scenarios and "Power" for measured test scenarios.  This allows reporting tools to know which scenarios to try and roll up.
 * Finally, the leaf directory automatically created is of the form `<scenario>_<iter>`.  Where `<iter>` is a 3-digit number that auto increments for each run.
 * So the final result directory is `<result_dir>\<study_type>\<studyvar1-val1>\<studyvar2-val1><run_type>\<scenario>_<iter>`
 
 ## Reporting
 * Run Report - A report rolled up for each scenario run. To run, add "run_report" to the list of tools on your global:tools parameter.  This does two things:
-    1. The tool runs an optional script specified in the script_path parameter to roll up any data collected by external equipment, such as DAQs, to a *_power_data.csv file, that just containes rows of `<key>,<val>` for any metrics you would like rolled up.  Since such a script is particular to individual lab environments, it is not provided, but we can help with creation of yours.
+    1. The tool runs an optional script specified in the script_path parameter to roll up any data collected by external equipment, such as DAQs, to a *_power_data.csv file, that just contains rows of `<key>,<val>` for any metrics you would like rolled up.  Since such a script is particular to individual lab environments, it is not provided, but we can help with creation of yours.
     2. A rollup_metrics script is run that rolls up all available .csv files, such as from other tools that may have been run, as well as the pre and post config_check runs, into a single *_metrics.csv file.  This summary file will be used by the study_report rollup.  The rollup_metrics.py script is in the "utilities" folder and can also be run manually and recursively on a full set of runs in one shot.
 * Study Report - Rolls up the Run Reports for an entire study.
     * Study Report is run as a scenario when you want to rollup existing results.
@@ -107,9 +107,9 @@ There are 3 levels of parameters:
 ## Test Plans
 * A "test plan" is simply a sequence of runs that make up a study.
 * The "New Job" page in the HOBL UI allows you to load existing test plans, amend them, or create new test plans by adding scenarios.
-* Each line specified the scenario to run, with options to change the number of iteratios, change the tools, or override parameters.
+* Each line specified the scenario to run, with options to change the number of iterations, change the tools, or override parameters.
 * A pane to set up Study Variables allows more automated generation and organization of advanced studies.
-* When submitting a job, the HOBL UI will automatically insert a "prep" scenario run for all the scenarios identified in the job, to make sure they've all been prepped before exeucting them.
+* When submitting a job, the HOBL UI will automatically insert a "prep" scenario run for all the scenarios identified in the job, to make sure they've all been prepped before executing them.
 
 ## SimpleRemote
 * SimpleRemote is a console application that runs in the background on the DUT to accept network commands (JSON RPC) for executing commands/programs and transferring files.
@@ -124,7 +124,7 @@ There are 3 levels of parameters:
 * Use of WinAppDriver is being phased out in favor of image-based automation, using the Scenario Maker tool, as it is no longer being maintained.  Also, WinAppDriver has a power hit, so it's only suitable for prep scenarios.
 
 ## Scenario Maker
-* Scenario Maker is an application that facilitates the creation of new test scenarios (or editing existing oens).
+* Scenario Maker is an application that facilitates the creation of new test scenarios (or editing existing ones).
 * Run Scenario Maker by executing hobl\ScenarioMaker\ScenarioMaker.cmd.
 * It starts with a remote connection to a DUT (specify IP address in Settings), then allows you to compose a sequence of actions for the scenario using the menu.
 * Record mode records you interacting with the DUT as a user would, and generates the appropriate action sequence for the test quickly and easily.  Caution, though, as these won't be optimized for power consumption.  To minimize power consumption, only take new screen captures when what you want to capture wasn't in a previous capture, and only capture as much of the screen as necessary.  Smaller screen region captures are faster and use less power.

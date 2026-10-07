@@ -18,7 +18,7 @@ class FishBowl(core.app_scenario.Scenario):
         f"scenarios\\windows\\{module}\\{resources}",
         __file__
     ]
-    prep_scenarios = [(module, prep_file_dependencies)]
+    # prep_scenarios = [(module, prep_file_dependencies)]
 
     # Set default parameters
     Params.setDefault(module, 'fish_count', '10',  desc="Number of fish to use")

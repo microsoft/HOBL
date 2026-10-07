@@ -3,7 +3,9 @@
 
 param(
     [string]$logFile = "",
-    [string]$startTime = (Get-Date).ToString("o")
+    [string]$startTime = (Get-Date).ToString("o"),
+    [string]$CompilerVersion = "21.1.8",
+    [string]$InstallerSha256 = ""
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -195,6 +197,26 @@ if (-not (Test-Path "$llvmBuildDir\CMakeCache.txt")) {
     Exit 1
 }
 "✓ Build directory verified" | log
+
+# Check the actual compiler before timing; never silently use another LLVM.
+try {
+    . (Join-Path $PSScriptRoot 'llvm_toolchain.ps1')
+    $compiler = Get-LlvmCompilerInfo -InstallDir $llvmInstallDir -ExpectedVersion $CompilerVersion
+    if ($InstallerSha256) {
+        Assert-LlvmMsiReceipt -Path (Join-Path $PSScriptRoot 'llvm_msi_receipt.json') -Sha256 $InstallerSha256 -Compiler $compiler
+    }
+    $cache = Get-Content -LiteralPath (Join-Path $llvmBuildDir 'CMakeCache.txt') -ErrorAction Stop
+    foreach ($language in @('C', 'CXX')) {
+        $entry = @($cache | Where-Object { $_ -match "^CMAKE_${language}_COMPILER:[^=]+=" })
+        if ($entry.Count -ne 1 -or ($entry[0] -split '=', 2)[1].Replace('/', '\') -ne $compiler.ClangCl.Replace('/', '\')) {
+            throw "CMake $language compiler does not match the selected toolchain. Re-prep required."
+        }
+    }
+    "Using LLVM compiler $($compiler.Version) ($($compiler.Architecture)): $($compiler.ClangCl)" | log
+} catch {
+    " ERROR - $($_.Exception.Message)" | log
+    Exit 1
+}
 
 # Clean previous build using ninja directly (matches ProjectD measurement methodology)
 $time = Get-Date -Format "HH:mm:ss"

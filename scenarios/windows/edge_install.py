@@ -24,11 +24,12 @@ class EdgeInstall(core.app_scenario.Scenario):
     module = __module__.split('.')[-1]
     Params.setDefault(module, 'install', '1')
 
-    browser = Params.get("global", 'browser')
-    install = Params.get(module, 'install')
     is_prep = True
 
     def runTest(self):
+        self.browser = Params.get("global", 'browser')
+        self.install = Params.get(self.module, 'install')
+
         # If the environment variable:EDGE_FEATURE_OVERRIDES_SOURCE is set to server_default (value is case-insensitive), then official builds will get only 100% allocated configurations from the server.
         self._call(['cmd.exe', '/C setx /m EDGE_FEATURE_OVERRIDES_SOURCE server_default'])
         
@@ -142,21 +143,25 @@ class EdgeInstall(core.app_scenario.Scenario):
         self._call(["powershell.exe", "& '"+ exe_path + "'"], blocking="False")
         time.sleep(15)
 
-        if edge_version.lower() in ["canary", "dev", "beta"]:
-            error = "Can't find Edge icon"
-            try:
-                app_elem = self._get_app_tray(self.desktop).find_element_by_name("Microsoft Edge " + edge_version + " - 1 running window")
-                # app_elem = self._get_app_tray(self.desktop).find_element_by_xpath('//Button[contains(@Name, "Edge ' + edge_version + '")]')
-                error = "Can't context click Microsoft Edge icon"
-                ActionChains(self.desktop).context_click(app_elem).perform()
-                time.sleep(1)
-                error = "Can't find Pin to taskbar"
-                pinbutton = self.desktop.find_element_by_name("Pin to taskbar")
-                error = "Can't click Pin to taskbar"
-                pinbutton.click()
-                logging.info("Microsoft Edge now pinned.")
-            except:
-                logging.info(error)
+        # Pin Edge icon to taskbar
+        # if edge_version.lower() in ["canary", "dev", "beta"]:
+        error = "Can't find Edge icon"
+        icon_version = edge_version + " "
+        if edge_version.lower() == "stable":
+            icon_version = ""
+        try:
+            app_elem = self._get_app_tray(self.desktop).find_element_by_name("Microsoft Edge " + icon_version + "- 1 running window")
+            # app_elem = self._get_app_tray(self.desktop).find_element_by_xpath('//Button[contains(@Name, "Edge ' + edge_version + '")]')
+            error = "Can't context click Microsoft Edge icon"
+            ActionChains(self.desktop).context_click(app_elem).perform()
+            time.sleep(1)
+            error = "Can't find Pin to taskbar"
+            pinbutton = self.desktop.find_element_by_name("Pin to taskbar")
+            error = "Can't click Pin to taskbar"
+            pinbutton.click()
+            logging.info("Microsoft Edge now pinned.")
+        except:
+            logging.info(error)
 
         elem = None
         total_wait = 60

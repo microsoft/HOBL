@@ -126,9 +126,10 @@ class Discharge(core.app_scenario.Scenario):
 
         logging.info(f"Stopping {self.run_scenario.lower()}")
 
-        p.stdin.write(b"teardown\n")
-        p.stdin.flush()
-        p.wait()
+        if p:
+            p.stdin.write(b"teardown\n")
+            p.stdin.flush()
+            p.wait()
 
         # Check if workload has been tapered if so then we need to finish discharing to resume_threshold
         if self.taper_workload > 0:

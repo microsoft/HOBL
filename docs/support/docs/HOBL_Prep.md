@@ -1,6 +1,6 @@
-# HOBL Prep
+# Prep Details
   
-The goal of HOBL is to test a device in the same way that a typical customer would use it, and therefore attempts to minimze any changes from the default setup of the device.  However, some changes need to be made in order to facilitate reliable automation.  Below is the list of scenarios and tools that make such changes to the system, and the changes they make.
+The goal of HOBL is to test a device in the same way that a typical customer would use it, and therefore attempts to minimize any changes from the default setup of the device.  However, some changes need to be made in order to facilitate reliable automation.  Below is the list of scenarios and tools that make such changes to the system, and the changes they make.
 
 ## dut_setup
 This is run to set up the device whenever it is re-imaged, either explicitly by the user or automatically as part of os_install.  Dut_setup makes the following changes to the system:

@@ -9,7 +9,7 @@ from random import *
 
 class Tool(Scenario):
     '''
-    Randomly fail a test, for devolpment/debug purposes.
+    Randomly fail a test, for development/debug purposes.
     '''
     module = __module__.split('.')[-1]
 

@@ -23,7 +23,7 @@ def main():
     from utilities.open_source.dump_tools import scenario_docs
 
     with open(doc_path, "w", encoding="utf-8") as doc_file:
-        doc_file.write("# HOBL Tools\n\n")
+        doc_file.write("# Tools\n\n")
         for tool, docstring in scenario_docs.items():
             if docstring is not None:
                 # write tool heading and docstring

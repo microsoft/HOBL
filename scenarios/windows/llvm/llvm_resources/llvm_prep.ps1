@@ -2,7 +2,11 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 param(
-    [string]$logFile = ""
+    [string]$logFile = "",
+    [string]$InstallerPath = "",
+    [string]$InstallerSha256 = "",
+    [string]$CompilerVersion = "21.1.8",
+    [switch]$AllowUnsignedInstaller
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -279,6 +283,26 @@ Set-Content -Path $logFile -encoding utf8 "-- llvm prep started ($logSuffix vers
 "=========================================" | log
 
 "Detected architecture: $arch (Processor: $processorArch)" | log
+
+# Validate the supplied artifact before any installers/toolchain changes.
+try {
+    . (Join-Path $PSScriptRoot 'llvm_toolchain.ps1')
+    if ($InstallerPath) {
+        Assert-LlvmMsi -Path $InstallerPath -Sha256 $InstallerSha256 -Version $CompilerVersion -AllowUnsigned:$AllowUnsignedInstaller | Out-Null
+    } elseif ($InstallerSha256 -or $AllowUnsignedInstaller -or $CompilerVersion -ne $llvmReleaseVersion) {
+        throw 'Custom compiler options require InstallerPath.'
+    } elseif (Test-Path -LiteralPath (Join-Path $llvmInstallDir 'bin\clang.exe')) {
+        # Never silently reuse or downgrade a manually installed/custom compiler.
+        try {
+            Get-LlvmCompilerInfo -InstallDir $llvmInstallDir -ExpectedVersion $llvmReleaseVersion | Out-Null
+        } catch {
+            throw "Existing LLVM does not match the default $llvmReleaseVersion toolchain. Select the approved MSI parameters, or have the DUT owner restore the default compiler before prep. $($_.Exception.Message)"
+        }
+    }
+} catch {
+    " ERROR - $($_.Exception.Message)" | log
+    Exit 1
+}
 
 # Refresh PATH
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
@@ -640,14 +664,25 @@ if ($vsAfter) {
     Exit 1
 }
 
-# --- Install pre-built LLVM 21.1.8 (compiler) ---
-"-- Installing pre-built LLVM $llvmReleaseVersion" | log
-installLLVMPrebuilt
-
-if (Test-Path "$llvmInstallDir\bin\clang.exe") {
-    & "$llvmInstallDir\bin\clang.exe" --version | log
-} else {
-    " ERROR - LLVM pre-built clang.exe not found after installation" | log
+# --- Install the compiler separately from the LLVM source benchmark version ---
+try {
+    if ($InstallerPath) {
+        # Always process an explicitly selected MSI during prep. The legacy
+        # 'any clang exists' shortcut must not skip an upgrade/custom build.
+        $msiLog = Join-Path (Split-Path $logFile -Parent) "llvm_msi_install_$($logSuffix.ToLower()).log"
+        Install-LlvmMsi -Path $InstallerPath -Sha256 $InstallerSha256 -Version $CompilerVersion -InstallDir $llvmInstallDir -InstallLog $msiLog -AllowUnsigned:$AllowUnsignedInstaller
+    } else {
+        "-- Installing pre-built LLVM $llvmReleaseVersion" | log
+        installLLVMPrebuilt
+    }
+    $compiler = Get-LlvmCompilerInfo -InstallDir $llvmInstallDir -ExpectedVersion $CompilerVersion
+    "Using LLVM compiler $($compiler.Version) ($($compiler.Architecture)): $($compiler.ClangCl)" | log
+    if ($InstallerPath) {
+        @{ InstallerSha256 = $InstallerSha256; Version = $compiler.Version; ClangSha256 = $compiler.ClangSha256; ClangClSha256 = $compiler.ClangClSha256 } |
+            ConvertTo-Json | Set-Content -LiteralPath (Join-Path $PSScriptRoot 'llvm_msi_receipt.json') -Encoding utf8 -ErrorAction Stop
+    }
+} catch {
+    " ERROR - $($_.Exception.Message)" | log
     Exit 1
 }
 
@@ -732,8 +767,8 @@ if ($pythonExe -and (Test-Path $pythonExe)) {
 # This is sufficient for cross-architecture testing and matches official Apple clang config.
 cmake -S "$llvmSourceDir\llvm" -B $llvmBuildDir -G "Ninja" `
     -DCMAKE_BUILD_TYPE=Release `
-    -DCMAKE_C_COMPILER=clang-cl `
-    -DCMAKE_CXX_COMPILER=clang-cl `
+    -DCMAKE_C_COMPILER="$($compiler.ClangCl)" `
+    -DCMAKE_CXX_COMPILER="$($compiler.ClangCl)" `
     -DLLVM_ENABLE_PROJECTS="clang;lld" `
     -DLLVM_TARGETS_TO_BUILD="AArch64;ARM;X86" `
     -DPython3_EXECUTABLE="$pythonExe"

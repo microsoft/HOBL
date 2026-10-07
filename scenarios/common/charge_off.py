@@ -25,9 +25,6 @@ class ChargeOff(core.app_scenario.Scenario):
     # Prevent any tools from running
     Params.setOverride('global', 'prep_tools', '')
 
-    # Get parameters
-    charge_off_call = Params.get('global', 'charge_off_call')
-
     widgets = Widgets()
 
     is_prep = True
@@ -38,20 +35,28 @@ class ChargeOff(core.app_scenario.Scenario):
         return
 
     def runTest(self):
+        # Get parameters
+        charge_off_call = Params.get('global', 'charge_off_call')
+        is_local = Params.get('global', 'dut_ip') in ['127.0.0.1', 'localhost']
+
         logging.info("Attempting to turn off charger...")
-        self._status_window("Attempting to turn off charger...")
-        if self.charge_off_call == '':
+        if is_local:
+            self._status_window("Attempting to turn off charger...")
+        if charge_off_call == '':
             if self.checkState() == 1:
                 logging.info("Already on DC power.")
-                self._status_window("Already on DC power.")
+                if is_local:
+                    self._status_window("Already on DC power.")
                 return
             logging.warning("No charge_off_call specified.  Manually turn off charger to continue.")
-            self._status_window("Attempting to turn off charger...\nAutomated charging not set up.\nManually disconnect charger to continue.")
+            if is_local:
+                self._status_window("Attempting to turn off charger...\nAutomated charging not set up.\nManually disconnect charger to continue.")
             self.widgets.about("Disconnect Charger", "Manually disconnect charger.", break_callback=self.onDC)
         else:
-            self._host_call(self.charge_off_call)
+            self._host_call(charge_off_call)
             logging.info("Charger turned off.")
-            self._status_window("Charger turned off.")
+            if is_local:
+                self._status_window("Charger turned off.")
 
     def tearDown(self):
         # Don't call base tearDown so that we don't interact with DUT.

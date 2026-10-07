@@ -6,7 +6,8 @@ Manages the list of actions.
 """
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QUrl
+from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWidgets import QApplication, QDialog, QCheckBox, QLineEdit, QTextEdit, QVBoxLayout, QHBoxLayout, QFormLayout, QPushButton, QInputDialog, QLabel, QDialogButtonBox, QGroupBox, QComboBox
 from settings import SettingsData
 import os
@@ -575,8 +576,12 @@ class ActionDialog(QDialog):
                 h_layout = QHBoxLayout()
                 edit_button = QPushButton("Edit")
                 edit_button.clicked.connect(self.editCode)
+                open_external_button = QPushButton("Open Externally")
+                open_external_button.setToolTip("Open the code file in the OS default editor (e.g. VS Code).")
+                open_external_button.clicked.connect(self.openCodeExternally)
                 h_layout.addWidget(self.fileNameEdit)
                 h_layout.addWidget(edit_button)
+                h_layout.addWidget(open_external_button)
                 layout.addRow(QLabel("File Name"), h_layout)
             else:
                 h_layout_fn = QHBoxLayout()
@@ -664,6 +669,19 @@ class ActionDialog(QDialog):
         file_path = os.path.join(self.working_dir, self.file_name)
         self.editor = CodeEditorWindow(None, file_path)
         self.editor.show()
+        self.save()
+
+    def openCodeExternally(self):
+        file_path = os.path.join(self.working_dir, self.file_name)
+        # Create the file with the template contents if it doesn't exist yet, so the
+        # external editor has something to open.
+
+        if not QDesktopServices.openUrl(QUrl.fromLocalFile(file_path)):
+            QtWidgets.QMessageBox.warning(
+                self,
+                "Open Externally",
+                f"Could not open the file in an external editor:\n{file_path}"
+            )
         self.save()
     
     def addImageCheck(self):
