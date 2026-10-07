@@ -1,0 +1,130 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "Open Quick Settings, mute, unmute, and restore the previous foreground window",
+        "enabled": true,
+        "id": "WAMU001",
+        "type": "Information"
+    },
+    {
+        "annoyance_timing_role": "stimulus",
+        "children": [],
+        "delay": "3",
+        "description": "Win+A to open quick settings",
+        "enabled": true,
+        "id": "WAMU023",
+        "text": "\ue03da",
+        "type": "Type",
+        "typing_delay": "50"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Quick Settings",
+        "enabled": true,
+        "file_name": [
+            "image_1V9VNMK.png"
+        ],
+        "h": "0.251",
+        "id": "1V9VNMK",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.215",
+        "x": "0.667",
+        "y": "0.697"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "file_name": [
+            "image_1W1NMKL.png"
+        ],
+        "h": "0.172",
+        "id": "1W1NMKL",
+        "target_id": "MUTE",
+        "trace_framerate": "60",
+        "trace_label": "Mute",
+        "trace_ms": "3000",
+        "trace_process": "settle",
+        "type": "Register Perf Capture",
+        "w": "0.144",
+        "x": "0.700",
+        "y": "0.725"
+    },
+    {
+        "capture_id": "1V9VNMK",
+        "children": [],
+        "delay": "4",
+        "description": "Speaker icon to mute",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1V9VR3X.png",
+            "image_1V9VRAP.png",
+            "image_1V9VRR5.png"
+        ],
+        "id": "MUTE",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "file_name": [
+            "image_1W1NNX1.png"
+        ],
+        "h": "0.198",
+        "id": "1W1NNX1",
+        "target_id": "UNMUTE",
+        "trace_framerate": "60",
+        "trace_label": "Unmute",
+        "trace_ms": "3000",
+        "trace_process": "settle",
+        "type": "Register Perf Capture",
+        "w": "0.120",
+        "x": "0.716",
+        "y": "0.697"
+    },
+    {
+        "capture_id": "1V9VNMK",
+        "children": [],
+        "delay": "4",
+        "description": "Speaker icon to unmute",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1V9VR3X.png",
+            "image_1V9VRAP.png",
+            "image_1V9VRR5.png"
+        ],
+        "id": "UNMUTE",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "annoyance_timing_role": "stimulus",
+        "children": [],
+        "delay": "0",
+        "description": "ESCAPE to dismiss Quick Settings",
+        "enabled": true,
+        "id": "WAMU053",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "0"
+    }
+]

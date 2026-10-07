@@ -1,0 +1,255 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "Open Pictures, show Extra large thumbnails, restore Large, close, and return to web",
+        "enabled": true,
+        "id": "WAPT001",
+        "type": "Information"
+    },
+    {
+        "annoyance_timing_role": "stimulus",
+        "children": [],
+        "delay": "5",
+        "description": "Win+E to open Explorer",
+        "enabled": true,
+        "id": "WAPT023",
+        "text": "\ue03de",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "Explorer",
+        "enabled": true,
+        "id": "1VYAN5A",
+        "type": "Window Maximize"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "CTRL-L to focus the Explorer address bar",
+        "enabled": true,
+        "id": "WAPT033",
+        "text": "\ue009l",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "annoyance_timing_role": "stimulus",
+        "children": [],
+        "delay": "2",
+        "description": "Pictures",
+        "enabled": true,
+        "id": "WAPT034",
+        "text": "pictures\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "CTRL-l",
+        "enabled": true,
+        "id": "1VYA83N",
+        "text": "\ue009l",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "ESC",
+        "enabled": true,
+        "id": "1VYARF8",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "Dismiss transient Explorer overlays",
+        "enabled": false,
+        "id": "WAPT034A",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Tool bar",
+        "enabled": true,
+        "file_name": [
+            "image_1VY28AC.png"
+        ],
+        "h": "0.153",
+        "id": "1VY28AC",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.260",
+        "x": "0.214",
+        "y": "0.040"
+    },
+    {
+        "capture_id": "1VY28AC",
+        "children": [],
+        "delay": "2",
+        "description": "View menu",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VY28WR.png"
+        ],
+        "id": "1VY28WR",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "View menu",
+        "enabled": true,
+        "file_name": [
+            "image_1VY29T7.png"
+        ],
+        "h": "0.279",
+        "id": "1VY29T7",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.301",
+        "x": "0.201",
+        "y": "0.040"
+    },
+    {
+        "capture_id": "1VY29T7",
+        "children": [],
+        "delay": "2",
+        "description": "Large icons",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VY2AN4.png"
+        ],
+        "id": "1VY2AN4",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "capture_id": "1VY28AC",
+        "children": [],
+        "delay": "2",
+        "description": "View menu",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VY28WR.png"
+        ],
+        "id": "WAPT043A",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Extra large icons",
+        "enabled": true,
+        "file_name": [
+            "image_1VYC77N.png"
+        ],
+        "h": "0.094",
+        "id": "1VYC77N",
+        "target_id": "CLICK_EXTRA_LARGE",
+        "trace_framerate": "60",
+        "trace_label": "Extra Large Icons",
+        "trace_ms": "2000",
+        "trace_process": "settle",
+        "type": "Register Perf Capture",
+        "w": "0.144",
+        "x": "0.171",
+        "y": "0.251"
+    },
+    {
+        "annoyance_timing_role": "stimulus",
+        "capture_id": "1VY29T7",
+        "children": [],
+        "delay": "3",
+        "description": "Extra large icons",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VY9HXU.png"
+        ],
+        "id": "CLICK_EXTRA_LARGE",
+        "match_threshold": "0.90",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "capture_id": "1VY28AC",
+        "children": [],
+        "delay": "2",
+        "description": "View menu",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VY28WR.png"
+        ],
+        "id": "WAPT053B",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "annoyance_timing_role": "stimulus",
+        "capture_id": "1VY29T7",
+        "children": [],
+        "delay": "2",
+        "description": "Restore Large icons",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VY2AN4.png"
+        ],
+        "id": "WAPT053D",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "annoyance_timing_role": "stimulus",
+        "children": [],
+        "delay": "0",
+        "description": "Close File Explorer via Alt+F4",
+        "enabled": true,
+        "id": "WAPT063",
+        "text": "\ue00a\ue034",
+        "type": "Type",
+        "typing_delay": "100"
+    }
+]
