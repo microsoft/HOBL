@@ -1,0 +1,540 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "Open Start, expand and collapse the app list, then return to the web workload",
+        "enabled": true,
+        "id": "WAST001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAST002",
+        "name": "[probe_name]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "start_menu_show_apps"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAST003",
+        "name": "[return_x]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "0.850"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAST004",
+        "name": "[return_y]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "0.020"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start probe occupancy timing",
+        "enabled": true,
+        "id": "WAST010",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "probe_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record probe start",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAST011",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Capture the taskbar",
+        "enabled": true,
+        "file_name": [
+            "capture_start_taskbar.png"
+        ],
+        "h": "0.100",
+        "id": "WASTCAP",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.900"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Start-open interaction",
+        "enabled": true,
+        "id": "WAST020",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "open_start_menu"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Start-open latency timing",
+        "enabled": true,
+        "id": "WAST021",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Start input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAST022",
+        "type": "Code"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WASTCAP",
+                "children": [],
+                "delay": "0",
+                "description": "Open Start",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "exception_on": "No match",
+                "file_name": [
+                    "image_1T6XEVR.png"
+                ],
+                "id": "WAST023",
+                "match_threshold": "0.72",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAST023IMAGEIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "image",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAST023IMAGEEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open Start using the caller-provided coordinate",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAST023",
+                "type": "Click Coord",
+                "x": "[open_taskbar_x]",
+                "y": "[open_taskbar_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAST023COORDIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAST023COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open Start via Ctrl+Esc",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAST023",
+                "text": "\ue009\ue00c",
+                "type": "Type",
+                "typing_delay": "50"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAST023KEYIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "keyboard",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAST023KEYEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture the Start panel controls",
+        "enabled": true,
+        "file_name": [
+            "capture_start_panel.png"
+        ],
+        "h": "1.000",
+        "id": "WASTPANEL",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WASTPANEL",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the Start search bar",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_start_search_bar.png"
+        ],
+        "h": "1.000",
+        "id": "WAST024",
+        "match_threshold": "0.85",
+        "timeout": "60",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Start-open latency timing",
+        "enabled": true,
+        "id": "WAST025",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record Start visible result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAST026",
+        "type": "Code"
+    },
+    {
+        "capture_id": "WASTPANEL",
+        "children": [],
+        "delay": "0",
+        "description": "Normalize a persisted expanded Start state",
+        "enabled": true,
+        "exception_on": "Never",
+        "file_name": [
+            "image_1T6XF07.png"
+        ],
+        "id": "WAST027",
+        "match_threshold": "0.72",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "capture_id": "WASTPANEL",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for a normalized collapsed Start state",
+        "enabled": true,
+        "file_name": [
+            "image_1T6XF07.png"
+        ],
+        "h": "1.000",
+        "id": "WAST028",
+        "match_threshold": "0.72",
+        "timeout": "30",
+        "type": "Check Until Not Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Show-all interaction",
+        "enabled": true,
+        "id": "WAST030",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "show_all_apps"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Show-all latency timing",
+        "enabled": true,
+        "id": "WAST031",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Show-all input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAST032",
+        "type": "Code"
+    },
+    {
+        "capture_id": "WASTPANEL",
+        "children": [],
+        "delay": "0",
+        "description": "Expand the app list",
+        "enabled": true,
+        "annoyance_timing_role": "stimulus",
+        "exception_on": "No match",
+        "file_name": [
+            "image_1T6XEX0.png"
+        ],
+        "id": "WAST033",
+        "match_threshold": "0.72",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "capture_id": "WASTPANEL",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for Show less control",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_1T6XF07.png"
+        ],
+        "h": "1.000",
+        "id": "WAST034",
+        "match_threshold": "0.72",
+        "timeout": "60",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Show-all latency timing",
+        "enabled": true,
+        "id": "WAST035",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record expanded app list result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAST036",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select return-to-web interaction",
+        "enabled": true,
+        "id": "WAST050",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "dismiss_start_menu"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start return-to-web latency timing",
+        "enabled": true,
+        "id": "WAST051",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record web-focus input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAST052",
+        "type": "Code"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Click the caller-provided safe coordinate",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAST053",
+                "type": "Click Coord",
+                "x": "[return_x]",
+                "y": "[return_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAST053COORDIF",
+        "left_term": "[dismiss_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAST053COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Dismiss Start with Escape",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAST053",
+                "text": "\ue03d",
+                "type": "Type",
+                "typing_delay": "0"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAST053ESCAPEIF",
+        "left_term": "[dismiss_mode]",
+        "right_term": "escape",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAST053ESCAPEEND",
+        "type": "End If"
+    },
+    {
+        "capture_id": "WASTPANEL",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the Start search bar to disappear",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_start_search_bar.png"
+        ],
+        "h": "1.000",
+        "id": "WAST054",
+        "match_threshold": "0.85",
+        "timeout": "90",
+        "type": "Check Until Not Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish return-to-web latency timing",
+        "enabled": true,
+        "id": "WAST055",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record Start dismissed result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAST056",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish probe occupancy timing",
+        "enabled": true,
+        "id": "WAST060",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "probe_end"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record probe end",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAST061",
+        "type": "Code"
+    }
+]
