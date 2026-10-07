@@ -297,6 +297,15 @@ Trace specified performance counters that report utilization.
 
 `npu_counter` - NPU counter to use (per process, per instance) **Default:** `\GPU Engine(*engtype_Compute)\Utilization Percentage` 
 
+## perf_codemarker
+
+Collects and processes code marker performance metrics.
+
+
+<u>Parameters:</u>
+
+`provider` - WPRP file to use for code marker traces. **Default:** `utc_codemarkers.wprp`
+
 ## perf_screen_capture
 
 A template that can be used for creating new tools.
@@ -309,6 +318,8 @@ Collects and processes UTC Perftrack scenarios
 <u>Parameters:</u>
 
 `provider` - WPRP file to use for UTC Perftrack traces. **Default:** `perf_utc.wprp`  **Options:** `abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, GTPLight_CustomMemHardFaults.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`
+
+`cm` - When set to `1`, use the Consumer Multitasker manifest, collect CodeMarker metrics, and append both results to the UTC `_PerfMetrics.csv` file. **Default:** `0`
 
 ## phm
 
@@ -681,4 +692,3 @@ Record a video of the scenario using a camera attached to the Host USB, or an RT
 `rotation` -  **Default:** `0` 
 
 `show` -  **Default:** `0` 
-

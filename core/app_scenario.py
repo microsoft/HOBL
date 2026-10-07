@@ -4245,14 +4245,17 @@ class Scenario(unittest.TestCase):
             with open(os.path.join(log_dir, fname), 'r') as f:
                 log_data[os.path.splitext(fname)[0]] = json.load(f)
 
+        youtube_durations = {}
         for yt_entry in log_data.get("youtube", []):
             title = yt_entry["title"]
-            dur = yt_entry["end"] - yt_entry["start"]
+            key = (yt_entry["url"], title)
+            duration = yt_entry["end"] - yt_entry["start"]
+            youtube_durations[key] = max(duration, youtube_durations.get(key, 0))
 
-            logging.debug(f"Checking YouTube playback log entry '{title}'. Comparing expected duration {youtube_duration}s with actual duration {dur:.2f}s")
-
-            if not youtube_duration - 15 <= dur <= youtube_duration + 15:
-                err_str = f"Unexpected YouTube {title} playback duration {dur}"
+        for (_, title), duration in youtube_durations.items():
+            logging.debug(f"Checking YouTube playback log entry '{title}'.  Comparing expected duration {youtube_duration}s with final cumulative duration {duration:.2f}s")
+            if not youtube_duration - 15 <= duration <= youtube_duration + 15:
+                err_str = f"Unexpected YouTube {title} playback duration {duration}"
                 logging.error(err_str)
                 self.fail(err_str)
 
@@ -4474,4 +4477,3 @@ class thread_with_exception(threading.Thread):
         
     def force_exception(self):
         sys.exit()
-

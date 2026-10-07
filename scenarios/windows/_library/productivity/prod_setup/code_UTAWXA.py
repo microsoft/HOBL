@@ -56,7 +56,7 @@ def run(scenario):
     # Upload Office docs
     upload_successful = False
     doc_source = os.path.join(os.path.dirname(__file__), "abl_docs")
-    doc_dest = os.path.join(userprofile, "OneDrive")
+    doc_dest = userprofile
     for i in range(12):
         try:
             scenario._upload(doc_source, doc_dest)

@@ -1,0 +1,22 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-26",
+        "description": "",
+        "enabled": true,
+        "id": "1TY5AAX",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Terminater (Alt+F4)",
+        "enabled": true,
+        "id": "1TY5AEU",
+        "text": "\ue00a\ue034",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    }
+]
