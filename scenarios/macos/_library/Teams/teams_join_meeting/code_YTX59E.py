@@ -23,6 +23,29 @@ def run(scenario):
         bot_names = json.loads(bot_names)
 
 
+    # Get the count of bots
+    bot_count = len(bot_uris)
+    logging.debug(f"Number of bots: {bot_count}")
+
+    # Determine the correct video resolution to subscribe at
+    if bots_force_subscribe_resolution != "0":
+        logging.debug(f"Force subscribe resolution set to: {bots_force_subscribe_resolution}")
+    else:
+        logging.debug(f"Auto-setting subscribe resolution based on bot count: {bot_count}")
+        
+        if bot_count > 16:
+            bots_force_subscribe_resolution = "180"
+            logging.debug(f"Auto-setting subscribe resolution to: {bots_force_subscribe_resolution}")
+        elif bot_count > 4:
+            bots_force_subscribe_resolution = "240"
+            logging.debug(f"Auto-setting subscribe resolution to: {bots_force_subscribe_resolution}")
+        elif bot_count > 1:
+            bots_force_subscribe_resolution = "360"
+            logging.debug(f"Auto-setting subscribe resolution to: {bots_force_subscribe_resolution}")
+        else:
+            bots_force_subscribe_resolution = "720"
+            logging.debug(f"Auto-setting subscribe resolution to: {bots_force_subscribe_resolution}")
+
 
     # Build the request URL
     subscribe_request = server_url + "/ForceSubscription" + "?code=" + access_key + "&resolution=" + bots_force_subscribe_resolution    

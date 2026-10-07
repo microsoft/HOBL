@@ -774,33 +774,15 @@
         "type": "Delay"
     },
     {
-        "children": [
-            {
-                "children": [],
-                "delay": "10",
-                "description": "Make a request to the bots to Subscribe to the DUT at the given resolution",
-                "enabled": true,
-                "file_name": [
-                    "code_YTX59E.py"
-                ],
-                "id": "YTX59E",
-                "type": "Code"
-            }
-        ],
-        "description": "",
-        "enabled": true,
-        "eval_method": "!=",
-        "id": "YTX4R5",
-        "left_term": "[teams:bots_force_subscribe_resolution]",
-        "right_term": "0",
-        "type": "If"
-    },
-    {
         "children": [],
-        "description": "",
+        "delay": "10",
+        "description": "Make a request to the bots to Subscribe to the DUT at the given resolution",
         "enabled": true,
-        "id": "YTX4R6",
-        "type": "End If"
+        "file_name": [
+            "code_YTX59E.py"
+        ],
+        "id": "YTX59E",
+        "type": "Code"
     },
     {
         "children": [],
