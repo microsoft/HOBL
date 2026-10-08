@@ -15,30 +15,30 @@
         "description": "PowerPoint Close Button",
         "enabled": true,
         "file_name": [
-            "image_UTA59H.png"
+            "image_1RLM5X9.png"
         ],
-        "h": "0.042",
-        "id": "UTA59H",
+        "h": "0.129",
+        "id": "1RLM5X9",
         "recapture": false,
         "type": "Capture",
-        "w": "0.032",
-        "x": "0.968",
-        "y": "0.000"
+        "w": "0.088",
+        "x": "0.911",
+        "y": "0.002"
     },
     {
-        "capture_id": "UTA59H",
+        "capture_id": "1RLM5X9",
         "children": [],
-        "delay": "1",
+        "delay": "2",
         "description": "PowerPoint Close Button",
-        "edge_thresholds": "5,50",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_UTA5JV.png"
+            "image_1RLM62T.png"
         ],
-        "id": "UTA5JV",
+        "id": "1RLM62T",
         "match_threshold": "",
         "primary": true,
+        "scale": "",
         "type": "Click",
         "x": "0.500",
         "y": "0.500"

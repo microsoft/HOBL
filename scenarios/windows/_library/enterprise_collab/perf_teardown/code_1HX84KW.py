@@ -9,4 +9,3 @@ def run(scenario):
     scenario._call(["cmd.exe", '/C reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 1 /f > null 2>&1'])
     scenario._call(["cmd.exe", '/C del /f "C:\\ProgramData\\Microsoft\\Diagnosis\\Sideload\\UtcPerftrack.xml"'])
     scenario._call(["cmd.exe", '/C del /f "C:\\ProgramData\\Microsoft\\Diagnosis\\Sideload\\DisableAllUploads.json"'])
-    scenario._sleep_to_now()
