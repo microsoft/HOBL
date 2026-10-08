@@ -2,7 +2,7 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 ##
-# Fast API building Workload
+# FastAPI maintainer release-validation workload
 ##
 
 import logging
@@ -68,4 +68,3 @@ class FastApi(core.app_scenario.Scenario):
             self._kill("pwsh.exe")
         except:
             pass
-
