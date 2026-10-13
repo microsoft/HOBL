@@ -7,7 +7,9 @@ charger_mode=manual skips relay callbacks and prints charger instructions in the
 HOBL log, waiting up to 120 seconds for each physical connection change.
 An unplugged DUT at or above min_battery_charge can proceed without charging.
 Below the threshold, connect AC and charge before measurement. Reconnect after
-measurement when requested. Automated mode requires working charger callbacks.
+measurement when requested; a manual post-run reconnect timeout only warns.
+Pre-measurement timeouts and automated restoration failures remain errors.
+Automated mode requires working charger callbacks.
 """
 
 import base64
@@ -18,6 +20,10 @@ import time
 
 import core.app_scenario
 from core.parameters import Params
+
+
+class _BatteryStateTimeout(RuntimeError):
+    """The DUT responded, but did not reach the requested battery state in time."""
 
 
 class BldtBatteryLife(core.app_scenario.Scenario):
@@ -45,7 +51,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         module,
         'charger_mode',
         'automated',
-        desc='automated uses charger callbacks; manual logs connect/unplug instructions and verifies power state (120-second transition timeout).',
+        desc='automated uses charger callbacks; manual logs connect/unplug instructions and verifies power state (120-second transition timeout; post-run reconnect timeout only warns).',
         valOptions=['automated', 'manual'],
     )
     Params.setDefault(
@@ -201,7 +207,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
                 return state
             remaining = deadline - time.monotonic()
             if remaining <= 0:
-                raise RuntimeError(f'Timed out waiting for {description}.')
+                raise _BatteryStateTimeout(f'Timed out waiting for {description}.')
             time.sleep(min(poll_seconds, remaining))
 
     def _ensure_charger_on(self):
@@ -259,7 +265,16 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             return
         try:
             if self.charger_mode == 'manual':
-                self._ensure_charger_on()
+                try:
+                    self._ensure_charger_on()
+                except _BatteryStateTimeout:
+                    logging.warning(
+                        "BLDT manual charger mode: AC power was not confirmed within "
+                        "120 seconds after the run. Connect the charger to prevent "
+                        "battery drain. This reconnect timeout does not change the "
+                        "assessment result; charging restoration remains unconfirmed."
+                    )
+                    return
             else:
                 self._request_charger(self.charge_on_call, 'charge_on')
                 self._wait_for_state(
