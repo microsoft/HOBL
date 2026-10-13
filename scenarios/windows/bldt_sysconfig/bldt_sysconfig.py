@@ -16,6 +16,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
     module = __module__.split('.')[-1]
     prep_version = "1"
     resources = module + "_resources"
+    prep_marker_module = "bldt"
 
     Params.setDefault(module, 'loops', '1')
     Params.setDefault(
@@ -43,7 +44,10 @@ class BldtSysconfig(core.app_scenario.Scenario):
         return ['powershell.exe', f'-NoProfile -NonInteractive -EncodedCommand {encoded}']
 
     def _prep_command(self, validate_only=False):
-        parameters = {'UseAi': str(self.use_ai).lower()}
+        parameters = {
+            'UseAi': str(self.use_ai).lower(),
+            'LogFile': f"{self.dut_data_path}\\bldt_sysconfig_prep.log",
+        }
         if validate_only:
             parameters['ValidateOnly'] = 'true'
         return self._powershell_command(
@@ -61,7 +65,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
             self._call(self._prep_command(validate_only=True), timeout=300)
         finally:
             self._copy_data_from_remote(self.result_dir)
-        self.createPrepStatusControlFile(self.prep_version)
+        self.createPrepStatusControlFile(self.prep_version, module=self.prep_marker_module)
 
     def setUp(self):
         self.loops = int(Params.get(self.module, 'loops'))
@@ -83,7 +87,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
             f"scenarios\\windows\\{self.module}\\{self.resources}",
             self.dut_exec_path,
         )
-        needs_prep = bool(self.checkPrepStatus([self.module + self.prep_version]))
+        needs_prep = bool(self.checkPrepStatus([self.prep_marker_module + self.prep_version]))
 
         if not needs_prep:
             try:

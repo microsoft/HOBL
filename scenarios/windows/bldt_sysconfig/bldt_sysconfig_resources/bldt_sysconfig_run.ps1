@@ -59,7 +59,8 @@ try {
     "Running: $($installation.Executable) $($arguments -join ' ')" | log
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
     $exitCode = Invoke-BldtProcess -FilePath $installation.Executable -ArgumentList $arguments `
-        -StandardOutput $stdoutFile -StandardError $stderrFile -TimeoutSeconds ($TimeoutMinutes * 60)
+        -StandardOutput $stdoutFile -StandardError $stderrFile -TimeoutSeconds ($TimeoutMinutes * 60) `
+        -WorkingDirectory $installation.InstallRoot
     $stopwatch.Stop()
     "BLDT process exit code: $exitCode" | log
 

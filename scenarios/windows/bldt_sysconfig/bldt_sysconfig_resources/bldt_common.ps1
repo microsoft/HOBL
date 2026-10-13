@@ -69,20 +69,30 @@ function Invoke-BldtProcess {
         [Parameter(Mandatory)][string[]]$ArgumentList,
         [Parameter(Mandatory)][string]$StandardOutput,
         [Parameter(Mandatory)][string]$StandardError,
-        [Parameter(Mandatory)][ValidateRange(1, 7200)][int]$TimeoutSeconds
+        [Parameter(Mandatory)][ValidateRange(1, 604800)][int]$TimeoutSeconds,
+        [string]$WorkingDirectory
     )
 
-    $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList `
-        -RedirectStandardOutput $StandardOutput -RedirectStandardError $StandardError -PassThru
+    $startParameters = @{
+        FilePath = $FilePath
+        ArgumentList = $ArgumentList
+        RedirectStandardOutput = $StandardOutput
+        RedirectStandardError = $StandardError
+        PassThru = $true
+    }
+    if ($WorkingDirectory) {
+        $startParameters.WorkingDirectory = $WorkingDirectory
+    }
+    $process = Start-Process @startParameters
     try {
         # Retain the handle before exit; Windows PowerShell otherwise can lose ExitCode.
         $null = $process.Handle
         if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
             Stop-Process -Id $process.Id -Force -ErrorAction Stop
             if (-not $process.WaitForExit(10000)) {
-                throw "BLDT SysConfigChecks exceeded the $TimeoutSeconds second timeout and could not be terminated."
+                throw "BLDT process exceeded the $TimeoutSeconds second timeout and could not be terminated."
             }
-            throw "BLDT SysConfigChecks exceeded the $TimeoutSeconds second timeout."
+            throw "BLDT process exceeded the $TimeoutSeconds second timeout."
         }
         $process.WaitForExit()
         if ($null -eq $process.ExitCode) {

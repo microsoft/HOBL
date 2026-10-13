@@ -17,7 +17,7 @@ $packageRoot = Join-Path $workRoot 'packages'
 if (-not $logFile) { $logFile = Join-Path $dataRoot 'bldt_sysconfig_prep.log' }
 
 New-Item -Path $dataRoot, $binRoot, $workRoot, $downloadRoot, $packageRoot -ItemType Directory -Force | Out-Null
-Set-Content -LiteralPath $logFile -Value '-- BLDT SysConfig prep started --' -Encoding UTF8
+Set-Content -LiteralPath $logFile -Value '-- BLDT prep started --' -Encoding UTF8
 . (Join-Path $PSScriptRoot 'bldt_common.ps1')
 
 $requireAi = $UseAi -eq 'true'
@@ -61,9 +61,9 @@ try {
 
     Start-Sleep -Seconds 3
     Assert-BldtInstallation -RequireAi:$requireAi | Out-Null
-    "-- BLDT SysConfig prep completed successfully --" | log
+    "-- BLDT prep completed successfully --" | log
     exit 0
 } catch {
-    " ERROR - BLDT SysConfig prep failed: $($_.Exception.Message)" | log
+    " ERROR - BLDT prep failed: $($_.Exception.Message)" | log
     exit 1
 }
