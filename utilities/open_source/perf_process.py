@@ -8,7 +8,7 @@ Takes a single HOBL run directory.  Everything needed lives inside it:
   trace_manifest.json          Written by core/app_scenario.py, one entry per recorded clip.
                                Each entry carries the clip folder name, the resolved capture
                                settings, and its "traceProcess" measurement settings.
-  perf_screenshots/<clip>/     Per-clip folder (named by the manifest's "clip" field) holding
+  perfcap_clips/<clip>/     Per-clip folder (named by the manifest's "clip" field) holding
                                the recorded "capture.mp4" (and a "frame_times.csv").
 
 For each manifest entry the entry's "traceProcess" measure is applied to its clip and a result
@@ -54,7 +54,7 @@ DEFAULT_MEASURE = "settle"
 # The manifest that core/app_scenario.py writes into the run directory.
 MANIFEST_FILENAME = "trace_manifest.json"
 # Clips are copied back from the DUT into this subfolder of the run directory.
-CLIPS_SUBDIR = "perf_screenshots"
+CLIPS_SUBDIR = "perfcap_clips"
 # Each recorded clip lives in its own folder (named by the manifest "clip" field) and the video
 # file inside is always named this.
 CLIP_FILENAME = "capture.mp4"
@@ -91,7 +91,7 @@ def load_manifest(run_dir):
 def resolve_clips_dir(run_dir):
     '''
     Locate the folder that holds the per-clip subfolders.  Clips are copied back from the DUT
-    into "<run_dir>/perf_screenshots", but fall back to the run directory itself if that
+    into "<run_dir>/perfcap_clips", but fall back to the run directory itself if that
     subfolder is absent.
     '''
     clips_dir = os.path.join(run_dir, CLIPS_SUBDIR)

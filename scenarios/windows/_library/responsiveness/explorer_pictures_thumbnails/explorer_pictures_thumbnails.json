@@ -178,7 +178,7 @@
         "target_id": "CLICK_EXTRA_LARGE",
         "trace_framerate": "60",
         "trace_label": "Extra Large Icons",
-        "trace_ms": "2000",
+        "trace_len": "2.0",
         "trace_process": "settle",
         "type": "Register Perf Capture",
         "w": "0.144",

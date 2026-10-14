@@ -13,7 +13,7 @@ class Tool(Scenario):
     A tool that captures partial screen recordings for later performance analysis.
     '''
     module = __module__.split('.')[-1]
-    perf_path_name = "perf_screenshots"
+    perf_path_name = "perfcap_clips"
 
     def initCallback(self, scenario):
         # Initialization code
