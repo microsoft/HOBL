@@ -1,0 +1,1042 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "Open Quick Settings, mute, unmute, and restore the previous foreground window",
+        "enabled": true,
+        "id": "WAMU001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAMU002",
+        "name": "[probe_name]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "mute_unmute"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start mute/unmute occupancy timing",
+        "enabled": true,
+        "id": "WAMU010",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "probe_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record probe start",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU011",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Capture the foreground window and taskbar",
+        "enabled": true,
+        "file_name": [
+            "capture_mute_unmute.png"
+        ],
+        "h": "1",
+        "id": "WAMUCAP",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1",
+        "x": "0",
+        "y": "0"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select open Quick Settings interaction",
+        "enabled": true,
+        "id": "WAMU020",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "open_quick_settings"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start open Quick Settings latency timing",
+        "enabled": true,
+        "id": "WAMU021",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record open Quick Settings input start",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU022",
+        "type": "Code"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAMUCAP",
+                "children": [],
+                "delay": "0",
+                "description": "Open Quick Settings from the taskbar",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "exception_on": "No match",
+                "file_name": [
+                    "image_1T6WY7U.png"
+                ],
+                "id": "WAMU023",
+                "match_threshold": "",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU023IMAGEIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "image",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU023IMAGEEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open Quick Settings from the taskbar using the caller-provided coordinate",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAMU023",
+                "type": "Click Coord",
+                "x": "[open_taskbar_x]",
+                "y": "[open_taskbar_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU023COORDIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU023COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open Quick Settings via Win+A",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAMU023",
+                "text": "\ue03da",
+                "type": "Type",
+                "typing_delay": "50"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU023KEYIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "keyboard",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU023KEYEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture only the Quick Settings volume row",
+        "enabled": true,
+        "file_name": [
+            "capture_volume_row.png"
+        ],
+        "h": "[volume_row_h]",
+        "id": "WAMUVOL",
+        "recapture": true,
+        "type": "Capture",
+        "w": "[volume_row_w]",
+        "x": "[volume_row_x]",
+        "y": "[volume_row_y]"
+    },
+    {
+        "capture_id": "WAMUVOL",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for Quick Settings volume control",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_1T6WYA2.png",
+            "image_unmuted_low_volume.png"
+        ],
+        "h": "[volume_row_h]",
+        "id": "WAMU024",
+        "match_threshold": "0.65",
+        "timeout": "5",
+        "type": "Check Until Found",
+        "w": "[volume_row_w]",
+        "x": "[volume_row_x]",
+        "y": "[volume_row_y]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish open Quick Settings latency timing",
+        "enabled": true,
+        "id": "WAMU025",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record open Quick Settings visible result",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU026",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "description": "Park cursor away from the speaker glyph before capture",
+        "enabled": true,
+        "id": "WAMU029PARK",
+        "type": "Move Coord",
+        "x": "0.973",
+        "y": "0.610"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select mute interaction",
+        "enabled": true,
+        "id": "WAMU030",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "mute_audio"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start mute latency timing",
+        "enabled": true,
+        "id": "WAMU031",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record mute input start",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU032",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Refresh the volume-row capture immediately before the click (avoid stale cached position)",
+        "enabled": true,
+        "file_name": [
+            "capture_volume_row.png"
+        ],
+        "h": "[volume_row_h]",
+        "id": "WAMU032CAP",
+        "recapture": true,
+        "type": "Capture",
+        "w": "[volume_row_w]",
+        "x": "[volume_row_x]",
+        "y": "[volume_row_y]"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAMU032CAP",
+                "children": [],
+                "delay": "0",
+                "description": "Mute audio",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "exception_on": "No match",
+                "file_name": [
+                    "image_volume_row_unmuted_200_xps13.png",
+                    "image_volume_row_unmuted_200.png",
+                    "image_volume_row_unmuted_200_idle.png"
+                ],
+                "id": "WAMU033",
+                "match_threshold": "0.75",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.0452",
+                "y": "0.5000"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU033IMAGEIF",
+        "left_term": "[audio_toggle_mode]",
+        "right_term": "image",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU033IMAGEEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Mute audio using the caller-provided Quick Settings coordinate",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAMU033",
+                "type": "Click Coord",
+                "x": "[audio_toggle_x]",
+                "y": "[audio_toggle_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU033COORDIF",
+        "left_term": "[audio_toggle_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU033COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "description": "Park cursor away from the speaker glyph before capture",
+        "enabled": true,
+        "id": "WAMU033PARK",
+        "type": "Move Coord",
+        "x": "0.973",
+        "y": "0.610"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAMUVOL",
+                "children": [],
+                "delay": "0",
+                "description": "Wait briefly for muted state",
+                "enabled": true,
+                "annoyance_timing_role": "endpoint",
+                "file_name": [
+                    "image_speaker_muted_200.png"
+                ],
+                "h": "[volume_row_h]",
+                "id": "WAMU034",
+                "match_threshold": "0.85",
+                "timeout": "1",
+                "type": "Check Until Found",
+                "w": "[volume_row_w]",
+                "x": "[volume_row_x]",
+                "y": "[volume_row_y]"
+            }
+        ],
+        "description": "Confirm mute transition on the first input",
+        "enabled": true,
+        "id": "WAMU034TRY",
+        "type": "Try"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Refresh the volume-row capture immediately before the click (avoid stale cached position)",
+                "enabled": true,
+                "file_name": [
+                    "capture_volume_row.png"
+                ],
+                "h": "[volume_row_h]",
+                "id": "WAMU033RCAP",
+                "recapture": true,
+                "type": "Capture",
+                "w": "[volume_row_w]",
+                "x": "[volume_row_x]",
+                "y": "[volume_row_y]"
+            },
+            {
+                "children": [
+                    {
+                        "capture_id": "WAMU033RCAP",
+                        "children": [],
+                        "delay": "0",
+                        "description": "Retry mute by image",
+                        "enabled": true,
+                        "annoyance_timing_role": "stimulus",
+                        "exception_on": "No match",
+                        "file_name": [
+                            "image_volume_row_unmuted_200_xps13.png",
+                            "image_volume_row_unmuted_200.png"
+                        ],
+                        "id": "WAMU033R",
+                        "match_threshold": "0.75",
+                        "primary": true,
+                        "scale": "",
+                        "type": "Click",
+                        "x": "0.0452",
+                        "y": "0.5000"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "WAMU033RIMAGEIF",
+                "left_term": "[audio_toggle_mode]",
+                "right_term": "image",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAMU033RIMAGEEND",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Retry mute using the caller-provided Quick Settings coordinate",
+                        "enabled": true,
+                        "annoyance_timing_role": "stimulus",
+                        "id": "WAMU033R",
+                        "type": "Click Coord",
+                        "x": "[audio_toggle_x]",
+                        "y": "[audio_toggle_y]"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "WAMU033RCOORDIF",
+                "left_term": "[audio_toggle_mode]",
+                "right_term": "coordinate",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAMU033RCOORDEND",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "description": "Park cursor away from the speaker glyph before capture",
+                "enabled": true,
+                "id": "WAMU033RPARK",
+                "type": "Move Coord",
+                "x": "0.973",
+                "y": "0.610"
+            },
+            {
+                "capture_id": "WAMUVOL",
+                "children": [],
+                "delay": "0",
+                "description": "Wait for muted state after retry",
+                "enabled": true,
+                "annoyance_timing_role": "endpoint",
+                "file_name": [
+                    "image_speaker_muted_200.png"
+                ],
+                "h": "[volume_row_h]",
+                "id": "WAMU034R",
+                "match_threshold": "0.85",
+                "timeout": "5",
+                "type": "Check Until Found",
+                "w": "[volume_row_w]",
+                "x": "[volume_row_x]",
+                "y": "[volume_row_y]"
+            }
+        ],
+        "description": "Retry mute when the first input is not applied",
+        "enabled": true,
+        "id": "WAMU034EXCEPT",
+        "type": "Except"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU034ENDTRY",
+        "type": "End Try"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish mute latency timing",
+        "enabled": true,
+        "id": "WAMU035",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record muted visible result",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU036",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select unmute interaction",
+        "enabled": true,
+        "id": "WAMU040",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "unmute_audio"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start unmute latency timing",
+        "enabled": true,
+        "id": "WAMU041",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record unmute input start",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU042",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Refresh the volume-row capture immediately before the click (avoid stale cached position)",
+        "enabled": true,
+        "file_name": [
+            "capture_volume_row.png"
+        ],
+        "h": "[volume_row_h]",
+        "id": "WAMU042CAP",
+        "recapture": true,
+        "type": "Capture",
+        "w": "[volume_row_w]",
+        "x": "[volume_row_x]",
+        "y": "[volume_row_y]"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAMU042CAP",
+                "children": [],
+                "delay": "0",
+                "description": "Unmute audio",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "exception_on": "No match",
+                "file_name": [
+                    "image_volume_row_muted_200_xps13.png",
+                    "image_volume_row_muted_200.png",
+                    "image_volume_row_muted_200_idle.png"
+                ],
+                "id": "WAMU043",
+                "match_threshold": "0.75",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.0452",
+                "y": "0.5000"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU043IMAGEIF",
+        "left_term": "[audio_toggle_mode]",
+        "right_term": "image",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU043IMAGEEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Unmute audio using the caller-provided Quick Settings coordinate",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAMU043",
+                "type": "Click Coord",
+                "x": "[audio_toggle_x]",
+                "y": "[audio_toggle_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU043COORDIF",
+        "left_term": "[audio_toggle_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU043COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "description": "Park cursor away from the speaker glyph before capture",
+        "enabled": true,
+        "id": "WAMU043PARK",
+        "type": "Move Coord",
+        "x": "0.973",
+        "y": "0.610"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAMUVOL",
+                "children": [],
+                "delay": "0",
+                "description": "Wait briefly for an unmuted volume state",
+                "enabled": true,
+                "annoyance_timing_role": "endpoint",
+                "file_name": [
+                    "image_speaker_unmuted_200.png"
+                ],
+                "h": "[volume_row_h]",
+                "id": "WAMU044",
+                "match_threshold": "0.85",
+                "timeout": "1",
+                "type": "Check Until Found",
+                "w": "[volume_row_w]",
+                "x": "[volume_row_x]",
+                "y": "[volume_row_y]"
+            }
+        ],
+        "description": "Confirm unmute transition on the first input",
+        "enabled": true,
+        "id": "WAMU044TRY",
+        "type": "Try"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Refresh the volume-row capture immediately before the click (avoid stale cached position)",
+                "enabled": true,
+                "file_name": [
+                    "capture_volume_row.png"
+                ],
+                "h": "[volume_row_h]",
+                "id": "WAMU043RCAP",
+                "recapture": true,
+                "type": "Capture",
+                "w": "[volume_row_w]",
+                "x": "[volume_row_x]",
+                "y": "[volume_row_y]"
+            },
+            {
+                "children": [
+                    {
+                        "capture_id": "WAMU043RCAP",
+                        "children": [],
+                        "delay": "0",
+                        "description": "Retry unmute by image",
+                        "enabled": true,
+                        "annoyance_timing_role": "stimulus",
+                        "exception_on": "No match",
+                        "file_name": [
+                            "image_volume_row_muted_200_xps13.png",
+                            "image_volume_row_muted_200.png"
+                        ],
+                        "id": "WAMU043R",
+                        "match_threshold": "0.75",
+                        "primary": true,
+                        "scale": "",
+                        "type": "Click",
+                        "x": "0.0452",
+                        "y": "0.5000"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "WAMU043RIMAGEIF",
+                "left_term": "[audio_toggle_mode]",
+                "right_term": "image",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAMU043RIMAGEEND",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Retry unmute using the caller-provided Quick Settings coordinate",
+                        "enabled": true,
+                        "annoyance_timing_role": "stimulus",
+                        "id": "WAMU043R",
+                        "type": "Click Coord",
+                        "x": "[audio_toggle_x]",
+                        "y": "[audio_toggle_y]"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "WAMU043RCOORDIF",
+                "left_term": "[audio_toggle_mode]",
+                "right_term": "coordinate",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WAMU043RCOORDEND",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "description": "Park cursor away from the speaker glyph before capture",
+                "enabled": true,
+                "id": "WAMU043RPARK",
+                "type": "Move Coord",
+                "x": "0.973",
+                "y": "0.610"
+            },
+            {
+                "capture_id": "WAMUVOL",
+                "children": [],
+                "delay": "0",
+                "description": "Wait for an unmuted volume state after retry",
+                "enabled": true,
+                "annoyance_timing_role": "endpoint",
+                "file_name": [
+                    "image_speaker_unmuted_200.png"
+                ],
+                "h": "[volume_row_h]",
+                "id": "WAMU044R",
+                "match_threshold": "0.85",
+                "timeout": "5",
+                "type": "Check Until Found",
+                "w": "[volume_row_w]",
+                "x": "[volume_row_x]",
+                "y": "[volume_row_y]"
+            }
+        ],
+        "description": "Retry unmute when the first input is not applied",
+        "enabled": true,
+        "id": "WAMU044EXCEPT",
+        "type": "Except"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU044ENDTRY",
+        "type": "End Try"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish unmute latency timing",
+        "enabled": true,
+        "id": "WAMU045",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record unmuted visible result",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU046",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select dismiss Quick Settings interaction",
+        "enabled": true,
+        "id": "WAMU050",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "dismiss_quick_settings"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start dismiss Quick Settings latency timing",
+        "enabled": true,
+        "id": "WAMU051",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record dismiss Quick Settings input start",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU052",
+        "type": "Code"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Click the caller-provided safe coordinate to dismiss Quick Settings",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAMU053",
+                "type": "Click Coord",
+                "x": "[return_x]",
+                "y": "[return_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU053COORDIF",
+        "left_term": "[dismiss_action_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU053COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Dismiss Quick Settings with Escape",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAMU053",
+                "text": "\ue00c",
+                "type": "Type",
+                "typing_delay": "0"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU053ESCAPEIF",
+        "left_term": "[dismiss_action_mode]",
+        "right_term": "escape",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU053ESCAPEEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAMUCAP",
+                "children": [],
+                "delay": "0",
+                "description": "Wait for the inactive taskbar volume state",
+                "enabled": true,
+                "annoyance_timing_role": "endpoint",
+                "file_name": [
+                    "image_1T6WY7U.png"
+                ],
+                "h": "0.100",
+                "id": "WAMU054",
+                "match_threshold": "0.65",
+                "timeout": "5",
+                "type": "Check Until Found",
+                "w": "0.150",
+                "x": "0.850",
+                "y": "0.900"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU054IMAGEIF",
+        "left_term": "[dismiss_check_mode]",
+        "right_term": "image",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU054IMAGEEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0.5",
+                "description": "Allow Quick Settings to dismiss after the configured dismiss action",
+                "enabled": true,
+                "id": "WAMU054",
+                "type": "Delay"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAMU054DELAYIF",
+        "left_term": "[dismiss_check_mode]",
+        "right_term": "delay",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAMU054DELAYEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish dismiss Quick Settings latency timing",
+        "enabled": true,
+        "id": "WAMU055",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record Quick Settings dismissed result",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU056",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish mute/unmute occupancy timing",
+        "enabled": true,
+        "id": "WAMU060",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "probe_end"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record probe end",
+        "enabled": true,
+        "file_name": [
+            "code_metrics.py"
+        ],
+        "id": "WAMU061",
+        "type": "Code"
+    }
+]

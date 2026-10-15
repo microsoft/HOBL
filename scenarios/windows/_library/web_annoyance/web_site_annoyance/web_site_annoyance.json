@@ -1,0 +1,34 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-19",
+        "description": "Run a stock web site with verified annoyance slots",
+        "enabled": true,
+        "id": "WASITE001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WASITE002",
+        "name": "[site_name]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": ""
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Run the stock site with annoyance slots",
+        "enabled": true,
+        "file_name": [
+            "code_site.py"
+        ],
+        "id": "WASITE003",
+        "type": "Code"
+    }
+]

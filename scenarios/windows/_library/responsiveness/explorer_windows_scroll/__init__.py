@@ -1,0 +1,1 @@
+"""Explorer Windows-folder responsiveness actions."""
