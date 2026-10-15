@@ -305,14 +305,30 @@ class StreamHandlerWrapper(logging.StreamHandler):
                 type(self).error_list.append(record.message)
 
 
+class NormalizeNewlinesFormatter(logging.Formatter):
+    def format(self, record):
+        return super().format(record).replace("\r\n", "\n")
+
+
+def format_log():
+    formatter = NormalizeNewlinesFormatter(
+        '%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s',
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+    for handler in root.handlers:
+        handler.setFormatter(formatter)
+
+
 def open_log(log=None):
-    if log:
-        logging.basicConfig(filename=log, filemode='w', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', force=True)
-    else:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', force=True)
-        return
     global root
     root = logging.getLogger()
+    if log:
+        logging.basicConfig(filename=log, filemode='w', level=logging.DEBUG, force=True)
+    else:
+        logging.basicConfig(level=logging.DEBUG, force=True)
+        format_log()
+        return
     ch = StreamHandlerWrapper(sys.stdout)
     output_level = params.get('global', 'output_level', log = False)
     dashboard_url = params.get('global', 'dashboard_url')
@@ -322,15 +338,13 @@ def open_log(log=None):
 
     if output_level == "DEBUG":
         ch.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', "%Y-%m-%d %H:%M:%S")
     elif output_level == "ERROR":
         ch.setLevel(logging.ERROR)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', "%Y-%m-%d %H:%M:%S")
     else:
         ch.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
-    ch.setFormatter(formatter)
+
     root.addHandler(ch)
+    format_log()
 
 
 def close_log():
@@ -424,7 +438,7 @@ def host_call(command, cwd = "."):
             l = line.decode().strip("\r\n")
             if l:
                 logging.error(l)
-    return(out.decode().strip("\r\n"))
+    return(out.decode().strip("\r\n").replace("\r\n", "\n"))
 
 
 def kill(test_name):
