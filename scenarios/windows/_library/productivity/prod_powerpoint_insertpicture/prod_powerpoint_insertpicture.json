@@ -1,0 +1,109 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-31",
+        "description": "Insert a specified picture into an open PowerPoint deck",
+        "enabled": true,
+        "id": "PPIPI00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Set the relative path of the picture to insert",
+        "enabled": true,
+        "id": "PPIPS01",
+        "name": "[image_path]",
+        "type": "Set Default",
+        "val_options": "abl_docs\\Manarola2.png",
+        "value": "abl_docs\\Manarola2.png"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Open the Insert tab (Alt+N)",
+        "enabled": true,
+        "id": "PPIPT01",
+        "text": "\ue00an",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Start the Pictures KeyTip (P)",
+        "enabled": true,
+        "id": "PPIPT02",
+        "text": "p",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Complete the Pictures KeyTip (1)",
+        "enabled": true,
+        "id": "PPIPT03",
+        "text": "1",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Open the This Device file picker (D)",
+        "enabled": true,
+        "id": "PPIPT04",
+        "text": "d",
+        "type": "Type",
+        "typing_delay": "600"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "10",
+                "description": "Enter the OneDrive picture path and insert the picture (Enter)",
+                "enabled": true,
+                "id": "PPIPT05",
+                "text": "[global:onedrive_path]\\[image_path]\ue007",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Use the OneDrive picture path on W365",
+        "enabled": true,
+        "id": "PPIPF01",
+        "eval_method": "==",
+        "left_term": "[global:platform]",
+        "right_term": "W365",
+        "type": "If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "10",
+                "description": "Enter the local picture path and insert the picture (Enter)",
+                "enabled": true,
+                "id": "PPIPT06",
+                "text": "[userprofile]\\[image_path]\ue007",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Use the local picture path on other platforms",
+        "enabled": true,
+        "id": "PPIPE01",
+        "type": "Else"
+    },
+    {
+        "children": [],
+        "description": "End picture path selection",
+        "enabled": true,
+        "id": "PPIPN01",
+        "type": "End If"
+    }
+]

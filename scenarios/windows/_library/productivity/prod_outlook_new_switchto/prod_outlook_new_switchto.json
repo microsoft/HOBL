@@ -23,21 +23,23 @@
         "description": "",
         "enabled": true,
         "id": "UH3H04",
-        "include_path": "..\\..\\misc\\capture_taskbar",
+        "include_path": "scenarios\\windows\\_library\\misc\\capture_taskbar",
         "type": "Include"
     },
     {
         "capture_id": "TYH95X",
         "children": [],
-        "delay": "2.5",
-        "description": "Outlook",
+        "delay": "2",
+        "description": "",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_UH3HC0.png"
+            "image_1UN0NT1.png"
         ],
-        "id": "UH3HC0",
+        "id": "1UN0NT1",
+        "match_threshold": "",
         "primary": true,
+        "scale": "",
         "type": "Click",
         "x": "0.500",
         "y": "0.500"
