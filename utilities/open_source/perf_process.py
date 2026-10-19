@@ -8,7 +8,7 @@ Takes a single HOBL run directory.  Everything needed lives inside it:
   trace_manifest.json          Written by core/app_scenario.py, one entry per recorded clip.
                                Each entry carries the clip folder name, the resolved capture
                                settings, and its "traceProcess" measurement settings.
-  perf_screenshots/<clip>/     Per-clip folder (named by the manifest's "clip" field) holding
+  perfcap_clips/<clip>/     Per-clip folder (named by the manifest's "clip" field) holding
                                the recorded "capture.mp4" (and a "frame_times.csv").
 
 For each manifest entry the entry's "traceProcess" measure is applied to its clip and a result
@@ -54,10 +54,13 @@ DEFAULT_MEASURE = "settle"
 # The manifest that core/app_scenario.py writes into the run directory.
 MANIFEST_FILENAME = "trace_manifest.json"
 # Clips are copied back from the DUT into this subfolder of the run directory.
-CLIPS_SUBDIR = "perf_screenshots"
+CLIPS_SUBDIR = "perfcap_clips"
 # Each recorded clip lives in its own folder (named by the manifest "clip" field) and the video
 # file inside is always named this.
 CLIP_FILENAME = "capture.mp4"
+
+# Prefix used for the "pretty_label" field in the output. Used for csv label.
+PRETTY_LABEL_PREFIX = "PerfCap"
 
 
 def build_matcher(run_dir):
@@ -88,7 +91,7 @@ def load_manifest(run_dir):
 def resolve_clips_dir(run_dir):
     '''
     Locate the folder that holds the per-clip subfolders.  Clips are copied back from the DUT
-    into "<run_dir>/perf_screenshots", but fall back to the run directory itself if that
+    into "<run_dir>/perfcap_clips", but fall back to the run directory itself if that
     subfolder is absent.
     '''
     clips_dir = os.path.join(run_dir, CLIPS_SUBDIR)
@@ -255,9 +258,13 @@ def process_entry(entry, clips_dir, matcher):
     clip_name = entry.get("clip", "")
     measure = entry.get("traceProcess") or DEFAULT_MEASURE
 
+    label_temp = entry.get("label", "")
+    instance_temp = entry.get("instance", "")
+
     result = {
         "clip": clip_name,
-        "label": entry.get("label", ""),
+        "label": label_temp,
+        "pretty_label": f"{PRETTY_LABEL_PREFIX} {label_temp} {instance_temp} (ms)",
         "action_id": entry.get("action_id", ""),
         "instance": entry.get("instance", ""),
         "scenario_time_s": entry.get("scenario_time_s", ""),
@@ -267,6 +274,7 @@ def process_entry(entry, clips_dir, matcher):
         "value": None,
         "status": "ok",
     }
+
 
     clip_path = os.path.join(clips_dir, clip_name, CLIP_FILENAME)
     if not os.path.isfile(clip_path):
@@ -309,10 +317,10 @@ def write_outputs(results, out_dir):
     csv_path = os.path.join(out_dir, "perf_process_results.csv")
     json_path = os.path.join(out_dir, "perf_process_detailed_results.json")
 
-    fieldnames = ["clip", "time_ms"]
+    fieldnames = ["pretty_label", "time_ms"]
     with open(csv_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
-        writer.writeheader()
+        # writer.writeheader()
         for row in results:
             writer.writerow(row)
 
@@ -330,7 +338,7 @@ def main(argv=None):
                         help="Output folder for the results CSV and JSON (default: the run directory).")
     args = parser.parse_args(argv)
 
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(levelname)s: %(message)s")
 
     if not os.path.isdir(args.run_dir):
         parser.error(f"run_dir does not exist: {args.run_dir}")
@@ -350,7 +358,6 @@ def main(argv=None):
         except Exception as exp:
             logging.error("Failed to process clip '%s': %s", clip_name, exp)
             result = {
-                "clip": clip_name,
                 "label": entry.get("label", ""),
                 "action_id": entry.get("action_id", ""),
                 "instance": entry.get("instance", ""),

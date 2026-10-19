@@ -106,7 +106,7 @@ class ActionModel(QtGui.QStandardItemModel):
             return True
         return False
 
-    def appendAction(self, working_dir, type="", x="", y="", w="", h="", text="", command="", id="", description="", relationship="", typing_delay="[typing_delay]", delay="0", file_name="", include_path="", params=[], direction="", val_options="", count="", target_id="",primary=True, trace_framerate="", trace_label="", trace_ms="", trace_process=""):
+    def appendAction(self, working_dir, type="", x="", y="", w="", h="", text="", command="", id="", description="", relationship="", typing_delay="[typing_delay]", delay="0", file_name="", include_path="", params=[], direction="", val_options="", count="", target_id="",primary=True, trace_framerate="", trace_label="", trace_len="", trace_process=""):
         action = collections.OrderedDict()
         action[u'id'] = id
         action[u'type'] = type
@@ -140,8 +140,8 @@ class ActionModel(QtGui.QStandardItemModel):
             action[u'trace_framerate'] = trace_framerate
         if trace_label != "":
             action[u'trace_label'] = trace_label
-        if trace_ms != "":
-            action[u'trace_ms'] = trace_ms
+        if trace_len != "":
+            action[u'trace_len'] = trace_len
         if trace_process != "":
             action[u'trace_process'] = trace_process
         if params != []:
@@ -632,8 +632,11 @@ class ActionDialog(QDialog):
                 h_layout = QHBoxLayout()
                 for file_name in file_names:
                     image_path = os.path.join(working_dir, file_name)
-                    self.thumbnail = self.makeThumbnail(image_path)
-                    h_layout.addWidget(self.thumbnail)
+                    try:
+                        self.thumbnail = self.makeThumbnail(image_path)
+                        h_layout.addWidget(self.thumbnail)
+                    except Exception as e:
+                        pass
                 layout.addRow(QLabel("Thumbnail"), h_layout)
         if 'capture_id' in self.action:
             self.captureEdit = QLineEdit(self, text=self.action[u'capture_id'])
@@ -647,9 +650,9 @@ class ActionDialog(QDialog):
         if 'trace_label' in self.action:
             self.traceLabelEdit = QLineEdit(self, text=self.action[u'trace_label'])
             layout.addRow(QLabel("Trace Label"), self.traceLabelEdit)
-        if 'trace_ms' in self.action:
-            self.traceMsEdit = QLineEdit(self, text=self.action[u'trace_ms'])
-            layout.addRow(QLabel("Trace MS"), self.traceMsEdit)
+        if 'trace_len' in self.action:
+            self.traceMsEdit = QLineEdit(self, text=self.action[u'trace_len'])
+            layout.addRow(QLabel("Trace Length (s)"), self.traceMsEdit)
         if 'exception_on' in self.action:
             self.exceptionCombo = QComboBox()
             self.exceptionCombo.addItems(['No match', 'Match', 'Never'])
@@ -786,8 +789,8 @@ class ActionDialog(QDialog):
             self.action[u'trace_framerate'] = self.traceFramerateEdit.text()
         if 'trace_label' in self.action:
             self.action[u'trace_label'] = self.traceLabelEdit.text()
-        if 'trace_ms' in self.action:
-            self.action[u'trace_ms'] = self.traceMsEdit.text()
+        if 'trace_len' in self.action:
+            self.action[u'trace_len'] = self.traceMsEdit.text()
         if 'right_term' in self.action:
             self.action[u'right_term'] = self.rightTermEdit.text()
         if 'val_options' in self.action:

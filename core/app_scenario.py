@@ -93,6 +93,7 @@ class Scenario(unittest.TestCase):
         self.component = None
         self.current_screen = 0
         self.rundown_comm_check = None
+        self.perf_trace = False
 
         # Reset tooCallback values on each attempt
         self.reset_toolCallBacks_result()
@@ -2415,7 +2416,7 @@ class Scenario(unittest.TestCase):
         Image.fromarray(rgb_image).save(save_path, dpi=(device_dpi, device_dpi)) # Convert for PIL
 
 
-    def _click_by_template(self, template, id=None, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, primary=True, delay=100, x=0.5, y=0.5, edge_detect_thresholds=[], trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_ms=None, trace_framerate=None):
+    def _click_by_template(self, template, id=None, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, primary=True, delay=100, x=0.5, y=0.5, edge_detect_thresholds=[], trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_len=None, trace_framerate=None):
         # Get the screenshot from the capture_id
         if capture_id is not None:
             screenshot = self.captures[capture_id]
@@ -2446,6 +2447,18 @@ class Scenario(unittest.TestCase):
             screen_width, screen_height = self._get_screen_size(self.current_screen)
             x_adj = int(float(cap_action["x"]) * screen_width)
             y_adj = int(float(cap_action["y"]) * screen_height)
+
+        if trace_x is not None:
+            trace_x = int(float(trace_x) * screen_width * self.dut_coord_scaler)
+        if trace_y is not None:
+            trace_y = int(float(trace_y) * screen_height * self.dut_coord_scaler)
+        if trace_w is not None:
+            trace_w = int(float(trace_w) * screen_width * self.dut_coord_scaler)
+        if trace_h is not None:
+            trace_h = int(float(trace_h) * screen_height * self.dut_coord_scaler)
+        trace_ms = 0
+        if trace_len is not None:
+            trace_ms = int(float(trace_len) * 1000)
 
         # Click the point
         x = (point[0] + x_adj) * self.dut_coord_scaler
@@ -2495,7 +2508,20 @@ class Scenario(unittest.TestCase):
     
     # TODO: Pipe in the typing speed
     # Send typing to the DUT
-    def _send_text(self, text, typing_delay=None, trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_ms=None, trace_framerate=None):
+    def _send_text(self, text, typing_delay=None, trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_len=None, trace_framerate=None):
+        screen_width, screen_height = self._get_screen_size(self.current_screen)
+        if trace_x is not None:
+            trace_x = int(float(trace_x) * screen_width * self.dut_coord_scaler)
+        if trace_y is not None:
+            trace_y = int(float(trace_y) * screen_height * self.dut_coord_scaler)
+        if trace_w is not None:
+            trace_w = int(float(trace_w) * screen_width * self.dut_coord_scaler)
+        if trace_h is not None:
+            trace_h = int(float(trace_h) * screen_height * self.dut_coord_scaler)
+        trace_ms = 0
+        if trace_len is not None:
+            trace_ms = int(float(trace_len) * 1000)
+
         # Get the typing delay from the class if it is not provided
         typing_delay = self.typing_delay if typing_delay is None else typing_delay
         rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Type", text, typing_delay, trace_label, trace_x, trace_y, trace_w, trace_h, trace_ms, trace_framerate)
@@ -2507,10 +2533,23 @@ class Scenario(unittest.TestCase):
     def _send_window_maximize(self):
         rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "WindowMaximize")
 
-    def _scroll(self, x_frac, y_frac, direction, trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_ms=None, trace_framerate=None):
-        w_screen, h_screen = self._get_screen_size(self.current_screen)
-        x = w_screen * x_frac * self.dut_coord_scaler
-        y = h_screen * y_frac * self.dut_coord_scaler
+    def _scroll(self, x_frac, y_frac, direction, trace_label=None, trace_x=None, trace_y=None, trace_w=None, trace_h=None, trace_len=None, trace_framerate=None):
+        screen_width, screen_height = self._get_screen_size(self.current_screen)
+        x = screen_width * x_frac * self.dut_coord_scaler
+        y = screen_height * y_frac * self.dut_coord_scaler
+
+        if trace_x is not None:
+            trace_x = int(float(trace_x) * screen_width * self.dut_coord_scaler)
+        if trace_y is not None:
+            trace_y = int(float(trace_y) * screen_height * self.dut_coord_scaler)
+        if trace_w is not None:
+            trace_w = int(float(trace_w) * screen_width * self.dut_coord_scaler)
+        if trace_h is not None:
+            trace_h = int(float(trace_h) * screen_height * self.dut_coord_scaler)
+        trace_ms = 0
+        if trace_len is not None:
+            trace_ms = int(float(trace_len) * 1000)
+
         rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Scroll", int(x), int(y), 720, direction, self.current_screen, self.cursor_movement_enable, trace_label, trace_x, trace_y, trace_w, trace_h, trace_ms, trace_framerate)
 
     # Check for a template match in a screenshot. Returns True if the template is found, False if it is not
@@ -3070,56 +3109,58 @@ class Scenario(unittest.TestCase):
                         # TODO: Determine the appropriate default trace process if not specified
                         action["trace_process"] = "settle"
                     # Store the trace parameters in the action_id_dict for the target_id
-                    self.action_id_dict[target_id] = {"action_type": "register_perf_capture", "trace_label": action["trace_label"], "trace_x": action["x"], "trace_y": action["y"], "trace_w": action["w"], "trace_h": action["h"], "trace_ms": action["trace_ms"], "trace_framerate": action["trace_framerate"], "trace_process": action["trace_process"], "trace_threshold": action["trace_threshold"], "trace_image": action["trace_image"]}
+                    self.action_id_dict[target_id] = {"action_type": "register_perf_capture", "trace_label": action["trace_label"], "trace_x": action["x"], "trace_y": action["y"], "trace_w": action["w"], "trace_h": action["h"], "trace_len": action["trace_len"], "trace_framerate": action["trace_framerate"], "trace_process": action["trace_process"], "trace_threshold": action["trace_threshold"], "trace_image": action["trace_image"]}
                 continue
 
 
-            # TODO: check more of the id path
             append_after = False
+            found_target_id = False
             for target_action_id in self.action_id_dict:
-                if target_action_id in action["id_path"]:
+                if target_action_id in action["id_path"] and target_action_id == action["id_path"].split(".")[-1]:
                     logging.debug(f"Found action_id {target_action_id} in action['id_path']: {action['id_path']}")
-                # if action["id"] in self.action_id_dict:
-                    if self.action_id_dict[target_action_id]["action_type"] == "insert":
-                    # if self.action_id_dict[action["id"]]["action_type"] == "insert":
-                        for child_action in self.action_id_dict[target_action_id]["actions"]:
-                        # for child_action in self.action_id_dict[action["id"]]["actions"]:
-                            child_action["id_path"] = old_id_path
+                    found_target_id = True
+                    break
+            if found_target_id:
+                if self.action_id_dict[target_action_id]["action_type"] == "insert":
+                # if self.action_id_dict[action["id"]]["action_type"] == "insert":
+                    for child_action in self.action_id_dict[target_action_id]["actions"]:
+                    # for child_action in self.action_id_dict[action["id"]]["actions"]:
+                        child_action["id_path"] = old_id_path
 
-                        relationship = self.action_id_dict[target_action_id]["relationship"]
-                        # relationship = self.action_id_dict[action["id"]]["relationship"]
-                        if relationship == "during":
-                            # Wrap the inserted actions with an "Insert Actions Begin" and "Insert Actions End" which will manage the appropriate delay.
-                            new_action = {}
-                            new_action["type"] = "Insert Actions Begin"
-                            new_action["description"] = f"Inserting actions during {action['id']}"
-                            new_action["id"] = "AUTO"
-                            new_action["component"] = component
-                            flat_json.append(new_action)
-                            flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
-                            # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
-                            new_action = {}
-                            new_action["type"] = "Insert Actions End"
-                            new_action["description"] = f"Finished inserting actions during {action['id']}"
-                            new_action["id"] = "AUTO"
-                            new_action["delay"] = action["delay"]
-                            new_action["component"] = component
-                            flat_json.append(new_action)
-                            continue
-                        if relationship == "before":
-                            flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
-                            # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
-                        if relationship == "after":
-                            append_after = True
+                    relationship = self.action_id_dict[target_action_id]["relationship"]
+                    # relationship = self.action_id_dict[action["id"]]["relationship"]
+                    if relationship == "during":
+                        # Wrap the inserted actions with an "Insert Actions Begin" and "Insert Actions End" which will manage the appropriate delay.
+                        new_action = {}
+                        new_action["type"] = "Insert Actions Begin"
+                        new_action["description"] = f"Inserting actions during {action['id']}"
+                        new_action["id"] = "AUTO"
+                        new_action["component"] = component
+                        flat_json.append(new_action)
+                        flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
+                        # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+                        new_action = {}
+                        new_action["type"] = "Insert Actions End"
+                        new_action["description"] = f"Finished inserting actions during {action['id']}"
+                        new_action["id"] = "AUTO"
+                        new_action["delay"] = action["delay"]
+                        new_action["component"] = component
+                        flat_json.append(new_action)
+                        continue
+                    if relationship == "before":
+                        flat_json.extend(self._flatten_json(self.action_id_dict[target_action_id]["actions"], directory_offset, component=component))
+                        # flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+                    if relationship == "after":
+                        append_after = True
 
-                    # If the action type is "register_perf_capture", copy all relevant keys from the action_id_dict entry to the current action.
-                    elif self.action_id_dict[target_action_id]["action_type"] == "register_perf_capture":
-                    # elif self.action_id_dict[action["id"]]["action_type"] == "register_perf_capture":
-                        for key, value in self.action_id_dict[target_action_id].items():
-                        # for key, value in self.action_id_dict[action["id"]].items():
-                            if key != "action_type":
-                                logging.debug(f"Register: Copying key {key} with value {value} to action {action['id']} in action_id_path {action['id_path']}")
-                                action[key] = value
+                # If the action type is "register_perf_capture", copy all relevant keys from the action_id_dict entry to the current action.
+                elif self.action_id_dict[target_action_id]["action_type"] == "register_perf_capture":
+                # elif self.action_id_dict[action["id"]]["action_type"] == "register_perf_capture":
+                    for key, value in self.action_id_dict[target_action_id].items():
+                    # for key, value in self.action_id_dict[action["id"]].items():
+                        if key != "action_type":
+                            logging.debug(f"Register: Copying key {key} with value {value} to action {action['id']} in action_id_path {action['id_path']}")
+                            action[key] = value
 
             # If the action is an include, read the json from the file and flatten it into the current json object
             if action["type"] == "Include":
@@ -3231,7 +3272,7 @@ class Scenario(unittest.TestCase):
             self.trace_manifest = []
 
         entry = {
-            "clip": action["trace_label"],
+            "clip": action["clip"],
             "label": trace_label,
             "action_id": action.get("id", ""),
             "instance": instance,
@@ -3246,7 +3287,7 @@ class Scenario(unittest.TestCase):
                 "y": action.get("trace_y", 0),
                 "w": action.get("trace_w", 0),
                 "h": action.get("trace_h", 0),
-                "ms": action.get("trace_ms", 0),
+                "len": action.get("trace_len", 0),
                 "framerate": action.get("trace_framerate", 0),
             },
             # trace_process selects the offline measurement ("settle", "pixel_change" or
@@ -3332,32 +3373,41 @@ class Scenario(unittest.TestCase):
         # appended because it is the stable key offline processing uses to find the action's
         # trace_process instructions.
         trace_label = ""
-        if not "trace_label" in action or str(action["trace_label"]).strip() == "":
-            action["trace_label"] = ""
+        if not "trace_label" in action or str(action["trace_label"]).strip() == "" or self.perf_trace == False:
+            action["clip"] = ""
             action["trace_x"]= 0
             action["trace_y"]= 0
             action["trace_w"]= 0
             action["trace_h"]= 0
-            action["trace_ms"] = 0
+            action["trace_len"] = 0
             action["trace_framerate"]= 0
             logging.debug("No trace_label found in action, setting to empty string and trace dimensions to 0")
         else:
             # Capture the scenario-supplied label once so repeated executions (loops, reused
             # includes) never compound the suffixes appended below.
+            original_trace_label = action["trace_label"]
             trace_label = action.setdefault("_traceLabel", self._sanitize_trace_label(action["trace_label"]))
-            action["trace_label"] = f"{trace_label}_{action['id']}"
+            action["clip"] = f"{trace_label}_{action['id']}"
+
             logging.info(f"Found trace_label in action: {action['trace_label']}")
-            logging.debug(f"Trace dimensions: X={action['trace_x']}, Y={action['trace_y']}, W={action['trace_w']}, H={action['trace_h']}, Ms={action['trace_ms']}, Framerate={action['trace_framerate']}")
+            logging.debug(f"Trace dimensions: X={action['trace_x']}, Y={action['trace_y']}, W={action['trace_w']}, H={action['trace_h']}, Len={action['trace_len']}, Framerate={action['trace_framerate']}")
 
         # create trace_label dictionary if it doesn't exist
         if not hasattr(self, 'trace_label_dict'):
             self.trace_label_dict = {}
-        if action["trace_label"] != "":
-            base_trace_id = action["trace_label"]
+
+        # If the action has a trace label, update it with an instance number and record it in the manifest.
+        if action["clip"] != "":
+            base_trace_id = action["clip"]
+            trace_label = action["trace_label"]
             # Next available instance number for this base id.
-            self.trace_label_dict[base_trace_id] = self.trace_label_dict.get(base_trace_id, 0) + 1
-            action["trace_label"] = f"{base_trace_id}_{self.trace_label_dict[base_trace_id]}"
-            self._record_trace_manifest(action, trace_label, self.trace_label_dict[base_trace_id])
+            self.trace_label_dict[trace_label] = self.trace_label_dict.get(trace_label, 0) + 1
+            
+            action["clip"] = f"{base_trace_id}_{self.trace_label_dict[trace_label]}"
+            
+            self._record_trace_manifest(action, original_trace_label, self.trace_label_dict[trace_label])
+
+
         ###########################################
 
         # Find the template in the screenshot and click on it on the DUT
@@ -3380,7 +3430,7 @@ class Scenario(unittest.TestCase):
                 # Convert it to a list of floats
                 scale_str = action["scale"]
                 scale = [float(x) for x in scale_str.split(',')]
-            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"])):
+            if self._click_by_template(action["file_name"], action["id"], action["capture_id"], threshold=threshold, delay=self.default_click_time, x=float(action["x"]), y=float(action["y"]), scale=scale, primary=primary, edge_detect_thresholds=edge_thresholds, trace_label=action["clip"], trace_x=float(action["trace_x"]), trace_y=float(action["trace_y"]), trace_w=float(action["trace_w"]), trace_h=float(action["trace_h"]), trace_len=float(action["trace_len"]), trace_framerate=int(action["trace_framerate"])):
                 logging.debug("Click successful")
             else:
                 except_flag = True
@@ -3394,8 +3444,21 @@ class Scenario(unittest.TestCase):
             screen_width, screen_height = self._get_screen_size(self.current_screen)
             x = int(float(x_frac) * screen_width * self.dut_coord_scaler)
             y = int(float(y_frac) * screen_height * self.dut_coord_scaler)
+
+            if "trace_x" in action and action["trace_x"] is not None:
+                trace_x = int(float(action["trace_x"]) * screen_width * self.dut_coord_scaler)
+            if "trace_y" in action and action["trace_y"] is not None:
+                trace_y = int(float(action["trace_y"]) * screen_height * self.dut_coord_scaler)
+            if "trace_w" in action and action["trace_w"] is not None:
+                trace_w = int(float(action["trace_w"]) * screen_width * self.dut_coord_scaler)
+            if "trace_h" in action and action["trace_h"] is not None:
+                trace_h = int(float(action["trace_h"]) * screen_height * self.dut_coord_scaler)
+            trace_ms = 0
+            if "trace_len" in action and action["trace_len"] is not None:
+                trace_ms = int(float(action["trace_len"]) * 1000)
+
             # Click the point
-            rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), 100, primary, self.current_screen, self.cursor_movement_enable, action["trace_label"], int(action["trace_x"]), action["trace_y"], action["trace_w"], action["trace_h"], action["trace_ms"], action["trace_framerate"])
+            rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Tap", int(x), int(y), 100, primary, self.current_screen, self.cursor_movement_enable, action["clip"], trace_x, trace_y, trace_w, trace_h, trace_ms, action["trace_framerate"])
 
         # Find the template in the screenshot and move the mouse to it on the DUT
         elif action["type"] == "Move":
@@ -3416,7 +3479,7 @@ class Scenario(unittest.TestCase):
         elif action["type"] == "Type":
             logging.debug(f"Typing: {action['description']}")
             typing_delay = int(action["typing_delay"]) if "typing_delay" in action else self.typing_delay
-            self._send_text(action["text"], typing_delay=typing_delay, trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"]))
+            self._send_text(action["text"], typing_delay=typing_delay, trace_label=action["clip"], trace_x=action["trace_x"], trace_y=action["trace_y"], trace_w=action["trace_w"], trace_h=action["trace_h"], trace_len=action["trace_len"], trace_framerate=int(action["trace_framerate"]))
             if "delay" in action:
                 calculated_delay_time = (typing_delay / 1000.0) * len(action["text"])
                 if float(action["delay"]) < calculated_delay_time:
@@ -3426,7 +3489,7 @@ class Scenario(unittest.TestCase):
         # Inject a scroll event
         elif action["type"] == "Scroll":
             logging.debug("Scrolling: " + str(action["direction"]))
-            self._scroll(x_frac=float(action["x"]), y_frac=float(action["y"]), direction=action["direction"], trace_label=action["trace_label"], trace_x=int(action["trace_x"]), trace_y=int(action["trace_y"]), trace_w=int(action["trace_w"]), trace_h=int(action["trace_h"]), trace_ms=int(action["trace_ms"]), trace_framerate=int(action["trace_framerate"]))
+            self._scroll(x_frac=float(action["x"]), y_frac=float(action["y"]), direction=action["direction"], trace_label=action["clip"], trace_x=action["trace_x"], trace_y=action["trace_y"], trace_w=action["trace_w"], trace_h=action["trace_h"], trace_len=action["trace_len"], trace_framerate=int(action["trace_framerate"]))
 
         # Check for a template match in a screenshot. Returns True if the template is found, False if it is not
         elif action["type"] == "Check":
@@ -3568,13 +3631,13 @@ class Scenario(unittest.TestCase):
 
         elif action["type"] == "Insert Actions Begin":
             self.insert_actions_time = self.scenario_accumulated_time
-            logging.debug(f"Inserting actions begin: {self.scenario_accumulated_time}")
+            logging.debug(f"Insert actions begin: {self.scenario_accumulated_time}")
             return 0
         
         elif action["type"] == "Insert Actions End":
             t = float(action["delay"]) + self.insert_actions_time
             self._sleep_to(t)
-            logging.debug(f"Inserting actions end: Delaying to {t}")
+            logging.debug(f"Insert actions end: Delaying to {t}")
             return 0
 
         # Delete the parameters from the params dictionary
