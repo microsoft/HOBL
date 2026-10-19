@@ -1,126 +1,291 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"""Intel Battery Life Diagnostic Tool System Configuration Checker scenario."""
+"""Prepare Intel BLDT, run SysConfig once, and stage its reports for HOBL."""
 
 import base64
+import csv
+import hashlib
+import json
 import logging
+import ntpath
+from pathlib import Path, PureWindowsPath
 
 import core.app_scenario
 from core.parameters import Params
 
 
 class BldtSysconfig(core.app_scenario.Scenario):
+    """Check system power configuration with Intel BLDT and collect its reports.
 
+    Steps:
+    1. Upload the prep script if missing or changed; install or repair BLDT only when needed.
+    2. Run SysConfigChecks once on AC (default) or DC.
+    3. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
+
+    SysConfig runs no AI analysis.
+    Success means complete execution and reports, not passing every Intel check.
+    """
+
+    # Diagnostic/preparation workload: do not start normal power measurements.
     is_prep = True
     module = __module__.split('.')[-1]
-    prep_version = "1"
-    resources = module + "_resources"
-    prep_marker_module = "bldt"
 
-    Params.setDefault(module, 'loops', '1')
-    Params.setDefault(
-        module,
-        'use_ai',
-        'false',
-        desc='Install/require the BLDT AI edition. The AI edition also satisfies standard requests.',
-        valOptions=['true', 'false'],
-    )
-    Params.setDefault(
-        module,
-        'power_source',
-        'AC',
-        desc='Power source passed to BLDT SysConfigChecks.',
-        valOptions=['AC', 'DC'],
-    )
-
-    @staticmethod
-    def _powershell_command(script, **parameters):
-        quote = lambda value: "'" + str(value).replace("'", "''") + "'"
-        command = "& " + quote(script)
-        for name, value in parameters.items():
-            command += f" -{name} {quote(value)}"
-        encoded = base64.b64encode(command.encode('utf-16-le')).decode('ascii')
-        return ['powershell.exe', f'-NoProfile -NonInteractive -EncodedCommand {encoded}']
-
-    def _prep_command(self, validate_only=False):
-        parameters = {
-            'UseAi': str(self.use_ai).lower(),
-            'LogFile': f"{self.dut_data_path}\\bldt_sysconfig_prep.log",
-        }
-        if validate_only:
-            parameters['ValidateOnly'] = 'true'
-        return self._powershell_command(
-            f"{self.target}\\bldt_sysconfig_prep.ps1",
-            **parameters,
-        )
-
-    def _run_prep(self):
-        if self.use_ai:
-            logging.info("Preparing Intel BLDT v3.1.1 AI edition; the AI package may take over an hour to download and extract.")
-        else:
-            logging.info("Preparing Intel BLDT v3.1.1 standard edition.")
-        try:
-            self._call(self._prep_command(), timeout=10800)
-            self._call(self._prep_command(validate_only=True), timeout=300)
-        finally:
-            self._copy_data_from_remote(self.result_dir)
-        self.createPrepStatusControlFile(self.prep_version, module=self.prep_marker_module)
+    # AI changes installation requirements, not the SysConfig command we execute.
+    Params.setDefault(module, 'use_ai', '0', valOptions=['0', '1'],
+                      desc='0: standard functionality; 1: require the AI edition.')
+    Params.setDefault(module, 'power_source', 'AC', valOptions=['AC', 'DC'],
+                      desc='Required DUT power source; does not control the charger.')
 
     def setUp(self):
-        self.loops = int(Params.get(self.module, 'loops'))
-        if self.loops < 1:
-            raise ValueError('bldt_sysconfig:loops must be at least 1.')
-
-        use_ai = Params.get(self.module, 'use_ai').strip().lower()
-        if use_ai not in ('true', 'false'):
-            raise ValueError('bldt_sysconfig:use_ai must be true or false.')
-        self.use_ai = use_ai == 'true'
-
+        """Read parameters, ensure BLDT is ready, then complete HOBL setup."""
+        self.use_ai = Params.get(self.module, 'use_ai').strip()
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
+
+        if self.use_ai not in ('0', '1'):
+            raise ValueError('bldt_sysconfig:use_ai must be 0 or 1.')
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_sysconfig:power_source must be AC or DC.')
 
-        self.target = f"{self.dut_exec_path}\\{self.resources}"
-        logging.info("Uploading BLDT scenario resources to %s", self.target)
-        self._upload(
-            f"scenarios\\windows\\{self.module}\\{self.resources}",
-            self.dut_exec_path,
-        )
-        needs_prep = bool(self.checkPrepStatus([self.prep_marker_module + self.prep_version]))
+        self.prep()
+        super().setUp()
 
-        if not needs_prep:
+    def prep(self):
+        """Discover on every invocation; install/repair only when discovery requires it."""
+        # HOBL may call prep again after setUp in prep-only mode. Reuse this invocation's validated result, not a marker left by an earlier run.
+        if getattr(self, 'installation', None) is not None:
+            return
+
+        needs_marker = bool(self.checkPrepStatus(['bldt']))
+        script = Path(__file__).with_name('bldt_sysconfig_resources') / 'bldt_sysconfig_prep.ps1'
+        remote_script = ntpath.join(self.dut_exec_path, script.name)
+
+        # Script freshness is independent of BLDT installation and the shared prep marker.
+        try:
+            expected_hash = hashlib.sha256(script.read_bytes()).hexdigest()
+            hash_check = r"""
+                Import-Module (Join-Path $PSHOME 'Modules\Microsoft.PowerShell.Utility\Microsoft.PowerShell.Utility.psd1')
+                $matches = (Test-Path -LiteralPath $path -PathType Leaf) -and
+                    ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -eq $expected)
+                ConvertTo-Json -InputObject $matches -Compress
+            """
+            hash_args = {'path': remote_script, 'expected': expected_hash}
+            if not json.loads(self._powershell(hash_check, **hash_args)):
+                logging.info("BLDT prep script is missing or changed; uploading %s.", remote_script)
+                self._upload(str(script), self.dut_exec_path, check_modified=False)
+                if not json.loads(self._powershell(hash_check, **hash_args)):
+                    raise RuntimeError('BLDT prep script hash mismatch after upload.')
+            else:
+                logging.info("BLDT prep script is current; skipping upload.")
+            output = self._powershell(
+                '& $prepScript -UseAi $useAi -CacheRoot $cache -LogRoot $logs',
+                timeout=32460, prepScript=remote_script, useAi=self.use_ai,
+                cache=ntpath.join(self.dut_exec_path, 'bldt_resources'), logs=self.dut_data_path,
+            )
+            prepared = json.loads(output)
+        except Exception:
+            # HOBL does not guarantee tearDown after a setup failure.
             try:
-                self._call(self._prep_command(validate_only=True), timeout=300)
-            except Exception as error:
-                logging.warning("BLDT live validation failed; prep will repair the installation: %s", error)
-                needs_prep = True
-
-        if needs_prep:
-            self._run_prep()
-
-        core.app_scenario.Scenario.setUp(self)
+                self._copy_data_from_remote(self.result_dir)
+            except Exception:
+                logging.exception("Could not retrieve BLDT preparation logs after setup failed.")
+            raise
+        self.installation = prepared['installation']
+        logging.info("BLDT ready: %s", self.installation)
+        if needs_marker or prepared['installed']:
+            self.createPrepStatusControlFile(module='bldt')
 
     def runTest(self):
-        for loop_index in range(self.loops):
-            logging.info("Running BLDT SysConfigChecks loop %d of %d", loop_index + 1, self.loops)
-            self._call(
-                self._powershell_command(
-                    f"{self.target}\\bldt_sysconfig_run.ps1",
-                    UseAi=str(self.use_ai).lower(),
-                    PowerSource=self.power_source,
-                    LoopNumber=loop_index + 1,
-                ),
-                timeout=1800,
+        """Run Intel's checks, stage fresh reports, and write an execution summary."""
+        # Also guard direct calls: a prep-only invocation must not run SysConfig.
+        if self.prep_run_only:
+            return
+
+        # Check what reports already exist before running the checks (so we know what was newly generated by this test)
+        before = self._report_files()
+        logging.info("Running BLDT SysConfigChecks on %s.", self.power_source)
+        try:
+            # invoke BLDT with SysConfigChecks and the specified power source paraemter
+            result = self._run_process(
+                self.installation['executable'],
+                f'--type SysConfigChecks --params pwrsrc:{self.power_source} --telemetry false',
+                ntpath.join(self.dut_data_path, 'bldt'), 900,
+                ntpath.dirname(self.installation['executable']),
             )
+        except Exception:
+            # Preserve partial output without hiding the original execution error.
+            try:
+                self._stage_reports(before, self.dut_data_path)
+            except Exception:
+                logging.exception("Could not stage partial BLDT reports after execution failed.")
+            raise
+
+        # Copy reports under dut_data_path; normal HOBL teardown retrieves them.
+        reports = self._stage_reports(before, self.dut_data_path)
+        if result['exit_code'] != 0:
+            raise RuntimeError(f"BLDT SysConfigChecks failed ({result['exit_code']}); see its logs.")
+        required = {'html', 'json', 'zip'}
+        if not any(required <= formats for formats in reports['sets'].values()):
+            missing = '; '.join(
+                f"{name}: missing fresh, nonempty {', '.join(sorted(required - formats)).upper()}"
+                for name, formats in sorted(reports['sets'].items())
+            ) or 'no fresh, nonempty SysConfigChecks HTML, JSON or ZIP reports'
+            raise RuntimeError(f'BLDT did not produce a complete matching report set: {missing}.')
+
+        # These describe execution, not the pass/fail findings inside Intel's HTML.
+        metrics = {
+            'scenario_runtime': round(result['seconds'], 3),
+            'bldt_version': self.installation['version'],
+            'bldt_edition': self.installation['edition'],
+            'power_source': self.power_source,
+            'html_report_created': 1,
+            'json_report_created': int(reports['json'] > 0),
+            'zip_report_created': int(reports['zip'] > 0),
+            'report_file_count': reports['files'],
+        }
+        # Write one summary pair at the host result root, without per-run duplicates.
+        directory = Path(self.result_dir)
+        directory.mkdir(parents=True, exist_ok=True)
+        with (directory / 'bldt_sysconfig_results.csv').open('w', newline='', encoding='utf-8') as stream:
+            csv.writer(stream).writerows(metrics.items())
+        (directory / 'bldt_sysconfig_results.json').write_text(
+            json.dumps(metrics, indent=2), encoding='utf-8',
+        )
+        logging.info("========== BLDT SysConfig metrics ==========")
+        for key, value in metrics.items():
+            logging.info("%s: %s", key, value)
 
     def tearDown(self):
-        logging.info("Collecting BLDT SysConfigChecks logs, metrics, and reports.")
-        core.app_scenario.Scenario.tearDown(self)
+        """Let HOBL retrieve staged reports and logs; leave BLDT installed."""
+        super().tearDown()
 
     def kill(self):
+        """Use HOBL's BLDT-specific cleanup on cancellation."""
         for process_name in ('BatteryLifeDiagnosticTool.exe', 'bldtUI.exe'):
             try:
                 self._kill(process_name)
             except Exception:
-                logging.debug("BLDT process was not running: %s", process_name)
+                logging.warning("Could not stop %s during BLDT cleanup.", process_name, exc_info=True)
+
+    @staticmethod
+    def _quote(value):
+        """Escape a literal PowerShell value, including apostrophes in paths."""
+        return "'" + str(value).replace("'", "''") + "'"
+
+    def _powershell(self, script, timeout=300, **values):
+        """Run a Windows operation on the DUT through HOBL, propagating failures."""
+        assignments = '\n'.join(f'${name} = {self._quote(value)}' for name, value in values.items())
+        command = (
+            "$ErrorActionPreference = 'Stop'\n"
+            "$ProgressPreference = 'SilentlyContinue'\n"
+            f"{assignments}\ntry {{\n{script}\n}} catch {{\n"
+            "Write-Output (' ERROR - ' + $_.Exception.Message)\nexit 1\n}"
+        )
+        # Suppress progress and CLIXML serialization so RPC output remains parseable JSON.
+        # Quoting protects values; UTF-16LE Base64 transports the command intact.
+        encoded = base64.b64encode(command.encode('utf-16-le')).decode('ascii')
+        return self._call(
+            ['powershell.exe',
+             f'-NoProfile -NonInteractive -OutputFormat Text -ExecutionPolicy Bypass -EncodedCommand {encoded}'],
+            timeout=timeout,
+        )
+
+    def _run_process(self, executable, arguments, log_prefix, timeout, working_directory):
+        """Capture output and enforce a DUT-side timeout, not just an RPC timeout."""
+        # Retain the process handle so Windows PowerShell can reliably read ExitCode.
+        # Give RPC extra time for termination and returning the measured result.
+        output = self._powershell(r"""
+            New-Item -ItemType Directory -Path (Split-Path -Parent $prefix) -Force | Out-Null
+            $timer = [Diagnostics.Stopwatch]::StartNew()
+            $process = Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory $cwd `
+                -RedirectStandardOutput "$prefix.stdout.log" -RedirectStandardError "$prefix.stderr.log" -PassThru
+            try {
+                $null = $process.Handle
+                if (-not $process.WaitForExit([int]$seconds * 1000)) {
+                    Stop-Process -Id $process.Id -Force
+                    if (-not $process.WaitForExit(10000)) { throw 'Timed-out BLDT process could not be stopped.' }
+                    throw "BLDT process timed out after $seconds seconds."
+                }
+                $process.WaitForExit()
+                if ($null -eq $process.ExitCode) { throw 'BLDT process exit code is unavailable.' }
+                $timer.Stop()
+                [pscustomobject]@{ exit_code = $process.ExitCode; seconds = $timer.Elapsed.TotalSeconds } |
+                    ConvertTo-Json -Compress
+            } finally {
+                $process.Dispose()
+            }
+        """, timeout=timeout + 60, exe=executable, arguments=arguments, prefix=log_prefix,
+            seconds=timeout, cwd=working_directory)
+        return json.loads(output)
+
+    def _report_files(self):
+        """Read DUT filenames, sizes and modification times; keep snapshots in Python."""
+        # Resolve short profile paths before computing relative filenames.
+        output = self._powershell(r"""
+            $root = Join-Path (Get-Item -LiteralPath $env:USERPROFILE).FullName 'Intel\BatteryLifeDiagnostic'
+            $files = @(
+                if (Test-Path -LiteralPath $root) {
+                    Get-ChildItem -LiteralPath $root -File -Recurse | ForEach-Object {
+                        [pscustomobject]@{
+                            path = $_.FullName.Substring($root.Length).TrimStart('\')
+                            size = $_.Length; modified = [string]$_.LastWriteTimeUtc.Ticks
+                        }
+                    }
+                }
+            )
+            [pscustomobject]@{ root = $root; files = $files } | ConvertTo-Json -Depth 4 -Compress
+        """)
+        snapshot = json.loads(output)
+        snapshot['files'] = {
+            item['path']: (item['size'], item['modified']) for item in snapshot['files']
+        }
+        return snapshot
+
+    def _stage_reports(self, before, report_dir):
+        """Select fresh output in Python, then copy it on the DUT for HOBL teardown."""
+        after = self._report_files()
+        if after['root'] != before['root']:
+            raise RuntimeError('BLDT report directory changed during the run.')
+        changed = {
+            name: metadata for name, metadata in after['files'].items()
+            if before['files'].get(name) != metadata
+        }
+        # Assets may be unchanged but are still needed to display the copied HTML.
+        selected = {
+            name: metadata for name, metadata in after['files'].items()
+            if name in changed or PureWindowsPath(name).parts[0].lower() == 'assets'
+        }
+        files = []
+        for name, (size, _) in selected.items():
+            relative = PureWindowsPath(name)
+            if relative.drive or relative.root or '..' in relative.parts:
+                raise RuntimeError(f'Invalid relative BLDT report path: {name}')
+            files.append({'path': name, 'size': size})
+
+        # Keep batches small enough for encoded Windows command lines. Copies stay
+        # on the DUT; there is no separate report download or snapshot file.
+        for start in range(0, len(files), 20):
+            self._powershell(r"""
+            foreach ($file in (ConvertFrom-Json -InputObject $files)) {
+                $source = Join-Path $root $file.path
+                $target = Join-Path $destination $file.path
+                New-Item -ItemType Directory -Path (Split-Path -Parent $target) -Force | Out-Null
+                Copy-Item -LiteralPath $source -Destination $target -Force
+                if ((Get-Item -LiteralPath $target).Length -ne $file.size) {
+                    throw "BLDT report staging incomplete: $($file.path)"
+                }
+            }
+        """, root=after['root'], destination=report_dir, files=json.dumps(files[start:start + 20]))
+        report_sets = {}
+        for name, (size, _) in changed.items():
+            relative = PureWindowsPath(name)
+            suffix = relative.suffix.lower()
+            if (size > 0 and relative.name.lower().startswith('sysconfigchecks_')
+                    and suffix in ('.html', '.htm', '.json', '.zip')):
+                stem = str(relative.with_suffix('')).lower()
+                report_sets.setdefault(stem, set()).add('html' if suffix == '.htm' else suffix[1:])
+        return {
+            **{kind: sum(kind in formats for formats in report_sets.values())
+               for kind in ('html', 'json', 'zip')},
+            'sets': report_sets, 'files': len(selected),
+        }
