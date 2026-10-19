@@ -12,6 +12,11 @@ import time
 class Tool(Scenario):
     '''
     Dump Wireshark capture.
+
+    Utilizes Wireshark's dumpcap tool to capture network traffic on the specified interface.
+
+    Parameters:
+        interface: The network interface on which to capture traffic (e.g., 'Wi-Fi').
     '''
     module = __module__.split('.')[-1]
 

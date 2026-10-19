@@ -81,6 +81,16 @@ class CounterType(Enum):
 class Tool(Scenario):
     '''
     Trace specified performance counters that report utilization.
+
+    Parameters:
+        include_processes: Whether to include counters for individual processes (0 or 1)
+        process_id_counter: Process ID counter to use (per process)
+        process_cpu_counter: Process CPU counter to use (per process)
+        process_mem_counter: Process memory counter to use (per process)
+        cpu_counter: CPU counter to use
+        memory_counter: Memory counter to use
+        gpu_counter: GPU counter to use (per process, per instance)
+        npu_counter: NPU counter to use (per process, per instance)
     '''
     module = __module__.split('.')[-1]
 
@@ -116,12 +126,14 @@ class Tool(Scenario):
         csv_filename   = "perfmon_util.csv"
         trace_filename = "perfmon_util.trace"
 
-        self.blg_path_dut = os.path.join(self.scenario.dut_data_path, blg_filename)
-        self.csv_path_dut = os.path.join(self.scenario.dut_data_path, csv_filename)
+        self.dut_output_path = os.path.join(self.scenario.dut_data_path, f"{self.module}")
+        self.blg_path_dut = os.path.join(self.dut_output_path, blg_filename)
+        self.csv_path_dut = os.path.join(self.dut_output_path, csv_filename)
 
-        self.blg_path_result   = os.path.join(self.scenario.result_dir, blg_filename)
-        self.csv_path_result   = os.path.join(self.scenario.result_dir, csv_filename)
-        self.trace_path_result = os.path.join(self.scenario.result_dir, trace_filename)
+        self.result_output_path = os.path.join(self.scenario.result_dir, f"{self.module}")
+        self.blg_path_result   = os.path.join(self.result_output_path, blg_filename)
+        self.csv_path_result   = os.path.join(self.result_output_path, csv_filename)
+        self.trace_path_result = os.path.join(self.result_output_path, trace_filename)
 
         luid_to_name_exe           = "map_luid_to_name.exe"
         self.luid_to_name_map_path = os.path.join(self.scenario.dut_exec_path, luid_to_name_exe)
@@ -140,6 +152,8 @@ class Tool(Scenario):
         self.num_logical_cores = int(self._call(["pwsh.exe", "-Command (Get-CimInstance Win32_Processor).NumberOfLogicalProcessors"]).strip())
         self.luid_to_name_map = csv_to_map(self._call([self.luid_to_name_map_path], log_output=False))
         self.pid_map = {}
+        self._call(["cmd.exe", '/c if not exist "' + self.dut_output_path + '" mkdir "' + self.dut_output_path + '"'])
+
         self._call(["typeperf.exe", f"{self.counters} -si 1 -f bin -o {self.blg_path_dut} -sc 0 -y"], blocking=False)
 
     def testEndCallback(self):
@@ -174,6 +188,8 @@ class Tool(Scenario):
         proc_cols = []
         luid_util_map, col_to_luid = {}, {}
         df = None
+
+        # os.makedirs(os.path.join(self.scenario.result_dir, f"{self.module}"), exist_ok=True) # make dir for storing results
 
         with open(self.csv_path_result, "r") as f:
             for line in f:

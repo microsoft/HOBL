@@ -39,7 +39,9 @@ class Tool(Scenario):
         else:
             data_cleanup = {data['Name'] : (data['SentBytes'], data['ReceivedBytes'])}
 
-        csv_name = os.path.join(self.scenario.result_dir, "net_stats.csv")
+        # Create dir for where results will be stored
+        os.makedirs(os.path.join(self.scenario.result_dir, f"{self.module}"), exist_ok=True)
+        csv_name = os.path.join(self.scenario.result_dir, f"{self.module}", "net_stats.csv")
         print("Writing CSV file: " + csv_name)
         with open(csv_name, 'w') as csvfile:
             csv_writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")

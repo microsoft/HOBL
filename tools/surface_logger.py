@@ -43,8 +43,9 @@ class Tool(Scenario):
         pass
     
     def testEndCallback(self):
+        self._call(["cmd.exe", '/c if not exist "' + os.path.join(self.scenario.dut_data_path, self.module) + '" mkdir "' + os.path.join(self.scenario.dut_data_path, self.module) + '"']) # Make dir for output from collect logs
         self._call(["powershell.exe", r"c:\tools\SurfaceLogger\SurfaceLogger.ps1 " + self.stop_args], blocking = True, fail_on_exception=True, expected_exit_code="0")
-        self._call(["cmd.exe", "/C xcopy C:\\Logs\\*.* " + self.dut_data_path], expected_exit_code="0")
+        self._call(["cmd.exe", "/C xcopy C:\\Logs\\*.* " + os.path.join(self.scenario.dut_data_path, self.module)], expected_exit_code="0")
 
     def dataReadyCallback(self):
         # You can do any post processing of data here.

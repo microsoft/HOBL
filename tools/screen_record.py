@@ -45,13 +45,16 @@ class Tool(Scenario):
         self.scenario.ffmpeg_launched = True
 
         if self.platform.lower() == "windows":
-            output_file = os.path.join(self.scenario.dut_data_path, self.scenario.testname + "_recording.mp4")
+            # self._call(["cmd.exe", '/c if not exist "' + os.path.join(self.scenario.dut_data_path, self.module) + '" mkdir "' + os.path.join(self.scenario.dut_data_path, self.module) + '"']) # Make dir for output from collect logs
+            self.scenario._remote_make_dir(os.path.join(self.scenario.dut_data_path, self.module))
+            output_file = os.path.join(self.scenario.dut_data_path, self.module, self.scenario.testname + "_recording.mp4")
             cmd = os.path.join(self.dut_exec_path, "ffmpeg.exe")
             args = "-f gdigrab -framerate 6 -i desktop -loglevel quiet -c:v libx264 -tune stillimage -crf 40 -pix_fmt yuv420p " + output_file
             stop_key = "q"
             self._call(["powershell.exe", os.path.join(self.dut_exec_path, "command_wrapper.ps1") + " \"" + cmd + " \'" + args + "\' " + self.stop_file + " " + stop_key + "\"" ], blocking=False)
         elif self.platform.lower() == "macos":
-            output_file = self.scenario.dut_data_path + "/" + self.scenario.testname + "_recording.mp4"
+            self._call(["/bin/bash", '/c if [ ! -d "' + os.path.join(self.scenario.dut_data_path, self.module) + '" ]; then mkdir -p "' + os.path.join(self.scenario.dut_data_path, self.module) + '"; fi']) # Make dir for output from collect logs
+            output_file = self.scenario.dut_data_path + "/" + self.module + "/" + self.scenario.testname + "_recording.mp4"
             cmd = "/opt/homebrew/bin/ffmpeg"
             args = f"-capture_cursor 1 -capture_mouse_clicks 1 -f avfoundation -framerate 6 -i {self.device_index} -loglevel quiet -c:v libx264 -tune stillimage -crf 40 -pix_fmt yuv420p " + output_file
             self._call(["/bin/bash", self.dut_exec_path + "/command_wrapper.sh " + cmd + " \"" + args + "\" " + self.stop_file + " " + "kill"], blocking=False)

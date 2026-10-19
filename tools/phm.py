@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import os
 from core.parameters import Params
 from core.app_scenario import Scenario
 import logging
@@ -12,6 +13,9 @@ import glob
 class Tool(Scenario):
     '''
     Run Intel's Power House Mountain tool.
+
+    Requires PHM to be installed on the DUT. Can be installed by running phm_prep scenario.
+    After PHM trace is completed, it will be copied back and results will be parsed. 
     '''
     module = __module__.split('.')[-1]
 
@@ -83,8 +87,10 @@ class Tool(Scenario):
 
         if not self.conn_timeout:
             # Copy over trace to results dir
-            logging.info("Moving PHM trace to " + self.dut_data_path)
-            self._call(["robocopy.exe", " ".join(["/MOVE", "/S", '"' + self.phm_dut_trace_path + '"', self.dut_data_path])], expected_exit_code="")        
+            self.dut_output_path = os.path.join(self.dut_data_path, f"{self.module}")
+            self._call(["cmd.exe", "/c if not exist \"" + self.dut_output_path + "\" mkdir \"" + self.dut_output_path + "\""])
+            logging.info("Moving PHM trace to " + self.dut_output_path)
+            self._call(["robocopy.exe", " ".join(["/MOVE", "/S", '"' + self.phm_dut_trace_path + '"', self.dut_output_path])], expected_exit_code="")        
 
     def cleanup(self):
         # Terminate PHM server
@@ -107,9 +113,9 @@ class Tool(Scenario):
         if Params.get('global', 'collection_enabled') != '0':
             logging.info("Parsing PHM data...")
             # host call of script_path
-            infile = glob.glob(self.scenario.result_dir + "\\Scenario20*\\**\\Mountains.csv", recursive=True)
+            infile = glob.glob(self.scenario.result_dir + f"\\{self.module}\\Scenario20*\\**\\Mountains.csv", recursive=True)
             infile = infile[0]
-            outfile = self.scenario.result_dir + "\\" + self.scenario.testname + "_PHM.csv"
+            outfile = self.scenario.result_dir + "\\" + f"{self.module}\\" + self.scenario.testname + "_PHM.csv"
             self._host_call("python.exe utilities\\open_source\\parse_socwatch.py" + " -i " + infile + " -o " + outfile)
 
     def testTimeoutCallback(self):

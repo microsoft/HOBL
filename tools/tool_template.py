@@ -38,10 +38,16 @@ class Tool(Scenario):
         return
 
     def testEndCallback(self):
+        # When working with any data or post processing results. Create necessary directories to store the reuslts in. Ideally using self.module as the dir name. 
+        # Example 1: create a directory at host side os.path.join(self.scenario.result_dir, self.module)
+        # Example 2: create a directory at DUT side using self.scenario.dut_data_path and self.module. EX call: self.scenario._remote_make_dir(os.path.join(self.scenario.dut_data_path, self.module))
         logging.info("Example Tool - testEndCallback for module: " + self.scenario._module)
         return
 
     def dataReadyCallback(self):
         # You can do any post processing of data here.
+        # When working with any data or post processing results. Create necessary directories to store the reuslts in. Ideally using self.module as the dir name. 
+        # Example 1: create a directory at os.path.join(self.scenario.result_dir, self.module)
+        # Example 2: create a directory at DUT side using self.scenario.dut_data_path and self.module. EX call: self.scenario._remote_make_dir(os.path.join(self.scenario.dut_data_path, self.module))
         logging.info("Example Tool - dataReadyCallback for module: " + self.scenario._module)
         return

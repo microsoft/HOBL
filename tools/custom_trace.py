@@ -1,13 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-# Take screenshots during scenario, where pause = the number of seconds between screenshots.
-# Set pause = 0 (default) to only take screenshots at the beginning and end of the scenario.
-#
-# To use, add "global:tools=screenshot" and optionally "screenshot:pause=<number of seconds>"
-# to the hobl command.
-# 
-# Need this in hobl_bin on DUT: \\ntwdata\powtel\CTF\ClientPower\Tests\x64\ScreenCapture.exe
+
 
 from builtins import str
 from builtins import *
@@ -24,6 +18,17 @@ import pandas as pd
 import csv
 
 class Tool(Scenario):
+    '''
+    Allows a custom ETL trace to be recorded during the scenario.
+    
+    Allows for multiple traces to be ran during the scenario or just a single trace.Modifying the parameters can customize the behavior of the ETL trace.
+    Parameters:
+        providers: The ETL provider files to use.
+        trace_duration: The duration of the trace in seconds.
+        start_delay: The start delay before the trace starts in seconds.
+        enable_check: Check the result of the trace. 0 = no check, 1 = check.
+        single_run: Run the trace only once. 0 = no, 1 = yes.
+    '''
     module = __module__.split('.')[-1]
     # Set default parameters
     Params.setDefault(module, 'providers', 'power_light.wprp', desc="ETL provider files to use", valOptions=["@\\providers"], multiple=True)
@@ -61,7 +66,7 @@ class Tool(Scenario):
         self.threadException = threading.Event()
 
         logging.info("initalizing etl thread")
-        self.thread = EtlThread(self.trace_duration, self.start_delay, self.enable_check, self.single_run, self.scenario, wprStartCommand, self.threadException)
+        self.thread = EtlThread(self.trace_duration, self.start_delay, self.enable_check, self.single_run, self.scenario, self.module, wprStartCommand, self.threadException)
         
         
     def testBeginCallback(self):
@@ -78,7 +83,7 @@ class Tool(Scenario):
         self.thread.event.set()
         if self.thread.activeEtl:
             try:
-                self.thread.stop_etl(self.scenario)
+                self.thread.stop_etl()
             except:
                 pass
         self.thread.join()
@@ -88,7 +93,7 @@ class Tool(Scenario):
         # Do 1 more check if test result is passed in case of another thread ending the test. 
         if self.testResult:
             if self.enable_check == 1:
-                if not self.thread.check_result(self.scenario):
+                if not self.thread.check_result():
                     raise Exception(self.thread.error_msg)
         return
 
@@ -96,9 +101,9 @@ class Tool(Scenario):
         logging.info("Stopping etl thread. Stopping and saving ETL trace.")
         self.thread.event.set()
         if self.thread.activeEtl:
-            self.thread.stop_etl(self.scenario)
+            self.thread.stop_etl()
             if self.enable_check == 1:
-                if not self.thread.check_result(self.scenario):
+                if not self.thread.check_result():
                     self.testResult = False
                     raise Exception(self.thread.error_msg)
         self.thread.join()
@@ -113,18 +118,20 @@ class Tool(Scenario):
         return (0, "continue test")
 
 class EtlThread(threading.Thread):
-    def __init__(self, trace_duration, start_delay, enable_check, single_run, scenario, wprStartCommand, exceptionEvent):
+    def __init__(self, trace_duration, start_delay, enable_check, single_run, scenario, module, wprStartCommand, exceptionEvent):
         threading.Thread.__init__(self)
         self.trace_duration = trace_duration
         self.start_delay = start_delay
         self.enable_check = enable_check
         self.single_run = single_run
         self.scenario = scenario
+        self.module = module
         self.wprStartCommand = wprStartCommand
         self.event = threading.Event()
         self.exceptionEvent = exceptionEvent
         self.activeEtl = False
         self.error_msg = ""
+        self.host_output_path = os.path.join(self.scenario.result_dir, self.module)
 
         self.setDaemon(True)
         
@@ -160,13 +167,15 @@ class EtlThread(threading.Thread):
         Periodically stop ETL traces.
         '''
         # stop the ETL trace
-        outfile = os.path.join(self.scenario.dut_data_path, self.scenario.testname + ".etl")
+        output_path = os.path.join(self.scenario.dut_data_path, self.module)
+        self.scenario._call(["cmd.exe", '/c if not exist "' + output_path + '" mkdir "' + output_path + '"']) # Make dir for output from collect logs
+        outfile = os.path.join(output_path, self.scenario.testname + ".etl")
         logging.info("Ending trace and saving at: " + outfile)
         self.scenario._call(["cmd.exe", "/c wpr.exe -stop " + outfile])
 
-        self.scenario._copy_data_from_remote(self.scenario.result_dir, source=outfile, single_file=True)
+        self.scenario._copy_data_from_remote(self.host_output_path, source=outfile, single_file=True)
 
-        basename = os.path.join(self.scenario.result_dir, self.scenario.testname)
+        basename = os.path.join(self.host_output_path, self.scenario.testname)
 
         self.scenario._host_call("utilities\\proprietary\\ParsePowerLight\\parse_power_light.exe -m e3 -f " + basename + ".etl" + " -o " + basename, expected_exit_code="")
 
@@ -177,7 +186,7 @@ class EtlThread(threading.Thread):
         Check the top ten process for memcompression and if so then fail the test. 
         '''
         error_msg = ""
-        top_ten_process = os.path.join(self.scenario.result_dir, self.scenario.testname + "_top_processes.csv") 
+        top_ten_process = os.path.join( self.host_output_path, self.scenario.testname + "_top_processes.csv") 
         if os.path.exists(top_ten_process):
             with open(top_ten_process, 'r') as f:
                 reader = csv.reader(f)
@@ -195,3 +204,4 @@ class EtlThread(threading.Thread):
                             return False
         else:
             logging.info(top_ten_process + " not found.")
+        return True

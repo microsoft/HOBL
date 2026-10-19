@@ -16,6 +16,17 @@ import core.call_rpc as rpc
 
 
 class Tool(Scenario):
+    '''
+    Calls executables on the DUT, either blocking or non-blocking.
+
+    Parameters:
+        executable: The full path on the DUT to the file to be executed.
+        arguments: The arguments to pass to the executable.
+        source_path: The local path to the source file/folder to be copied to the DUT before the test.
+        results_path: The path on the DUT where results will be stored and copied back after the test.
+        stop_command: The command to stop the executable if it is non-blocking.
+        blocking: Whether the call should be blocking ('True' or 'False').
+    '''
     module = __module__.split('.')[-1]
     # Set default parameters
     Params.setDefault(module, 'executable', '') # Specify full path on DUT to file to be executed

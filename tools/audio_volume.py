@@ -16,6 +16,11 @@ import decimal
 class Tool(Scenario):
     '''
     Set specified audio volume.
+
+    Setting the 'volume' parameter will adjust the audio output volume accordingly.
+
+    Parameters:
+        volume: The desired audio output volume as a percentage (0-100).
     '''
     module = __module__.split('.')[-1]
 

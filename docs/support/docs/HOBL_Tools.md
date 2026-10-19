@@ -4,6 +4,11 @@
 
 Set specified audio volume.
 
+Setting the 'volume' parameter will adjust the audio output volume accordingly.
+
+Parameters:
+    volume: The desired audio output volume as a percentage (0-100).
+
 
 <u>Parameters:</u>
 
@@ -12,6 +17,12 @@ Set specified audio volume.
 ## auto_charge
 
 Turn off charger before scenario, turn it on after.
+
+Gives the option to turn off charger before the scenario starts and turn it back on after the scenario ends.
+
+Parameters:
+    delay: The delay in seconds before turning off the charger.
+    mode: The charging mode, either 'DC' or 'AC'. If 'AC' is specified, the charger will not be turned off during scenario. 
 
 
 <u>Parameters:</u>
@@ -24,12 +35,19 @@ Turn off charger before scenario, turn it on after.
 
 Pause run and recharge device when battery drops below [charge_threshold], then resume.
 
+Monitors the battery level before each scenario and automatically recharges the device when it falls below the specified charge threshold. The device will resume normal operation once the battery reaches the resume threshold.
+
+Parameters:
+    charge_threshold: The battery level percentage at which to start charging.
+    resume_threshold: The battery level percentage at which to stop charging.
+    post_charge_delay: The delay in seconds after reaching the resume threshold before disconnecting the charger.
+
 
 <u>Parameters:</u>
 
-`charge_threshold` -  **Default:** `40` 
+`charge_threshold` - The battery level percentage at which to start charging. **Default:** `40` 
 
-`resume_threshold` -  **Default:** `95` 
+`resume_threshold` - The battery level percentage at which to stop charging. **Default:** `95` 
 
 `post_charge_delay` - How many seconds to wait after reaching the resume_threshold before disconnecting charger. **Default:** `1800` 
 
@@ -54,13 +72,50 @@ Deprecated.
 
 Surface only.  Logs battery details over time.
 
+## call
+
+Calls executables on the DUT, either blocking or non-blocking.
+
+Parameters:
+    executable: The full path on the DUT to the file to be executed.
+    arguments: The arguments to pass to the executable.
+    source_path: The local path to the source file/folder to be copied to the DUT before the test.
+    results_path: The path on the DUT where results will be stored and copied back after the test.
+    stop_command: The command to stop the executable if it is non-blocking.
+    blocking: Whether the call should be blocking ('True' or 'False').
+
+
+<u>Parameters:</u>
+
+`executable` -  **Default:** `` 
+
+`arguments` -  **Default:** `` 
+
+`source_path` -  **Default:** `` 
+
+`results_path` -  **Default:** `` 
+
+`stop_command` -  **Default:** `` 
+
+`blocking` -  **Default:** `False` 
+
 ## collect_logs
 
 Collect various system logs in the case of scenario failure.
 
+Will collect various logs such as sleep study reports, battery reports, system event logs, and power shell logs.
+
 ## custom_trace
 
-Periodically start ETL traces.
+Allows a custom ETL trace to be recorded during the scenario.
+
+Allows for multiple traces to be ran during the scenario or just a single trace.Modifying the parameters can customize the behavior of the ETL trace.
+Parameters:
+    providers: The ETL provider files to use.
+    trace_duration: The duration of the trace in seconds.
+    start_delay: The start delay before the trace starts in seconds.
+    enable_check: Check the result of the trace. 0 = no check, 1 = check.
+    single_run: Run the trace only once. 0 = no, 1 = yes.
 
 
 <u>Parameters:</u>
@@ -135,6 +190,10 @@ Parameters:
 
 Map display brightness slider percentage to nits value specified by scenarios.
 
+Parameters:
+    brightness: The desired display brightness, specified in nits (e.g., '150nits').
+    nits_map: A mapping of nits values to corresponding brightness slider percentages (e.g., '100nits:50% 150nits:65%').
+
 
 <u>Parameters:</u>
 
@@ -146,6 +205,11 @@ Map display brightness slider percentage to nits value specified by scenarios.
 
 Dump Wireshark capture.
 
+Utilizes Wireshark's dumpcap tool to capture network traffic on the specified interface.
+
+Parameters:
+    interface: The network interface on which to capture traffic (e.g., 'Wi-Fi').
+
 
 <u>Parameters:</u>
 
@@ -154,6 +218,11 @@ Dump Wireshark capture.
 ## etl_trace
 
 Collect ETL trace from specified [providers].
+
+Collects ETL traces from the specified providers. Multiple providers can be specified, separated by spaces. 
+
+Parameters:
+    providers: The ETL provider files to use (e.g., '@\providers'). 
 
 
 <u>Parameters:</u>
@@ -187,6 +256,10 @@ Kill all instances of Teams processes.
 
 Stops the Windows Widgets from running.
 
+## live_translation
+
+Setups up the Live Translation feature on the DUT.
+
 ## mac_powermetrics
 
 macOS-only lightweight power measurement tool based on powermetrics.
@@ -204,6 +277,9 @@ macOS-only lightweight power measurement tool based on powermetrics.
 
 Deprecated.
 
+Media perf tool for post processing of Media ETL traces using Media eXperience Analyzer
+ETL trace should have been collected using MediaEngine.wprp profile
+
 
 <u>Parameters:</u>
 
@@ -212,6 +288,24 @@ Deprecated.
 ## mep_toggle
 
 Enable/disable specified MEP features.
+
+Before scenario starts specified MEP features will be toggled according to the configured parameters.
+Parameters:
+    framing: Enable/disable framing feature ('0' for off, '1' for on).
+    eye_gaze: Enable/disable eye gaze feature ('0' for off, '1' for on).
+    blur: Enable/disable blur feature ('0' for off, '1' for on).
+    portraitlight: Enable/disable portrait light feature ('0' for off, '1' for on).
+    creative: Enable/disable creative feature ('0' for off, '1' for on).
+
+    standardframing: Enable/disable standard framing sub-feature ('0' for off, '1' for on).
+    cinematicframing: Enable/disable cinematic framing sub-feature ('0' for off, '1' for on).
+    portraitblur: Enable/disable portrait blur sub-feature ('0' for off, '1' for on).
+    standardblur: Enable/disable standard blur sub-feature ('0' for off, '1' for on).
+    standardeye: Enable/disable standard eye sub-feature ('0' for off, '1' for on).
+    enhancedeye: Enable/disable enhanced eye sub-feature ('0' for off, '1' for on').
+    illustrated: Enable/disable illustrated sub-feature ('0' for off, '1' for on).
+    animated: Enable/disable animated sub-feature ('0' for off, '1' for on).
+    watercolor: Enable/disable watercolor sub-feature ('0' for off, '1' for on).
 
 
 <u>Parameters:</u>
@@ -269,6 +363,8 @@ Reports number of bytes transferred over Wi-Fi vs Cellular.
 
 Calculates a MOS score from an abl_perf run.
 
+Collects an ETL trace with abl_perf.wprp and will parse results from it to calculate a MOS score.
+
 
 <u>Parameters:</u>
 
@@ -277,6 +373,16 @@ Calculates a MOS score from an abl_perf run.
 ## perfmon_util
 
 Trace specified performance counters that report utilization.
+
+Parameters:
+    include_processes: Whether to include counters for individual processes (0 or 1)
+    process_id_counter: Process ID counter to use (per process)
+    process_cpu_counter: Process CPU counter to use (per process)
+    process_mem_counter: Process memory counter to use (per process)
+    cpu_counter: CPU counter to use
+    memory_counter: Memory counter to use
+    gpu_counter: GPU counter to use (per process, per instance)
+    npu_counter: NPU counter to use (per process, per instance)
 
 
 <u>Parameters:</u>
@@ -299,11 +405,14 @@ Trace specified performance counters that report utilization.
 
 ## perf_screen_capture
 
-A template that can be used for creating new tools.
+Performance screen capture tool for collecting and saving screenshots during performance tests.
 
 ## perf_utc
 
 Collects and processes UTC Perftrack scenarios
+
+Parameters:
+    provider: WPRP file to use for UTC Perftrack traces. Default is set to 'perf_utc.wprp'
 
 
 <u>Parameters:</u>
@@ -313,6 +422,9 @@ Collects and processes UTC Perftrack scenarios
 ## phm
 
 Run Intel's Power House Mountain tool.
+
+Requires PHM to be installed on the DUT. Can be installed by running phm_prep scenario.
+After PHM trace is completed, it will be copied back and results will be parsed. 
 
 
 <u>Parameters:</u>
@@ -506,7 +618,7 @@ Deprecated.
 
 ## socwatch
 
-Run Intel's SOCWatch tool.
+Run Intel's SOCWatch tool and parses results.
 
 
 <u>Parameters:</u>
