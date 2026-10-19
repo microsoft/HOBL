@@ -92,6 +92,7 @@ class Scenario(unittest.TestCase):
         self.bare = False
         self.component = None
         self.current_screen = 0
+        self.rundown_comm_check = None
 
         # Reset tooCallback values on each attempt
         self.reset_toolCallBacks_result()
@@ -688,6 +689,8 @@ class Scenario(unittest.TestCase):
                 try:
                     if self.stop_soc == "0":
                         time.sleep(60)
+                    if str(exp).lower() == "timed out":
+                        self._is_dut_alive()
                     if self.platform.lower() != 'android':
                         rpc.call_rpc(self.dut_ip, self.rpc_port,
                                      "GetVersion", [])
@@ -878,6 +881,7 @@ class Scenario(unittest.TestCase):
                     time.sleep(900)
             except Exception:
                 self.toolCallBacks("testTimeoutCallback")
+                self._is_dut_alive()
                 if self.platform.lower() != 'android':
                     self.dut_conn_timeout = True
                     self._wait_for_dut_comm()
@@ -3685,7 +3689,6 @@ class Scenario(unittest.TestCase):
             
         count = 0
         count_timeout = 20
-
         # Poll for simple remote to determine if DUT is alive
         while(True):
             logging.info("Waiting for DUT communication")
@@ -3706,6 +3709,23 @@ class Scenario(unittest.TestCase):
                 count += 1
                 continue
 
+    def _is_dut_alive(self):
+        logging.info("Checking if DUT is alive.")
+        alive = True
+        try:
+            rpc.call_rpc(self.dut_ip, self.rpc_port, "GetVersion", [], log=False, timeout=15)
+        except:
+            alive = False
+
+        if self.rundown_mode == '1':
+            self.rundown_comm_check = alive
+            return
+
+        if alive:
+            logging.error("Temporarily lost communication to DUT", extra={"update_error": True})
+        else:    
+            logging.error("Lost communication to DUT", extra={"update_error": True, "update_fail": True})
+        
     def _check_local_exec_reboot(self):
         if self.dut_ip == "127.0.0.1" and self.platform.lower() == "windows":
             Params.setCalculated("local_execution_reboot", "1")
@@ -3904,6 +3924,10 @@ class Scenario(unittest.TestCase):
         if (test_pass):
             logging.info("Device successfully entered hibernate and woke up.")
         else:
+            if self.rundown_comm_check:
+                logging.error("DUT temporarily lost communication. Potentially network glitch or DUT restarted.", extra={"update_error": True})
+            elif self.rundown_comm_check is False:
+                logging.error("lost communication to DUT.", extra={"update_error": True})
             logging.error("Test timed out before critical battery level reached.")
             raise Exception("Command timeout occurred before critical battery level reached.  Critical battery level: " + self.crit_batt_level)
     

@@ -280,7 +280,8 @@ class StreamHandlerWrapper(logging.StreamHandler):
     def emit(self, record):
         super().emit(record)
 
-        if record.levelno == logging.ERROR and not type(self).is_error_seen:
+        # Post on the first unseen error, or whenever a record opts in via extra={"update_error": True} to refresh the UI message.
+        if (record.levelno == logging.ERROR and not type(self).is_error_seen) or (record.levelno == logging.ERROR and getattr(record, "update_error", False)):
             if dashboard_url != '':
                 url = urlunparse(
                     urlparse(dashboard_url)._replace(
@@ -295,6 +296,8 @@ class StreamHandlerWrapper(logging.StreamHandler):
                         "errorInfo": record.message
                     }
                 )
+                if getattr(record, "update_fail", False) and not params.getCalculated("fail_notification_sent"):
+                    send_fail_notification()
 
             type(self).is_error_seen = True
 
@@ -305,6 +308,7 @@ class StreamHandlerWrapper(logging.StreamHandler):
 
 
 def open_log(log=None):
+    params.setCalculated("fail_notification_sent", False)
     if log:
         logging.basicConfig(filename=log, filemode='w', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', force=True)
     else:
@@ -614,6 +618,7 @@ def send_pass_notification():
 
 def send_fail_notification():
     send_status_notification("FAIL")
+    params.setCalculated("fail_notification_sent", True)
 
 
 def preps_missing_print(prep_scenarios_to_run):
@@ -894,7 +899,7 @@ if __name__ == '__main__':
                         except:
                             print("Could not close log.")
                     else:
-                        if dashboard_url != '':
+                        if dashboard_url != '' and not params.getCalculated("fail_notification_sent"):
                             # Send FAIL notification and write .FAIL file.
                             send_fail_notification()
                         open(run_dir + "\\.FAIL", "w+").close()
