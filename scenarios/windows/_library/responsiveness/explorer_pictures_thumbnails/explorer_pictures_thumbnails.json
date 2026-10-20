@@ -1,0 +1,1167 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "Open Pictures, show Extra large thumbnails, restore Large, close, and return to web",
+        "enabled": true,
+        "id": "WAPT001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAPT002",
+        "name": "[probe_name]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "explorer_pictures_thumbnails"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAPT003",
+        "name": "[return_x]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "0.850"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WAPT004",
+        "name": "[return_y]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "0.020"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start probe occupancy timing",
+        "enabled": true,
+        "id": "WAPT010",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "probe_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record probe start",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT011",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Capture the taskbar",
+        "enabled": true,
+        "file_name": [
+            "capture_pictures_taskbar.png"
+        ],
+        "h": "0.100",
+        "id": "WAPTCAP",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.900"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Explorer-open interaction",
+        "enabled": true,
+        "id": "WAPT020",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "open_pictures_explorer"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Explorer-open latency timing",
+        "enabled": true,
+        "id": "WAPT021",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Explorer-open input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT022",
+        "type": "Code"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAPTCAP",
+                "children": [],
+                "delay": "0",
+                "description": "Open File Explorer from the taskbar",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "exception_on": "No match",
+                "file_name": [
+                    "..\\explorer_windows_scroll\\image_1T70W9T.png"
+                ],
+                "id": "WAPT023",
+                "match_threshold": "0.65",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAPT023IMAGEIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "image",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAPT023IMAGEEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open File Explorer using the caller-provided coordinate",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAPT023",
+                "type": "Click Coord",
+                "x": "[open_taskbar_x]",
+                "y": "[open_taskbar_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAPT023COORDIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAPT023COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open File Explorer via Win+E",
+                "enabled": true,
+                "annoyance_timing_role": "stimulus",
+                "id": "WAPT023",
+                "text": "\ue03de",
+                "type": "Type",
+                "typing_delay": "50"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAPT023KEYIF",
+        "left_term": "[open_taskbar_mode]",
+        "right_term": "keyboard",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAPT023KEYEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture Explorer chrome",
+        "enabled": true,
+        "file_name": [
+            "capture_pictures_state.png"
+        ],
+        "h": "1.000",
+        "id": "WAPTSTATE",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPTSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for Explorer toolbar chrome",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT024",
+        "match_threshold": "0.68",
+        "timeout": "30",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Explorer-open latency timing",
+        "enabled": true,
+        "id": "WAPT025",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record Explorer-open visible result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT026",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select first-thumbnail-visible interaction",
+        "enabled": true,
+        "id": "WAPT030",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "first_thumbnail_visible"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start first-thumbnail-visible latency timing",
+        "enabled": true,
+        "id": "WAPT031",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Arm first-thumbnail-visible timing",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT032",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0.25",
+        "description": "Focus the Explorer address bar",
+        "enabled": true,
+        "id": "WAPT033",
+        "text": "\ue009l",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "children": [],
+        "delay": "0.25",
+        "description": "Navigate to the Pictures known folder",
+        "enabled": true,
+        "annoyance_timing_role": "stimulus",
+        "id": "WAPT034",
+        "text": "shell:My Pictures\ue007",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Dismiss transient Explorer overlays",
+        "enabled": true,
+        "id": "WAPT034A",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "capture_id": "WAPTSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the first visible Pictures thumbnail",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_thumbnail_large.png",
+            "image_thumbnail_large_compact.png",
+            "image_thumbnail_extra_large.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT034THUMB",
+        "match_threshold": "0.90",
+        "timeout": "12",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish first-thumbnail-visible latency timing",
+        "enabled": true,
+        "id": "WAPT034THUMBEND",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record first visible thumbnail result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT034THUMBRECORD",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select normalized Pictures-grid interaction",
+        "enabled": true,
+        "id": "WAPT034GRIDNAME",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "open_pictures_grid"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start normalized Pictures-grid latency timing",
+        "enabled": true,
+        "id": "WAPT034GRIDSTART",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Arm normalized Pictures-grid timing",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT034GRIDARM",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture Explorer toolbar for Large normalization",
+        "enabled": true,
+        "id": "WAPT035",
+        "file_name": [
+            "capture_pictures_toolbar.png"
+        ],
+        "h": "1.000",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT035",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the Explorer View button",
+        "enabled": true,
+        "file_name": [
+            "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT035VIEW",
+        "match_threshold": "0.68",
+        "timeout": "5",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAPT035",
+                "children": [],
+                "delay": "0.5",
+                "description": "Open the Explorer View menu",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+                ],
+                "id": "WAPT035A",
+                "match_threshold": "0.68",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Capture the Explorer View menu",
+                "enabled": true,
+                "file_name": [
+                    "capture_pictures_view_menu.png"
+                ],
+                "h": "1.000",
+                "id": "WAPT035B",
+                "recapture": true,
+                "type": "Capture",
+                "w": "1.000",
+                "x": "0.000",
+                "y": "0.000"
+            },
+            {
+                "capture_id": "WAPT035B",
+                "children": [],
+                "delay": "0",
+                "description": "Wait briefly for Large icons menu item",
+                "enabled": true,
+                "file_name": [
+                    "image_view_large_current.png"
+                ],
+                "h": "1.000",
+                "id": "WAPT035CHECK",
+                "match_threshold": "0.90",
+                "timeout": "2",
+                "type": "Check Until Found",
+                "w": "1.000",
+                "x": "0.000",
+                "y": "0.000"
+            }
+        ],
+        "description": "Open the Explorer View menu on the first click",
+        "enabled": true,
+        "id": "WAPT035TRY",
+        "type": "Try"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "WAPT035",
+                "children": [],
+                "delay": "0.5",
+                "description": "Retry after the first click only activated Explorer",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+                ],
+                "id": "WAPT035AR",
+                "match_threshold": "0.68",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            },
+            {
+                "capture_id": "WAPT035B",
+                "children": [],
+                "delay": "0",
+                "description": "Wait for Large icons menu item after retry",
+                "enabled": true,
+                "file_name": [
+                    "image_view_large_current.png"
+                ],
+                "h": "1.000",
+                "id": "WAPT035CHECKR",
+                "match_threshold": "0.90",
+                "timeout": "5",
+                "type": "Check Until Found",
+                "w": "1.000",
+                "x": "0.000",
+                "y": "0.000"
+            }
+        ],
+        "description": "Retry the View menu after activation consumes a click",
+        "enabled": true,
+        "id": "WAPT035EXCEPT",
+        "type": "Except"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAPT035ENDTRY",
+        "type": "End Try"
+    },
+    {
+        "capture_id": "WAPT035B",
+        "children": [],
+        "delay": "0",
+        "description": "Normalize Pictures to Large icons",
+        "enabled": true,
+        "annoyance_timing_role": "stimulus",
+        "exception_on": "No match",
+        "file_name": [
+            "image_view_large_current.png"
+        ],
+        "id": "WAPT035C",
+        "match_threshold": "0.90",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Dismiss a late Pictures address suggestion overlay",
+        "enabled": true,
+        "id": "WAPT035D",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "capture_id": "WAPTSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the Large thumbnail grid",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_thumbnail_large.png",
+            "image_thumbnail_large_compact.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT036",
+        "match_threshold": "0.85",
+        "timeout": "12",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Pictures-grid latency timing",
+        "enabled": true,
+        "id": "WAPT037",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record Pictures-grid visible result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT038",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Extra-large thumbnail interaction",
+        "enabled": true,
+        "id": "WAPT040",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "show_extra_large_thumbnails"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Extra-large thumbnail timing",
+        "enabled": true,
+        "id": "WAPT041",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Extra-large input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT042",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Dismiss transient Explorer overlays",
+        "enabled": true,
+        "id": "WAPT042A",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture Explorer toolbar for Extra-large selection",
+        "enabled": true,
+        "id": "WAPT043",
+        "file_name": [
+            "capture_pictures_toolbar.png"
+        ],
+        "h": "1.000",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT043",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the Explorer View button",
+        "enabled": true,
+        "file_name": [
+            "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT043VIEW",
+        "match_threshold": "0.68",
+        "timeout": "5",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT043",
+        "children": [],
+        "delay": "0.5",
+        "description": "Open the Explorer View menu",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+        ],
+        "id": "WAPT043A",
+        "match_threshold": "0.68",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture the Explorer View menu",
+        "enabled": true,
+        "file_name": [
+            "capture_pictures_view_menu.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT043B",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT043B",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for Extra large icons menu item",
+        "enabled": true,
+        "file_name": [
+            "image_view_extra_large_current.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT043CHECK",
+        "match_threshold": "0.90",
+        "timeout": "5",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT043B",
+        "children": [],
+        "delay": "0",
+        "description": "Select Extra large icons",
+        "enabled": true,
+        "annoyance_timing_role": "stimulus",
+        "exception_on": "No match",
+        "file_name": [
+            "image_view_extra_large_current.png"
+        ],
+        "id": "WAPT043C",
+        "match_threshold": "0.90",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "capture_id": "WAPTSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the Extra-large thumbnail grid",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_thumbnail_extra_large_200.png",
+            "image_thumbnail_extra_large.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT044",
+        "match_threshold": "0.85",
+        "timeout": "12",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Extra-large thumbnail timing",
+        "enabled": true,
+        "id": "WAPT045",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record Extra-large thumbnail result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT046",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Scroll down through Pictures",
+        "direction": "down",
+        "enabled": true,
+        "id": "WAPT047",
+        "type": "Scroll",
+        "x": "0.650",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Scroll back to the top",
+        "direction": "up",
+        "enabled": true,
+        "id": "WAPT048",
+        "type": "Scroll",
+        "x": "0.650",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Large-thumbnail restoration interaction",
+        "enabled": true,
+        "id": "WAPT050",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "restore_large_thumbnails"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Large-thumbnail restoration timing",
+        "enabled": true,
+        "id": "WAPT051",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Large-icons input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT052",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Dismiss transient Explorer overlays",
+        "enabled": true,
+        "id": "WAPT052A",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture Explorer toolbar for Large restoration",
+        "enabled": true,
+        "id": "WAPT053",
+        "file_name": [
+            "capture_pictures_toolbar.png"
+        ],
+        "h": "1.000",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT053",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the Explorer View button",
+        "enabled": true,
+        "file_name": [
+            "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT053VIEW",
+        "match_threshold": "0.68",
+        "timeout": "5",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT053",
+        "children": [],
+        "delay": "0.5",
+        "description": "Open the Explorer View menu",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+        ],
+        "id": "WAPT053A",
+        "match_threshold": "0.68",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Capture the Explorer View menu",
+        "enabled": true,
+        "file_name": [
+            "capture_pictures_view_menu.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT053B",
+        "recapture": true,
+        "type": "Capture",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT053B",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for Large icons menu item",
+        "enabled": true,
+        "file_name": [
+            "image_view_large_current.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT053CHECK",
+        "match_threshold": "0.90",
+        "timeout": "5",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "WAPT053B",
+        "children": [],
+        "delay": "0",
+        "description": "Restore Large icons",
+        "enabled": true,
+        "annoyance_timing_role": "stimulus",
+        "exception_on": "No match",
+        "file_name": [
+            "image_view_large_current.png"
+        ],
+        "id": "WAPT053C",
+        "match_threshold": "0.90",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "capture_id": "WAPTSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for the restored Large thumbnail grid",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "image_thumbnail_large.png",
+            "image_thumbnail_large_compact.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT054",
+        "match_threshold": "0.85",
+        "timeout": "12",
+        "type": "Check Until Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Large-thumbnail restoration timing",
+        "enabled": true,
+        "id": "WAPT055",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Record restored Large thumbnail result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT056",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Select Explorer-close interaction",
+        "enabled": true,
+        "id": "WAPT060",
+        "name": "[interaction_name]",
+        "type": "Set",
+        "value": "close_pictures_explorer"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Start Explorer-close latency timing",
+        "enabled": true,
+        "id": "WAPT061",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_start"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Explorer-close input begin",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT062",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Close File Explorer via Alt+F4",
+        "enabled": true,
+        "annoyance_timing_role": "stimulus",
+        "id": "WAPT063",
+        "text": "\ue00a\ue034",
+        "type": "Type",
+        "typing_delay": "100"
+    },
+    {
+        "capture_id": "WAPTSTATE",
+        "children": [],
+        "delay": "0",
+        "description": "Wait for Explorer to close",
+        "enabled": true,
+        "annoyance_timing_role": "endpoint",
+        "file_name": [
+            "..\\explorer_windows_scroll\\image_explorer_view_control.png"
+        ],
+        "h": "1.000",
+        "id": "WAPT064",
+        "match_threshold": "0.68",
+        "timeout": "8",
+        "type": "Check Until Not Found",
+        "w": "1.000",
+        "x": "0.000",
+        "y": "0.000"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish Explorer-close latency timing",
+        "enabled": true,
+        "id": "WAPT065",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "interaction_end"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record Explorer-close visible result",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT066",
+        "type": "Code"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Click the caller-provided safe coordinate to restore focus",
+                "enabled": true,
+                "id": "WAPT067",
+                "type": "Click Coord",
+                "x": "[return_x]",
+                "y": "[return_y]"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAPT067COORDIF",
+        "left_term": "[return_focus_mode]",
+        "right_term": "coordinate",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAPT067COORDEND",
+        "type": "End If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Allow the previous foreground window to resume after Explorer closes",
+                "enabled": true,
+                "id": "WAPT067",
+                "type": "Delay"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "WAPT067NONEIF",
+        "left_term": "[return_focus_mode]",
+        "right_term": "none",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "WAPT067NONEEND",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Finish probe occupancy timing",
+        "enabled": true,
+        "id": "WAPT070",
+        "name": "[metric_action]",
+        "type": "Set",
+        "value": "probe_end"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Record probe end",
+        "enabled": true,
+        "file_name": [
+            "..\\mute_unmute\\code_metrics.py"
+        ],
+        "id": "WAPT071",
+        "type": "Code"
+    }
+]
