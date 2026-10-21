@@ -18,15 +18,11 @@ class Tool(Scenario):
     Turn off charger before scenario, turn it on after.
 
     Gives the option to turn off charger before the scenario starts and turn it back on after the scenario ends.
-
-    Parameters:
-        delay: The delay in seconds before turning off the charger.
-        mode: The charging mode, either 'DC' or 'AC'. If 'AC' is specified, the charger will not be turned off during scenario. 
     '''
     module = __module__.split('.')[-1]
     # Set default parameters
-    Params.setDefault(module, 'delay', '5')
-    Params.setDefault(module, 'mode', 'DC') # DC or AC
+    Params.setDefault(module, 'delay', '5', desc="Delay in seconds before turning off the charger.")
+    Params.setDefault(module, 'mode', 'DC', desc="The charging mode, either 'DC' or 'AC'. If 'AC' is specified, the charger will not be turned off during scenario.") # DC or AC
     conn_timeout = False
 
     # Get parameters

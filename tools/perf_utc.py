@@ -12,9 +12,6 @@ import logging
 class Tool(Scenario):
     '''
     Collects and processes UTC Perftrack scenarios
-
-    Parameters:
-        provider: WPRP file to use for UTC Perftrack traces. Default is set to 'perf_utc.wprp'
     '''
 
     module = __module__.split('.')[-1]

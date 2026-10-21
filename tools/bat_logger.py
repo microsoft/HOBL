@@ -32,7 +32,7 @@ class Tool(Scenario):
 
     def testBeginCallback(self):
         #Make directory in dut_data_path of the tool name to put any outputs in that directory
-        self._call(["cmd.exe", '/c if not exist "' + self.output_path + '" mkdir "' + self.output_path + '"'])
+        self._remote_make_dir(self.output_path)
         output_file = self.output_path + "\\batlog.csv"
         cmd = "-ExecutionPolicy Unrestricted " + os.path.join(self.dut_exec_path, "RunBatLogger.ps1 -o " + output_file)
         self._call(["powershell.exe", cmd], blocking=False)

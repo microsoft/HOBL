@@ -82,15 +82,6 @@ class Tool(Scenario):
     '''
     Trace specified performance counters that report utilization.
 
-    Parameters:
-        include_processes: Whether to include counters for individual processes (0 or 1)
-        process_id_counter: Process ID counter to use (per process)
-        process_cpu_counter: Process CPU counter to use (per process)
-        process_mem_counter: Process memory counter to use (per process)
-        cpu_counter: CPU counter to use
-        memory_counter: Memory counter to use
-        gpu_counter: GPU counter to use (per process, per instance)
-        npu_counter: NPU counter to use (per process, per instance)
     '''
     module = __module__.split('.')[-1]
 
@@ -152,7 +143,7 @@ class Tool(Scenario):
         self.num_logical_cores = int(self._call(["pwsh.exe", "-Command (Get-CimInstance Win32_Processor).NumberOfLogicalProcessors"]).strip())
         self.luid_to_name_map = csv_to_map(self._call([self.luid_to_name_map_path], log_output=False))
         self.pid_map = {}
-        self._call(["cmd.exe", '/c if not exist "' + self.dut_output_path + '" mkdir "' + self.dut_output_path + '"'])
+        self._remote_make_dir(self.dut_output_path)
 
         self._call(["typeperf.exe", f"{self.counters} -si 1 -f bin -o {self.blg_path_dut} -sc 0 -y"], blocking=False)
 

@@ -47,7 +47,7 @@ class Tool(Scenario):
         battery_file_xml = '\\battery-report.xml /XML'
         output_file_html = '\\sleepstudy-report.html'
         battery_file_html = '\\battery-report.html'
-        self._call(["cmd.exe", '/c if not exist "' + self.output_path + '" mkdir "' + self.output_path + '"']) # Make dir for output from collect logs
+        self._remote_make_dir(self.output_path)
 
         self._call(["cmd.exe", "/C powercfg.exe /SLEEPSTUDY /VERBOSE /DURATION 5 /OUTPUT " + self.output_path + output_file_xml], expected_exit_code="", fail_on_exception=False)
         if self.platform.lower() != "wcos":

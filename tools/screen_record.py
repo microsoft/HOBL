@@ -45,7 +45,6 @@ class Tool(Scenario):
         self.scenario.ffmpeg_launched = True
 
         if self.platform.lower() == "windows":
-            # self._call(["cmd.exe", '/c if not exist "' + os.path.join(self.scenario.dut_data_path, self.module) + '" mkdir "' + os.path.join(self.scenario.dut_data_path, self.module) + '"']) # Make dir for output from collect logs
             self.scenario._remote_make_dir(os.path.join(self.scenario.dut_data_path, self.module))
             output_file = os.path.join(self.scenario.dut_data_path, self.module, self.scenario.testname + "_recording.mp4")
             cmd = os.path.join(self.dut_exec_path, "ffmpeg.exe")

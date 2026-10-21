@@ -6,13 +6,10 @@ Set specified audio volume.
 
 Setting the 'volume' parameter will adjust the audio output volume accordingly.
 
-Parameters:
-    volume: The desired audio output volume as a percentage (0-100).
-
 
 <u>Parameters:</u>
 
-`volume` -  **Default:** `Unknown` 
+`volume` - Desired audio output volume as a percentage (0-100) **Default:** `Unknown` 
 
 ## auto_charge
 
@@ -20,27 +17,18 @@ Turn off charger before scenario, turn it on after.
 
 Gives the option to turn off charger before the scenario starts and turn it back on after the scenario ends.
 
-Parameters:
-    delay: The delay in seconds before turning off the charger.
-    mode: The charging mode, either 'DC' or 'AC'. If 'AC' is specified, the charger will not be turned off during scenario. 
-
 
 <u>Parameters:</u>
 
-`delay` -  **Default:** `5` 
+`delay` - Delay in seconds before turning off the charger. **Default:** `5` 
 
-`mode` -  **Default:** `DC` 
+`mode` - The charging mode, either 'DC' or 'AC'. If 'AC' is specified, the charger will not be turned off during scenario. **Default:** `DC` 
 
 ## auto_recharge
 
 Pause run and recharge device when battery drops below [charge_threshold], then resume.
 
 Monitors the battery level before each scenario and automatically recharges the device when it falls below the specified charge threshold. The device will resume normal operation once the battery reaches the resume threshold.
-
-Parameters:
-    charge_threshold: The battery level percentage at which to start charging.
-    resume_threshold: The battery level percentage at which to stop charging.
-    post_charge_delay: The delay in seconds after reaching the resume threshold before disconnecting the charger.
 
 
 <u>Parameters:</u>
@@ -76,28 +64,20 @@ Surface only.  Logs battery details over time.
 
 Calls executables on the DUT, either blocking or non-blocking.
 
-Parameters:
-    executable: The full path on the DUT to the file to be executed.
-    arguments: The arguments to pass to the executable.
-    source_path: The local path to the source file/folder to be copied to the DUT before the test.
-    results_path: The path on the DUT where results will be stored and copied back after the test.
-    stop_command: The command to stop the executable if it is non-blocking.
-    blocking: Whether the call should be blocking ('True' or 'False').
-
 
 <u>Parameters:</u>
 
-`executable` -  **Default:** `` 
+`executable` - Specify full path on DUT to file to be executed **Default:** `` 
 
-`arguments` -  **Default:** `` 
+`arguments` - Arguments to pass to the executable **Default:** `` 
 
-`source_path` -  **Default:** `` 
+`source_path` - Local path to the source file/folder to be copied to the DUT before the test **Default:** `` 
 
-`results_path` -  **Default:** `` 
+`results_path` - Path on the DUT where results will be stored and copied back after the test **Default:** `` 
 
-`stop_command` -  **Default:** `` 
+`stop_command` - Command to stop the executable if it is non-blocking **Default:** `` 
 
-`blocking` -  **Default:** `False` 
+`blocking` - Whether the call should be blocking ('True' or 'False') **Default:** `False` 
 
 ## collect_logs
 
@@ -110,12 +90,6 @@ Will collect various logs such as sleep study reports, battery reports, system e
 Allows a custom ETL trace to be recorded during the scenario.
 
 Allows for multiple traces to be ran during the scenario or just a single trace.Modifying the parameters can customize the behavior of the ETL trace.
-Parameters:
-    providers: The ETL provider files to use.
-    trace_duration: The duration of the trace in seconds.
-    start_delay: The start delay before the trace starts in seconds.
-    enable_check: Check the result of the trace. 0 = no check, 1 = check.
-    single_run: Run the trace only once. 0 = no, 1 = yes.
 
 
 <u>Parameters:</u>
@@ -154,17 +128,6 @@ and only restored when display_restore=1 is set.
 Only parameters that are explicitly provided are processed — empty parameters
 are ignored, so the tool can be called for any subset of operations.
 
-Parameters:
-  als_adaptive_brightness       0/1 — adaptive brightness (ALS) on/off (Windows only)
-  hdr                           0/1 — HDR on/off (Windows only)
-  hdr_auto                      0/1 — Auto HDR on/off (Windows only)
-  refresh_rate                  60/120/dynamic — display refresh rate (Windows only)
-  content_adaptive_brightness   Off/Always/On battery only — CABC mode (Windows only)
-  adaptive_color                0/1 — adaptive color management on/off (Windows only)
-  brightness                    brightness value (e.g. 65, 65%, 150nits)
-  nits_map                      nits-to-slider mapping (e.g. "100nits:50% 150nits:65%")
-  display_restore               1 — restore all saved initial values after test
-
 
 <u>Parameters:</u>
 
@@ -190,16 +153,12 @@ Parameters:
 
 Map display brightness slider percentage to nits value specified by scenarios.
 
-Parameters:
-    brightness: The desired display brightness, specified in nits (e.g., '150nits').
-    nits_map: A mapping of nits values to corresponding brightness slider percentages (e.g., '100nits:50% 150nits:65%').
-
 
 <u>Parameters:</u>
 
-`brightness` -  **Default:** `150nits` 
+`brightness` - The desired display brightness, specified in nits (e.g., '150nits') **Default:** `150nits` 
 
-`nits_map` -  **Default:** `100nits:50% 150nits:65%` 
+`nits_map` - A mapping of nits values to corresponding brightness slider percentages (e.g., '100nits:50% 150nits:65%') **Default:** `100nits:50% 150nits:65%` 
 
 ## dumpcap
 
@@ -207,22 +166,16 @@ Dump Wireshark capture.
 
 Utilizes Wireshark's dumpcap tool to capture network traffic on the specified interface.
 
-Parameters:
-    interface: The network interface on which to capture traffic (e.g., 'Wi-Fi').
-
 
 <u>Parameters:</u>
 
-`interface` -  **Default:** `Wi-Fi` 
+`interface` - The network interface on which to capture traffic (e.g., 'Wi-Fi') **Default:** `Wi-Fi` 
 
 ## etl_trace
 
 Collect ETL trace from specified [providers].
 
 Collects ETL traces from the specified providers. Multiple providers can be specified, separated by spaces. 
-
-Parameters:
-    providers: The ETL provider files to use (e.g., '@\providers'). 
 
 
 <u>Parameters:</u>
@@ -290,53 +243,37 @@ ETL trace should have been collected using MediaEngine.wprp profile
 Enable/disable specified MEP features.
 
 Before scenario starts specified MEP features will be toggled according to the configured parameters.
-Parameters:
-    framing: Enable/disable framing feature ('0' for off, '1' for on).
-    eye_gaze: Enable/disable eye gaze feature ('0' for off, '1' for on).
-    blur: Enable/disable blur feature ('0' for off, '1' for on).
-    portraitlight: Enable/disable portrait light feature ('0' for off, '1' for on).
-    creative: Enable/disable creative feature ('0' for off, '1' for on).
-
-    standardframing: Enable/disable standard framing sub-feature ('0' for off, '1' for on).
-    cinematicframing: Enable/disable cinematic framing sub-feature ('0' for off, '1' for on).
-    portraitblur: Enable/disable portrait blur sub-feature ('0' for off, '1' for on).
-    standardblur: Enable/disable standard blur sub-feature ('0' for off, '1' for on).
-    standardeye: Enable/disable standard eye sub-feature ('0' for off, '1' for on).
-    enhancedeye: Enable/disable enhanced eye sub-feature ('0' for off, '1' for on').
-    illustrated: Enable/disable illustrated sub-feature ('0' for off, '1' for on).
-    animated: Enable/disable animated sub-feature ('0' for off, '1' for on).
-    watercolor: Enable/disable watercolor sub-feature ('0' for off, '1' for on).
 
 
 <u>Parameters:</u>
 
-`framing` -  **Default:** `0` 
+`framing` - framing feature ('0' for off, '1' for on). **Default:** `0` 
 
-`eye_gaze` -  **Default:** `0` 
+`eye_gaze` - eye gaze feature ('0' for off, '1' for on). **Default:** `0` 
 
-`blur` -  **Default:** `0` 
+`blur` - blur feature ('0' for off, '1' for on). **Default:** `0` 
 
-`portraitlight` -  **Default:** `0` 
+`portraitlight` - portrait light feature ('0' for off, '1' for on). **Default:** `0` 
 
-`creative` -  **Default:** `0` 
+`creative` - creative feature ('0' for off, '1' for on). **Default:** `0` 
 
-`standardframing` -  **Default:** `0` 
+`standardframing` - standard framing sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
-`cinematicframing` -  **Default:** `0` 
+`cinematicframing` - cinematic framing sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
-`portraitblur` -  **Default:** `0` 
+`portraitblur` - portrait blur sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
-`standardblur` -  **Default:** `0` 
+`standardblur` - standard blur sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
-`standardeye` -  **Default:** `0` 
+`standardeye` - standard eye sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
-`enhancedeye` -  **Default:** `0` 
+`enhancedeye` - enhanced eye sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
-`illustrated` -  **Default:** `0` 
+`illustrated` - illustrated sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
-`animated` -  **Default:** `0` 
+`animated` - animated sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
-`watercolor` -  **Default:** `0` 
+`watercolor` - watercolor sub-feature ('0' for off, '1' for on). **Default:** `0` 
 
 ## netsh
 
@@ -374,16 +311,6 @@ Collects an ETL trace with abl_perf.wprp and will parse results from it to calcu
 
 Trace specified performance counters that report utilization.
 
-Parameters:
-    include_processes: Whether to include counters for individual processes (0 or 1)
-    process_id_counter: Process ID counter to use (per process)
-    process_cpu_counter: Process CPU counter to use (per process)
-    process_mem_counter: Process memory counter to use (per process)
-    cpu_counter: CPU counter to use
-    memory_counter: Memory counter to use
-    gpu_counter: GPU counter to use (per process, per instance)
-    npu_counter: NPU counter to use (per process, per instance)
-
 
 <u>Parameters:</u>
 
@@ -410,9 +337,6 @@ Performance screen capture tool for collecting and saving screenshots during per
 ## perf_utc
 
 Collects and processes UTC Perftrack scenarios
-
-Parameters:
-    provider: WPRP file to use for UTC Perftrack traces. Default is set to 'perf_utc.wprp'
 
 
 <u>Parameters:</u>

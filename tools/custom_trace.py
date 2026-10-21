@@ -22,12 +22,6 @@ class Tool(Scenario):
     Allows a custom ETL trace to be recorded during the scenario.
     
     Allows for multiple traces to be ran during the scenario or just a single trace.Modifying the parameters can customize the behavior of the ETL trace.
-    Parameters:
-        providers: The ETL provider files to use.
-        trace_duration: The duration of the trace in seconds.
-        start_delay: The start delay before the trace starts in seconds.
-        enable_check: Check the result of the trace. 0 = no check, 1 = check.
-        single_run: Run the trace only once. 0 = no, 1 = yes.
     '''
     module = __module__.split('.')[-1]
     # Set default parameters
@@ -168,7 +162,7 @@ class EtlThread(threading.Thread):
         '''
         # stop the ETL trace
         output_path = os.path.join(self.scenario.dut_data_path, self.module)
-        self.scenario._call(["cmd.exe", '/c if not exist "' + output_path + '" mkdir "' + output_path + '"']) # Make dir for output from collect logs
+        self.scenario._remote_make_dir(output_path)
         outfile = os.path.join(output_path, self.scenario.testname + ".etl")
         logging.info("Ending trace and saving at: " + outfile)
         self.scenario._call(["cmd.exe", "/c wpr.exe -stop " + outfile])

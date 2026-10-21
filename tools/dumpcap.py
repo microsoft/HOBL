@@ -14,14 +14,11 @@ class Tool(Scenario):
     Dump Wireshark capture.
 
     Utilizes Wireshark's dumpcap tool to capture network traffic on the specified interface.
-
-    Parameters:
-        interface: The network interface on which to capture traffic (e.g., 'Wi-Fi').
     '''
     module = __module__.split('.')[-1]
 
     # Set default parameters
-    Params.setDefault(module, 'interface', 'Wi-Fi')
+    Params.setDefault(module, 'interface', 'Wi-Fi', desc="The network interface on which to capture traffic (e.g., 'Wi-Fi')")
 
     # Get parameters
     interface = Params.get(module, 'interface')

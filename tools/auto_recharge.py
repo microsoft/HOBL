@@ -15,11 +15,6 @@ class Tool(Scenario):
     Pause run and recharge device when battery drops below [charge_threshold], then resume.
 
     Monitors the battery level before each scenario and automatically recharges the device when it falls below the specified charge threshold. The device will resume normal operation once the battery reaches the resume threshold.
-
-    Parameters:
-        charge_threshold: The battery level percentage at which to start charging.
-        resume_threshold: The battery level percentage at which to stop charging.
-        post_charge_delay: The delay in seconds after reaching the resume threshold before disconnecting the charger.
     '''
     module = __module__.split('.')[-1]
     # Set default parameters

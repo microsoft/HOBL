@@ -30,8 +30,7 @@ class Tool(Scenario):
         pass
     
     def testEndCallback(self):
-        self._call(["cmd.exe", '/c if not exist "' + self.output_path + '" mkdir "' + self.output_path + '"']) # Make dir for output from collect logs
-
+        self._remote_make_dir(self.output_path)
         logging.debug("testEndCallback(self): self.scenario_failed set to: " + str(self.scenario_failed))
         if not self.scenario_failed:
             return
