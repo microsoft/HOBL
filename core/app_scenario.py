@@ -244,6 +244,9 @@ class Scenario(unittest.TestCase):
             elif self.platform.lower() == 'macos':
                 self.dut_exec_path = "/Users/Shared/hobl_bin"
                 self.dut_data_path = "/Users/Shared/hobl_data"
+            elif self.platform.lower() == 'linux':
+                self.dut_exec_path = "/home/shared/hobl_bin"
+                self.dut_data_path = "/home/shared/hobl_data"
             else:
                 self.dut_exec_path = "C:\\hobl_bin"
                 self.dut_data_path = "C:\\hobl_data"
@@ -377,6 +380,9 @@ class Scenario(unittest.TestCase):
     def load_plugins(self):
         if self.platform.lower() == 'macos':
             rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "/Users/Shared/hobl_bin/InputInject/InputInject.dll")
+        elif self.platform.lower() == 'linux':
+            # InputInject not supported for Linux
+            pass
         else:
             rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "C:\\hobl_bin\\InputInject\\InputInject.dll")
             rpc.plugin_load(self.dut_ip, self.rpc_port, "PowerManager", "PowerManager.Application", "C:\\hobl_bin\\PowerManager\\PowerManager.dll")
@@ -525,6 +531,7 @@ class Scenario(unittest.TestCase):
 
             override_dict = {}
             override_dict["Hardware Version"] = Params.get('global', 'hardware_version', log = False).upper()
+            override_dict["Hardware Type"] = Params.get('global', 'hardware_type', log = False)
             override_dict["Screen Size (in)"] = Params.get('global', 'screen_size', log = False)
             override_dict["Accessories"] = Params.get('global', 'accessories', log = False)
             override_dict['HOBL Version'] = hobl_ver.strip()
@@ -543,8 +550,13 @@ class Scenario(unittest.TestCase):
                 dest = self.dut_exec_path + "/config_check.sh"
                 self._upload(source, self.dut_exec_path, check_modified=True)
                 cmd = f'-c "{dest} --logfile={self.dut_data_path}/Config --override-string=\\\"{override_str}\\\""'
-                # cmd = f'-c "{dest} --logfile=/Users/powertest/Config"'
                 self._call(["zsh", cmd])
+            elif self.platform.lower() == "linux":
+                source = os.path.join("utilities", "open_source", "config_check_linux.sh")
+                dest = self.dut_exec_path + "/config_check_linux.sh"
+                self._upload(source, self.dut_exec_path, check_modified=True)
+                cmd = f'-c "{dest} --logfile={self.dut_data_path}/Config --override-string=\\\"{override_str}\\\""'
+                self._call(["bash", cmd])
 
 
 
@@ -572,8 +584,11 @@ class Scenario(unittest.TestCase):
             elif self.platform.lower() == "macos":
                 dest = self.dut_exec_path + "/config_check.sh"
                 cmd = f'-c "{dest} --prerun --logfile={self.dut_data_path}/{self.testname}_ConfigPre --override-string=\\\"{override_str}\\\""'
-                # cmd = f'-c "{dest} --prerun --logfile={self.dut_data_path}/{self.testname}_ConfigPre"'
                 result = self._call(["zsh", cmd])
+            elif self.platform.lower() == "linux":
+                dest = self.dut_exec_path + "/config_check_linux.sh"
+                cmd = f'-c "{dest} --prerun --logfile={self.dut_data_path}/{self.testname}_ConfigPre --override-string=\\\"{override_str}\\\""'
+                result = self._call(["bash", cmd])
             # Copy back results - Commenting out for now because trying to copy back while screen_recording causes tar failure on SimpleRemote, and I don't see the need for it anyway.
             # logging.debug("Copying data from DUT in setUp.")
             # self._copy_data_from_remote(self.result_dir)
@@ -889,7 +904,7 @@ class Scenario(unittest.TestCase):
         if self.platform.lower() == "android":
             while int(self.getAndroidBatt(self.dut_ip)) > int(self.stop_soc):
                 time.sleep(int(self.poll_rate))
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             # file_path = self.result_dir + os.sep + 'battery_level.txt'
             # while(True):
             #     result = self._call(["pmset", "-g batt"], blocking=True)
@@ -1261,6 +1276,10 @@ class Scenario(unittest.TestCase):
                 dest = self.dut_exec_path + "/config_check.sh"
                 cmd = f'-c "{dest} --postrun --logfile={self.dut_data_path}/{self.testname}_ConfigPost --prerunfile={self.dut_data_path}/{self.testname}_ConfigPre.csv"'
                 result = self._call(["zsh", cmd])
+            elif self.platform.lower() == "linux":
+                dest = self.dut_exec_path + "/config_check_linux.sh"
+                cmd = f'-c "{dest} --postrun --logfile={self.dut_data_path}/{self.testname}_ConfigPost --prerunfile={self.dut_data_path}/{self.testname}_ConfigPre.csv"'
+                result = self._call(["bash", cmd])
 
         # Copy back results
         if self.collection_enabled != '0':
@@ -1740,7 +1759,7 @@ class Scenario(unittest.TestCase):
             if delete:
                 self._host_call("adb -s " + str(self.dut_ip) + ":5555 shell rm -r " + path, expected_exit_code="")
             self._host_call("adb -s " + str(self.dut_ip) + ":5555 shell mkdir " + path, expected_exit_code="")
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             if delete:
                 self._call(["rm", "-rf " + path], callback=False, timeout=10)
             self._call(["mkdir", "-p " + path], callback=False, timeout=10)
@@ -1774,7 +1793,7 @@ class Scenario(unittest.TestCase):
                     full_dest = os.path.join(dest, folder)
                     if self.platform.lower() == "windows":
                         self._call(["cmd.exe", '/c if exist ' + full_dest + ' rmdir ' + full_dest + ' /S /Q'], callback = False)
-                    elif self.platform.lower() == "macos":
+                    elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
                         full_dest = dest + "/" + folder
                         self._call(["rm", "-rf " + full_dest], callback=False)
                 else:
@@ -1829,7 +1848,7 @@ class Scenario(unittest.TestCase):
                             if source_time <= result_time:
                                 logging.debug("File not modified, skipping upload: " + source)
                                 return
-                        elif self.platform.lower() == "macos":
+                        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
                             dest_file = dest + "/" + os.path.basename(source)
                             result = self._call(["stat", f'-f "%Sm" -t "%Y-%m-%d %H:%M:%S" "{dest_file}"'], expected_exit_code="")
                             logging.debug("RESULT: " + result)
@@ -1955,7 +1974,7 @@ class Scenario(unittest.TestCase):
                             self._call(["cmd.exe", '/c copy ' + source_path + ' ' + source], expected_exit_code="")
                         
                 rpc.download(target_ip, self.rpc_port, source, dest)
-            elif self.platform.lower() == "macos":
+            elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
                 rpc.download(target_ip, self.rpc_port, source, dest)
 
     ''' Checks if path exists on DUT '''
@@ -1972,7 +1991,7 @@ class Scenario(unittest.TestCase):
             # logging.info("Checking: '" + file_name + "'")
             if file_name == "":
                 return False
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             if in_exec_path:
                 # Strip leading path breaks before joining
                 if path[:1] == "/":
@@ -1991,7 +2010,7 @@ class Scenario(unittest.TestCase):
         if module == "":
             module = self._module
         path = os.path.join(self.dut_exec_path, "prep_status", module + suffix)
-        if self.platform.lower() == "macos":
+        if self.platform.lower() == "macos" or self.platform.lower() == "linux":
             path = path.replace("\\", "/")
         self._remote_make_dir(path, True)
 
@@ -2001,7 +2020,7 @@ class Scenario(unittest.TestCase):
         if not self.prep_status_enable:
             return assert_list
         for prep in prep_list:
-            if self.platform.lower() == "macos":
+            if self.platform.lower() == "macos" or self.platform.lower() == "linux":
                 path = "prep_status/" + prep
             else:
                 path = "prep_status\\" + prep
@@ -2196,7 +2215,7 @@ class Scenario(unittest.TestCase):
                 tasks = self._call(["cmd.exe", '/c kill -f ' + str(name)], expected_exit_code="")
             elif self.platform.lower() == 'android':
                 pass
-            elif self.platform.lower() == 'macos':
+            elif self.platform.lower() == 'macos' or self.platform.lower() == 'linux':
                 tasks = self._call(["killall", name], expected_exit_code="", timeout=timeout)
             else:
                 tasks = self._call(["cmd.exe", '/c tasklist /nh /fo csv /fi "IMAGENAME eq ' + name + '"'], expected_exit_code="", timeout=timeout)
@@ -2264,15 +2283,12 @@ class Scenario(unittest.TestCase):
         else:
             name = os.path.join(self.result_dir, name)
 
-        # Try to create /screenshots
-        # logging.info("Creating " + self.dut_data_path + "/screenshots")
-        if self.platform.lower() == 'android':
-            self._host_call("adb -s " + self.dut_ip + ":5555 shell mkdir " + self.dut_data_path + "/screenshots")
-
         logging.info("Saving screenshot: " + name)
         if self.platform.lower() == 'android':
             self._host_call("adb -s " + self.dut_ip + ":5555 shell screencap " + name)
-        # elif self.platform.lower() == 'windows':
+        elif self.platform.lower() == 'linux':
+            # Linux screenshot not implemented
+            return
         # I believe windows and mac use same method.
         else:
             # Embed device DPI to image
@@ -2284,22 +2300,6 @@ class Scenario(unittest.TestCase):
             rgb_image = cv.cvtColor(img, cv.COLOR_BGR2RGB)
             Image.fromarray(rgb_image).save(name, dpi=(device_dpi, device_dpi))
 
-
-            # screenshot_path = os.path.join(self.dut_exec_path, "ScreenShot.exe")
-            # screenshot_path_old = os.path.join(self.dut_exec_path, "ScreenCapture.exe")
-            # if self._check_remote_file_exists(screenshot_path):
-            #     self._call([os.path.join(self.dut_exec_path, "ScreenShot.exe"), name])
-            # elif self._check_remote_file_exists(screenshot_path_old):
-            #     logging.info("screenshot.exe doesn't exists. Trying old screenshot method.")
-            #     self._call([os.path.join(self.dut_exec_path, "ScreenCapture.exe"), name])
-            # else:
-            #     logging.info("No Screenshots avaliable")
-        # elif self.platform.lower() == 'macos':
-        #     # TODO: Implement MacOS screenshot
-        #     img = self._capture_screen()
-        #     rgb_image = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-        #     Image.fromarray(rgb_image).save(name)
-        #     pass
     
     # ############################################################################################################
     # Template Matching Functions ################################################################################
@@ -3773,9 +3773,9 @@ class Scenario(unittest.TestCase):
             else:
                 logging.info("Rebooting DUT")
                 self._call(["shutdown.exe", "/r /f /t 5"])
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             logging.info("Rebooting DUT")
-            self._call(["zsh", f'-c "echo {self.password} | sudo -S shutdown -r now"'])
+            self._call(["bash", f'-c "echo {self.password} | sudo -S shutdown -r now"'])
         else:
             logging.error("Unsupported platform")
         time.sleep(30)
@@ -4021,7 +4021,7 @@ class Scenario(unittest.TestCase):
 
         if self.platform.lower() == "windows":
             web_replay_cmd_args += f" --https_port={self.web_replay_https_port}"
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             web_replay_cmd_args += f" --http_proxy_port={self.web_replay_https_port}"
 
         if self.web_replay_ip == self.host_ip:
@@ -4140,6 +4140,9 @@ class Scenario(unittest.TestCase):
 
         if self.platform.lower() == "w365":
             Params.setOverride('web_kill', 'web_replay_remove_args_cmd', f'powershell.exe {web_replay_ps1}')
+        elif self.platform.lower() == "linux":
+            # Not implemented for Linux
+            pass
         elif self.platform.lower() == "macos":
             result = self._call(["networksetup", f'-listallnetworkservices'])
             services = result.splitlines()
@@ -4172,6 +4175,9 @@ class Scenario(unittest.TestCase):
 
         if self.platform.lower() == "w365":
             Params.setOverride('web_setup', 'web_replay_set_args_cmd', f'powershell.exe {self.dut_exec_path}\\web_replay\\set_args.ps1 {web_replay_ps1_args}')
+        elif self.platform.lower() == "linux":
+            # Not implemented for Linux
+            pass
         elif self.platform.lower() == "macos":
             result = self._call(["networksetup", f'-listallnetworkservices'])
             services = result.splitlines()
