@@ -10,14 +10,22 @@ $targetPath = "C:\hobl"
 $extractedPath = "C:\hobl-main"
 
 try {
-    # Remove any existing hobl folder
-    Write-Host "Removing $targetPath"
+    
+    # Back up any existing hobl folder
     if (Test-Path -LiteralPath $targetPath) {
-        Remove-Item -LiteralPath $targetPath -Recurse -Force
+        $backupPath = "$targetPath-backup"
+        $backupNumber = 1
+        while (Test-Path -LiteralPath $backupPath) {
+            $backupPath = "$targetPath-backup$backupNumber"
+            $backupNumber++
+        }
+
+        Write-Host "Archiving $targetPath to $backupPath"
+        Rename-Item -LiteralPath $targetPath -NewName (Split-Path -Leaf $backupPath)
     }
 
     # Remove any existing extracted archive
-    Write-Host "Checking if $extractedPath exists"
+    Write-Host "Removing $extractedPath if it exists"
     if (Test-Path -LiteralPath $extractedPath) {
         Remove-Item -LiteralPath $extractedPath -Recurse -Force
     }

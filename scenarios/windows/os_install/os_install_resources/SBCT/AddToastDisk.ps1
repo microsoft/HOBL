@@ -107,7 +107,7 @@ Function EnumToastVol {
     $OSPartition = (Get-Partition -DriveLetter C).PartitionNumber
     "OSPartition: $OSPartition" 
 
-    $ToastPartition = (get-partition | where-object -FilterScript {$_.Type -eq "Basic"} | where-object -FilterScript {$_.Size -lt 34000000000} | where-object -FilterScript {$_.Size -gt 30000000000}).PartitionNumber
+    $ToastPartition = (get-partition | where-object -FilterScript {$_.Type -eq "Basic"} | where-object -FilterScript {$_.Size -lt 40000000000} | where-object -FilterScript {$_.Size -gt 30000000000}).PartitionNumber
     "ToastPartition: $ToastPartition" 
 
     # Check if TOAST volume exists and is SHIFU_SCOTT - Install failed.

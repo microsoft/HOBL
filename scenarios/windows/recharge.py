@@ -195,8 +195,9 @@ class Recharge(core.app_scenario.Scenario):
             elif "charged" in battery_status:
                 state = 2
         else:
-            state = int(self._call(["powershell", "(Get-WmiObject -Class Win32_Battery -ea 0).BatteryStatus"], timeout=10))
-
+            s = self._call(["powershell", "(Get-WmiObject -Class Win32_Battery -ea 0).BatteryStatus"], timeout=10)
+            state = int(s.split("\r\n")[0])
+            
         return state
 
     def waitForState(self, target_state, automated=False):

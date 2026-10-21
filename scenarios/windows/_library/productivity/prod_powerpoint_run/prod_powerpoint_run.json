@@ -15,7 +15,7 @@
         "description": "",
         "enabled": true,
         "id": "V2N1M9",
-        "include_path": "..\\..\\misc\\recording_phase_begin",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
         "type": "Include"
     },
     {
@@ -95,13 +95,13 @@
         "file_name": [
             "image_V12EP4.png"
         ],
-        "h": "0.487",
+        "h": "0.3",
         "id": "V12EP4",
         "recapture": false,
         "type": "Capture",
-        "w": "0.479",
-        "x": "0.039",
-        "y": "0.040"
+        "w": "0.6",
+        "x": "0.05",
+        "y": "0.05"
     },
     {
         "capture_id": "V12EP4",
@@ -127,7 +127,7 @@
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_V1JT0A.png"
+            "image_1VHFCJN.png"
         ],
         "id": "V1JT0A",
         "match_threshold": "",
@@ -288,21 +288,21 @@
         "y": "0.142"
     },
     {
-        "id": "W8MLF8",
-        "type": "Click",
+        "capture_id": "VJFYE6",
+        "children": [],
+        "delay": "1",
         "description": "",
         "enabled": true,
-        "delay": "1",
-        "x": "0.500",
-        "y": "0.500",
+        "exception_on": "No match",
         "file_name": [
             "image_W8MLF8.png"
         ],
-        "exception_on": "No match",
+        "id": "W8MLF8",
         "match_threshold": "",
         "primary": true,
-        "children": [],
-        "capture_id": "VJFYE6"
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     },
     {
         "capture_id": "VJFYE6",
@@ -358,7 +358,7 @@
         "description": "",
         "enabled": true,
         "id": "V2N1PJ",
-        "include_path": "..\\..\\misc\\recording_phase_end",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
         "params": [
             {
                 "name": "[phase_category]",

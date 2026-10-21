@@ -1,0 +1,1228 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="HOBL_Support.html">
+      
+      
+        <link rel="next" href="HOBL_ScenarioMaker.html">
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>Contributing - Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.26e3688c.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#contributing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Docs" class="md-header__button md-logo" aria-label="Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Contributing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Docs" class="md-nav__button md-logo" aria-label="Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Overview.html" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Design_Philosophy.html" class="md-nav__link">
+        Design Philosophy
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          User Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          User Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Setup.html" class="md-nav__link">
+        Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Usage.html" class="md-nav__link">
+        Usage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_UI.html" class="md-nav__link">
+        User Interface
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Support.html" class="md-nav__link">
+        Support
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Developer Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Developer Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Contributing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="HOBL_Contributing.html" class="md-nav__link md-nav__link--active">
+        Contributing
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    Table of contents
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-of-conduct" class="md-nav__link">
+    Code of conduct
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-and-support" class="md-nav__link">
+    Security and support
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-starting-work" class="md-nav__link">
+    Before starting work
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#governance" class="md-nav__link">
+    Governance
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ways-to-contribute" class="md-nav__link">
+    Ways to contribute
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development-setup" class="md-nav__link">
+    Development setup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-overview" class="md-nav__link">
+    Repository overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#making-a-change" class="md-nav__link">
+    Making a change
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-contribution-requirements" class="md-nav__link">
+    Scenario contribution requirements
+  </a>
+  
+    <nav class="md-nav" aria-label="Scenario contribution requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-design-tenets" class="md-nav__link">
+    Scenario design tenets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preserve-the-prep-setup-run-teardown-and-kill-lifecycle" class="md-nav__link">
+    Preserve the prep, setup, run, teardown, and kill lifecycle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maintain-platform-parity" class="md-nav__link">
+    Maintain platform parity
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-validation" class="md-nav__link">
+    Testing and validation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-and-dependencies" class="md-nav__link">
+    Documentation and dependencies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submitting-a-pull-request" class="md-nav__link">
+    Submitting a pull request
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributor-license-agreement" class="md-nav__link">
+    Contributor License Agreement
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_ScenarioMaker.html" class="md-nav__link">
+        Scenario Maker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_UI_Scenario_Guide.html" class="md-nav__link">
+        Developing UI-based Scenarios
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Command_Scenario_Guide.html" class="md-nav__link">
+        Developing Command-based Scenarios
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Scenarios.html" class="md-nav__link">
+        Scenarios
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Tools.html" class="md-nav__link">
+        Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Parameters.html" class="md-nav__link">
+        Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="HOBL_Prep.html" class="md-nav__link">
+        Prep Details
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    Table of contents
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-of-conduct" class="md-nav__link">
+    Code of conduct
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-and-support" class="md-nav__link">
+    Security and support
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-starting-work" class="md-nav__link">
+    Before starting work
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#governance" class="md-nav__link">
+    Governance
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ways-to-contribute" class="md-nav__link">
+    Ways to contribute
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development-setup" class="md-nav__link">
+    Development setup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-overview" class="md-nav__link">
+    Repository overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#making-a-change" class="md-nav__link">
+    Making a change
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-contribution-requirements" class="md-nav__link">
+    Scenario contribution requirements
+  </a>
+  
+    <nav class="md-nav" aria-label="Scenario contribution requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-design-tenets" class="md-nav__link">
+    Scenario design tenets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preserve-the-prep-setup-run-teardown-and-kill-lifecycle" class="md-nav__link">
+    Preserve the prep, setup, run, teardown, and kill lifecycle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maintain-platform-parity" class="md-nav__link">
+    Maintain platform parity
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-validation" class="md-nav__link">
+    Testing and validation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-and-dependencies" class="md-nav__link">
+    Documentation and dependencies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submitting-a-pull-request" class="md-nav__link">
+    Submitting a pull request
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributor-license-agreement" class="md-nav__link">
+    Contributor License Agreement
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="contributing">Contributing</h1>
+<p>Thank you for your interest in HOBL. Contributions are welcome across the
+framework, test scenarios, tools, utilities, and documentation.</p>
+<p>HOBL controls and measures physical test devices. Changes can install software,
+modify system configuration, run remote commands, and affect shared toolchains.
+Please read the safety and scenario guidance below before making changes.</p>
+<h2 id="table-of-contents">Table of contents</h2>
+<ul>
+<li><a href="#code-of-conduct">Code of conduct</a></li>
+<li><a href="#security-and-support">Security and support</a></li>
+<li><a href="#before-starting-work">Before starting work</a></li>
+<li><a href="#governance">Governance</a></li>
+<li><a href="#ways-to-contribute">Ways to contribute</a></li>
+<li><a href="#development-setup">Development setup</a></li>
+<li><a href="#repository-overview">Repository overview</a></li>
+<li><a href="#making-a-change">Making a change</a></li>
+<li><a href="#scenario-contribution-requirements">Scenario contribution requirements</a></li>
+<li><a href="#testing-and-validation">Testing and validation</a></li>
+<li><a href="#documentation-and-dependencies">Documentation and dependencies</a></li>
+<li><a href="#submitting-a-pull-request">Submitting a pull request</a></li>
+<li><a href="#contributor-license-agreement">Contributor License Agreement</a></li>
+</ul>
+<h2 id="code-of-conduct">Code of conduct</h2>
+<p>This project has adopted the <a href="https://opensource.microsoft.com/codeofconduct/">Microsoft Open Source Code of
+Conduct</a>. For more information, see the
+<a href="https://opensource.microsoft.com/codeofconduct/faq/">Code of Conduct FAQ</a> or
+contact <a href="mailto:opencode@microsoft.com">opencode@microsoft.com</a>.</p>
+<h2 id="security-and-support">Security and support</h2>
+<p>Use <a href="https://github.com/microsoft/HOBL/issues">GitHub Issues</a> for reproducible
+bugs and feature requests. For help using HOBL, contact
+<a href="mailto:HOBLsupport@microsoft.com">HOBLsupport@microsoft.com</a>. See
+<a href="HOBL_Support.html">Support</a> for the full support information.</p>
+<p>HOBL uses <a href="https://github.com/microsoft/SimpleRemote">SimpleRemote</a> to run commands and access files on test devices without authentication. Use HOBL only on dedicated test devices connected to an isolated, trusted lab network. Never use a personal or production computer as a device under test (DUT).</p>
+<h2 id="before-starting-work">Before starting work</h2>
+<p>Search <a href="https://github.com/microsoft/HOBL/issues">open and closed issues</a> before
+filing a new issue or beginning a significant change. This helps avoid duplicate
+work and gives maintainers an opportunity to confirm the problem and approach.</p>
+<p>Open or comment on an issue before implementing:</p>
+<ul>
+<li>new scenarios or substantial scenario behavior changes;</li>
+<li>changes to result formats, metrics, parameters, or test methodology;</li>
+<li>changes that install software or alter DUT configuration;</li>
+<li>broad refactors or changes affecting both Windows and macOS; or</li>
+<li>changes that add, replace, or redistribute third-party software.</li>
+</ul>
+<p>Small documentation fixes and narrowly scoped bug fixes can usually go directly
+to a pull request. If an issue is already assigned, coordinate with the assignee
+before starting work.</p>
+<p>Remove credentials, confidential information, personal data, machine names,
+network details, and other sensitive content before attaching logs or images.
+Use reactions instead of comments such as "+1" when you have no additional
+diagnostic information to add.</p>
+<h2 id="governance">Governance</h2>
+<p>HOBL uses a maintainer-led, open development model. Technical proposals,
+implementation decisions, and reviews take place through GitHub issues and pull
+requests whenever practical so that the reasoning and resulting expectations
+remain visible to contributors.</p>
+<p>Maintainers are stewards of the project and are responsible for ensuring that
+contributions uphold HOBL's scenario-development <a href="#scenario-design-tenets">tenets</a>, the
+<a href="HOBL_Design_Philosophy.html">HOBL Design Philosophy</a>, and the
+project's standards for safety, impartiality, reliability, repeatability, data
+quality, maintainability, and user experience. This responsibility includes:</p>
+<ul>
+<li>setting and communicating technical direction and release expectations;</li>
+<li>evaluating whether proposals serve HOBL users and preserve trustworthy,
+  comparable measurements;</li>
+<li>ensuring that scenarios remain impartial across manufacturers, devices,
+  architectures, platforms, and silicon implementations;</li>
+<li>requiring appropriate design discussion, validation, documentation,
+  ownership, and support plans;</li>
+<li>coordinating changes that affect power baselines or cross-platform behavior;</li>
+<li>reviewing contributions consistently, regardless of whether they originate
+  from Microsoft or the community; and</li>
+<li>maintaining the health, security, licensing compliance, and long-term
+  sustainability of the repository.</li>
+</ul>
+<p>Contributors are encouraged to propose alternatives, identify tradeoffs, and
+participate in technical discussion. Maintainers should seek practical
+consensus and explain significant decisions in the associated issue or pull
+request. When consensus cannot be reached, the maintainers make the final
+decision based on the project's tenets, available evidence, user impact, and
+long-term maintenance cost.</p>
+<p>Approval is not based solely on whether a change functions in one environment.
+Maintainers may request revisions, additional validation, consolidation with
+existing components, a committed support owner, or deferral to an appropriate
+release. They may decline or revert a change that compromises HOBL's principles,
+result comparability, reliability, safety, or maintainability, including when a
+problem becomes apparent only after the change is merged.</p>
+<p>Scenario ownership is shared governance in practice. Contributors and
+sponsoring teams are expected to maintain and support the scenarios they add,
+while maintainers ensure that this ownership remains active and that
+repository-wide standards are applied consistently.</p>
+<h2 id="ways-to-contribute">Ways to contribute</h2>
+<p>Useful contributions include:</p>
+<ul>
+<li>improving documentation and examples;</li>
+<li>reporting reproducible bugs;</li>
+<li>proposing test scenarios or measurement improvements;</li>
+<li>fixing framework, UI, tool, or scenario defects;</li>
+<li>improving Windows and macOS parity;</li>
+<li>adding validation, diagnostics, or actionable error reporting; and</li>
+<li>reviewing and testing open pull requests on supported hardware.</li>
+</ul>
+<p>New scenarios should represent realistic user activity, produce repeatable
+results, minimize measurement overhead, and follow the design principles in
+<a href="HOBL_Design_Philosophy.html">HOBL Design Philosophy</a>.</p>
+<h2 id="development-setup">Development setup</h2>
+<p>HOBL's host runs on Windows 10 or Windows 11. Scenario execution may target
+Windows or macOS DUTs. A complete end-to-end validation generally requires a
+dedicated DUT and, for hosted operation, a private network between the host and
+DUT.</p>
+<ol>
+<li>Fork <a href="https://github.com/microsoft/HOBL">microsoft/HOBL</a>.</li>
+<li>Clone your fork and add the upstream repository:</li>
+</ol>
+<p><code>powershell
+   git clone https://github.com/&lt;your-account&gt;/HOBL.git
+   cd hobl
+   git remote add upstream https://github.com/microsoft/HOBL.git</code></p>
+<ol>
+<li>Create a focused branch from the latest <code>main</code>:</li>
+</ol>
+<p><code>powershell
+   git fetch upstream
+   git switch -c &lt;issue-number&gt;-&lt;short-description&gt; upstream/main</code></p>
+<ol>
+<li>Follow the applicable setup documentation:</li>
+<li><a href="HOBL_Setup.html">Setup</a></li>
+<li><a href="HOBL_Usage.html">Usage</a></li>
+<li><a href="HOBL_ScenarioMaker.html">Creating Scenarios</a></li>
+<li><a href="HOBL_Command_Scenario_Guide.html">Command-based Scenario Guide</a></li>
+<li><a href="HOBL_UI_Scenario_Guide.html">UI-based Scenario Guide</a></li>
+</ol>
+<p>Do not assume that a default installation path exists. Discover installed tools,
+verify paths before using them, and preserve support for custom drives and
+installation directories.</p>
+<h2 id="repository-overview">Repository overview</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>core/</code></td>
+<td>Core HOBL framework code</td>
+</tr>
+<tr>
+<td><code>scenarios/windows/</code></td>
+<td>Windows scenarios and shared scenario libraries</td>
+</tr>
+<tr>
+<td><code>scenarios/macos/</code></td>
+<td>macOS scenarios and resources</td>
+</tr>
+<tr>
+<td><code>testplans/</code></td>
+<td>Test-plan definitions</td>
+</tr>
+<tr>
+<td><code>profile_templates/</code></td>
+<td>Reusable HOBL profile templates</td>
+</tr>
+<tr>
+<td><code>providers/</code></td>
+<td>ETL trace providers</td>
+</tr>
+<tr>
+<td><code>tools/</code></td>
+<td>Modules that run with scenarios to change settings, collect data, control equipment, etc.</td>
+</tr>
+<tr>
+<td><code>ScenarioMaker/</code></td>
+<td>Scenario authoring application</td>
+</tr>
+<tr>
+<td><code>docs/support/docs/</code></td>
+<td>User and contributor documentation</td>
+</tr>
+<tr>
+<td><code>utilities/</code></td>
+<td>Microsoft, open-source, and third-party utilities</td>
+</tr>
+</tbody>
+</table>
+<p>Read nearby implementations before adding a new pattern. Reuse the framework's
+existing scenario lifecycle, logging helpers, parameter handling, remote
+execution helpers, and result conventions.</p>
+<h2 id="making-a-change">Making a change</h2>
+<p>Keep each pull request focused on one problem. Avoid unrelated formatting,
+renaming, generated-file, or cleanup changes.</p>
+<p>For code and scripts:</p>
+<ul>
+<li>preserve existing behavior unless the issue calls for a behavior change;</li>
+<li>validate inputs, command exit codes, required files, and discovered paths;</li>
+<li>fail early with an actionable error instead of silently continuing;</li>
+<li>support the architectures and platforms already supported by the affected
+  component;</li>
+<li>avoid hardcoded credentials, user-specific paths, machine names, addresses,
+  and drive letters;</li>
+<li>update comments and documentation affected by the change; and</li>
+<li>never include test results, logs, screenshots, or datasets containing
+  sensitive or confidential information.</li>
+</ul>
+<p>For PowerShell scenario scripts, error messages must use this exact format:</p>
+<pre><code class="language-text"> ERROR - &lt;description&gt;
+</code></pre>
+<p>The leading space and spacing around the hyphen are required by existing log
+handling.</p>
+<h2 id="scenario-contribution-requirements">Scenario contribution requirements</h2>
+<p>The detailed requirements and examples for various types of workloads can be found here: 
+- <a href="HOBL_UI_Scenario_Guide.html">UI-based scenarios</a>
+- <a href="HOBL_Command_Scenario_Guide.html">Command-based developer or benchmark scenarios</a></p>
+<p>The following rules are especially important:</p>
+<h3 id="scenario-design-tenets">Scenario design tenets</h3>
+<ol>
+<li>Be kind to users.<ul>
+<li>A scenario needs to "just work" without any manual set up.</li>
+<li>Execution time is a big limiter, so maximize coverage in as little time as possible.  Merge scenarios where possible.</li>
+</ul>
+</li>
+<li>Re-use as much as possible.<ul>
+<li>Not only does it make building scenarios easier, but it's critical for maintenance.  </li>
+<li>If an app changes an icon or accessibility tag, there should only be one place in the repository that needs to be updated.</li>
+</ul>
+</li>
+<li>Self-check<ul>
+<li>There can be many reasons why a scenario might not run correctly:  An unexpected popup, something accidentally left running, network glitches, devices freezes, etc.  Scenarios need to check that they ran correctly and completely, and FAIL otherwise.</li>
+<li>This is important to prevent bad data from tainting conclusions.</li>
+</ul>
+</li>
+<li>Reliable<ul>
+<li>It needs to work, every time, on all kinds of devices.</li>
+<li>Accommodate a wide range of screen resolutions and scaling factors.</li>
+<li>Accommodate a wide variety of device performance.  Early silicon may have severe performance limitations.  Make sure that fixed delays are long enough to accommodate very slow devices.</li>
+<li>Make sure that any first-run dialogs, tutorials, hints, etc. are all handled before measurement begins.</li>
+</ul>
+</li>
+<li>Maintain device and silicon impartiality<ul>
+<li>Scenarios must evaluate devices impartially and must not favor or disadvantage a particular manufacturer, processor, architecture, platform, or silicon implementation. </li>
+<li>Adapt behavior only when required by a documented capability or platform difference. Prefer capability detection over checks for vendor, model, or processor identity. </li>
+</ul>
+</li>
+<li>Leave no trace<ul>
+<li>During the "teardown" phase, a scenario should clean up and close down everything that it launched.</li>
+<li>It should also kill and clean up everything in the "kill" routine for the case when the user explicitly stops the scenario, or there is a failure of some sort.</li>
+<li>Kill routine needs to have every action wrapped in try so that if one fails others can continue.  Kill routine itself must never get an exception.</li>
+</ul>
+</li>
+<li>Accommodate all ways of measurement.<ul>
+<li>Short run, targeting around 5 min, for DAQ measurements and heavy ETL tracing so that resulting files are not too unwieldy.  40 min max.</li>
+<li>Ability to loop to support rundown measurements.  (Note this is different than scenario iterations.)</li>
+</ul>
+</li>
+<li>Reserve power-impacting changes to the annual HOBL release at the beginning of each calendar year.<ul>
+<li>To minimize users having to re-baseline.</li>
+</ul>
+</li>
+<li>Fast support.<ul>
+<li>Fast support is a core expectation for HOBL. The contributor or sponsoring team for a scenario is responsible for maintaining it, investigating user-reported failures, and answering questions.</li>
+<li>Scenario owners are expected to acknowledge user reports and support requests same day, then provide status and drive the issue to resolution as quickly as practical. </li>
+</ul>
+</li>
+</ol>
+<h3 id="preserve-the-prep-setup-run-teardown-and-kill-lifecycle">Preserve the prep, setup, run, teardown, and kill lifecycle</h3>
+<ul>
+<li><strong>Prep</strong> installs dependencies and creates persistent scenario resources. It
+  should be idempotent where practical.</li>
+<li><strong>Setup</strong> performs procedures that are needed to set up the test for every iteration.</li>
+<li><strong>Run</strong> performs the measured workload and must be repeatable across
+  iterations.</li>
+<li><strong>Teardown</strong> removes only outputs that the next run will recreate. It must not
+  remove repositories, packages, environments, caches, or other prep-installed
+  dependencies.</li>
+<li><strong>Kill</strong> cleans up anything that may get left running when the test is terminated mid-run.  It should have try-except around every command to ensure it never fails.</li>
+</ul>
+<h3 id="maintain-platform-parity">Maintain platform parity</h3>
+<p>When a scenario has Windows and macOS implementations, inspect both before
+changing either. Equivalent implementations must time the same workload phases,
+calculate shared metrics the same way, and use the same CSV keys.</p>
+<h2 id="testing-and-validation">Testing and validation</h2>
+<p>HOBL contains varied workloads and does not have one command that validates every
+possible change. Run the smallest meaningful validation for the files you
+changed, then perform end-to-end scenario validation when behavior on a DUT is
+affected.</p>
+<p>As applicable:</p>
+<ul>
+<li>exercise setup, run, failure, cancellation, and teardown paths;</li>
+<li>verify repeat execution, including an iteration after the first successful
+  run;</li>
+<li>test every affected architecture, or clearly state what was not available;</li>
+<li>confirm logs contain actionable errors and no sensitive data;</li>
+<li>verify output files, CSV shape, metric names, units, and values; and</li>
+<li>compare Windows and macOS results when changing a cross-platform scenario.</li>
+</ul>
+<p>Do not validate destructive or configuration-changing behavior on a personal or
+production machine. Use a dedicated DUT and preserve the repository rule that
+testers must not disable normal operating-system services merely to improve a
+measurement.</p>
+<p>If full hardware validation is not available, describe exactly what you did
+validate and what remains untested in the pull request. Maintainers may request
+additional lab validation before merging.</p>
+<h2 id="documentation-and-dependencies">Documentation and dependencies</h2>
+<p>Update documentation in the same pull request when changing setup,
+configuration, parameters, output, metrics, or user-visible behavior. Keep links
+relative when referencing files in this repository.</p>
+<p>Changes to files in <code>utilities/</code> require additional care:</p>
+<ul>
+<li>do not modify, reverse engineer, or redistribute Microsoft proprietary
+  utilities outside the permissions stated in their directory;</li>
+<li>preserve upstream copyright and license text for third-party files;</li>
+<li>include only software whose license permits the intended use and
+  redistribution;</li>
+<li>update NOTICE.md in the root folder, and applicable component notices when required;
+  and</li>
+<li>identify the source, version, license, and reason for adding or updating a
+  binary or third-party component in the pull request.</li>
+</ul>
+<p>Prefer reproducible source or package-manager installation over committing new
+binaries. Do not add generated artifacts unless the repository requires them.</p>
+<h2 id="submitting-a-pull-request">Submitting a pull request</h2>
+<p>Push your branch to your fork and open a pull request against <code>main</code>. Draft pull
+requests are encouraged for substantial or cross-platform work when early
+feedback would prevent rework.</p>
+<p>A good pull request:</p>
+<ul>
+<li>links the related issue;</li>
+<li>explains the problem and why the change is needed;</li>
+<li>describes the implementation and important design choices;</li>
+<li>calls out user-visible behavior, compatibility, or measurement changes;</li>
+<li>lists exact validation performed, including operating systems,
+  architectures, and hardware;</li>
+<li>identifies validation that was not performed;</li>
+<li>includes relevant logs or before-and-after results with sensitive data
+  removed;</li>
+<li>updates tests and documentation where applicable; and</li>
+<li>contains no unrelated changes.</li>
+</ul>
+<p>Before requesting review, confirm:</p>
+<ul>
+<li>[ ] The change is scoped to one issue or coherent objective.</li>
+<li>[ ] New and changed paths are discovered or derived, not assumed.</li>
+<li>[ ] Failure paths report actionable errors and command failures are checked.</li>
+<li>[ ] Scenario prep, run, and teardown responsibilities remain separated.</li>
+<li>[ ] Shared toolchains cannot be overwritten by the change.</li>
+<li>[ ] Windows and macOS behavior and metrics remain aligned where applicable.</li>
+<li>[ ] Relevant validation passed, or limitations are documented.</li>
+<li>[ ] Documentation and third-party notices are current.</li>
+<li>[ ] Logs, screenshots, commits, and generated files contain no secrets or
+      confidential data.</li>
+</ul>
+<p>Respond to review comments and automated checks. Keep the branch current when
+requested, and resolve review conversations only after the concern has been
+addressed or agreement has been reached.</p>
+<h2 id="contributor-license-agreement">Contributor License Agreement</h2>
+<p>Most contributions require you to agree to a Contributor License Agreement
+(CLA), declaring that you have the right to grant Microsoft the rights to use
+your contribution. For details, visit
+<a href="https://cla.opensource.microsoft.com">https://cla.opensource.microsoft.com</a>.</p>
+<p>When you submit a pull request, a CLA bot will determine whether you need to
+provide a CLA and will add the appropriate status or instructions to the pull
+request. Follow the bot's instructions. You generally need to complete this only
+once for Microsoft repositories that use the same CLA.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["search.highlight", "navigation.expand", "navigation.sections"], "search": "assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

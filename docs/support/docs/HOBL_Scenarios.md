@@ -1,4 +1,4 @@
-# HOBL Scenarios
+# Scenarios
 
 ## cinebench
 
@@ -19,7 +19,7 @@ Collect various system logs.
 
 ## copilot
 
-Nonfuctional.  Needs to be updated for new architecture.
+Nonfunctional.  Needs to be updated for new architecture.
 
 ## iperf3
 
@@ -67,7 +67,7 @@ Plays a video on full screen for a specified amount of time.
 
 ## lvp_jeita
 
-Plays a video in full screen mode in accordance with reqirements set by the Japan Electronics and Information Technology Industries Association for battery operated electronic devices being released in Japan.
+Plays a video in full screen mode in accordance with requirements set by the Japan Electronics and Information Technology Industries Association for battery operated electronic devices being released in Japan.
 
 Please do not alter parameters as they have been set to meet the requirements of that governing body
 
@@ -241,7 +241,7 @@ Preforms various tasks that prepare a device for testing.  This includes queuing
 
 ## standby
 
-Puts the device into standby mode, still conneccted to the network.
+Puts the device into standby mode, still connected to the network.
 
 
 <u>Parameters:</u>
@@ -324,7 +324,7 @@ Local user is sharing desktop.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_1on1_audio
 
@@ -370,7 +370,7 @@ Local camera is off and mic is on, other participant is a bot sending audio.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_1on1_video
 
@@ -416,7 +416,7 @@ Local camera and mic are on, other participant is a bot sending video and audio.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_3x3_audio
 
@@ -462,7 +462,7 @@ Local camera is off and mic is on, other 9 participants are bots sending audio.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_3x3_present
 
@@ -509,7 +509,7 @@ Local users is sharing screen.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_3x3_video
 
@@ -555,7 +555,7 @@ Local camera and mic are on, other 9 participants are bots sending video and aud
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_3x3_vid_share
 
@@ -602,7 +602,7 @@ One of the bots is sharing a video.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_5p_rpres
 
@@ -649,7 +649,7 @@ One of the bots is sharing a video.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_audio_desktop
 
@@ -696,7 +696,7 @@ Local user is sharing desktop.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
 
 ## teams2_idle
 
@@ -816,5 +816,5 @@ Local user is sharing desktop.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test peridically check that all bots are present in the call and add bots if needed. **Default:** `0`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `0`  **Options:** `0, 1`
 

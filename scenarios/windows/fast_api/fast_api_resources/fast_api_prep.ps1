@@ -902,7 +902,7 @@ $pypiIndexUrl = "https://packagefeedproxy.microsoft.io/pypi/simple"
 "Using approved PyPI feed proxy: $pypiIndexUrl" | log
 
 "Installing requirements.txt into venv..." | log
-& $venvPip install --index-url $pypiIndexUrl -r requirements.txt
+& $venvPip install --index-url $pypiIndexUrl -r requirements.txt "click==8.2.1"
 check($lastexitcode)
 
 "Installing build tool into venv..." | log

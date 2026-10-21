@@ -3,7 +3,7 @@
 
 param(
     [string]$logFile = "",
-    [string]$foundryVersion = "0.8.117.0"
+    [string]$foundryVersion = "2.0.1"
 )
 
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
@@ -38,8 +38,10 @@ $processorArch = $env:PROCESSOR_ARCHITECTURE
 
 if ($arch -eq "64-bit" -and $processorArch -eq "AMD64") {
     $logSuffix = "x64"
+    $runtimeIdentifier = "win-x64"
 } elseif ($arch -match "ARM" -or $processorArch -match "ARM") {
     $logSuffix = "ARM64"
+    $runtimeIdentifier = "win-arm64"
 } else {
     Write-Host " ERROR - Unsupported architecture: $arch (Processor: $processorArch)" -ForegroundColor Red
     Exit 1
@@ -94,9 +96,9 @@ Set-Content -Path $logFile -encoding utf8 "-- Foundry Local prep started ($logSu
 "Detected architecture: $arch (Processor: $processorArch)" | log
 
 # ============================================================================
-# Step 1: Install AI Foundry Local via winget
+# Step 1: Install the .NET 8 SDK
 # ============================================================================
-"Step 1: Installing AI Foundry Local..." | log
+"Step 1: Installing .NET 8 SDK..." | log
 
 # --- Remove the msstore source before any winget install so a broken pinned
 # certificate on that source cannot fail the command (winget 0x8a15005e /
@@ -110,31 +112,84 @@ try {
     "Could not remove msstore source (continuing): $($_.Exception.Message)" | log
 }
 
-"Installing Microsoft.FoundryLocal version $foundryVersion via winget..." | log
-winget install Microsoft.FoundryLocal --source winget --version $foundryVersion --accept-source-agreements --accept-package-agreements 2>&1 | ForEach-Object { "  $_" | log }
+"Installing Microsoft.DotNet.SDK.8 via winget..." | log
+winget install --id Microsoft.DotNet.SDK.8 --source winget --accept-source-agreements --accept-package-agreements 2>&1 | ForEach-Object { "  $_" | log }
 checkWinget $LASTEXITCODE
 
-# Refresh PATH to pick up newly installed foundry
+# Refresh PATH to pick up the newly installed SDK
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
 # ============================================================================
-# Step 2: Verify installation
+# Step 2: Download the Foundry Local 2.0.1 packages
 # ============================================================================
-"Step 2: Verifying Foundry Local installation..." | log
+"Step 2: Downloading Foundry Local SDK version $foundryVersion..." | log
 
-$foundryCmd = Get-Command foundry -ErrorAction SilentlyContinue
-if ($foundryCmd) {
-    "Foundry command found at: $($foundryCmd.Source)" | log
-    
-    # Get version info
-    "Getting Foundry version..." | log
-    $versionOutput = & foundry --version 2>&1
-    $versionOutput | ForEach-Object { "  $_" | log }
-} else {
-    " ERROR - Foundry command not found after installation" | log
-    "Please ensure Microsoft.FoundryLocal is installed correctly" | log
+$dotnetCmd = Get-Command dotnet -ErrorAction SilentlyContinue
+if (-not $dotnetCmd) {
+    " ERROR - dotnet not found on PATH after installation" | log
     Exit 1
 }
+"Found dotnet at: $($dotnetCmd.Source)" | log
+dotnet --info 2>&1 | ForEach-Object { "  $_" | log }
+
+$curlCmd = Get-Command curl.exe -ErrorAction SilentlyContinue
+if (-not $curlCmd) {
+    " ERROR - curl.exe not found on PATH" | log
+    Exit 1
+}
+"Found curl.exe at: $($curlCmd.Source)" | log
+
+$appDir = Join-Path $PSScriptRoot "foundrylocal_app"
+$projectFile = Join-Path $appDir "FoundryLocalWorkload.csproj"
+$packageDir = Join-Path $appDir "packages"
+$publishDir = Join-Path $appDir "publish"
+
+if (-not (Test-Path $projectFile)) {
+    " ERROR - Foundry Local workload project not found: $projectFile" | log
+    Exit 1
+}
+
+New-Item -Path $packageDir -ItemType Directory -Force | Out-Null
+if (Test-Path $publishDir) {
+    Remove-Item -Path $publishDir -Recurse -Force
+}
+New-Item -Path $publishDir -ItemType Directory | Out-Null
+
+$packages = @(
+    "Microsoft.AI.Foundry.Local"
+    "Microsoft.AI.Foundry.Local.Runtime"
+)
+
+foreach ($package in $packages) {
+    $packageFile = Join-Path $packageDir "$package.$foundryVersion.nupkg"
+    $packageUrl = "https://www.nuget.org/api/v2/package/$package/$foundryVersion"
+    "Downloading $package $foundryVersion from: $packageUrl" | log
+    & $curlCmd.Source -L --fail --retry 3 --output $packageFile $packageUrl 2>&1 | ForEach-Object { "  $_" | log }
+    check $LASTEXITCODE
+
+    if (-not (Test-Path $packageFile) -or (Get-Item $packageFile).Length -eq 0) {
+        " ERROR - Downloaded package is missing or empty: $packageFile" | log
+        Exit 1
+    }
+}
+
+# ============================================================================
+# Step 3: Restore and publish the workload app
+# ============================================================================
+"Step 3: Publishing Foundry Local workload for $runtimeIdentifier..." | log
+
+dotnet restore $projectFile --runtime $runtimeIdentifier --configfile (Join-Path $appDir "NuGet.config") 2>&1 | ForEach-Object { "  $_" | log }
+check $LASTEXITCODE
+
+dotnet publish $projectFile --configuration Release --runtime $runtimeIdentifier --self-contained false --no-restore --output $publishDir 2>&1 | ForEach-Object { "  $_" | log }
+check $LASTEXITCODE
+
+$appDll = Join-Path $publishDir "FoundryLocalWorkload.dll"
+if (-not (Test-Path $appDll)) {
+    " ERROR - Published Foundry Local workload not found: $appDll" | log
+    Exit 1
+}
+"Published workload: $appDll" | log
 
 # ============================================================================
 # Summary
@@ -142,6 +197,7 @@ if ($foundryCmd) {
 "" | log
 "========================================" | log
 "Foundry Local prep completed successfully ($logSuffix version)" | log
+"SDK version: $foundryVersion" | log
 "========================================" | log
 "Log file: $logFile" | log
 

@@ -23,7 +23,7 @@ import core.action_list
 
 class Copilot(core.app_scenario.Scenario):
     '''
-    Nonfuctional.  Needs to be updated for new architecture.
+    Nonfunctional.  Needs to be updated for new architecture.
     '''
     module = __module__.split('.')[-1]
     # # Set default parameters

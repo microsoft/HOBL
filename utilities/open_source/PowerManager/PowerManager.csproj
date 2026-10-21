@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <OutputType>Exe</OutputType>
+    <NuGetAudit>false</NuGetAudit>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseAppHost>true</UseAppHost>
+    <DisableMacOSAppBundle>true</DisableMacOSAppBundle>
+    <CreatePkgInstaller>false</CreatePkgInstaller>
+
+    <!-- App Identifier -->
+    <ApplicationId>PowerManager</ApplicationId>
+    <SelfContained>false</SelfContained>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' == 'MacOS'">
+    <TargetFramework>net8.0-macos</TargetFramework>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' == 'Windows'">
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(OS)' == 'MacOS' ">$(DefineConstants);MACOS</DefineConstants>
+    <DefineConstants Condition=" '$(OS)' == 'Windows' ">$(DefineConstants);WINDOWS</DefineConstants>
+  </PropertyGroup>
+</Project>

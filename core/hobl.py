@@ -55,7 +55,9 @@ if "-d" not in sys.argv and "-dv" not in sys.argv:
 params = Params
 
 # Set default global parameters
-params.setDefault('global', 'hardware_version', '', desc="Optional information to pass to reporting.")
+params.setDefault('global', 'hardware_version', '', desc="Optional information to pass to reporting.  Will be converted to upper case.")
+params.setDefault('global', 'hardware_type', '', desc="Optional information to pass to reporting.")
+params.setDefault('global', 'screen_size', '', desc="Approximate screen size in inches, measured diagonally.Optional information to pass to reporting.", valOptions=["10", "11", "12", "13", "14", "15", "16", "17"])
 params.setDefault('global', 'accessories', '', desc="Optional information to pass to reporting.")
 params.setDefault('global', 'result_dir', 'c:\\hobl_results', desc="Base file path for storing test results.")
 params.setDefault('global', 'goals', '', desc="Path to a CSV file that has goals for each scenario to compare results with.")
@@ -64,17 +66,17 @@ params.setDefault('global', 'charge_off_call', '', desc="A shell command to turn
 params.setDefault('global', 'browser', 'Edge', desc="Web browser to use.", valOptions=["Edge", "Edge Beta", "Edge Dev", "Edge Canary", "Chrome"])
 params.setDefault('global', 'host_ip', '', desc="Option to override IP address of host computer, if it doesn't get automatically determined properly.")  # Will try to determine automatically if blank
 params.setDefault('global', 'aux_host', '', desc="IP address or hostname of an auxiliary host computer, such as a DAQ system, thermal chamber, etc.  Referenced parameters are not supported here.")
-params.setDefault('global', 'run_type', '', desc="A results sub-folde to indicate the type of run it is, such as 'Power', 'ETL', 'Misc', etc.")
+params.setDefault('global', 'run_type', '', desc="A results sub-folder to indicate the type of run it is, such as 'Power', 'ETL', 'Misc', etc.")
 params.setDefault('global', 'iterations', '1', desc="How many time to repeat the scenario.")
 params.setDefault('global', 'training_mode', '0', desc="Specify if this is a training run (1) or not (0).", valOptions=["0", "1"])
-params.setDefault('global', 'platform', '[PLATFORM]', desc="Operating system platform.", valOptions=["[PLATFORM]", "Windows", "Android", "W365", "MacOS"])
+params.setDefault('global', 'platform', '[PLATFORM]', desc="Operating system platform.", valOptions=["[PLATFORM]", "Windows", "Android", "W365", "MacOS", "Linux"])
 params.setDefault('global', 'msa_account', '', desc="The test account that Windows and apps will be logged in with.")
 params.setDefault('global', 'dut_password', '', desc="The password for the test account (msa_account).")
 params.setDefault('global', 'dut_ip', '127.0.0.1', desc="IP address of the Device Under Test (name can be used if DNS is supported).")
-params.setDefault('global', 'dut_name', '', desc="Name of the Device Under Test.  Every DUT on the lab netowrk needs to have a unique name.")
+params.setDefault('global', 'dut_name', '', desc="Name of the Device Under Test.  Every DUT on the lab network needs to have a unique name.")
 params.setDefault('global', 'dut_architecture', 'x64', desc="The CPU architecture of the DUT, used for running apps and tools that are optimized for that architecture.", valOptions=["x64", "arm64"])
-params.setDefault('global', 'dut_wifi_name', '', desc="Name of the Wi-Fi netowrk SSID that this device should connect to.")
-params.setDefault('global', 'dut_wifi_password', '', desc="Password of the Wi-Fi netowrk SSID that this device should connect to.")
+params.setDefault('global', 'dut_wifi_name', '', desc="Name of the Wi-Fi network SSID that this device should connect to.")
+params.setDefault('global', 'dut_wifi_password', '', desc="Password of the Wi-Fi network SSID that this device should connect to.")
 params.setDefault('global', 'dut_wifi_authentication', 'WPA2PSK', desc="Wi-Fi authentication type.", valOptions=["WPA2PSK", "WPA3SAE"]) # WPA3SAE for Wi-Fi 6E+
 params.setDefault('global', 'app_port', '4723', desc="Deprecated.")
 params.setDefault('global', 'systemPort', '8200', desc="Deprecated.") # android port for forwarding for uiautomator2
@@ -83,11 +85,12 @@ params.setDefault('global', 'port_range_low', '0', desc="Deprecated.")
 params.setDefault('global', 'port_range_high', '0', desc="Deprecated.")
 # params.setDefault('global', 'scenarios', 'timer')
 params.setDefault('global', 'config_check', '1', desc="Enable running config_check (1) or not (0).", valOptions=["1", "0"])
+params.setDefault('global', 'callback_calibrate', '', desc="Shell command to calibrate equipment, called by system_prep.")
 params.setDefault('global', 'callback_test_begin', '', desc="Shell command to call when test measurement phase begins.")
 params.setDefault('global', 'callback_test_end', '', desc="Shell command to call when test measurement phase ends.")
 params.setDefault('global', 'callback_data_ready', '', desc="Shell command to call when data has been copied back from the DUT.")
 params.setDefault('global', 'callback_test_fail', '', desc="Shell command to call when a test fails, to reset any instruments.")
-params.setDefault('global', 'collection_enabled', '1', desc="Enable data collection from the test scenarip (1) or not (0).", valOptions=["1", "0"])
+params.setDefault('global', 'collection_enabled', '1', desc="Enable data collection from the test scenario (1) or not (0).", valOptions=["1", "0"])
 params.setDefault('global', 'post_run_delay', '0', desc="Seconds to pause to let the system quiesce after a scenario.")
 params.setDefault('global', 'pre_run_delay', '0', desc="Seconds to pause to let the system quiesce before a scenario.")
 # params.setDefault('global', 'power_after', '0') # deprecated
@@ -273,6 +276,7 @@ dashboard_scenario_id = params.get('global', 'dashboard_scenario_id')
 
 class StreamHandlerWrapper(logging.StreamHandler):
     is_error_seen = False
+    error_list = []
 
     def emit(self, record):
         super().emit(record)
@@ -295,15 +299,36 @@ class StreamHandlerWrapper(logging.StreamHandler):
 
             type(self).is_error_seen = True
 
+        # Skip records tagged as the end-of-run summary so they don't re-enter error_list.
+        if record.levelno == logging.ERROR and not getattr(record, "is_summary", False):
+            if record.message not in type(self).error_list:
+                type(self).error_list.append(record.message)
+
+
+class NormalizeNewlinesFormatter(logging.Formatter):
+    def format(self, record):
+        return super().format(record).replace("\r\n", "\n")
+
+
+def format_log():
+    formatter = NormalizeNewlinesFormatter(
+        '%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s',
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+    for handler in root.handlers:
+        handler.setFormatter(formatter)
+
 
 def open_log(log=None):
-    if log:
-        logging.basicConfig(filename=log, filemode='w', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', force=True)
-    else:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', force=True)
-        return
     global root
     root = logging.getLogger()
+    if log:
+        logging.basicConfig(filename=log, filemode='w', level=logging.DEBUG, force=True)
+    else:
+        logging.basicConfig(level=logging.DEBUG, force=True)
+        format_log()
+        return
     ch = StreamHandlerWrapper(sys.stdout)
     output_level = params.get('global', 'output_level', log = False)
     dashboard_url = params.get('global', 'dashboard_url')
@@ -313,19 +338,23 @@ def open_log(log=None):
 
     if output_level == "DEBUG":
         ch.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', "%Y-%m-%d %H:%M:%S")
     elif output_level == "ERROR":
         ch.setLevel(logging.ERROR)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', "%Y-%m-%d %H:%M:%S")
     else:
         ch.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
-    ch.setFormatter(formatter)
+
     root.addHandler(ch)
+    format_log()
 
 
 def close_log():
     global root
+    if StreamHandlerWrapper.error_list:
+        logging.error("##################################################################", extra={"is_summary": True})
+        logging.error("Log error summary:", extra={"is_summary": True})
+        for error_message in list(StreamHandlerWrapper.error_list):
+            logging.error("  " + error_message, extra={"is_summary": True})
+        logging.error("##################################################################", extra={"is_summary": True})
     handlers = root.handlers[:]
     for handler in handlers:
         handler.close()
@@ -409,7 +438,7 @@ def host_call(command, cwd = "."):
             l = line.decode().strip("\r\n")
             if l:
                 logging.error(l)
-    return(out.decode().strip("\r\n"))
+    return(out.decode().strip("\r\n").replace("\r\n", "\n"))
 
 
 def kill(test_name):
@@ -484,7 +513,7 @@ def get_test_module(test_name, ext_paths=[]):
     # Check platform compatibility
     platform = params.get('global', 'platform', log = False).lower()
 
-    for folder_name, display_name in [("macos", "MacOS"), ("windows", "Windows")]:
+    for folder_name, display_name in [("macos", "MacOS"), ("windows", "Windows"), ("linux", "Linux")]:
         if folder_name in test_module.lower() and platform != folder_name:
             test_module = "scenarios.common.scenario_invalid"
             params.setCalculated("scenario_invalid", f"Invalid platform {platform} for {test_name}. Expected platform: {display_name}.")

@@ -107,7 +107,7 @@
             },
             {
                 "children": [],
-                "delay": "0",
+                "delay": "1",
                 "description": "0",
                 "enabled": true,
                 "id": "1JY9RWR",
@@ -183,7 +183,7 @@
             },
             {
                 "children": [],
-                "delay": "87",
+                "delay": "80",
                 "description": "Watch video",
                 "enabled": true,
                 "id": "UCL4U1",
@@ -202,7 +202,7 @@
             },
             {
                 "children": [],
-                "delay": "0",
+                "delay": "1",
                 "description": "k to pause video",
                 "enabled": true,
                 "id": "UCL478",
@@ -212,7 +212,7 @@
             },
             {
                 "children": [],
-                "delay": "2.5",
+                "delay": "2",
                 "description": "Final delay",
                 "enabled": true,
                 "id": "UC6L36",

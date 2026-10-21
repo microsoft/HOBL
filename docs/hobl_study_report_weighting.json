@@ -56,7 +56,7 @@
         "ABL Active":  "abl_active",
         "Idle Applications": "abl_active.idle",
         "Productivity": "abl_active.prod",
-        "Web Browsing (Edge)": "abl_active.web",
+        "Web Browsing (Edge)": "web",
         "Teams2 Video Conference":  "teams2_3x3_video",
         "Teams2 Audio Call": "teams2_1on1_audio",
         "Teams2 Idle": "teams2_idle",

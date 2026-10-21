@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "dut_setup"
-#define MyAppVersion "2.4"
+#define MyAppVersion "2.5"
 #define MyAppPublisher "Microsoft"
 
 [Setup]
@@ -53,6 +53,7 @@ Source: "..\..\utilities\open_source\HOBLStatusWindow\bin\arm64\Release\net8.0-w
 Source: "..\..\utilities\open_source\HOBLStatusWindow\bin\x64\Release\net8.0-windows\win-x64\*"; DestDir: "{tmp}\dut_setup\HOBLStatusWindow-x64"; Flags: ignoreversion
 Source: "..\..\utilities\proprietary\WindowsApplicationDriver\*"; DestDir: "{tmp}\dut_setup\WindowsApplicationDriver"; Flags: ignoreversion
 Source: "..\..\utilities\open_source\InputInject\Output\InputInject_win*.zip"; DestDir: "{tmp}\dut_setup\InputInject"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\utilities\open_source\PowerManager\Output\PowerManager_win*.zip"; DestDir: "{tmp}\dut_setup\PowerManager"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\utilities\open_source\ScreenServer\Output\ScreenServer_win*.zip"; DestDir: "{tmp}\dut_setup\ScreenServer"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\utilities\proprietary\RTCWakeCore\*"; DestDir: "{tmp}\dut_setup\RTCWakeCore"; Flags: ignoreversion
 Source: "..\..\utilities\proprietary\MonitorPowerEvents\MonitorPowerEvents.exe"; DestDir: "{tmp}\dut_setup"; Flags: ignoreversion

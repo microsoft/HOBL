@@ -1,77 +1,44 @@
-#!/bin/sh
+#!/bin/zsh
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 # AI Foundry Local teardown script for macOS
-# Removes the model from cache and stops the service
+# Removes only the model cached by the workload.
 
-BIN_DIR="/Users/Shared/hobl_bin"
 LOG_DIR="/Users/Shared/hobl_data"
 LOG_FILE="$LOG_DIR/mac_foundrylocal_teardown.log"
-MODEL="${1:-phi-3.5-mini}"
+MODEL="${1:-qwen2.5-0.5b}"
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+DOTNET="$SCRIPT_DIR/foundrylocal_app/.dotnet/dotnet"
+APP_DLL="$SCRIPT_DIR/foundrylocal_app/publish/FoundryLocalWorkload.dll"
 
-# Create log directory if it doesn't exist
-if [ ! -d "$LOG_DIR" ]; then
-    mkdir -p "$LOG_DIR"
-fi
+mkdir -p "$LOG_DIR"
 
 log() {
     echo "$1"
     echo "$1" >> "$LOG_FILE"
 }
 
-# Clear log file
 echo "-- Foundry Local teardown started" > "$LOG_FILE"
-
 log "-- Foundry Local teardown started"
 log "Model to remove: $MODEL"
-
-# Load environment (homebrew)
-if [ -f ~/.zprofile ]; then
-    source ~/.zprofile
-fi
-eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null || true
-
-# Add foundry to PATH (installed via install-foundry.command)
-export PATH="$HOME/bin:$PATH"
-
-# ============================================================================
-# Remove model from cache
-# ============================================================================
 log "Removing model from cache..."
 
-if command -v foundry &> /dev/null; then
-    FOUNDRY_PATH=$(which foundry)
-    log "Foundry command found at: $FOUNDRY_PATH"
-    
-    # Remove model from cache
-    log "Running: foundry cache remove $MODEL --yes"
-    OUTPUT=$(foundry cache remove "$MODEL" --yes 2>&1)
-    echo "$OUTPUT" | while read line; do log "  $line"; done
-    
-    if [ $? -eq 0 ]; then
+if [ -x "$DOTNET" ] && [ -f "$APP_DLL" ]; then
+    log "Running SDK teardown for model: $MODEL"
+    OUTPUT=$("$DOTNET" "$APP_DLL" teardown "$MODEL" 2>&1)
+    EXIT_CODE=$?
+    echo "$OUTPUT" | while IFS= read -r line; do log "  $line"; done
+
+    if [ "$EXIT_CODE" -eq 0 ]; then
         log "Model removed successfully"
     else
-        log "Warning: Model removal returned non-zero exit code (model may not have been cached)"
-    fi
-    
-    # Stop the Foundry service
-    log "Running: foundry service stop"
-    OUTPUT=$(foundry service stop 2>&1)
-    echo "$OUTPUT" | while read line; do log "  $line"; done
-    
-    if [ $? -eq 0 ]; then
-        log "Foundry service stopped successfully"
-    else
-        log "Warning: Foundry service stop returned non-zero exit code"
+        log "Warning: Model removal returned exit code $EXIT_CODE (model may not have been cached)"
     fi
 else
-    log "Warning: Foundry command not found, skipping service stop and cache removal"
+    log "Warning: Foundry Local workload app or per-scenario dotnet not found, skipping cache removal"
 fi
 
-# ============================================================================
-# Summary
-# ============================================================================
 log ""
 log "========================================"
 log "Foundry Local teardown completed"

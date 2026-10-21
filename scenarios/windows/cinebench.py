@@ -3,7 +3,7 @@
 
 import logging
 import os
-import time
+import re
 from core.parameters import Params
 import core.app_scenario
 
@@ -41,9 +41,11 @@ class Cinebench(core.app_scenario.Scenario):
         super().setUp()
 
     def prep(self):
-        if self.checkPrepStatus([self.module + self.prep_version]):
+        prep_suffix = f"_{self.folder_name}_{self.prep_version}"
+
+        if self.checkPrepStatus([self.module + prep_suffix]):
             self._upload(f"{self.installer_path}", f"{self.dut_exec_path}\\Cinebench")
-            self.createPrepStatusControlFile(self.prep_version)
+            self.createPrepStatusControlFile(prep_suffix)
 
     def runTest(self):
         if self.workload == 'single_core':
@@ -53,6 +55,21 @@ class Cinebench(core.app_scenario.Scenario):
         logging.info("Cinebench started.")
         self._call(["cmd.exe", f'/c start /B /wait "parent" {self.cinebench_path} {workload_arg} g_CinebenchMinimumTestDuration={self.duration} > {self.dut_data_path}\\{self.out_filename}"'], timeout=self.duration + 2700)
         logging.info("Cinebench completed.")
+
+    def parse_values(self, s):
+        match = re.search(
+            r"Values:\s*\{([^}]*)\}\s*->\s*Avg/Deviation:\s*([\d.]+)/([\d.]+)",
+            s
+        )
+
+        if not match:
+            raise ValueError("Invalid input format")
+
+        values = [float(x) for x in match.group(1).split(",")]
+        avg    = float(match.group(2))
+        std    = float(match.group(3))
+
+        return (values, avg, std)
 
     def tearDown(self):
         if self.prep_run_only:
@@ -68,8 +85,14 @@ class Cinebench(core.app_scenario.Scenario):
         # Extract score from output file
         output_file = os.path.join(self.result_dir, self.out_filename)
         logging.info(f"Extracting score from {output_file}")
+        values = None
         with open(output_file, "r", encoding="utf-8") as f:
             for line in f:
+                if line.strip().startswith("Values:"):
+                    try:
+                        values = self.parse_values(line.strip())
+                    except:
+                        logging.debug(f"Failed to parse CB values: {line.strip()}")
                 if line.strip().startswith("CB "):
                     parts = line.split()
                     if len(parts) >= 2:
@@ -80,16 +103,24 @@ class Cinebench(core.app_scenario.Scenario):
 
         # Write score to cinebench.csv
         with open(self.result_dir + '\\cinebench.csv', 'w') as out:
+            if values:
+                for i, value in enumerate(values[0]):
+                    out.write(f"Cinebench Render {i+1} Score,{value}\n")
+
+                out.write(f"Cinebench Avg Score,{values[1]}\n")
+                out.write(f"Cinebench Std Score,{values[2]}\n")
+
             if self.workload == 'single_core':
                 out.write(f"Cinebench Single Core Score,{score}\n")
             else:
                 out.write(f"Cinebench Multi Core Score,{score}\n")
 
         super().tearDown(callback_test_end="")
+
         if self.workload == 'single_core':
-            logging.info(f"Cinebench Single Core score: {score}")
+            logging.info(f"Cinebench Single Core Score: {score}")
         else:
-            logging.info(f"Cinebench Multi Core score: {score}")
+            logging.info(f"Cinebench Multi Core Score: {score}")
 
     def kill(self):
         # In case of scenario failure or termination, kill any applications left open here:

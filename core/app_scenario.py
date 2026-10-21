@@ -245,6 +245,9 @@ class Scenario(unittest.TestCase):
             elif self.platform.lower() == 'macos':
                 self.dut_exec_path = "/Users/Shared/hobl_bin"
                 self.dut_data_path = "/Users/Shared/hobl_data"
+            elif self.platform.lower() == 'linux':
+                self.dut_exec_path = "/home/shared/hobl_bin"
+                self.dut_data_path = "/home/shared/hobl_data"
             else:
                 self.dut_exec_path = "C:\\hobl_bin"
                 self.dut_data_path = "C:\\hobl_data"
@@ -282,11 +285,8 @@ class Scenario(unittest.TestCase):
                 if dut_version != host_version:
                     logging.warning(f"DUT Setup version {dut_version} does not match expected version {host_version}. It is recommended to run the dut_setup scenario to update the DUT to the right version.")
 
-            # Load InputInject plugin to SimpleRemote
-            if self.platform.lower() == 'macos':
-                result = rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "/Users/Shared/hobl_bin/InputInject/InputInject.dll")
-            else:
-                result = rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "C:\\hobl_bin\\InputInject\\InputInject.dll")
+            # Load plugins to SimpleRemote
+            self.load_plugins()
 
             if Params.get('global', 'local_execution') == '0':
                 # Create and/or delete contents of hobl_data
@@ -378,6 +378,16 @@ class Scenario(unittest.TestCase):
         self.rundown_mode = Params.get('global', 'rundown_mode')
         self.poll_rate = "360" # 6 minutes, gives us battery life hours in 0.1 increments.
 
+    def load_plugins(self):
+        if self.platform.lower() == 'macos':
+            rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "/Users/Shared/hobl_bin/InputInject/InputInject.dll")
+        elif self.platform.lower() == 'linux':
+            # InputInject not supported for Linux
+            pass
+        else:
+            rpc.plugin_load(self.dut_ip, self.rpc_port, "InputInject", "InputInject.Application", "C:\\hobl_bin\\InputInject\\InputInject.dll")
+            rpc.plugin_load(self.dut_ip, self.rpc_port, "PowerManager", "PowerManager.Application", "C:\\hobl_bin\\PowerManager\\PowerManager.dll")
+
     def _getDutSetupVersionOfDut(self):
         if self.platform.lower() == 'windows':
             # Read last line of dut_setup.log on DUT to get actual DUT setup version
@@ -457,6 +467,7 @@ class Scenario(unittest.TestCase):
 
     def setUp(self, callback_test_begin=None):
         if self.tool_failure_reason is not None:
+            logging.error(self.tool_failure_reason)
             self.fail(self.tool_failure_reason)
 
         logging.debug("ORDER app_scenario setUp: " + self._module)
@@ -520,8 +531,10 @@ class Scenario(unittest.TestCase):
                 logging.warning(f"Failed to read hobl_version.txt: {e}")
 
             override_dict = {}
-            override_dict["Hardware Version"] = Params.get('global', 'hardware_version', log = False)
-            # override_dict["Accessories"] = Params.get('global', 'accessories', log = False)
+            override_dict["Hardware Version"] = Params.get('global', 'hardware_version', log = False).upper()
+            override_dict["Hardware Type"] = Params.get('global', 'hardware_type', log = False)
+            override_dict["Screen Size (in)"] = Params.get('global', 'screen_size', log = False)
+            override_dict["Accessories"] = Params.get('global', 'accessories', log = False)
             override_dict['HOBL Version'] = hobl_ver.strip()
             override_dict['Study Type'] = Params.get('global', 'study_type', log = False)
             override_dict['Product'] = Params.get('global', 'product', log = False)
@@ -538,8 +551,13 @@ class Scenario(unittest.TestCase):
                 dest = self.dut_exec_path + "/config_check.sh"
                 self._upload(source, self.dut_exec_path, check_modified=True)
                 cmd = f'-c "{dest} --logfile={self.dut_data_path}/Config --override-string=\\\"{override_str}\\\""'
-                # cmd = f'-c "{dest} --logfile=/Users/powertest/Config"'
                 self._call(["zsh", cmd])
+            elif self.platform.lower() == "linux":
+                source = os.path.join("utilities", "open_source", "config_check_linux.sh")
+                dest = self.dut_exec_path + "/config_check_linux.sh"
+                self._upload(source, self.dut_exec_path, check_modified=True)
+                cmd = f'-c "{dest} --logfile={self.dut_data_path}/Config --override-string=\\\"{override_str}\\\""'
+                self._call(["bash", cmd])
 
 
 
@@ -567,8 +585,11 @@ class Scenario(unittest.TestCase):
             elif self.platform.lower() == "macos":
                 dest = self.dut_exec_path + "/config_check.sh"
                 cmd = f'-c "{dest} --prerun --logfile={self.dut_data_path}/{self.testname}_ConfigPre --override-string=\\\"{override_str}\\\""'
-                # cmd = f'-c "{dest} --prerun --logfile={self.dut_data_path}/{self.testname}_ConfigPre"'
                 result = self._call(["zsh", cmd])
+            elif self.platform.lower() == "linux":
+                dest = self.dut_exec_path + "/config_check_linux.sh"
+                cmd = f'-c "{dest} --prerun --logfile={self.dut_data_path}/{self.testname}_ConfigPre --override-string=\\\"{override_str}\\\""'
+                result = self._call(["bash", cmd])
             # Copy back results - Commenting out for now because trying to copy back while screen_recording causes tar failure on SimpleRemote, and I don't see the need for it anyway.
             # logging.debug("Copying data from DUT in setUp.")
             # self._copy_data_from_remote(self.result_dir)
@@ -688,7 +709,15 @@ class Scenario(unittest.TestCase):
                         rpc.call_rpc(self.dut_ip, self.rpc_port,
                                      "GetVersion", [])
 
+                    # Load plugins since device may have rebooted or scenario forced is_alive to 0
+                    self.load_plugins()
                     self._screenshot(name="failedscreen.png")
+                    if self.dashboard_url:
+                        hobl_url = self.dashboard_url.split('/')[0] + "//" + self.dashboard_url.split('/')[2] + '/'
+                        img_path = os.path.join(self.result_dir, "failedscreen.png")
+                        url = f"{hobl_url}result/Results?path={self.result_dir}&amp;currentFiles={img_path}&amp;currentViews=/result/ImageView"
+                        logging.error(r'[HOBL Results - Failedscreen link](' + url + r')')
+
                     logging.debug(
                         "Copying data from DUT due to test exception.")
                     self._copy_data_from_remote(self.result_dir)
@@ -879,7 +908,7 @@ class Scenario(unittest.TestCase):
         if self.platform.lower() == "android":
             while int(self.getAndroidBatt(self.dut_ip)) > int(self.stop_soc):
                 time.sleep(int(self.poll_rate))
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             # file_path = self.result_dir + os.sep + 'battery_level.txt'
             # while(True):
             #     result = self._call(["pmset", "-g batt"], blocking=True)
@@ -1171,6 +1200,15 @@ class Scenario(unittest.TestCase):
         logging.info("Battery level: " + str(int(out)))
         return (int(out))
 
+    def power_manager_call(self, method, *args, **kwargs):
+        out = json.loads(rpc.plugin_call(self.dut_ip, self.rpc_port, "PowerManager", method, *args, **kwargs))
+
+        if "result" in out:
+            return out["result"]
+
+        if "error" in out:
+            raise Exception(f"PowerManager call {method} failed")
+
     def tearDown(self, callback_test_end=None, callback_data_ready=None):
         logging.info("Entered teardown")
         self.run_action_phase = "teardown" # Updating run action phase from runtest -> teardown. Will handle negative delay by adding a static delay value.
@@ -1243,6 +1281,10 @@ class Scenario(unittest.TestCase):
                 dest = self.dut_exec_path + "/config_check.sh"
                 cmd = f'-c "{dest} --postrun --logfile={self.dut_data_path}/{self.testname}_ConfigPost --prerunfile={self.dut_data_path}/{self.testname}_ConfigPre.csv"'
                 result = self._call(["zsh", cmd])
+            elif self.platform.lower() == "linux":
+                dest = self.dut_exec_path + "/config_check_linux.sh"
+                cmd = f'-c "{dest} --postrun --logfile={self.dut_data_path}/{self.testname}_ConfigPost --prerunfile={self.dut_data_path}/{self.testname}_ConfigPre.csv"'
+                result = self._call(["bash", cmd])
 
         # Copy back results
         if self.collection_enabled != '0':
@@ -1722,7 +1764,7 @@ class Scenario(unittest.TestCase):
             if delete:
                 self._host_call("adb -s " + str(self.dut_ip) + ":5555 shell rm -r " + path, expected_exit_code="")
             self._host_call("adb -s " + str(self.dut_ip) + ":5555 shell mkdir " + path, expected_exit_code="")
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             if delete:
                 self._call(["rm", "-rf " + path], callback=False, timeout=10)
             self._call(["mkdir", "-p " + path], callback=False, timeout=10)
@@ -1756,7 +1798,7 @@ class Scenario(unittest.TestCase):
                     full_dest = os.path.join(dest, folder)
                     if self.platform.lower() == "windows":
                         self._call(["cmd.exe", '/c if exist ' + full_dest + ' rmdir ' + full_dest + ' /S /Q'], callback = False)
-                    elif self.platform.lower() == "macos":
+                    elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
                         full_dest = dest + "/" + folder
                         self._call(["rm", "-rf " + full_dest], callback=False)
                 else:
@@ -1811,7 +1853,7 @@ class Scenario(unittest.TestCase):
                             if source_time <= result_time:
                                 logging.debug("File not modified, skipping upload: " + source)
                                 return
-                        elif self.platform.lower() == "macos":
+                        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
                             dest_file = dest + "/" + os.path.basename(source)
                             result = self._call(["stat", f'-f "%Sm" -t "%Y-%m-%d %H:%M:%S" "{dest_file}"'], expected_exit_code="")
                             logging.debug("RESULT: " + result)
@@ -1937,7 +1979,7 @@ class Scenario(unittest.TestCase):
                             self._call(["cmd.exe", '/c copy ' + source_path + ' ' + source], expected_exit_code="")
                         
                 rpc.download(target_ip, self.rpc_port, source, dest)
-            elif self.platform.lower() == "macos":
+            elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
                 rpc.download(target_ip, self.rpc_port, source, dest)
 
     ''' Checks if path exists on DUT '''
@@ -1954,7 +1996,7 @@ class Scenario(unittest.TestCase):
             # logging.info("Checking: '" + file_name + "'")
             if file_name == "":
                 return False
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             if in_exec_path:
                 # Strip leading path breaks before joining
                 if path[:1] == "/":
@@ -1973,7 +2015,7 @@ class Scenario(unittest.TestCase):
         if module == "":
             module = self._module
         path = os.path.join(self.dut_exec_path, "prep_status", module + suffix)
-        if self.platform.lower() == "macos":
+        if self.platform.lower() == "macos" or self.platform.lower() == "linux":
             path = path.replace("\\", "/")
         self._remote_make_dir(path, True)
 
@@ -1983,7 +2025,7 @@ class Scenario(unittest.TestCase):
         if not self.prep_status_enable:
             return assert_list
         for prep in prep_list:
-            if self.platform.lower() == "macos":
+            if self.platform.lower() == "macos" or self.platform.lower() == "linux":
                 path = "prep_status/" + prep
             else:
                 path = "prep_status\\" + prep
@@ -2178,7 +2220,7 @@ class Scenario(unittest.TestCase):
                 tasks = self._call(["cmd.exe", '/c kill -f ' + str(name)], expected_exit_code="")
             elif self.platform.lower() == 'android':
                 pass
-            elif self.platform.lower() == 'macos':
+            elif self.platform.lower() == 'macos' or self.platform.lower() == 'linux':
                 tasks = self._call(["killall", name], expected_exit_code="", timeout=timeout)
             else:
                 tasks = self._call(["cmd.exe", '/c tasklist /nh /fo csv /fi "IMAGENAME eq ' + name + '"'], expected_exit_code="", timeout=timeout)
@@ -2246,37 +2288,23 @@ class Scenario(unittest.TestCase):
         else:
             name = os.path.join(self.result_dir, name)
 
-        # Try to create /screenshots
-        # logging.info("Creating " + self.dut_data_path + "/screenshots")
-        if self.platform.lower() == 'android':
-            self._host_call("adb -s " + self.dut_ip + ":5555 shell mkdir " + self.dut_data_path + "/screenshots")
-
         logging.info("Saving screenshot: " + name)
         if self.platform.lower() == 'android':
             self._host_call("adb -s " + self.dut_ip + ":5555 shell screencap " + name)
-        # elif self.platform.lower() == 'windows':
+        elif self.platform.lower() == 'linux':
+            # Linux screenshot not implemented
+            return
         # I believe windows and mac use same method.
         else:
+            # Embed device DPI to image
+            if self.dut_scaling_override != "":
+                device_dpi = int(float(self.dut_scaling_override) * 96)
+            else:
+                device_dpi = int(self._get_screen_scale(self.current_screen) * 96)
             img = self._capture_screen()
             rgb_image = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-            Image.fromarray(rgb_image).save(name)
+            Image.fromarray(rgb_image).save(name, dpi=(device_dpi, device_dpi))
 
-
-            # screenshot_path = os.path.join(self.dut_exec_path, "ScreenShot.exe")
-            # screenshot_path_old = os.path.join(self.dut_exec_path, "ScreenCapture.exe")
-            # if self._check_remote_file_exists(screenshot_path):
-            #     self._call([os.path.join(self.dut_exec_path, "ScreenShot.exe"), name])
-            # elif self._check_remote_file_exists(screenshot_path_old):
-            #     logging.info("screenshot.exe doesn't exists. Trying old screenshot method.")
-            #     self._call([os.path.join(self.dut_exec_path, "ScreenCapture.exe"), name])
-            # else:
-            #     logging.info("No Screenshots avaliable")
-        # elif self.platform.lower() == 'macos':
-        #     # TODO: Implement MacOS screenshot
-        #     img = self._capture_screen()
-        #     rgb_image = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-        #     Image.fromarray(rgb_image).save(name)
-        #     pass
     
     # ############################################################################################################
     # Template Matching Functions ################################################################################
@@ -2320,10 +2348,15 @@ class Scenario(unittest.TestCase):
         else:
             # Use the provided screenshot if it is a numpy array already
             screen_img = copy.deepcopy(screenshot)
+
+        
+        # Keep an untouched color copy resized in lockstep with screen_img so we can save the color version on failure.
+        screen_color_img = screen_img.copy()
         screen_img = cv.cvtColor(screen_img, cv.COLOR_BGR2GRAY)
 
         if self.upscale != 1.0:
             screen_img = cv.resize(screen_img, (int(screen_img.shape[1] * (self.upscale)), int(screen_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR)
+            screen_color_img = cv.resize(screen_color_img, (int(screen_color_img.shape[1] * (self.upscale)), int(screen_color_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR)
 
         screen_gray_img = screen_img
 
@@ -2332,6 +2365,8 @@ class Scenario(unittest.TestCase):
             # logging.debug("Loading template: " + str(template))
             # Load the template from a file if a string is provided
             template_img = cv.imread(os.path.join(self.json_parent_dir, template))
+            # Keep an untouched color copy resized in lockstep with template_img so we can save the color version on failure.
+            template_color_img = template_img.copy()
             template_img = cv.cvtColor(template_img, cv.COLOR_BGR2GRAY)
         else:
             # Use the provided template if it is a numpy array already
@@ -2345,6 +2380,7 @@ class Scenario(unittest.TestCase):
         if self.upscale != 1.0:
             start_time = datetime.now()
             template_img = cv.resize(template_img, (int(template_img.shape[1] * (self.upscale)), int(template_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR)
+            template_color_img = cv.resize(template_color_img, (int(template_color_img.shape[1] * (self.upscale)), int(template_color_img.shape[0] * (self.upscale))), interpolation= cv.INTER_LINEAR)
             # logging.debug(f"Template upscale took: {(datetime.now() - start_time).total_seconds()}")
 
         if self.standardize_dpi:
@@ -2367,17 +2403,19 @@ class Scenario(unittest.TestCase):
                 scale_factor = template_dpi / device_dpi
                 logging.debug(f"Scaling screen capture by {scale_factor:.2f} to match template DPI")
                 screen_img = cv.resize(screen_img, (int(screen_img.shape[1] * scale_factor), int(screen_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR)
+                screen_color_img = cv.resize(screen_color_img, (int(screen_color_img.shape[1] * scale_factor), int(screen_color_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR)
             elif template_dpi < device_dpi:
                 scale_factor = device_dpi / template_dpi
                 logging.debug(f"Scaling template by {scale_factor:.2f} to match device DPI")
                 template_img = cv.resize(template_img, (int(template_img.shape[1] * scale_factor), int(template_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR)
+                template_color_img = cv.resize(template_color_img, (int(template_color_img.shape[1] * scale_factor), int(template_color_img.shape[0] * scale_factor)), interpolation= cv.INTER_LINEAR)
             else:
                 # They are the same DPI and no need to resize
                 pass
             # logging.info(f"Screen res after: {screen_img.shape[1]} x {screen_img.shape[0]}")
             # logging.info(f"template res after: {template_img.shape[1]} x {template_img.shape[0]}")
 
-            template_resize_img = template_img
+            # template_resize_img = template_color_img
             # logging.debug(f"Template DPI standardization took: {(datetime.now() - start_time).total_seconds()}")
 
         if self.edge_blur:
@@ -2460,11 +2498,11 @@ class Scenario(unittest.TestCase):
 
             if self.output_images:
                 template_basename = os.path.basename(template)
-                # self._save_screen("resized_template_" + "_scale_" + str(scale) + str(template_basename), template_resize_img)
+                # self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), template_resize_img)
                 self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), resized_template)
                 # self._save_screen("scaled_edge_template_" + "_scale_" + str(scale) + str(template_basename), resized_edge_template)
                 # self._save_screen("screen_gray_img_for_matching_with_" + str(template_basename), screen_gray_img)
-                self._save_screen("capture_img_" + str(template_basename), screen_img)
+                self._save_screen("capture_" + str(template_basename), screen_img)
                 # self._save_screen("screen_edge_img_for_matching_with_" + str(template_basename), screen_edge_img)
 
             # Apply template matching
@@ -2509,14 +2547,21 @@ class Scenario(unittest.TestCase):
             # logging.warning("Best match below threshold!")
             logging.debug(f"Match: {best_match[1]}, below threshold: {threshold}")
             template_basename = os.path.basename(template)
-            self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), resized_template)
-            self._save_screen("capture_img_" + str(template_basename), screen_img)
+            scaled_template_name = "scaled_template" + str(scale) + "_" + str(template_basename)
+            # self._save_screen(scaled_template_name, template_resize_img)
+            self._save_screen(scaled_template_name, template_color_img)
+            # self.scaled_images.append(scaled_template_name)
+            self.scaled_images["template"].append({"filename": scaled_template_name, "score": best_match[1]})
+            self.scaled_images["capture_image"] = "capture_" + str(template_basename)
+
+            # self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), resized_template)
+            self._save_screen("capture_" + str(template_basename), screen_color_img)
             return  (False, best_match[1], next_best_match_val)
 
         # Uncomment below for debugging
         template_basename = os.path.basename(template)
-        self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), resized_template)
-        self._save_screen("capture_img_" + str(template_basename), screen_img)
+        self._save_screen("scaled_template_" + str(scale) + "_" + str(template_basename), template_color_img)
+        self._save_screen("capture_img_" + str(template_basename), screen_color_img)
 
         # return the click point and the confidence of the match
         return best_match
@@ -2535,8 +2580,8 @@ class Scenario(unittest.TestCase):
         rgb_image = cv.cvtColor(img, cv.COLOR_RGB2BGR)
 
         # Save the image if a filename is provided
-        if filename is not None:
-            self._save_screen(os.path.basename(str(filename)), rgb_image)
+        # if filename is not None:
+        #     self._save_screen(os.path.basename(str(filename)), rgb_image)             # commentting out to have a cleaner image matching folder. Will add back if there needs to be good image for scenario maker adding template from existing image feature
             # save_path = os.path.join(str(self.result_dir), os.path.basename(str(filename)))
             # logging.debug("Saving screenshot: " + str(save_path))
             # Image.fromarray(img).save(save_path)
@@ -2553,7 +2598,12 @@ class Scenario(unittest.TestCase):
         else:
             # Don't try to convert grayscale images
             rgb_image = img
-        Image.fromarray(rgb_image).save(save_path) # Convert for PIL
+        # Embed device DPI so downstream viewers can render at the correct scale.
+        if self.dut_scaling_override != "":
+            device_dpi = int(float(self.dut_scaling_override) * 96)
+        else:
+            device_dpi = int(self._get_screen_scale(self.current_screen) * 96)
+        Image.fromarray(rgb_image).save(save_path, dpi=(device_dpi, device_dpi)) # Convert for PIL
 
 
     def _click_by_template(self, template, id=None, capture_id=None, threshold=None, method=default_template_method, scale=default_scale, primary=True, delay=100, x=0.5, y=0.5, edge_detect_thresholds=[], traceId=None, traceX=None, traceY=None, traceW=None, traceH=None, traceMs=None, traceFramerate=None):
@@ -2968,8 +3018,31 @@ class Scenario(unittest.TestCase):
             # If the action failed, stop processing and return 1 to indicate failure
             if action_result == 1:
                 if fail_on_error:
-                    logging.error(f"Action failed: {action['id']}")
-                    self.fail("Failure to run action: " + str(action["id"]))
+                    logging.error(f"Failed {self.failed_action['type']} (id: {self.failed_action['id']}). Failed for {self.failed_action['description']}")
+                    # logging.error(f"Action failed: {action['id']}")
+                    if "capture_id" in self.failed_action:
+                        img_path = os.path.join(self.result_dir, "image_matching")
+                        # scaled_images was cleared at the start of this action, so it only holds images saved while matching this action's templates.
+                        # Pick the highest-scoring template so the dashboard opens with the closest match, not an arbitrary one.
+                        templates = self.scaled_images.get("template", [])
+                        best_template = max(templates, key=lambda t: t["score"]) if templates else None
+                        capture_image_name = self.scaled_images.get("capture_image")
+
+                        # Log a dashboard link so the failure line is clickable to the image compare view
+                        if not best_template or not capture_image_name:
+                            logging.warning(f"Skipping dashboard link for failed action {self.failed_action['id']}: missing capture image or template (capture_image={capture_image_name}, templates={len(templates)}).")
+                        elif self.dashboard_url:
+                            hobl_url = self.dashboard_url.split('/')[0] + "//" + self.dashboard_url.split('/')[2] + '/'
+                            capture_path = os.path.join(img_path, capture_image_name)
+                            scaled_template_paths = [os.path.join(img_path, best_template["filename"])]
+                            # failedscreen.png lives in self.result_dir and is written later by runTestWrapper after the fail propagates up.
+                            failed_screen_path = os.path.join(self.result_dir, "failedscreen.png")
+                            files = ";".join([failed_screen_path, capture_path] + scaled_template_paths)
+                            views = ";".join(["/result/ImageView"] * (2 + len(scaled_template_paths)))
+                            url = f"{hobl_url}result/Results?path={img_path}&amp;currentFiles={files}&amp;currentViews={views}&amp;imageViewScale=80"
+                            logging.error(r'[HOBL Results - Image Match Failure ' + str(self.failed_action["id"]) + r'](' + url + r')')
+                    # self.fail("Failure to run action: " + str(self.failed_action["id"]))
+                    self.fail(f"Failed {self.failed_action['type']} (id: {self.failed_action['id']}). Failed for {self.failed_action['description']}")
                 return 1
 
             # If the action was exit loop and was nested in another action such as If statement, return -1 to exit the loop
@@ -3253,6 +3326,9 @@ class Scenario(unittest.TestCase):
 
         if action["type"] in ["Information", "Comment", "Setup", "Run Test", "Teardown", "Set Default", "Set User Default", "Loop", "End Loop", "If", "Else If", "Else", "End If", "Try", "Except", "End Try", "On Success"]:
             return 0
+
+        # Reset so scaled_images only contains images saved while matching this action's templates. The templates will be a list of dictionaries to keep track of match scores so it will choose the best matched template. Capture id will be used to link the capture image to the corresponding template.
+        self.scaled_images = {"template":[], "capture_image": None}
         
         self.component = component
         # logging.info(f"Setting self.component to {self.component}")
@@ -3280,6 +3356,7 @@ class Scenario(unittest.TestCase):
         if "capture_id" in action:
             if action["capture_id"] not in self.captures:
                 logging.debug("Capture not in memory. Loading capture: " + str(action["capture_id"]))
+                logging.error(f"Capture image {action['capture_id']} not found in memory. Check if proper capture id was associated to template.")
                 action["capture_id"] = cv.imread(os.path.join(self.json_parent_dir, "image_" + str(action["capture_id"]) + ".png" ), cv.IMREAD_GRAYSCALE)
                 self.fail("Shouldn't reach here") 
 
@@ -3569,6 +3646,7 @@ class Scenario(unittest.TestCase):
         # Save the screen if the action failed
         if except_flag:
             logging.warning("Action failed: " + str(action["id"]))
+            self.failed_action = action # Saving the true failed action in case the action is in a try block and it failed on success or except block
             if "capture_id" in action:
                 self._save_screen("exception_" + str(action["id"] + ".png"), self.captures[action["capture_id"]])
             
@@ -3703,9 +3781,9 @@ class Scenario(unittest.TestCase):
             else:
                 logging.info("Rebooting DUT")
                 self._call(["shutdown.exe", "/r /f /t 5"])
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             logging.info("Rebooting DUT")
-            self._call(["zsh", f'-c "echo {self.password} | sudo -S shutdown -r now"'])
+            self._call(["bash", f'-c "echo {self.password} | sudo -S shutdown -r now"'])
         else:
             logging.error("Unsupported platform")
         time.sleep(30)
@@ -3976,7 +4054,7 @@ class Scenario(unittest.TestCase):
 
         if self.platform.lower() == "windows":
             web_replay_cmd_args += f" --https_port={self.web_replay_https_port}"
-        elif self.platform.lower() == "macos":
+        elif self.platform.lower() == "macos" or self.platform.lower() == "linux":
             web_replay_cmd_args += f" --http_proxy_port={self.web_replay_https_port}"
 
         if self.web_replay_ip == self.host_ip:
@@ -4095,6 +4173,9 @@ class Scenario(unittest.TestCase):
 
         if self.platform.lower() == "w365":
             Params.setOverride('web_kill', 'web_replay_remove_args_cmd', f'powershell.exe {web_replay_ps1}')
+        elif self.platform.lower() == "linux":
+            # Not implemented for Linux
+            pass
         elif self.platform.lower() == "macos":
             result = self._call(["networksetup", f'-listallnetworkservices'])
             services = result.splitlines()
@@ -4127,6 +4208,9 @@ class Scenario(unittest.TestCase):
 
         if self.platform.lower() == "w365":
             Params.setOverride('web_setup', 'web_replay_set_args_cmd', f'powershell.exe {self.dut_exec_path}\\web_replay\\set_args.ps1 {web_replay_ps1_args}')
+        elif self.platform.lower() == "linux":
+            # Not implemented for Linux
+            pass
         elif self.platform.lower() == "macos":
             result = self._call(["networksetup", f'-listallnetworkservices'])
             services = result.splitlines()
@@ -4204,7 +4288,8 @@ class Scenario(unittest.TestCase):
             title = yt_entry["title"]
             dur = yt_entry["end"] - yt_entry["start"]
 
-            logging.debug(f"Checking YouTube playback log entry '{title}'.  Comparing expected duration {youtube_duration}s with actual duration {dur:.2f}s")
+            logging.debug(f"Checking YouTube playback log entry '{title}'. Comparing expected duration {youtube_duration}s with actual duration {dur:.2f}s")
+
             if not youtube_duration - 15 <= dur <= youtube_duration + 15:
                 err_str = f"Unexpected YouTube {title} playback duration {dur}"
                 logging.error(err_str)

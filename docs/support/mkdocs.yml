@@ -5,6 +5,26 @@ theme:
   name: material
   features:
     - search.highlight
+    - navigation.expand
+    - navigation.sections
 plugins:
   - offline
   - search
+nav:
+  - Introduction: HOBL_Overview.md
+  - Design Philosophy: HOBL_Design_Philosophy.md
+  - User Guide:
+    - HOBL_Setup.md
+    - HOBL_Usage.md
+    - HOBL_UI.md
+    - HOBL_Support.md
+  - Developer Guide:
+    - HOBL_Contributing.md
+    - HOBL_ScenarioMaker.md
+    - HOBL_UI_Scenario_Guide.md
+    - HOBL_Command_Scenario_Guide.md
+  - Reference:
+    - HOBL_Scenarios.md
+    - HOBL_Tools.md
+    - HOBL_Parameters.md
+    - HOBL_Prep.md

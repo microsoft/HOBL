@@ -17,7 +17,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "195P4C6",
-                "include_path": "..\\..\\run_command",
+                "include_path": "scenarios\\windows\\_library\\run_command",
                 "params": [
                     {
                         "name": "[command]",
@@ -94,32 +94,114 @@
         "y": "0.000"
     },
     {
-        "capture_id": "195LN5R",
+        "children": [
+            {
+                "capture_id": "195LN5R",
+                "children": [],
+                "delay": "2",
+                "description": "Trying to click join info",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_1WP019R.png"
+                ],
+                "id": "1WP019R",
+                "match_threshold": ".8",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "1WP004P",
+        "type": "Try"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "195LN5R",
+                "children": [],
+                "delay": "2",
+                "description": "Settings button",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_195LNFU.png"
+                ],
+                "id": "195LNFU",
+                "match_threshold": "",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "1WP004T",
+        "type": "Except"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1WP004U",
+        "type": "On Success"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1WP004V",
+        "type": "End Try"
+    },
+    {
         "children": [],
         "delay": "2",
-        "description": "Settings button",
+        "description": "Go to Call Health",
+        "enabled": false,
+        "id": "195LNP5",
+        "text": "\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1.0",
+        "description": "More options to select call health",
         "enabled": true,
-        "exception_on": "No match",
         "file_name": [
-            "image_195LNFU.png"
+            "image_1WP01Y4.png"
         ],
-        "id": "195LNFU",
+        "h": "0.750",
+        "id": "1WP01Y4",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.710",
+        "x": "0.444",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "1WP01Y4",
+        "children": [],
+        "delay": "2",
+        "description": "Call Health",
+        "enabled": true,
+        "exception_on": "Never",
+        "file_name": [
+            "image_1WP0244.png"
+        ],
+        "id": "1WP0244",
         "match_threshold": "",
         "primary": true,
         "scale": "",
         "type": "Click",
         "x": "0.500",
         "y": "0.500"
-    },
-    {
-        "children": [],
-        "delay": "2",
-        "description": "Go to Call Health",
-        "enabled": true,
-        "id": "195LNP5",
-        "text": "\ue007",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
     },
     {
         "children": [],

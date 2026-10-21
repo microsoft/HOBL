@@ -1,14 +1,14 @@
-# HOBL Parameters
+# Parameters
 
-This is a description of the parameters that can be set for HOBL runs, either in a profile or overriden on the command line.
+This is a description of the parameters that can be set for HOBL runs, either in a profile or overridden on the command line.
 
 
 The format consists of "sections", which refer to a particular scenario or tool, except "global" which has parameters that pertain to all.  The parameters below each section pertain to that section.  Parameters are specified on the command line as `<section>:<key>=<value>`.   Ex:
     `global:dut_ip=127.0.0.1`  
-Values can contain spaces, but not commas or semilcolons.
+Values can contain spaces, but not commas or semi-colons.
 
 ## global
-`msa_account` - Microsoft account associated with Device Under Test (DUT).  Example vlaue: "tester@outlook.com"
+`msa_account` - Microsoft account associated with Device Under Test (DUT).  Example value: "tester@outlook.com"
 
 `dut_name` - Name of DUT, as reported by "hostname" command.  The name of the DUT will be changed to the name you put here.  Make sure names do not include '-' or spaces.  If you want to keep the current DUT host name, this can be omitted.
 
@@ -18,7 +18,7 @@ Values can contain spaces, but not commas or semilcolons.
 
 `dut_password` - Password associated with the MSA Account.  This is only used by dut_setup to configure auto-logon.
 
-`result_dir` - The directory to write results.  Typically, this should be changed for each study with a path that includes the name of the study.  To prevent the need to manually change this dir, variables can be specified in square brackets in the path.  Any global paramter can be
+`result_dir` - The directory to write results.  Typically, this should be changed for each study with a path that includes the name of the study.  To prevent the need to manually change this dir, variables can be specified in square brackets in the path.  Any global parameter can be
 a path variable, as well as the following special ones: [OS_BUILD], [LKG].  Example value:  "c:\hobl_results\\[dut_name]\\[study_type]\\[LKG]".
 
 `dut_wifi_name` - Wireless LAN name (SSID) to be used by DUT.  Dut_setup uses this to create the Wi-Fi profile and establish initial connection.
@@ -87,7 +87,7 @@ You need to have a Netflix account to run the Netflix scenario.  Provide usernam
 
 `template` - The Excel template used to roll up the data.  Leave blank to use the standard HOBL template.  For Rundowns, "docs\\basic_study_report_template.xlsx" should be used.
 
-`goals` - Path to CSV file of subystem power goals.
+`goals` - Path to CSV file of subsystem power goals.
 
 `trend` - Path to top level of studies to generate trend data.
 

@@ -8,6 +8,6 @@ import scenarios.windows.cs_floor
 
 class Standby(scenarios.windows.cs_floor.CS):
     '''
-    Puts the device into standby mode, still conneccted to the network.
+    Puts the device into standby mode, still connected to the network.
     '''
     pass

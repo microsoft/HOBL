@@ -14,15 +14,15 @@ import time
 class MacFoundrylocal(core.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
-    prep_version = "5"
+    prep_version = "6"
     resources = module + "_resources"
 
 
     # Set default parameters
     Params.setDefault(module, 'loops', '1')
-    Params.setDefault(module, 'model', 'Phi-3.5-mini-instruct-generic-cpu')
+    Params.setDefault(module, 'model', 'qwen2.5-0.5b')
     Params.setDefault(module, 'prompt', 'What is the meaning of life?')
-    Params.setDefault(module, 'foundry_version', '0.8.117')
+    Params.setDefault(module, 'foundry_version', '2.0.1')
 
 
     def setUp(self):
@@ -47,8 +47,8 @@ class MacFoundrylocal(core.app_scenario.Scenario):
             logging.info(f"Uploading test files to {self.target}")
             self._upload(f"scenarios\\MacOS\\{self.module}\\{self.resources}", self.dut_exec_path)
 
-            # Execute prep script (installs Foundry Local from GitHub release)
-            logging.info(f"Executing prep, installing Foundry Local version {self.foundry_version}...")
+            # Execute prep script (installs the Foundry Local SDK and publishes the workload app)
+            logging.info(f"Executing prep, installing Foundry Local SDK version {self.foundry_version}...")
             try:
                 self._call(["zsh", f"{self.target}/{self.module}_prep.sh {self.foundry_version}"], timeout=1800)
             finally:
@@ -58,7 +58,7 @@ class MacFoundrylocal(core.app_scenario.Scenario):
         # Upload resources (in case of updates)
         self._upload(f"scenarios\\MacOS\\{self.module}\\{self.resources}", self.dut_exec_path)
 
-        # Execute setup script (starts service and downloads the model)
+        # Execute setup script (downloads the model)
         logging.info(f"Setting up model: {self.model}")
         try:
             self._call(["zsh", f"{self.target}/{self.module}_setup.sh {self.model}"], timeout=3600)
@@ -87,7 +87,7 @@ class MacFoundrylocal(core.app_scenario.Scenario):
 
     def kill(self):
         try:
-            logging.debug("Killing foundry processes")
-            self._kill("foundry")
+            logging.debug("Killing dotnet processes")
+            self._kill("dotnet")
         except:
             pass

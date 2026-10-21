@@ -14,14 +14,15 @@ import time
 class Foundrylocal(core.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
-    prep_version = "7"
+    prep_version = "8"
     resources = module + "_resources"
 
 
     # Set default parameters
     Params.setDefault(module, 'loops', '1')
-    Params.setDefault(module, 'model', 'Phi-3.5-mini-instruct-generic-cpu')
+    Params.setDefault(module, 'model', 'qwen2.5-0.5b')
     Params.setDefault(module, 'prompt', 'What is the meaning of life?')
+    Params.setDefault(module, 'foundry_version', '2.0.1')
 
 
     def setUp(self):
@@ -30,6 +31,7 @@ class Foundrylocal(core.app_scenario.Scenario):
         self.loops = Params.get(self.module, 'loops')
         self.model = Params.get(self.module, 'model')
         self.prompt = Params.get(self.module, 'prompt')
+        self.foundry_version = Params.get(self.module, 'foundry_version')
 
         self.target = f"{self.dut_exec_path}\\{self.resources}"
 
@@ -41,10 +43,10 @@ class Foundrylocal(core.app_scenario.Scenario):
             logging.info(f"Uploading test files to {self.target}")
             self._upload(f"scenarios\\windows\\{self.module}\\{self.resources}", self.dut_exec_path)
 
-            # Execute prep script (installs Foundry Local via winget)
-            logging.info("Executing prep, this may take a few minutes...")
+            # Execute prep script (installs the Foundry Local SDK and publishes the workload app)
+            logging.info(f"Executing prep, installing Foundry Local SDK version {self.foundry_version}...")
             try:
-                self._call(["pwsh", f"{self.target}\\{self.module}_prep.ps1"], timeout=1800)
+                self._call(["pwsh", f"{self.target}\\{self.module}_prep.ps1 -foundryVersion {self.foundry_version}"], timeout=1800)
             finally:
                 self._copy_data_from_remote(self.result_dir)
             self.createPrepStatusControlFile(self.prep_version)

@@ -5,6 +5,7 @@
 // using System.Drawing;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
+using System.Drawing;
 
 
 namespace InputInject
@@ -196,24 +197,80 @@ namespace InputInject
 
         public void MoveTo(Int64 x, Int64 y, Int64 screenIndex = 0, bool moveCursor = false)
         {
-            // moveCursor is not implemented for MacOS
-            point.x = x;
-            point.y = y;
-            var mouseEvent = CGEventCreateMouseEvent(0, kCGEventMouseMoved, point, 0);
-            CGEventPost(0, mouseEvent);
-            CFRelease(mouseEvent);
+            if (moveCursor)
+            {
+                MoveCursorToTargetAsync(x, y, screenIndex).GetAwaiter().GetResult();
+            }
+            else 
+            {
+                point.x = x;
+                point.y = y;
+                var mouseEvent = CGEventCreateMouseEvent(0, kCGEventMouseMoved, point, 0);
+                CGEventPost(0, mouseEvent);
+                CFRelease(mouseEvent);
+            }
         }
+
+
+        private async Task MoveCursorToTargetAsync(Int64 x, Int64 y, Int64 screenIndex = 0)
+        {
+            IntPtr eventPtr = CGEventCreate(IntPtr.Zero);
+            CGPOINT startCG = CGEventGetLocation(eventPtr);
+            CGPOINT pathCG = new CGPOINT();
+            Point start = new Point((int)startCG.x, (int)startCG.y);
+            Point target = new Point((int)x, (int)y);
+            int deltaX = target.X - start.X;
+            int deltaY = target.Y - start.Y;
+            double distance = Math.Sqrt((deltaX * deltaX) + (deltaY * deltaY));
+            int pointCount = Math.Clamp((int)(distance / 6) + 2, 10, 250);
+            Point[] path = MousePathGenerator.Generate(start, target, pointCount);
+
+            await Task.Run(() =>
+            {
+                using HighResolutionPeriodicTimer timer = new(TimeSpan.FromMilliseconds(8));
+
+                for (int index = 1; index < path.Length; index++)
+                {
+                    if (index > 1)
+                    {
+                        timer.WaitForNextTick();
+                    }
+
+                    pathCG.x = path[index].X;
+                    pathCG.y = path[index].Y;
+                    var mouseEvent = CGEventCreateMouseEvent(0, kCGEventMouseMoved, pathCG, 0);
+                    CGEventPost(0, mouseEvent);
+                    CFRelease(mouseEvent);
+                }
+            });
+            CFRelease(eventPtr);
+        }
+
 
         public void MoveBy(Int64 x, Int64 y, bool moveCursor = false)
         {
-            IntPtr eventPtr = CGEventCreate(IntPtr.Zero);
-            CGPOINT locStruct = CGEventGetLocation(eventPtr);
-            point.x = (int)(locStruct.x + x);
-            point.y = (int)(locStruct.y + y);
-            var mouseEvent = CGEventCreateMouseEvent(0, kCGEventMouseMoved, point, 0);
-            CGEventPost(0, mouseEvent);
-            CFRelease(eventPtr);
-            CFRelease(mouseEvent);
+            if (moveCursor)
+            {
+                // x and y are relative to the current cursor position.
+                // Calculate the absolute target position and move the cursor there.
+                IntPtr eventPtr = CGEventCreate(IntPtr.Zero);
+                CGPOINT locStruct = CGEventGetLocation(eventPtr);
+                Int64 ax = (int)(locStruct.x + x);
+                Int64 ay = (int)(locStruct.y + y);
+                MoveCursorToTargetAsync(ax, ay, 0).GetAwaiter().GetResult();
+                CFRelease(eventPtr);
+            }
+            else 
+            {
+                IntPtr eventPtr = CGEventCreate(IntPtr.Zero);
+                CGPOINT locStruct = CGEventGetLocation(eventPtr);
+                point.x = (int)(locStruct.x + x);
+                point.y = (int)(locStruct.y + y);
+                var mouseEvent = CGEventCreateMouseEvent(0, kCGEventMouseMoved, point, 0);
+                CGEventPost(0, mouseEvent);
+                CFRelease(eventPtr);
+                CFRelease(mouseEvent);
+            }
         }
 
         public void Tap(Int64 x, Int64 y, Int64 delay, bool primary, Int64 screenIndex = 0, bool moveCursor = false)

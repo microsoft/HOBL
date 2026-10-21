@@ -54,7 +54,10 @@ def main():
     share_username = Params.get('global', 'remote_share_username')
     share_password = Params.get('global', 'remote_share_password')
 
-    if share_path != '':
+    if share_path != '' and target == "dut":
+        # Only map drives on DUTs.  Aux hosts are expected to have their drives already configured.
+        # Disconnect any existing mapping to drive Z: before creating a new one
+        call(["cmd.exe", f"/C net use /del z:"])
         call(["cmd.exe", f"/C net use z: {share_path} {share_password} /user:{share_username}"])
 
     call(["cmd.exe", "/C taskkill /F /T /IM remote.exe"], "RunWithResultAndExitCode")

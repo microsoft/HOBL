@@ -13,11 +13,12 @@ import time
 import datetime
 import csv
 
+_LUID_ENGINE_RE = re.compile(
+    r"pid_([0-9]+)_luid_0x([0-9A-Fa-f]+)_0x([0-9A-Fa-f]+).*?engtype_([A-Za-z0-9]+)"
+)
+
 def parse_luid_engine(s):
-    m = re.search(
-        r"pid_([0-9]+)_luid_0x([0-9A-Fa-f]+)_0x([0-9A-Fa-f]+).*?engtype_([A-Za-z0-9]+)",
-        s
-    )
+    m = _LUID_ENGINE_RE.search(s)
 
     if not m:
         return ("unknown", "unknown_unknown", "unknown")
@@ -30,12 +31,19 @@ def parse_luid_engine(s):
     return (pid, f"0x{high:08X}_0x{low:08X}", engtype)
 
 def parse_process(s):
-    m = re.search(r"Process\((.*)\)\\", s)
+    start = s.find("Process(")
 
-    if not m:
+    if start == -1:
         return "unknown"
 
-    return m.group(1)
+    start += 8
+
+    end = s.find(")\\", start)
+
+    if end == -1:
+        return "unknown"
+
+    return s[start:end]
 
 def csv_to_map(csvtext):
     reader = csv.reader(csvtext.split("\n"))
@@ -173,7 +181,8 @@ class Tool(Scenario):
         remaining_order = []
         proc_cols = []
         luid_util_map, col_to_luid = {}, {}
-        df = None
+        columns = []
+        rows = []
 
         with open(self.csv_path_result, "r") as f:
             for line in f:
@@ -208,7 +217,6 @@ class Tool(Scenario):
                             proc_cols.append(col)
                         col_to_luid[col] = k
                         columns.append(col)
-                    df = pd.DataFrame(columns=columns)
 
                     continue
 
@@ -253,18 +261,20 @@ class Tool(Scenario):
                 cpu_util = cpu_util.replace('"', '').strip()
                 cpu_util = float(cpu_util) if cpu_util != "" else 0.0
 
-                row = [timestamp, cpu_util, mem_util]
-                for k in luid_util_map_i:
-                    row.append(limit_n(luid_util_map_i[k]))
-                df.loc[len(df)] = row
+                rows.append(
+                    [timestamp, cpu_util, mem_util]
+                    + [limit_n(v) for v in luid_util_map_i.values()]
+                )
 
         try:
             os.remove(self.blg_path_result)
         except Exception as e:
             logging.error(f"Error deleting file: {e}")
 
-        if df is None or len(df) <= 0:
+        if len(columns) == 0 or len(rows) == 0:
             return
+
+        df = pd.DataFrame(rows, columns=columns)
 
         cols_to_drop = list(df.columns[3:][df.iloc[:, 3:].eq(0).all()])
         df = df.drop(columns=cols_to_drop + ([] if self.include_processes else proc_cols))

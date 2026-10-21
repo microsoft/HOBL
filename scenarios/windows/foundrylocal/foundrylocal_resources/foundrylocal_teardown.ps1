@@ -3,7 +3,7 @@
 
 param(
     [string]$logFile = "",
-    [string]$model = "Phi-3.5-mini-instruct-generic-cpu"
+    [string]$model = "qwen2.5-0.5b"
 )
 
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
@@ -56,7 +56,7 @@ Set-Content -Path $logFile -encoding utf8 "-- Foundry Local teardown started ($l
 
 "Model to remove: $model" | log
 
-# Refresh PATH to ensure foundry is available
+# Refresh PATH to ensure dotnet is available
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
 # ============================================================================
@@ -64,13 +64,12 @@ $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";
 # ============================================================================
 "Removing model from cache..." | log
 
-$foundryCmd = Get-Command foundry -ErrorAction SilentlyContinue
-if ($foundryCmd) {
-    "Foundry command found at: $($foundryCmd.Source)" | log
-    
-    # Remove model from cache
-    "Running: foundry cache remove $model" | log
-    $output = & foundry cache remove $model --yes 2>&1
+$appDll = Join-Path $PSScriptRoot "foundrylocal_app\publish\FoundryLocalWorkload.dll"
+$dotnetCmd = Get-Command dotnet -ErrorAction SilentlyContinue
+
+if ($dotnetCmd -and (Test-Path $appDll)) {
+    "Running SDK teardown for model: $model" | log
+    $output = & dotnet $appDll teardown $model 2>&1
     $output | ForEach-Object { "  $_" | log }
     
     if ($LASTEXITCODE -eq 0) {
@@ -78,19 +77,8 @@ if ($foundryCmd) {
     } else {
         "Warning: Model removal returned exit code $LASTEXITCODE (model may not have been cached)" | log
     }
-    
-    # Stop the Foundry service
-    "Running: foundry service stop" | log
-    $output = & foundry service stop 2>&1
-    $output | ForEach-Object { "  $_" | log }
-    
-    if ($LASTEXITCODE -eq 0) {
-        "Foundry service stopped successfully" | log
-    } else {
-        "Warning: Foundry service stop returned exit code $LASTEXITCODE" | log
-    }
 } else {
-    "Warning: Foundry command not found, skipping service stop and cache removal" | log
+    "Warning: Foundry Local workload app or dotnet not found, skipping cache removal" | log
 }
 
 # ============================================================================

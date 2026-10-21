@@ -57,7 +57,7 @@ if %CLEAN% == true (
     curl --output get-pip.py %GET_PIP_DOWNLOAD_URL%
     .\python.exe get-pip.py --no-warn-script-location
     del get-pip.py
-    .\python.exe -m pip install pip==25.2 --no-warn-script-location
+    .\python.exe -m pip install pip==26.2.1 --no-warn-script-location
     echo Pip set up successful
 
     popd
@@ -73,6 +73,10 @@ for %%f in ("%PYTHON_DIR%\python*._pth") do (
     echo Disabling %%f
     ren "%%f" "%%~nxf.disabled"
 )
+
+echo Installing no_isolation_requirements.txt
+%PYTHON_DIR%\python.exe -Im pip install --requirement ..\..\no_isolation_requirements.txt --no-warn-script-location --no-build-isolation
+if %errorlevel% neq 0 goto ERROR
 
 echo Installing requirements.txt
 %PYTHON_DIR%\python.exe -Im pip install --requirement ..\..\requirements.txt --no-warn-script-location

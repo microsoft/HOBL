@@ -1,4 +1,4 @@
-set dut_setup_version=2.4
+set dut_setup_version=2.5
 
 REM Copyright (c) Microsoft. All rights reserved.
 REM Licensed under the MIT license. See LICENSE file in the project root for full license information.
@@ -216,13 +216,8 @@ echo Copy HOBLStatusWindow to dut hobl_bin folder
 robocopy %usb_drive%\%dut_setup_folder%\HOBLStatusWindow-!dut_architecture! %hobl_bin_path%\HOBLStatusWindow /S /E
 echo Copy WindowsApplicationDrivers to dut hobl_bin folder
 robocopy %usb_drive%\%dut_setup_folder%\WindowsApplicationDriver %hobl_bin_path%\WindowsApplicationDriver /S /E
-@REM if "!dut_architecture!" EQU "arm64" (
-@REM     robocopy %usb_drive%\%dut_setup_folder%\InputInject\ARM64\Release\net6 %hobl_bin_path%\InputInject /S /E
-@REM ) else (
-@REM     robocopy %usb_drive%\%dut_setup_folder%\InputInject\x64\Release\net6 %hobl_bin_path%\InputInject /S /E
-@REM )
 
-echo Copy InputInject and ScreenServer folders to dut hobl_bin folder
+echo Copy InputInject folder to dut hobl_bin folder
 if not exist "%hobl_bin_path%\InputInject" (
     mkdir %hobl_bin_path%\InputInject
 )
@@ -234,6 +229,20 @@ if "!dut_architecture!" EQU "arm64" (
     copy %usb_drive%\%dut_setup_folder%\InputInject\InputInject_win-x64.zip %hobl_bin_path%\InputInject
     tar -xf %hobl_bin_path%\InputInject\InputInject_win-x64.zip -C %hobl_bin_path%\InputInject
     del %hobl_bin_path%\InputInject\InputInject_win-x64.zip
+)
+
+echo Copy PowerManager folder to dut hobl_bin folder
+if not exist "%hobl_bin_path%\PowerManager" (
+    mkdir %hobl_bin_path%\PowerManager
+)
+if "!dut_architecture!" EQU "arm64" (
+    copy %usb_drive%\%dut_setup_folder%\PowerManager\PowerManager_win-arm64.zip %hobl_bin_path%\PowerManager
+    tar -xf %hobl_bin_path%\PowerManager\PowerManager_win-arm64.zip -C %hobl_bin_path%\PowerManager
+    del %hobl_bin_path%\PowerManager\PowerManager_win-arm64.zip
+) else (
+    copy %usb_drive%\%dut_setup_folder%\PowerManager\PowerManager_win-x64.zip %hobl_bin_path%\PowerManager
+    tar -xf %hobl_bin_path%\PowerManager\PowerManager_win-x64.zip -C %hobl_bin_path%\PowerManager
+    del %hobl_bin_path%\PowerManager\PowerManager_win-x64.zip
 )
 
 echo Copy ScreenServer folder to dut hobl_bin folder

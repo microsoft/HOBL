@@ -19,7 +19,7 @@ class PhmPrep(core.app_scenario.Scenario):
 
     # Set default parameters
     Params.setDefault(module, 'host_path', "C:\\phm")
-    Params.setDefault(module, 'phm_installer', "phm_nda_V4.22.3_B25.12.05.02_H.exe")
+    Params.setDefault(module, 'phm_installer', "phm_nda_V4.22.6_B26.08.28.01_H.exe")
     Params.setDefault(module, 'phm', "PowerhouseMountain.exe")
     Params.setDefault(module, 'phm_base_path', 'C:\\Program Files\\PowerhouseMountain')
 

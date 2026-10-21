@@ -205,6 +205,18 @@ class DutSetup(core.app_scenario.Scenario):
             shutil.copy(source_path + source , dest)
             time.sleep(1)
 
+        src_files = ["\\PowerManager_win-x64.zip", "\\PowerManager_win-arm64.zip"]
+        for src in src_files:
+            dest_dir = usb_hobl_bin + "\\PowerManager"
+            dest = dest_dir + src
+            source = "\\Utilities\\open_source\\PowerManager\\Output" + src
+            if not os.path.exists(dest_dir):
+                os.makedirs(dest_dir)
+            logging.debug("Source: " + source_path + source)
+            logging.debug("Dest  : " + dest)
+            shutil.copy(source_path + source , dest)
+            time.sleep(1)
+
         # Copy ScreenServer, both architectures, folder to usb drive
         dest = usb_hobl_bin + "\\ScreenServer"
         if not os.path.exists(dest):

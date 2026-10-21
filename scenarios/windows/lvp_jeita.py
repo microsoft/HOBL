@@ -14,7 +14,7 @@ Params.setAssociatedSections("lvp_jeita", ["lvp"])
 
 class LvpJeitaPrep(scenarios.windows.lvp.LVP):
     """
-    Plays a video in full screen mode in accordance with reqirements set by the Japan Electronics and Information Technology Industries Association for battery operated electronic devices being released in Japan.
+    Plays a video in full screen mode in accordance with requirements set by the Japan Electronics and Information Technology Industries Association for battery operated electronic devices being released in Japan.
 
     Please do not alter parameters as they have been set to meet the requirements of that governing body
     """

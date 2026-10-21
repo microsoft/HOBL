@@ -1,4 +1,4 @@
-# HOBL Tools
+# Tools
 
 ## audio_volume
 
@@ -409,9 +409,23 @@ Collect and parse a lightweight power trace.  Does not have a significant impact
 
 `storage` -  **Default:** `` 
 
+`camera` -  **Default:** `` 
+
+`audio` -  **Default:** `` 
+
+`display_light` -  **Default:** `` 
+
+`display_logic` -  **Default:** `` 
+
 `sam` -  **Default:** `` 
 
+`touch` -  **Default:** `` 
+
+`trackpad` -  **Default:** `` 
+
 `blade` -  **Default:** `` 
+
+`keyboard` -  **Default:** `` 
 
 `retimers` -  **Default:** `` 
 
@@ -434,7 +448,7 @@ Switch to specified power mode (best power efficiency, recommended/balanced, bet
 
 ## random_fail
 
-Randomly fail a test, for devolpment/debug purposes.
+Randomly fail a test, for development/debug purposes.
 
 ## run_report
 
