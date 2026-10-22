@@ -8,5 +8,5 @@ torch==2.8.0
 # Pin tokenizers to a version with pre-built win_arm64 wheels to avoid
 # requiring the Rust toolchain for source compilation on Arm64
 tokenizers==0.22.2
-transformers==4.56.1
+transformers==5.10.0
 safetensors==0.8.0rc0
