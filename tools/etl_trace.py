@@ -16,6 +16,8 @@ import re
 class Tool(Scenario):
     '''
     Collect ETL trace from specified [providers].
+    
+    Collects ETL traces from the specified providers. Multiple providers can be specified, separated by spaces. 
     '''
     module = __module__.split('.')[-1]
     # Set default parameters

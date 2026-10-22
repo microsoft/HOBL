@@ -13,11 +13,13 @@ import subprocess
 class Tool(Scenario):
     '''
     Pause run and recharge device when battery drops below [charge_threshold], then resume.
+
+    Monitors the battery level before each scenario and automatically recharges the device when it falls below the specified charge threshold. The device will resume normal operation once the battery reaches the resume threshold.
     '''
     module = __module__.split('.')[-1]
     # Set default parameters
-    Params.setDefault(module, 'charge_threshold', '40')  # Percent battery level (40%)
-    Params.setDefault(module, 'resume_threshold', '95')  # Percent battery level (95%)
+    Params.setDefault(module, 'charge_threshold', '40', desc="The battery level percentage at which to start charging.")  # Percent battery level (40%)
+    Params.setDefault(module, 'resume_threshold', '95', desc="The battery level percentage at which to stop charging.")  # Percent battery level (95%)
     Params.setDefault('charge_on', 'charge_on_call', '')
     Params.setDefault('charge_off', 'charge_off_call', '')
     Params.setDefault(module, 'post_charge_delay', '1800', desc="How many seconds to wait after reaching the resume_threshold before disconnecting charger.")  # Adding time here can help sensure the device is maximally charged.

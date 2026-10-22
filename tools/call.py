@@ -16,14 +16,17 @@ import core.call_rpc as rpc
 
 
 class Tool(Scenario):
+    '''
+    Calls executables on the DUT, either blocking or non-blocking.
+    '''
     module = __module__.split('.')[-1]
     # Set default parameters
-    Params.setDefault(module, 'executable', '') # Specify full path on DUT to file to be executed
-    Params.setDefault(module, 'arguments', '')
-    Params.setDefault(module, 'source_path', '') # Will be copied to c:\hobl_bin befor test
-    Params.setDefault(module, 'results_path', '') # Will be copied to c:\hobl_data after test
-    Params.setDefault(module, 'stop_command', '') # Will be copied to c:\hobl_data after test
-    Params.setDefault(module, 'blocking', 'False')
+    Params.setDefault(module, 'executable', '', desc="Specify full path on DUT to file to be executed")
+    Params.setDefault(module, 'arguments', '', desc="Arguments to pass to the executable")
+    Params.setDefault(module, 'source_path', '', desc="Local path to the source file/folder to be copied to the DUT before the test") # Will be copied to c:\hobl_bin befor test
+    Params.setDefault(module, 'results_path', '', desc="Path on the DUT where results will be stored and copied back after the test") # Will be copied to c:\hobl_data after test
+    Params.setDefault(module, 'stop_command', '', desc="Command to stop the executable if it is non-blocking") # Will be copied to c:\hobl_data after test
+    Params.setDefault(module, 'blocking', 'False', desc="Whether the call should be blocking ('True' or 'False')")
 
     # Get parameters
     executable = Params.get(module, 'executable')

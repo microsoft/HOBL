@@ -525,6 +525,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#call" class="md-nav__link">
+    call
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#collect_logs" class="md-nav__link">
     collect_logs
   </a>
@@ -604,6 +611,13 @@
         <li class="md-nav__item">
   <a href="#kill_widgets" class="md-nav__link">
     kill_widgets
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#live_translation" class="md-nav__link">
+    live_translation
   </a>
   
 </li>
@@ -972,6 +986,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#call" class="md-nav__link">
+    call
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#collect_logs" class="md-nav__link">
     collect_logs
   </a>
@@ -1051,6 +1072,13 @@
         <li class="md-nav__item">
   <a href="#kill_widgets" class="md-nav__link">
     kill_widgets
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#live_translation" class="md-nav__link">
+    live_translation
   </a>
   
 </li>
@@ -1325,18 +1353,21 @@
 <h1 id="tools">Tools</h1>
 <h2 id="audio_volume">audio_volume</h2>
 <p>Set specified audio volume.</p>
+<p>Setting the 'volume' parameter will adjust the audio output volume accordingly.</p>
 <p><u>Parameters:</u></p>
-<p><code>volume</code> -  <strong>Default:</strong> <code>Unknown</code> </p>
+<p><code>volume</code> - Desired audio output volume as a percentage (0-100) <strong>Default:</strong> <code>Unknown</code> </p>
 <h2 id="auto_charge">auto_charge</h2>
 <p>Turn off charger before scenario, turn it on after.</p>
+<p>Gives the option to turn off charger before the scenario starts and turn it back on after the scenario ends.</p>
 <p><u>Parameters:</u></p>
-<p><code>delay</code> -  <strong>Default:</strong> <code>5</code> </p>
-<p><code>mode</code> -  <strong>Default:</strong> <code>DC</code> </p>
+<p><code>delay</code> - Delay in seconds before turning off the charger. <strong>Default:</strong> <code>5</code> </p>
+<p><code>mode</code> - The charging mode, either 'DC' or 'AC'. If 'AC' is specified, the charger will not be turned off during scenario. <strong>Default:</strong> <code>DC</code> </p>
 <h2 id="auto_recharge">auto_recharge</h2>
 <p>Pause run and recharge device when battery drops below [charge_threshold], then resume.</p>
+<p>Monitors the battery level before each scenario and automatically recharges the device when it falls below the specified charge threshold. The device will resume normal operation once the battery reaches the resume threshold.</p>
 <p><u>Parameters:</u></p>
-<p><code>charge_threshold</code> -  <strong>Default:</strong> <code>40</code> </p>
-<p><code>resume_threshold</code> -  <strong>Default:</strong> <code>95</code> </p>
+<p><code>charge_threshold</code> - The battery level percentage at which to start charging. <strong>Default:</strong> <code>40</code> </p>
+<p><code>resume_threshold</code> - The battery level percentage at which to stop charging. <strong>Default:</strong> <code>95</code> </p>
 <p><code>post_charge_delay</code> - How many seconds to wait after reaching the resume_threshold before disconnecting charger. <strong>Default:</strong> <code>1800</code> </p>
 <p><code>charge_on_call</code> -  <strong>Default:</strong> `` </p>
 <p><code>charge_off_call</code> -  <strong>Default:</strong> `` </p>
@@ -1348,10 +1379,21 @@
 <p>Deprecated.</p>
 <h2 id="bat_logger">bat_logger</h2>
 <p>Surface only.  Logs battery details over time.</p>
+<h2 id="call">call</h2>
+<p>Calls executables on the DUT, either blocking or non-blocking.</p>
+<p><u>Parameters:</u></p>
+<p><code>executable</code> - Specify full path on DUT to file to be executed <strong>Default:</strong> `` </p>
+<p><code>arguments</code> - Arguments to pass to the executable <strong>Default:</strong> `` </p>
+<p><code>source_path</code> - Local path to the source file/folder to be copied to the DUT before the test <strong>Default:</strong> `` </p>
+<p><code>results_path</code> - Path on the DUT where results will be stored and copied back after the test <strong>Default:</strong> `` </p>
+<p><code>stop_command</code> - Command to stop the executable if it is non-blocking <strong>Default:</strong> `` </p>
+<p><code>blocking</code> - Whether the call should be blocking ('True' or 'False') <strong>Default:</strong> <code>False</code> </p>
 <h2 id="collect_logs">collect_logs</h2>
 <p>Collect various system logs in the case of scenario failure.</p>
+<p>Will collect various logs such as sleep study reports, battery reports, system event logs, and power shell logs.</p>
 <h2 id="custom_trace">custom_trace</h2>
-<p>Periodically start ETL traces.</p>
+<p>Allows a custom ETL trace to be recorded during the scenario.</p>
+<p>Allows for multiple traces to be ran during the scenario or just a single trace.Modifying the parameters can customize the behavior of the ETL trace.</p>
 <p><u>Parameters:</u></p>
 <p><code>providers</code> - ETL provider files to use <strong>Default:</strong> <code>power_light.wprp</code>  <strong>Options:</strong> <code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, GTPLight_CustomMemHardFaults.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp</code></p>
 <p><code>trace_duration</code> - The duration of the trace in seconds <strong>Default:</strong> <code>300</code> </p>
@@ -1371,16 +1413,6 @@ before a test. Initial values are saved to the DUT registry on first use
 and only restored when display_restore=1 is set.</p>
 <p>Only parameters that are explicitly provided are processed — empty parameters
 are ignored, so the tool can be called for any subset of operations.</p>
-<p>Parameters:
-  als_adaptive_brightness       0/1 — adaptive brightness (ALS) on/off (Windows only)
-  hdr                           0/1 — HDR on/off (Windows only)
-  hdr_auto                      0/1 — Auto HDR on/off (Windows only)
-  refresh_rate                  60/120/dynamic — display refresh rate (Windows only)
-  content_adaptive_brightness   Off/Always/On battery only — CABC mode (Windows only)
-  adaptive_color                0/1 — adaptive color management on/off (Windows only)
-  brightness                    brightness value (e.g. 65, 65%, 150nits)
-  nits_map                      nits-to-slider mapping (e.g. "100nits:50% 150nits:65%")
-  display_restore               1 — restore all saved initial values after test</p>
 <p><u>Parameters:</u></p>
 <p><code>als_adaptive_brightness</code> - Adaptive brightness (1=on, 0=off). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
 <p><code>adaptive_color</code> - Adaptive color (1=on, 0=off). <strong>Default:</strong> <code>`  **Options:**</code>0, 1`</p>
@@ -1394,14 +1426,16 @@ are ignored, so the tool can be called for any subset of operations.</p>
 <h2 id="display_brightness">display_brightness</h2>
 <p>Map display brightness slider percentage to nits value specified by scenarios.</p>
 <p><u>Parameters:</u></p>
-<p><code>brightness</code> -  <strong>Default:</strong> <code>150nits</code> </p>
-<p><code>nits_map</code> -  <strong>Default:</strong> <code>100nits:50% 150nits:65%</code> </p>
+<p><code>brightness</code> - The desired display brightness, specified in nits (e.g., '150nits') <strong>Default:</strong> <code>150nits</code> </p>
+<p><code>nits_map</code> - A mapping of nits values to corresponding brightness slider percentages (e.g., '100nits:50% 150nits:65%') <strong>Default:</strong> <code>100nits:50% 150nits:65%</code> </p>
 <h2 id="dumpcap">dumpcap</h2>
 <p>Dump Wireshark capture.</p>
+<p>Utilizes Wireshark's dumpcap tool to capture network traffic on the specified interface.</p>
 <p><u>Parameters:</u></p>
-<p><code>interface</code> -  <strong>Default:</strong> <code>Wi-Fi</code> </p>
+<p><code>interface</code> - The network interface on which to capture traffic (e.g., 'Wi-Fi') <strong>Default:</strong> <code>Wi-Fi</code> </p>
 <h2 id="etl_trace">etl_trace</h2>
 <p>Collect ETL trace from specified [providers].</p>
+<p>Collects ETL traces from the specified providers. Multiple providers can be specified, separated by spaces. </p>
 <p><u>Parameters:</u></p>
 <p><code>providers</code> - ETL provider files to use <strong>Default:</strong> <code>`  **Options:**</code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, GTPLight_CustomMemHardFaults.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp`</p>
 <h2 id="frame_data">frame_data</h2>
@@ -1417,6 +1451,8 @@ Make sure this tool is listed first in the tool list so that it doesn't interrup
 <p><code>restart</code> -  <strong>Default:</strong> <code>0</code> </p>
 <h2 id="kill_widgets">kill_widgets</h2>
 <p>Stops the Windows Widgets from running.</p>
+<h2 id="live_translation">live_translation</h2>
+<p>Setups up the Live Translation feature on the DUT.</p>
 <h2 id="mac_powermetrics">mac_powermetrics</h2>
 <p>macOS-only lightweight power measurement tool based on powermetrics.</p>
 <p><u>Parameters:</u></p>
@@ -1425,25 +1461,28 @@ Make sure this tool is listed first in the tool list so that it doesn't interrup
 <p><code>output_file</code> - Output filename written in dut_data_path. <strong>Default:</strong> <code>powertrace.plist</code> </p>
 <h2 id="media_perf">media_perf</h2>
 <p>Deprecated.</p>
+<p>Media perf tool for post processing of Media ETL traces using Media eXperience Analyzer
+ETL trace should have been collected using MediaEngine.wprp profile</p>
 <p><u>Parameters:</u></p>
 <p><code>autoxa_path</code> -  <strong>Default:</strong> <code>C:\"Media eXperience Analyzer\AutoXA.exe"</code> </p>
 <h2 id="mep_toggle">mep_toggle</h2>
 <p>Enable/disable specified MEP features.</p>
+<p>Before scenario starts specified MEP features will be toggled according to the configured parameters.</p>
 <p><u>Parameters:</u></p>
-<p><code>framing</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>eye_gaze</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>blur</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>portraitlight</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>creative</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>standardframing</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>cinematicframing</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>portraitblur</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>standardblur</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>standardeye</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>enhancedeye</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>illustrated</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>animated</code> -  <strong>Default:</strong> <code>0</code> </p>
-<p><code>watercolor</code> -  <strong>Default:</strong> <code>0</code> </p>
+<p><code>framing</code> - framing feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>eye_gaze</code> - eye gaze feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>blur</code> - blur feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>portraitlight</code> - portrait light feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>creative</code> - creative feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>standardframing</code> - standard framing sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>cinematicframing</code> - cinematic framing sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>portraitblur</code> - portrait blur sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>standardblur</code> - standard blur sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>standardeye</code> - standard eye sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>enhancedeye</code> - enhanced eye sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>illustrated</code> - illustrated sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>animated</code> - animated sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
+<p><code>watercolor</code> - watercolor sub-feature ('0' for off, '1' for on). <strong>Default:</strong> <code>0</code> </p>
 <h2 id="netsh">netsh</h2>
 <p>Get ETL trace of wns_client.</p>
 <h2 id="network_ping">network_ping</h2>
@@ -1456,6 +1495,7 @@ Make sure this tool is listed first in the tool list so that it doesn't interrup
 <p>Reports number of bytes transferred over Wi-Fi vs Cellular.</p>
 <h2 id="perf">perf</h2>
 <p>Calculates a MOS score from an abl_perf run.</p>
+<p>Collects an ETL trace with abl_perf.wprp and will parse results from it to calculate a MOS score.</p>
 <p><u>Parameters:</u></p>
 <p><code>provider</code> -  <strong>Default:</strong> <code>abl_perf.wprp</code> </p>
 <h2 id="perfmon_util">perfmon_util</h2>
@@ -1470,13 +1510,15 @@ Make sure this tool is listed first in the tool list so that it doesn't interrup
 <p><code>gpu_counter</code> - GPU counter to use (per process, per instance) <strong>Default:</strong> <code>\GPU Engine(*engtype_3D)\Utilization Percentage</code> </p>
 <p><code>npu_counter</code> - NPU counter to use (per process, per instance) <strong>Default:</strong> <code>\GPU Engine(*engtype_Compute)\Utilization Percentage</code> </p>
 <h2 id="perf_screen_capture">perf_screen_capture</h2>
-<p>A template that can be used for creating new tools.</p>
+<p>Performance screen capture tool for collecting and saving screenshots during performance tests.</p>
 <h2 id="perf_utc">perf_utc</h2>
 <p>Collects and processes UTC Perftrack scenarios</p>
 <p><u>Parameters:</u></p>
 <p><code>provider</code> - WPRP file to use for UTC Perftrack traces. <strong>Default:</strong> <code>perf_utc.wprp</code>  <strong>Options:</strong> <code>abl_perf.wprp, full_th.wprp, full_th_wpp.wprp, general_cpi_collector.wprp, GTPLight_CustomMemHardFaults.wprp, multimedia.wprp, perf_utc.wprp, pmu.wprp, power.wprp, power_heavy.wprp, power_light.wprp, power_memory.wprp, productivity_perf.wprp, stack_walk.wprp, thermal_power_light.wprp, web_perf.wprp</code></p>
 <h2 id="phm">phm</h2>
 <p>Run Intel's Power House Mountain tool.</p>
+<p>Requires PHM to be installed on the DUT. Can be installed by running phm_prep scenario.
+After PHM trace is completed, it will be copied back and results will be parsed. </p>
 <p><u>Parameters:</u></p>
 <p><code>node</code> -  <strong>Default:</strong> <code>C:\Program Files\nodejs\node.exe</code> </p>
 <p><code>phm_args</code> -  <strong>Default:</strong> <code>!cpup</code> </p>
@@ -1567,7 +1609,7 @@ Make sure this tool is listed first in the tool list so that it doesn't interrup
 <p><code>counter</code> -  <strong>Default:</strong> <code>900</code> </p>
 <p><code>lock_path</code> -  <strong>Default:</strong> `` </p>
 <h2 id="socwatch">socwatch</h2>
-<p>Run Intel's SOCWatch tool.</p>
+<p>Run Intel's SOCWatch tool and parses results.</p>
 <p><u>Parameters:</u></p>
 <p><code>delay</code> -  <strong>Default:</strong> <code>0</code> </p>
 <p><code>additional_args</code> -  <strong>Default:</strong> <code>-f cpu-pkgc-dbg -f pcie -f platform-ltr -f panel-srr -f cpu-cstate -f cpu-pstate -f gfx-cstate -f gfx-pstate -f acpi-dstate -f sstate -f ddr-bw -f timer-resolution -f cpu-gpu-concurrency -f pch-slps0 -f pcie-lpm -f hw-gfx-pstate -f ddr-bw -f pch-ip-active-all -f pch-ip-status -f sys -f sa-freq -f pch-all</code> </p>
