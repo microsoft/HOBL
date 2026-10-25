@@ -95,37 +95,6 @@ if [ ! -x /opt/homebrew/bin/brew ]; then
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# 3. Install Node.js 24.18.0
-log "-- Checking Node.js installation"
-NODE_VERSION="24.18.0"
-NODE_PACKAGE="node-v${NODE_VERSION}.pkg"
-NODE_PACKAGE_URL="https://nodejs.org/dist/v${NODE_VERSION}/${NODE_PACKAGE}"
-NODE_PACKAGE_SHA256="e5a6701100066156d69da48878e4b95986733b0688e0b83afbe1093778e3fffd"
-NODE_PACKAGE_PATH="${TMPDIR:-/tmp}/${NODE_PACKAGE}"
-
-if command -v node >/dev/null 2>&1 && [ "$(node --version)" = "v${NODE_VERSION}" ]; then
-    log "✓ Node.js ${NODE_VERSION} already installed: $(node --version)"
-else
-    log "-- Installing Node.js ${NODE_VERSION}..."
-    brew list --formula | grep -E '^node(@.*)?$' | while read -r formula; do
-        brew unlink "$formula" >/dev/null 2>&1 || true
-    done
-    curl -fL "$NODE_PACKAGE_URL" -o "$NODE_PACKAGE_PATH"
-    check_status "Node.js ${NODE_VERSION} download"
-    echo "${NODE_PACKAGE_SHA256}  ${NODE_PACKAGE_PATH}" | shasum -a 256 -c -
-    check_status "Node.js ${NODE_VERSION} checksum verification"
-    sudo -A installer -pkg "$NODE_PACKAGE_PATH" -target /
-    check_status "Node.js ${NODE_VERSION} installation"
-    rm -f "$NODE_PACKAGE_PATH"
-    hash -r
-fi
-check_command "node" || exit 1
-if [ "$(node --version)" != "v${NODE_VERSION}" ]; then
-    log " ERROR - Node.js version is $(node --version), expected v${NODE_VERSION}"
-    exit 1
-fi
-log "-- Node.js version: $(node --version)"
-
 # 4. Install readline and xz (needed for pyenv Python builds)
 log "-- Installing readline and xz"
 brew install readline xz
@@ -155,8 +124,12 @@ source ~/.zprofile
 check_command "pyenv" || exit 1
 
 log "-- Installing Python 3.12.10"
-pyenv install 3.12.10 -f
-check_status "Python 3.12.10 installation"
+if ! pyenv versions --bare | grep -qx "3.12.10"; then
+    pyenv install 3.12.10
+    check_status "Python 3.12.10 installation"
+else
+    log "✓ Preserving shared Python 3.12.10 installation"
+fi
 
 log "-- Setting Python version"
 pyenv global 3.12.10
@@ -191,6 +164,16 @@ git checkout 1.132.0
 check_status "VS Code checkout v1.132.0"
 
 # 7. Install npm dependencies
+# Select Node after profile loading, which can put a different Node on PATH.
+. "$BIN_DIR/mac_vscode_resources/mac_vscode_node.sh" || exit 1
+vscode_install_node || exit 1
+
+# Node's major version changed. Do not reuse native modules from an older prep.
+# This is prep-only cleanup inside this scenario's clone, never in a timed run.
+log "-- Removing previous npm dependencies before Node.js 26.9.0 prep"
+find "$VSCODE_DIR" -type d -name node_modules -prune -exec rm -rf {} +
+check_status "Previous npm dependency cleanup"
+
 log "-- Installing npm dependencies (this may take 10-20 minutes)..."
 # Install deps without lifecycle scripts first so @vscode/spdlog headers are
 # guaranteed to exist for patching before node-gyp build kicks in.
@@ -262,7 +245,10 @@ check_status "spdlog rebuild"
 log "-- Completing npm install..."
 NPM_FINAL_LOG="$LOG_DIR/mac_vscode_npm_install_final.log"
 log "   phase-2 npm install output -> $NPM_FINAL_LOG"
-npm install --loglevel=error >>"$NPM_FINAL_LOG" 2>&1
+# Explicit benchmark override: upstream 1.132.0 requires Node 24. Keep all
+# lifecycle scripts/error checks; bypass only its Node major-version gate.
+log "-- Using Node.js 26.9.0 outside VS Code 1.132.0's upstream Node 24 requirement"
+VSCODE_SKIP_NODE_VERSION_CHECK=1 VSCODE_FORCE_INSTALL=1 npm install --loglevel=error >>"$NPM_FINAL_LOG" 2>&1
 if [ $? -ne 0 ]; then
     log " ERROR - Final npm install failed."
     log " ERROR - See $NPM_FINAL_LOG for details."
