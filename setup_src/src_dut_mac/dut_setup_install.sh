@@ -49,6 +49,12 @@ echo "Installing brightness utility..."
 cp ./brightness $BIN_DIR/brightness
 chmod +x $BIN_DIR/brightness
 
+# Install remote.app
+echo "Installing remote.app..."
+mkdir -p $BIN_DIR/remote
+cp -R ./remote.app $BIN_DIR/remote
+chmod -R 755 $BIN_DIR/remote/remote.app
+
 # Install certificates
 echo "Installing certificates..."
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ./root_cert.pem
@@ -164,6 +170,16 @@ if [ ! -x /opt/homebrew/bin/brew ]; then
 fi
 echo "Homebrew verified at /opt/homebrew/bin/brew"
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Install libpng
+echo "Installing libpng"
+brew install libpng
+check_status "libpng installation"
+
+# Install jpeg-turbo
+echo "Installing jpeg-turbo"
+brew install jpeg-turbo
+check_status "jpeg-turbo installation"
 
 # Install ffmpeg
 echo "Installing ffmpeg"

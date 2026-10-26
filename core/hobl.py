@@ -69,7 +69,7 @@ params.setDefault('global', 'aux_host', '', desc="IP address or hostname of an a
 params.setDefault('global', 'run_type', '', desc="A results sub-folder to indicate the type of run it is, such as 'Power', 'ETL', 'Misc', etc.")
 params.setDefault('global', 'iterations', '1', desc="How many time to repeat the scenario.")
 params.setDefault('global', 'training_mode', '0', desc="Specify if this is a training run (1) or not (0).", valOptions=["0", "1"])
-params.setDefault('global', 'platform', '[PLATFORM]', desc="Operating system platform.", valOptions=["[PLATFORM]", "Windows", "Android", "W365", "MacOS"])
+params.setDefault('global', 'platform', '[PLATFORM]', desc="Operating system platform.", valOptions=["[PLATFORM]", "Windows", "Android", "W365", "MacOS", "Linux"])
 params.setDefault('global', 'msa_account', '', desc="The test account that Windows and apps will be logged in with.")
 params.setDefault('global', 'dut_password', '', desc="The password for the test account (msa_account).")
 params.setDefault('global', 'dut_ip', '127.0.0.1', desc="IP address of the Device Under Test (name can be used if DNS is supported).")
@@ -513,7 +513,7 @@ def get_test_module(test_name, ext_paths=[]):
     # Check platform compatibility
     platform = params.get('global', 'platform', log = False).lower()
 
-    for folder_name, display_name in [("macos", "MacOS"), ("windows", "Windows")]:
+    for folder_name, display_name in [("macos", "MacOS"), ("windows", "Windows"), ("linux", "Linux")]:
         if folder_name in test_module.lower() and platform != folder_name:
             test_module = "scenarios.common.scenario_invalid"
             params.setCalculated("scenario_invalid", f"Invalid platform {platform} for {test_name}. Expected platform: {display_name}.")
