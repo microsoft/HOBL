@@ -676,6 +676,59 @@ static void signalHandler(int sig)
     rfbShutdownServer(rfbScreen, TRUE);
 }
 
+static NSImage *createRemoteIcon(void)
+{
+    const CGFloat size    = 512.0;
+    const CGFloat padding = 52.0;
+
+    NSImage *icon = [[NSImage alloc] initWithSize:NSMakeSize(size, size)];
+
+    [icon lockFocus];
+
+    NSRect iconRect = NSMakeRect(padding, padding, size - (padding * 2.0), size - (padding * 2.0));
+
+    [[NSColor blackColor] setFill];
+
+    NSBezierPath *background =
+        [NSBezierPath bezierPathWithRoundedRect:iconRect
+                                        xRadius:90.0
+                                        yRadius:90.0];
+
+    [background fill];
+
+    NSString *text = @"R";
+
+    NSFont *font = [NSFont boldSystemFontOfSize:275.0];
+
+    NSDictionary *attributes = @{
+        NSFontAttributeName: font,
+        NSForegroundColorAttributeName: [NSColor whiteColor]
+    };
+
+    NSSize textSize = [text sizeWithAttributes:attributes];
+
+    NSPoint textPoint = NSMakePoint((size - textSize.width) / 2.0, (size - textSize.height) / 2.0);
+
+    [text drawAtPoint:textPoint withAttributes:attributes];
+
+    [icon unlockFocus];
+
+    return icon;
+}
+
+@interface AppDelegate : NSObject <NSApplicationDelegate>
+@end
+
+@implementation AppDelegate
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*)sender
+{
+    if (rfbScreen)
+        rfbShutdownServer(rfbScreen, TRUE);
+
+    return NSTerminateCancel;
+}
+@end
+
 int main(int argc,char *argv[])
 {
   int i;
@@ -724,16 +777,52 @@ int main(int argc,char *argv[])
   sigaction(SIGHUP,  &sa, NULL);
   sigaction(SIGQUIT, &sa, NULL);
 
-  rfbRunEventLoop(rfbScreen,-1,TRUE);
+  rfbRunEventLoop(rfbScreen, -1, TRUE);
 
-  while(rfbIsActive(rfbScreen)) {
-      sleep(1);
+  @autoreleasepool {
+    NSApplication *app = [NSApplication sharedApplication];
+    [app setActivationPolicy:NSApplicationActivationPolicyRegular];
+
+    app.applicationIconImage = createRemoteIcon();
+
+    AppDelegate *appDelegate = [[AppDelegate alloc] init];
+    app.delegate = appDelegate;
+
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        while (rfbIsActive(rfbScreen)) {
+            sleep(1);
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [NSApp stop:nil];
+
+            NSEvent *event =
+                [NSEvent otherEventWithType:NSEventTypeApplicationDefined
+                                   location:NSZeroPoint
+                              modifierFlags:0
+                                  timestamp:0
+                               windowNumber:0
+                                    context:nil
+                                    subtype:0
+                                      data1:0
+                                      data2:0];
+
+            [NSApp postEvent:event atStart:NO];
+        });
+    });
+
+    [NSApp run];
+
+    while (rfbIsActive(rfbScreen)) {
+        sleep(1);
+    }
+
+    rfbScreenCleanup(rfbScreen);
+
+    system("diskutil unmount /Users/Shared/mnt/z > /dev/null 2>&1");
+
+    rfbLog("Remote done\n");
+
+    return(0);
   }
-
-  rfbScreenCleanup(rfbScreen);
-
-  system("diskutil unmount /Users/Shared/mnt/z > /dev/null 2>&1");
-
-  rfbLog("Remote done\n");
-  return(0);
 }
