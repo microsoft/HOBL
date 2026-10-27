@@ -3140,5 +3140,221 @@
         <final id="_complete"/>
       </scxml>
     </scenario>
+    <scenario schemaversion="2" scenarioid="{bf21185f-7b07-4ec6-b3aa-6de54d0706e4}" scenarioname="PT_10148_File Explorer Launch to Home from Taskbar _All U_bf2118" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="File Explorer Launch to Home from Taskbar _All Up_ _60s Cap_" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft-Windows-Shell-Launcher.AppLaunch">
+          <etwtrigger>
+            <provider>{3d6120a6-0986-51c4-213a-e2975903051d}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="MicrosoftWindowsFileExplorer.FirstViewStartedToShow">
+          <etwtrigger>
+            <provider>{8e12dcd2-fe15-5af4-2a6a-e707d9dc7de5}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Wait60000_nc_StateModelEditorApi.Domain.Models.StateModel.StateMachineState_StateModelEditorApi.Domain.Models.StateModel.StateMa">
+          <timetrigger>
+            <durationms>60000</durationms>
+            <allowscoalescing>0</allowscoalescing>
+          </timetrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename/>
+            <valuetype>REG_NONE</valuetype>
+            <value/>
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match7312AppIde_1Microsoft_Windows_Explorer">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft-Windows-Shell-Launcher.AppLaunch</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>AppId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>Microsoft.Windows.Explorer</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match14688namespaceCLSIDe_1F874310E_B6B7_47DC_BC84_B9E6B38F5903">
+          <singletriggerpropertyfilter>
+            <triggername>MicrosoftWindowsFileExplorer.FirstViewStartedToShow</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>namespaceCLSID</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>F874310E-B6B7-47DC-BC84-B9E6B38F5903</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match7312Locatione_13">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft-Windows-Shell-Launcher.AppLaunch</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>Location</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>3</value>
+          </singletriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft-Windows-Shell-Launcher.AppLaunch" target="1" name="T0" uploadtrigger="false">
+            <filter>match7312AppIde_1Microsoft_Windows_Explorer</filter>
+            <filter>match7312Locatione_13</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="MicrosoftWindowsFileExplorer.FirstViewStartedToShow" target="_complete" name="T2" uploadtrigger="false">
+            <filter>match14688namespaceCLSIDe_1F874310E_B6B7_47DC_BC84_B9E6B38F5903</filter>
+          </transition>
+          <transition event="Wait60000_nc_StateModelEditorApi.Domain.Models.StateModel.StateMachineState_StateModelEditorApi.Domain.Models.StateModel.StateMa" target="_cancel" name="T3" uploadtrigger="false"/>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{e8b1b48b-c087-469b-b4a1-b784ae303b13}" scenarioname="PT_10052__FE Xaml Home_ Standard File Explorer Launch to _e8b1b4" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="_FE Xaml Home_ Standard File Explorer Launch to XAML Home" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft-Windows-Shell-Launcher.AppLaunch">
+          <etwtrigger>
+            <provider>{3d6120a6-0986-51c4-213a-e2975903051d}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="MicrosoftWindowsFileExplorer.FirstViewLoadedOnWindowCreation">
+          <etwtrigger>
+            <provider>{8e12dcd2-fe15-5af4-2a6a-e707d9dc7de5}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="trigger" filtername="match7312AppIde_1Microsoft_Windows_Explorer">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft-Windows-Shell-Launcher.AppLaunch</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>AppId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>Microsoft.Windows.Explorer</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match14643namespaceCLSIDe_1f874310e_b6b7_47dc_bc84_b9e6b38f5903">
+          <singletriggerpropertyfilter>
+            <triggername>MicrosoftWindowsFileExplorer.FirstViewLoadedOnWindowCreation</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>namespaceCLSID</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>f874310e-b6b7-47dc-bc84-b9e6b38f5903</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match14643isPrelaunchedWindowe_1false">
+          <singletriggerpropertyfilter>
+            <triggername>MicrosoftWindowsFileExplorer.FirstViewLoadedOnWindowCreation</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>isPrelaunchedWindow</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>false</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match7312Locatione_13">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft-Windows-Shell-Launcher.AppLaunch</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>Location</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>3</value>
+          </singletriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="1">
+          <transition event="MicrosoftWindowsFileExplorer.FirstViewLoadedOnWindowCreation" target="_complete" name="T2" uploadtrigger="false">
+            <filter>match14643namespaceCLSIDe_1f874310e_b6b7_47dc_bc84_b9e6b38f5903</filter>
+            <filter>match14643isPrelaunchedWindowe_1false</filter>
+          </transition>
+        </state>
+        <state id="_start">
+          <transition event="Microsoft-Windows-Shell-Launcher.AppLaunch" target="1" name="T1" uploadtrigger="false">
+            <filter strict="false">match7312AppIde_1Microsoft_Windows_Explorer</filter>
+            <filter>match7312Locatione_13</filter>
+          </transition>
+        </state>
+        <final id="_complete"/>
+        <final id="_cancel"/>
+      </scxml>
+    </scenario>
   </scenarios>
 </diagrules>
