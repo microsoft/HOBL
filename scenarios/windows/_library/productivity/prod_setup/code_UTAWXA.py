@@ -51,12 +51,12 @@ def run(scenario):
     # Create junction link to abl_docs, so less typing of paths
     onedrive_path = "c:\\abl_docs"
     scenario._call(["cmd.exe", "/C rmdir " + onedrive_path], expected_exit_code="", fail_on_exception=False)
-    scenario._call(["cmd.exe", "/C mklink /J " + onedrive_path + ' "' + userprofile + '\\OneDrive\\abl_docs"'])
+    scenario._call(["cmd.exe", "/C mklink /J " + onedrive_path + " " + userprofile + "\\OneDrive\\abl_docs"])
 
     # Upload Office docs
     upload_successful = False
     doc_source = os.path.join(os.path.dirname(__file__), "abl_docs")
-    doc_dest = userprofile
+    doc_dest = os.path.join(userprofile, "OneDrive")
     for i in range(12):
         try:
             scenario._upload(doc_source, doc_dest)

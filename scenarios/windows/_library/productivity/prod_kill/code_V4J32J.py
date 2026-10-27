@@ -15,7 +15,8 @@ def run(scenario):
     else:
         userprofile = os.environ["USERPROFILE"]
 
-    abl_docs_path = os.path.join(userprofile, "abl_docs")
+    doc_dest = os.path.join(userprofile, "OneDrive")
+    abl_docs_path = os.path.join(doc_dest, "abl_docs")
     scenario._call(
         ["cmd.exe", f'/C if exist "{abl_docs_path}" rmdir /S /Q "{abl_docs_path}"'],
         expected_exit_code="",
