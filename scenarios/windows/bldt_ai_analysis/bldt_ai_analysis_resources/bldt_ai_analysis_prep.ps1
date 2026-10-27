@@ -17,6 +17,19 @@ function log {
     Add-Content -LiteralPath (Join-Path $LogRoot 'bldt_ai_analysis_prep.log') -Value $Message -Encoding UTF8
 }
 
+function Close-Bldt {
+    $running = @(Get-Process | Where-Object { $_.ProcessName -in 'BatteryLifeDiagnosticTool', 'bldtUI' })
+    foreach ($process in $running) {
+        if ($process.HasExited) { continue }
+        log "Stopping existing BLDT session: $($process.ProcessName) (PID $($process.Id))"
+        try { Stop-Process -Id $process.Id -Force -ErrorAction Stop }
+        catch { if (-not $process.HasExited) { throw } }
+        if (-not $process.WaitForExit(10000)) {
+            throw "BLDT process $($process.Id) did not exit; cannot safely continue prep."
+        }
+    }
+}
+
 function Get-BldtInstallation {
     # Follow the other BLDT scenarios' registry/version fallbacks for custom paths.
     $paths = @()
@@ -159,6 +172,7 @@ try {
     foreach ($name in @('Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Archive', 'Microsoft.PowerShell.Security')) {
         Import-Module (Join-Path $PSHOME "Modules\$name\$name.psd1")
     }
+    Close-Bldt
     $installation = Get-BldtInstallation
     if ($null -eq $installation) {
         Install-Bldt

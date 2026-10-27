@@ -2,7 +2,6 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 param(
-    [ValidateSet('0', '1')][string]$UseAi = '0',
     [string]$CacheRoot = '',
     [string]$LogRoot = ''
 )
@@ -17,6 +16,19 @@ function log {
     param([string]$Message)
     # Keep stdout exclusively for the JSON result consumed by Python.
     Add-Content -LiteralPath (Join-Path $LogRoot 'bldt_modern_standby_prep.log') -Value $Message -Encoding UTF8
+}
+
+function Close-Bldt {
+    $running = @(Get-Process | Where-Object { $_.ProcessName -in 'BatteryLifeDiagnosticTool', 'bldtUI' })
+    foreach ($process in $running) {
+        if ($process.HasExited) { continue }
+        log "Stopping existing BLDT session: $($process.ProcessName) (PID $($process.Id))"
+        try { Stop-Process -Id $process.Id -Force -ErrorAction Stop }
+        catch { if (-not $process.HasExited) { throw } }
+        if (-not $process.WaitForExit(10000)) {
+            throw "BLDT process $($process.Id) did not exit; cannot safely continue prep."
+        }
+    }
 }
 
 function Get-BldtState {
@@ -78,24 +90,15 @@ function Get-BldtState {
             }
         }
     )
-    # These only check AI payload presence, not AI inference or diagnostic findings.
-    $analyzer = Join-Path $env:LOCALAPPDATA 'Intel\BLDT-Analyzer'
-    $models = Join-Path $env:ProgramData 'BLDT-Analyzer\models'
-    $aiReady = (Test-Path "$analyzer\BLDT-Analyzer.exe") -and
-        (Test-Path "$analyzer\.version_*") -and (Test-Path "$models\config.json") -and
-        (Test-Path "$models\OpenVINO\Qwen3-Embedding-0.6B-int8-ov") -and
-        (Test-Path "$models\OpenVINO\Qwen3-1.7B-int8-ov")
     return [pscustomobject]@{
-        installations = $installations; ai_ready = $aiReady; ai_registered = $aiRegistered
+        installations = $installations; ai_registered = $aiRegistered
     }
 }
 
 function Select-BldtInstallation {
     param([object]$State)
     foreach ($installation in $State.installations) {
-        if ($installation.version -like '3.1.1.*' -and (
-            $UseAi -eq '0' -or ($installation.edition -eq 'ai' -and $State.ai_ready)
-        )) {
+        if ($installation.version -like '3.1.1.*') {
             return $installation
         }
     }
@@ -220,7 +223,7 @@ function Initialize-Bldt {
     $installed = $false
     if ($null -eq $installation) {
         # Preserve an existing AI edition, even when its executable is missing.
-        $edition = if ($UseAi -eq '1' -or $state.ai_registered -or
+        $edition = if ($state.ai_registered -or
             @($state.installations | Where-Object edition -eq 'ai').Count -gt 0) { 'ai' } else { 'standard' }
         Install-Bldt $edition
         $state = Get-BldtState
@@ -240,6 +243,7 @@ try {
     foreach ($name in @('Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Archive', 'Microsoft.PowerShell.Security')) {
         Import-Module (Join-Path $PSHOME "Modules\$name\$name.psd1")
     }
+    Close-Bldt
     Initialize-Bldt | ConvertTo-Json -Depth 4 -Compress
 } catch {
     $message = " ERROR - $($_.Exception.Message)"

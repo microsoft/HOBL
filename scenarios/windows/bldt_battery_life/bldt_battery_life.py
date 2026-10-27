@@ -31,21 +31,16 @@ class BldtBatteryLife(core.app_scenario.Scenario):
     4. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
     5. Restore charging after measurement.
 
+    Prep automatically stops any existing BLDT session before installation or collection.
     Charger control is automated or manual; manual reconnect timeouts only warn.
     scenario_runtime measures the BLDT process, excluding charging and report collection.
-    Battery Life runs no AI analysis. Prep-only mode skips charging and the workload.
+    Either BLDT edition works without AI models; no AI analysis is run.
+    Prep-only mode skips charging and the workload.
     Success means complete execution and reports, not passing every Intel check.
     """
 
     module = __module__.split('.')[-1]
 
-    Params.setDefault(
-        module,
-        'use_ai',
-        '0',
-        desc='0: standard functionality; 1: require the AI edition. AI also satisfies standard requests.',
-        valOptions=['0', '1'],
-    )
     Params.setDefault(
         module,
         'power_source',
@@ -130,8 +125,8 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             else:
                 logging.info("BLDT prep script is current; skipping upload.")
             output = self._powershell(
-                '& $prepScript -UseAi $useAi -CacheRoot $cache -LogRoot $logs',
-                timeout=32460, prepScript=remote_script, useAi=self.use_ai,
+                '& $prepScript -CacheRoot $cache -LogRoot $logs',
+                timeout=32460, prepScript=remote_script,
                 cache=ntpath.join(self.dut_exec_path, 'bldt_resources'), logs=self.dut_data_path,
             )
             prepared = json.loads(output)
@@ -306,10 +301,6 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def setUp(self):
         """Prepare installation and power before entering HOBL's measured lifecycle."""
-        self.use_ai = Params.get(self.module, 'use_ai').strip()
-        if self.use_ai not in ('0', '1'):
-            raise ValueError('bldt_battery_life:use_ai must be 0 or 1.')
-
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_battery_life:power_source must be AC or DC.')
@@ -429,9 +420,6 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         directory.mkdir(parents=True, exist_ok=True)
         with (directory / 'bldt_battery_life_results.csv').open('w', newline='', encoding='utf-8') as stream:
             csv.writer(stream).writerows(metrics.items())
-        (directory / 'bldt_battery_life_results.json').write_text(
-            json.dumps(metrics, indent=2), encoding='utf-8',
-        )
         logging.info("========== BLDT Battery Life metrics ==========")
         for key, value in metrics.items():
             logging.info("%s: %s", key, value)
@@ -457,12 +445,21 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         self._restore_charging()
 
     def kill(self):
-        """Clean up BLDT only and attempt to restore charging on cancellation."""
-        for process_name in ('BatteryLifeDiagnosticTool.exe', 'bldtUI.exe'):
-            try:
-                self._kill(process_name)
-            except Exception:
-                logging.warning("Could not stop %s during BLDT cleanup.", process_name, exc_info=True)
+        """Stop only this run's BLDT process and attempt to restore charging."""
+        # HOBL creates a new scenario instance for cleanup; ownership must survive on the DUT.
+        path = ntpath.join(self.dut_data_path, 'bldt_battery_life.process.json')
+        try:
+            self._powershell(r"""
+                if (Test-Path -LiteralPath $path) {
+                    $saved = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+                    $process = Get-Process | Where-Object { $_.Id -eq $saved.pid }
+                    if ($process -and [string]$process.StartTime.ToUniversalTime().Ticks -eq $saved.started) {
+                        Stop-Process -Id $process.Id -Force
+                    }
+                }
+            """, timeout=30, path=path)
+        except Exception:
+            logging.exception("Could not stop this run's BLDT process; check the DUT.")
         self._restore_charging(best_effort=True)
 
     @staticmethod
@@ -495,6 +492,8 @@ class BldtBatteryLife(core.app_scenario.Scenario):
                 -RedirectStandardOutput "$prefix.stdout.log" -RedirectStandardError "$prefix.stderr.log" -PassThru
             try {
                 $null = $process.Handle
+                [pscustomobject]@{ pid = $process.Id; started = [string]$process.StartTime.ToUniversalTime().Ticks } |
+                    ConvertTo-Json -Compress | Set-Content -LiteralPath "$prefix.process.json" -Encoding UTF8
                 if (-not $process.WaitForExit([int]$seconds * 1000)) {
                     Stop-Process -Id $process.Id -Force
                     if (-not $process.WaitForExit(10000)) { throw 'Timed-out BLDT process could not be stopped.' }

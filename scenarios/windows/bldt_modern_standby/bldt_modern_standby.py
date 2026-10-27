@@ -34,21 +34,18 @@ class BldtModernStandby(core.app_scenario.Scenario):
     4. Verify the requested sleep interval (minimum 20 minutes); collect fresh reports.
     5. Restore charging after measurement; manual reconnect timeouts only warn.
 
+    Prep automatically stops any existing BLDT session before installation or collection.
     Requires a separate host, global:async_comm=1, global:rundown_mode=0 and
     global:sleep_wake_call. Leave the DUT untouched; no polling or relay retries.
     Early completion cancels the pending wake.
     scenario_runtime includes BLDT and standby, excluding charging and report collection.
-    No AI analysis. Prep-only mode skips charging and the workload.
+    Either BLDT edition works without AI models; no AI analysis is run.
+    Prep-only mode skips charging and the workload.
     Success means valid sleep and complete reports, not passing every Intel check.
     """
 
     module = __module__.split('.')[-1]
 
-    Params.setDefault(
-        module, 'use_ai', '0',
-        desc='0: standard functionality; 1: require the AI edition. No AI analysis is run.',
-        valOptions=['0', '1'],
-    )
     Params.setDefault(
         module, 'power_source', 'DC',
         desc='Power source used for the Modern Standby collection.',
@@ -113,8 +110,8 @@ class BldtModernStandby(core.app_scenario.Scenario):
             else:
                 logging.info("BLDT prep script is current; skipping upload.")
             output = self._powershell(
-                '& $prepScript -UseAi $useAi -CacheRoot $cache -LogRoot $logs',
-                timeout=32460, prepScript=remote_script, useAi=self.use_ai,
+                '& $prepScript -CacheRoot $cache -LogRoot $logs',
+                timeout=32460, prepScript=remote_script,
                 cache=ntpath.join(self.dut_exec_path, 'bldt_resources'), logs=self.dut_data_path,
             )
             prepared = json.loads(output)
@@ -280,9 +277,6 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def setUp(self):
         """Validate host orchestration, then prepare installation and power."""
-        self.use_ai = Params.get(self.module, 'use_ai').strip()
-        if self.use_ai not in ('0', '1'):
-            raise ValueError('bldt_modern_standby:use_ai must be 0 or 1.')
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_modern_standby:power_source must be AC or DC.')
@@ -465,9 +459,6 @@ class BldtModernStandby(core.app_scenario.Scenario):
             directory.mkdir(parents=True, exist_ok=True)
             with (directory / 'bldt_modern_standby_results.csv').open('w', newline='', encoding='utf-8') as stream:
                 csv.writer(stream).writerows(metrics.items())
-            (directory / 'bldt_modern_standby_results.json').write_text(
-                json.dumps(metrics, indent=2), encoding='utf-8',
-            )
             logging.info("========== BLDT Modern Standby metrics ==========")
             for key, value in metrics.items():
                 logging.info("%s: %s", key, value)

@@ -27,6 +27,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
     2. Run BLDT's AIAnalysis flow, including native model initialization (Global region).
     3. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
 
+    Prep automatically stops any existing BLDT session before installation or analysis.
     AC power is recommended, not required; no power checks or charger control.
     No DAQ measurement or new diagnostic collection.
     scenario_runtime measures BLDT, including its initialization but excluding MSI prep.

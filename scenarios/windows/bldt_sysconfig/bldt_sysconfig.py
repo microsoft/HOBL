@@ -23,7 +23,8 @@ class BldtSysconfig(core.app_scenario.Scenario):
     2. Run SysConfigChecks once on AC (default) or DC.
     3. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
 
-    SysConfig runs no AI analysis.
+    Prep automatically stops any existing BLDT session before installation or collection.
+    SysConfig runs no AI analysis and accepts either BLDT edition without AI models.
     Success means complete execution and reports, not passing every Intel check.
     """
 
@@ -31,19 +32,13 @@ class BldtSysconfig(core.app_scenario.Scenario):
     is_prep = True
     module = __module__.split('.')[-1]
 
-    # AI changes installation requirements, not the SysConfig command we execute.
-    Params.setDefault(module, 'use_ai', '0', valOptions=['0', '1'],
-                      desc='0: standard functionality; 1: require the AI edition.')
     Params.setDefault(module, 'power_source', 'AC', valOptions=['AC', 'DC'],
                       desc='Required DUT power source; does not control the charger.')
 
     def setUp(self):
         """Read parameters, ensure BLDT is ready, then complete HOBL setup."""
-        self.use_ai = Params.get(self.module, 'use_ai').strip()
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
 
-        if self.use_ai not in ('0', '1'):
-            raise ValueError('bldt_sysconfig:use_ai must be 0 or 1.')
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_sysconfig:power_source must be AC or DC.')
 
@@ -78,8 +73,8 @@ class BldtSysconfig(core.app_scenario.Scenario):
             else:
                 logging.info("BLDT prep script is current; skipping upload.")
             output = self._powershell(
-                '& $prepScript -UseAi $useAi -CacheRoot $cache -LogRoot $logs',
-                timeout=32460, prepScript=remote_script, useAi=self.use_ai,
+                '& $prepScript -CacheRoot $cache -LogRoot $logs',
+                timeout=32460, prepScript=remote_script,
                 cache=ntpath.join(self.dut_exec_path, 'bldt_resources'), logs=self.dut_data_path,
             )
             prepared = json.loads(output)
@@ -140,14 +135,11 @@ class BldtSysconfig(core.app_scenario.Scenario):
             'zip_report_created': int(reports['zip'] > 0),
             'report_file_count': reports['files'],
         }
-        # Write one summary pair at the host result root, without per-run duplicates.
+        # Write the metrics summary at the host result root.
         directory = Path(self.result_dir)
         directory.mkdir(parents=True, exist_ok=True)
         with (directory / 'bldt_sysconfig_results.csv').open('w', newline='', encoding='utf-8') as stream:
             csv.writer(stream).writerows(metrics.items())
-        (directory / 'bldt_sysconfig_results.json').write_text(
-            json.dumps(metrics, indent=2), encoding='utf-8',
-        )
         logging.info("========== BLDT SysConfig metrics ==========")
         for key, value in metrics.items():
             logging.info("%s: %s", key, value)
@@ -157,12 +149,21 @@ class BldtSysconfig(core.app_scenario.Scenario):
         super().tearDown()
 
     def kill(self):
-        """Use HOBL's BLDT-specific cleanup on cancellation."""
-        for process_name in ('BatteryLifeDiagnosticTool.exe', 'bldtUI.exe'):
-            try:
-                self._kill(process_name)
-            except Exception:
-                logging.warning("Could not stop %s during BLDT cleanup.", process_name, exc_info=True)
+        """Stop only a BLDT process launched by this run, never an existing session."""
+        # HOBL creates a new scenario instance for cleanup; ownership must survive on the DUT.
+        path = ntpath.join(self.dut_data_path, 'bldt.process.json')
+        try:
+            self._powershell(r"""
+                if (Test-Path -LiteralPath $path) {
+                    $saved = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+                    $process = Get-Process | Where-Object { $_.Id -eq $saved.pid }
+                    if ($process -and [string]$process.StartTime.ToUniversalTime().Ticks -eq $saved.started) {
+                        Stop-Process -Id $process.Id -Force
+                    }
+                }
+            """, timeout=30, path=path)
+        except Exception:
+            logging.exception("Could not stop this run's BLDT process; check the DUT.")
 
     @staticmethod
     def _quote(value):
@@ -198,6 +199,8 @@ class BldtSysconfig(core.app_scenario.Scenario):
                 -RedirectStandardOutput "$prefix.stdout.log" -RedirectStandardError "$prefix.stderr.log" -PassThru
             try {
                 $null = $process.Handle
+                [pscustomobject]@{ pid = $process.Id; started = [string]$process.StartTime.ToUniversalTime().Ticks } |
+                    ConvertTo-Json -Compress | Set-Content -LiteralPath "$prefix.process.json" -Encoding UTF8
                 if (-not $process.WaitForExit([int]$seconds * 1000)) {
                     Stop-Process -Id $process.Id -Force
                     if (-not $process.WaitForExit(10000)) { throw 'Timed-out BLDT process could not be stopped.' }

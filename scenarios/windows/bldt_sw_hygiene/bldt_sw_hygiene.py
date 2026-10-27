@@ -31,21 +31,17 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     4. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
     5. Restore charging after measurement.
 
+    Prep automatically stops any existing BLDT session before installation or collection.
     Charger control is automated or manual; manual reconnect timeouts only warn.
     scenario_runtime measures the BLDT process, excluding charging and report collection.
-    Software Hygiene runs no AI analysis. Prep-only mode skips charging and the workload.
+    Either BLDT edition works without AI models; no AI analysis is run.
+    Debug providers, process grouping and hidden processes are disabled; lost-event tolerance is zero.
+    Prep-only mode skips charging and the workload.
     Success means complete execution and reports, not passing every Intel check.
     """
 
     module = __module__.split('.')[-1]
 
-    Params.setDefault(
-        module,
-        'use_ai',
-        '0',
-        desc='0: standard functionality; 1: require the AI edition. AI also satisfies standard requests.',
-        valOptions=['0', '1'],
-    )
     Params.setDefault(
         module,
         'power_source',
@@ -86,33 +82,6 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     )
     Params.setDefault(
         module,
-        'socwatch_cfg',
-        'false',
-        desc='Collect additional debug providers; increases trace size.',
-        valOptions=['true', 'false'],
-    )
-    Params.setDefault(
-        module,
-        'group_by_process_name',
-        'false',
-        desc='Group processes with the same name in report summary widgets.',
-        valOptions=['true', 'false'],
-    )
-    Params.setDefault(
-        module,
-        'show_hidden_processes',
-        'false',
-        desc='Include BLDT and normally hidden system processes in report summaries.',
-        valOptions=['true', 'false'],
-    )
-    Params.setDefault(
-        module,
-        'allow_lost_events',
-        '0',
-        desc='Maximum allowed percentage of lost collection events (0-100).',
-    )
-    Params.setDefault(
-        module,
         'charge_timeout_minutes',
         '240',
         desc='Maximum time to wait for the battery to reach min_battery_charge.',
@@ -130,14 +99,6 @@ class BldtSwHygiene(core.app_scenario.Scenario):
                 f'bldt_sw_hygiene:{name} must be between {minimum} and {maximum}.'
             )
         return parsed
-
-    @staticmethod
-    def _get_boolean_parameter(name):
-        """Preserve BLDT's true/false format for collection and report options."""
-        value = Params.get(BldtSwHygiene.module, name).strip().lower()
-        if value not in ('true', 'false'):
-            raise ValueError(f'bldt_sw_hygiene:{name} must be true or false.')
-        return value == 'true'
 
     def prep(self):
         """Refresh changed scripts and discover BLDT; install or repair only if needed."""
@@ -165,8 +126,8 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             else:
                 logging.info("BLDT prep script is current; skipping upload.")
             output = self._powershell(
-                '& $prepScript -UseAi $useAi -CacheRoot $cache -LogRoot $logs',
-                timeout=32460, prepScript=remote_script, useAi=self.use_ai,
+                '& $prepScript -CacheRoot $cache -LogRoot $logs',
+                timeout=32460, prepScript=remote_script,
                 cache=ntpath.join(self.dut_exec_path, 'bldt_resources'), logs=self.dut_data_path,
             )
             prepared = json.loads(output)
@@ -341,13 +302,6 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def setUp(self):
         """Prepare installation and power before entering HOBL's measured lifecycle."""
-        self.use_ai = Params.get(self.module, 'use_ai').strip()
-        if self.use_ai not in ('0', '1'):
-            raise ValueError('bldt_sw_hygiene:use_ai must be 0 or 1.')
-        self.socwatch_cfg = self._get_boolean_parameter('socwatch_cfg')
-        self.group_by_process_name = self._get_boolean_parameter('group_by_process_name')
-        self.show_hidden_processes = self._get_boolean_parameter('show_hidden_processes')
-
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_sw_hygiene:power_source must be AC or DC.')
@@ -368,7 +322,6 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         self.wpr_duration_power = self._get_integer_parameter(
             'wpr_duration_power', 10, 86400
         )
-        self.allow_lost_events = self._get_integer_parameter('allow_lost_events', 0, 100)
         self.charge_timeout_minutes = self._get_integer_parameter(
             'charge_timeout_minutes', 1, 1440
         )
@@ -428,10 +381,8 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             f'socwatch_delay:{self.socwatch_delay};'
             f'socwatch_pwrsrc:{self.power_source};'
             f'wpr_duration_power:{self.wpr_duration_power};'
-            f'socwatch_cfg:{str(self.socwatch_cfg).lower()};'
-            f'groupByProcessName:{str(self.group_by_process_name).lower()};'
-            f'showHiddenProcesses:{str(self.show_hidden_processes).lower()};'
-            f'allow_lost_events:{self.allow_lost_events}'
+            'socwatch_cfg:false;groupByProcessName:false;'
+            'showHiddenProcesses:false;allow_lost_events:0'
         )
         logging.info(
             "Running BLDT Software Hygiene on %s power (timeout: %d minutes, not expected duration).",
@@ -466,19 +417,16 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             'socwatch_duration': self.socwatch_duration,
             'socwatch_delay': self.socwatch_delay,
             'wpr_duration_power': self.wpr_duration_power,
-            'socwatch_cfg': str(self.socwatch_cfg).lower(),
-            'group_by_process_name': str(self.group_by_process_name).lower(),
-            'show_hidden_processes': str(self.show_hidden_processes).lower(),
-            'allow_lost_events': self.allow_lost_events,
+            'socwatch_cfg': 'false',
+            'group_by_process_name': 'false',
+            'show_hidden_processes': 'false',
+            'allow_lost_events': 0,
             'report_file_count': reports['files'],
         }
         directory = Path(self.result_dir)
         directory.mkdir(parents=True, exist_ok=True)
         with (directory / 'bldt_sw_hygiene_results.csv').open('w', newline='', encoding='utf-8') as stream:
             csv.writer(stream).writerows(metrics.items())
-        (directory / 'bldt_sw_hygiene_results.json').write_text(
-            json.dumps(metrics, indent=2), encoding='utf-8',
-        )
         logging.info("========== BLDT Software Hygiene metrics ==========")
         for key, value in metrics.items():
             logging.info("%s: %s", key, value)
@@ -504,12 +452,21 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         self._restore_charging()
 
     def kill(self):
-        """Clean up BLDT only and attempt to restore charging on cancellation."""
-        for process_name in ('BatteryLifeDiagnosticTool.exe', 'bldtUI.exe'):
-            try:
-                self._kill(process_name)
-            except Exception:
-                logging.warning("Could not stop %s during BLDT cleanup.", process_name, exc_info=True)
+        """Stop only this run's BLDT process and attempt to restore charging."""
+        # HOBL creates a new scenario instance for cleanup; ownership must survive on the DUT.
+        path = ntpath.join(self.dut_data_path, 'bldt_sw_hygiene.process.json')
+        try:
+            self._powershell(r"""
+                if (Test-Path -LiteralPath $path) {
+                    $saved = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+                    $process = Get-Process | Where-Object { $_.Id -eq $saved.pid }
+                    if ($process -and [string]$process.StartTime.ToUniversalTime().Ticks -eq $saved.started) {
+                        Stop-Process -Id $process.Id -Force
+                    }
+                }
+            """, timeout=30, path=path)
+        except Exception:
+            logging.exception("Could not stop this run's BLDT process; check the DUT.")
         self._restore_charging(best_effort=True)
 
     @staticmethod
@@ -542,6 +499,8 @@ class BldtSwHygiene(core.app_scenario.Scenario):
                 -RedirectStandardOutput "$prefix.stdout.log" -RedirectStandardError "$prefix.stderr.log" -PassThru
             try {
                 $null = $process.Handle
+                [pscustomobject]@{ pid = $process.Id; started = [string]$process.StartTime.ToUniversalTime().Ticks } |
+                    ConvertTo-Json -Compress | Set-Content -LiteralPath "$prefix.process.json" -Encoding UTF8
                 if (-not $process.WaitForExit([int]$seconds * 1000)) {
                     Stop-Process -Id $process.Id -Force
                     if (-not $process.WaitForExit(10000)) { throw 'Timed-out BLDT process could not be stopped.' }
