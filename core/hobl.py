@@ -55,8 +55,9 @@ if "-d" not in sys.argv and "-dv" not in sys.argv:
 params = Params
 
 # Set default global parameters
-params.setDefault('global', 'hardware_version', '', desc="Optional information to pass to reporting.")
-params.setDefault('global', 'screen_size', '', desc="Optional information to pass to reporting.", valOptions=["10", "11", "12", "13", "14", "15", "16", "17"])
+params.setDefault('global', 'hardware_version', '', desc="Optional information to pass to reporting.  Will be converted to upper case.")
+params.setDefault('global', 'hardware_type', '', desc="Optional information to pass to reporting.")
+params.setDefault('global', 'screen_size', '', desc="Approximate screen size in inches, measured diagonally.Optional information to pass to reporting.", valOptions=["10", "11", "12", "13", "14", "15", "16", "17"])
 params.setDefault('global', 'accessories', '', desc="Optional information to pass to reporting.")
 params.setDefault('global', 'result_dir', 'c:\\hobl_results', desc="Base file path for storing test results.")
 params.setDefault('global', 'goals', '', desc="Path to a CSV file that has goals for each scenario to compare results with.")
@@ -68,7 +69,7 @@ params.setDefault('global', 'aux_host', '', desc="IP address or hostname of an a
 params.setDefault('global', 'run_type', '', desc="A results sub-folder to indicate the type of run it is, such as 'Power', 'ETL', 'Misc', etc.")
 params.setDefault('global', 'iterations', '1', desc="How many time to repeat the scenario.")
 params.setDefault('global', 'training_mode', '0', desc="Specify if this is a training run (1) or not (0).", valOptions=["0", "1"])
-params.setDefault('global', 'platform', '[PLATFORM]', desc="Operating system platform.", valOptions=["[PLATFORM]", "Windows", "Android", "W365", "MacOS"])
+params.setDefault('global', 'platform', '[PLATFORM]', desc="Operating system platform.", valOptions=["[PLATFORM]", "Windows", "Android", "W365", "MacOS", "Linux"])
 params.setDefault('global', 'msa_account', '', desc="The test account that Windows and apps will be logged in with.")
 params.setDefault('global', 'dut_password', '', desc="The password for the test account (msa_account).")
 params.setDefault('global', 'dut_ip', '127.0.0.1', desc="IP address of the Device Under Test (name can be used if DNS is supported).")
@@ -304,14 +305,30 @@ class StreamHandlerWrapper(logging.StreamHandler):
                 type(self).error_list.append(record.message)
 
 
+class NormalizeNewlinesFormatter(logging.Formatter):
+    def format(self, record):
+        return super().format(record).replace("\r\n", "\n")
+
+
+def format_log():
+    formatter = NormalizeNewlinesFormatter(
+        '%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s',
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+    for handler in root.handlers:
+        handler.setFormatter(formatter)
+
+
 def open_log(log=None):
-    if log:
-        logging.basicConfig(filename=log, filemode='w', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', force=True)
-    else:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', force=True)
-        return
     global root
     root = logging.getLogger()
+    if log:
+        logging.basicConfig(filename=log, filemode='w', level=logging.DEBUG, force=True)
+    else:
+        logging.basicConfig(level=logging.DEBUG, force=True)
+        format_log()
+        return
     ch = StreamHandlerWrapper(sys.stdout)
     output_level = params.get('global', 'output_level', log = False)
     dashboard_url = params.get('global', 'dashboard_url')
@@ -321,15 +338,13 @@ def open_log(log=None):
 
     if output_level == "DEBUG":
         ch.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', "%Y-%m-%d %H:%M:%S")
     elif output_level == "ERROR":
         ch.setLevel(logging.ERROR)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s:%(lineno)d  %(message)s', "%Y-%m-%d %H:%M:%S")
     else:
         ch.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
-    ch.setFormatter(formatter)
+
     root.addHandler(ch)
+    format_log()
 
 
 def close_log():
@@ -423,7 +438,7 @@ def host_call(command, cwd = "."):
             l = line.decode().strip("\r\n")
             if l:
                 logging.error(l)
-    return(out.decode().strip("\r\n"))
+    return(out.decode().strip("\r\n").replace("\r\n", "\n"))
 
 
 def kill(test_name):
@@ -498,7 +513,7 @@ def get_test_module(test_name, ext_paths=[]):
     # Check platform compatibility
     platform = params.get('global', 'platform', log = False).lower()
 
-    for folder_name, display_name in [("macos", "MacOS"), ("windows", "Windows")]:
+    for folder_name, display_name in [("macos", "MacOS"), ("windows", "Windows"), ("linux", "Linux")]:
         if folder_name in test_module.lower() and platform != folder_name:
             test_module = "scenarios.common.scenario_invalid"
             params.setCalculated("scenario_invalid", f"Invalid platform {platform} for {test_name}. Expected platform: {display_name}.")

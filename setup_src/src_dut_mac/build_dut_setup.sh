@@ -12,6 +12,7 @@ cp ../SimpleRemote/Output/SimpleRemoteServer_osx-arm64/SimpleRemoteConsole_osx-a
 cp ../InputInject/Output/InputInject_osx-arm64.zip assets/
 cp ../ScreenServer/Output/ScreenServer_osx-arm64/ScreenServer_osx-arm64.zip assets/
 cp ../brightness/brightness assets/
+cp -R ../remote.app assets/
 
 # Copy desktop images to assets folder
 cp -r ../DesktopImages assets/

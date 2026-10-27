@@ -157,7 +157,7 @@ def upload(host, port, source, dest):
     # closing the tar record doesn't close sockfile
     # it need to be done manually (so hold a ref to it)
     sockfile = s.makefile("rwb")
-    tf = tarfile.open(mode = "w|", fileobj = sockfile)
+    tf = tarfile.open(mode = "w|", fileobj = sockfile, format=tarfile.GNU_FORMAT)
 
     for f in glob.glob(source):
         directory = os.path.dirname(os.path.abspath(f))

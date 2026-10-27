@@ -1133,6 +1133,8 @@ else {
     Write-KeyVal "Accessories" ""
     # Hardware Version
     Write-KeyVal "Hardware Version" ""
+    # Hardware Type
+    Write-KeyVal "Hardware Type" ""
     # Screen Size
     Write-KeyVal "Screen Size (in)" ""
 

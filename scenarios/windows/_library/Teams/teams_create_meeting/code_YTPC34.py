@@ -88,11 +88,11 @@ def run(scenario):
 
 
         if meeting_time == "" or meeting_time == "0":
-            meeting_time = str(int((float(duration) / 60) + 15)) # Default meeting time is test duration + 15 minutes, to ensure meeting doesn't end before test does. Meeting time is in minutes, duration is in seconds.
+            scenario.meeting_time = str(int((float(duration) / 60) + 15)) # Default meeting time is test duration + 15 minutes, to ensure meeting doesn't end before test does. Meeting time is in minutes, duration is in seconds.
 
         bot_data = json.dumps(bot_list, sort_keys=True)
-        logging.debug("Starting new bots meeting for duration: " + str(duration) + " seconds with meeting time of: " + str(meeting_time) + " minutes")
-        request_string += ("/StartMeeting" + "?code=" + access_key + "&meetingDurationInMinutes=" + meeting_time)
+        logging.debug("Starting new bots meeting for duration: " + str(duration) + " seconds with meeting time of: " + str(scenario.meeting_time) + " minutes")
+        request_string += ("/StartMeeting" + "?code=" + access_key + "&meetingDurationInMinutes=" + scenario.meeting_time)
 
 
         # Send Request to the bot server. Retry as needed.
