@@ -110,7 +110,7 @@
         "description": "Enter the PDF path and publish the presentation (Enter)",
         "enabled": true,
         "id": "PPR3T03",
-        "text": "[userprofile]\\abl_docs\\sample.pdf\ue007",
+        "text": "[userprofile]\\OneDrive\\abl_docs\\sample.pdf\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
