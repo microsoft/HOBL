@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"""Run Intel BLDT Modern Standby with a single host-controlled relay wake."""
+"""Coordinate Intel standby on a separate host, with one relay wake and post-run evidence."""
 
 import base64
 import csv
@@ -21,29 +21,32 @@ from core.parameters import Params
 
 
 class _BatteryStateTimeout(RuntimeError):
-    """The DUT responded, but did not reach the requested battery state in time."""
+    """Distinguish a power-transition timeout from RPC or malformed-response failures."""
 
 
 class BldtModernStandby(core.app_scenario.Scenario):
-    """Assess Modern Standby with Intel BLDT and collect its reports.
+    """Run Intel's Modern Standby diagnostics with a host-controlled wake.
 
-    Steps:
-    1. Upload changed prep; install or repair BLDT only when needed.
-    2. Reach min_battery_charge and confirm DC (default) or AC before measurement.
-    3. Run mosTest; wake once after sleep_duration_minutes plus five minutes for startup.
-    4. Verify the requested sleep interval (minimum 20 minutes); collect fresh reports.
-    5. Restore charging after measurement; manual reconnect timeouts only warn.
+    Intel workload: mosTest requests sleep, gathers standby diagnostics, and generates
+    native reports including Windows Sleep Study. Intel initiates sleep; HOBL wakes the DUT.
 
-    Prep automatically stops any existing BLDT session before installation or collection.
-    Requires a separate host, global:async_comm=1, global:rundown_mode=0 and
-    global:sleep_wake_call. Leave the DUT untouched; no polling or relay retries.
-    Early completion cancels the pending wake.
+    HOBL lifecycle:
+    1. Before: require a separate host with asynchronous communication, a wake callback,
+       and rundown monitoring disabled; refresh prep, close existing BLDT sessions,
+       ensure either edition is installed, and establish charge/power before measurement.
+    2. Run: invoke mosTest with sleep enabled and the selected power/report settings.
+       Wait without DUT polling; wake once after the requested interval plus five minutes
+       for startup. Early completion cancels the pending wake; never retry the toggle.
+    3. After: validate one entry/exit event interval and complete native reports, write
+       CSV metrics, stop measurement, collect reports/assets/logs, then restore charging.
+
     scenario_runtime includes BLDT and standby, excluding charging and report collection.
-    Either BLDT edition works without AI models; no AI analysis is run.
+    Manual reconnect timeouts only warn. No AI analysis or AI models are required.
     Prep-only mode skips charging and the workload.
-    Success means valid sleep and complete reports, not passing every Intel check.
+    Success means the event interval and reports meet validation, not every Intel check passes.
     """
 
+    # This is a measured scenario; sleep_duration_minutes controls host wake timing.
     module = __module__.split('.')[-1]
 
     Params.setDefault(
@@ -75,6 +78,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     @staticmethod
     def _get_integer_parameter(name, minimum, maximum):
+        """Parse one numeric setting and reject values outside its supported range."""
         value = Params.get(BldtModernStandby.module, name)
         try:
             parsed = int(value)
@@ -88,6 +92,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def prep(self):
         """Refresh changed scripts and discover BLDT; install or repair only if needed."""
+        # Reuse discovery only within this instance; markers do not replace live checks.
         if getattr(self, 'installation', None) is not None:
             return
         needs_marker = bool(self.checkPrepStatus(['bldt']))
@@ -109,6 +114,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
                     raise RuntimeError('BLDT prep script hash mismatch after upload.')
             else:
                 logging.info("BLDT prep script is current; skipping upload.")
+            # The DUT script installs/repairs only if discovery cannot reuse either edition.
             output = self._powershell(
                 '& $prepScript -CacheRoot $cache -LogRoot $logs',
                 timeout=32460, prepScript=remote_script,
@@ -116,11 +122,13 @@ class BldtModernStandby(core.app_scenario.Scenario):
             )
             prepared = json.loads(output)
         except Exception:
+            # Setup failure may skip teardown, so preserve available preparation logs here.
             try:
                 self._copy_data_from_remote(self.result_dir)
             except Exception:
                 logging.exception("Could not retrieve BLDT preparation logs after setup failed.")
             raise
+        # Retain actual executable/version metadata and update shared prep bookkeeping.
         self.installation = prepared['installation']
         logging.info("BLDT ready: %s", self.installation)
         if needs_marker or prepared['installed']:
@@ -128,6 +136,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _get_battery_state(self):
         """Read actual DUT power state rather than trusting a relay acknowledgment."""
+        # These queries run before sleep or after collection, never in the standby wait loop.
         command = (
             "$ErrorActionPreference = 'Stop'; "
             "$ProgressPreference = 'SilentlyContinue'; "
@@ -143,6 +152,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
         lines = [line.strip() for line in output.splitlines() if line.strip()]
         if not lines:
             raise RuntimeError('BLDT Modern Standby could not read the DUT battery state.')
+        # Invalid/unknown readings must not be interpreted as ready to measure.
         try:
             json_lines = [line for line in lines if line.startswith('{')]
             if len(json_lines) != 1:
@@ -167,6 +177,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _request_charger(self, callback, action):
         """Prompt an operator or use the existing host-side charger callback."""
+        # Manual mode sends no relay command; callers still verify Windows power state.
         if self.charger_mode == 'manual':
             instruction = 'Connect the charger' if action == 'charge_on' else 'Unplug the charger'
             logging.warning(
@@ -183,6 +194,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _wait_for_state(self, description, predicate, timeout_seconds, poll_seconds=30):
         """Bound charging and physical transition waits using a monotonic deadline."""
+        # Wall-clock corrections must not extend or shorten a charging deadline.
         deadline = time.monotonic() + timeout_seconds
         while True:
             state = self._get_battery_state()
@@ -199,6 +211,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
             time.sleep(min(poll_seconds, remaining))
 
     def _ensure_charger_on(self):
+        # Verify actual AC rather than treating callback acknowledgment as proof of power.
         state = self._get_battery_state()
         if state['power_line_status'] != 'Online':
             self._request_charger(self.charge_on_call, 'charge_on')
@@ -221,6 +234,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
                     "DUT is already on DC at %.2f%% (minimum %d%%); no charging needed.",
                     state['battery_percent'], self.min_battery_charge,
                 )
+                # Restore charging afterward even when this run did not disconnect it.
                 self.restore_charging = True
                 return
         self._ensure_charger_on()
@@ -238,6 +252,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
             timeout_seconds=self.charge_timeout_minutes * 60,
         )
         if self.power_source == 'DC':
+            # Arm restoration before requesting disconnection, including failed transitions.
             self.restore_charging = True
             self._request_charger(self.charge_off_call, 'charge_off')
             self._wait_for_state(
@@ -271,12 +286,14 @@ class BldtModernStandby(core.app_scenario.Scenario):
                 )
             self.restore_charging = False
         except Exception:
+            # Failure/cancellation cleanup must not replace the original assessment error.
             if not best_effort:
                 raise
             logging.exception("Failed to restore charging after BLDT Modern Standby.")
 
     def setUp(self):
         """Validate host orchestration, then prepare installation and power."""
+        # Validate collection settings before installation or charger operations.
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_modern_standby:power_source must be AC or DC.')
@@ -287,12 +304,14 @@ class BldtModernStandby(core.app_scenario.Scenario):
         self.sleep_duration_minutes = self._get_integer_parameter('sleep_duration_minutes', 20, 1440)
         self.sleep_study_days = self._get_integer_parameter('sleep_study_days', 1, 28)
         self.charge_timeout_minutes = self._get_integer_parameter('charge_timeout_minutes', 1, 1440)
+        # The host wake deadline includes five minutes for startup; actual sleep is checked later.
         self.wake_after_seconds = self.sleep_duration_minutes * 60 + 300
         self.bldt_timeout_seconds = self.wake_after_seconds + 900
         self.charge_on_call = Params.get('global', 'charge_on_call')
         self.charge_off_call = Params.get('global', 'charge_off_call')
         self.sleep_wake_call = Params.get('global', 'sleep_wake_call')
         self.restore_charging = False
+        # Per-instance host state controls the one pending wake while the DUT is unavailable.
         self._standby_cancelled = threading.Event()
         self._standby_wait = False
         self._process_path = None
@@ -302,6 +321,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
             self.prep()
             core.app_scenario.Scenario.setUp(self)
             return
+        # Require an awake external controller and disable monitoring that would disturb sleep.
         if not self.sleep_wake_call:
             raise RuntimeError('BLDT Modern Standby requires global:sleep_wake_call in the device profile.')
         if self.async_comm != '1':
@@ -319,6 +339,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
                 'BLDT Modern Standby DC testing requires global:charge_on_call and '
                 'global:charge_off_call in the device profile.'
             )
+        # Prepare charge/source first; base setup starts measurement only after these checks.
         if self.charger_mode == 'automated':
             self._ensure_charger_on()
         else:
@@ -335,10 +356,12 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _wait_for_rpc_callback(self, jobid, skt, host, port, log_output=True, timeout=1800, target_ip=None):
         """Wait on the host only; a completed job takes precedence over the wake pulse."""
+        # Override framework waiting only for the BLDT workload, not ordinary setup commands.
         if not getattr(self, '_standby_wait', False):
             return super()._wait_for_rpc_callback(
                 jobid, skt, host, port, log_output=log_output, timeout=timeout, target_ip=target_ip,
             )
+        # Host-only deadlines avoid probing the sleeping DUT for progress or power state.
         started = time.monotonic()
         wake_at = started + self.wake_after_seconds
         deadline = started + timeout
@@ -359,6 +382,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
                     )
                 readable, _, _ = select.select([skt], [], [], min(1, deadline - now))
                 if readable:
+                    # Completion wins over a due wake: do not toggle an already completed run.
                     client, _ = skt.accept()
                     with client:
                         client.settimeout(10)
@@ -381,6 +405,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _wait_for_dut_comm(self):
         """Bound framework failure recovery without toggles or hard reboots."""
+        # Communication recovery may poll after the workload, but never during intentional sleep.
         if getattr(self, '_standby_wait', False):
             raise RuntimeError('DUT communication can be unavailable during the intentional BLDT standby wait.')
         deadline = time.monotonic() + 120
@@ -407,6 +432,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
         if self.prep_run_only:
             return
         before = self._report_files()
+        # Intel initiates sleep; the host schedules wake separately, not through an Intel duration.
         parameters = (
             f'min_battery_charge:{self.min_battery_charge};'
             f'sleep_study_days:{self.sleep_study_days};'
@@ -415,6 +441,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
         )
         logging.info("BLDT Modern Standby parameters: %s", parameters)
         try:
+            # Route this command through the host-only wait override while BLDT runs.
             self._standby_wait = True
             try:
                 result = self._run_process(
@@ -433,6 +460,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
                 logging.exception("Could not stage partial BLDT reports after execution failed.")
             raise
         reports = self._stage_reports(before, self.dut_data_path)
+        # Keep total BLDT wall time distinct from the event-derived standby interval.
         metrics = {
             'scenario_runtime': round(result['seconds'], 3),
             'bldt_exit_code': result['exit_code'],
@@ -465,6 +493,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _validate_sleep(self, events):
         """Validate this invocation's first session, not historical or summed intervals."""
+        # Require exactly one ordered entry/exit pair; do not sum interrupted sessions.
         if len(events) != 2 or [event['id'] for event in events] != [506, 507]:
             raise RuntimeError(
                 'Expected one complete, uninterrupted Modern Standby entry/exit pair during BLDT. '
@@ -485,12 +514,14 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _validate_reports(self, reports):
         """Use native report identity rather than guessing a mosTest filename prefix."""
+        # Filenames may start with mosTest; the JSON report name must instead be mosReport.
         candidates = [
             name for name, formats in reports['sets'].items()
             if {'html', 'json', 'zip'} <= formats
         ]
         if not candidates:
             raise RuntimeError('BLDT did not produce a fresh, nonempty matching HTML, JSON and ZIP report set.')
+        # Require native Sleep Study XML/HTML inside the bundle, not just outer report files.
         self._powershell(r"""
             Add-Type -AssemblyName System.IO.Compression.FileSystem
             $valid = $false
@@ -514,6 +545,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def tearDown(self):
         """Stop measurement and collect results before attempting charger restoration."""
+        # Charger reconnection must stay outside the measured workload power trace.
         try:
             logging.info("Collecting BLDT Modern Standby logs, metrics, and reports.")
             core.app_scenario.Scenario.tearDown(self)
@@ -524,6 +556,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def kill(self):
         """Cancel the pending wake; stop only this invocation's process if reachable."""
+        # Do not send a cleanup toggle: an ambiguous second pulse could put an awake DUT to sleep.
         if hasattr(self, '_standby_cancelled'):
             self._standby_cancelled.set()
         if getattr(self, '_process_path', None):
@@ -543,10 +576,12 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     @staticmethod
     def _quote(value):
+        """Escape apostrophes so caller values remain literal PowerShell strings."""
         return "'" + str(value).replace("'", "''") + "'"
 
     def _powershell(self, script, timeout=300, **values):
         """Keep JSON replies free of progress serialization and propagate remote errors."""
+        # Bind values as literals and propagate remote failures as nonzero command exits.
         assignments = '\n'.join(f'${name} = {self._quote(value)}' for name, value in values.items())
         command = (
             "$ErrorActionPreference = 'Stop'\n"
@@ -554,6 +589,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
             f"{assignments}\ntry {{\n{script}\n}} catch {{\n"
             "Write-Output (' ERROR - ' + $_.Exception.Message)\nexit 1\n}"
         )
+        # UTF-16LE Base64 is PowerShell's command transport format, not encryption.
         encoded = base64.b64encode(command.encode('utf-16-le')).decode('ascii')
         return self._call(
             ['powershell.exe',
@@ -563,7 +599,9 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _run_process(self, executable, arguments, log_prefix, timeout, working_directory):
         """Capture BLDT output and post-run sleep evidence without monitoring during sleep."""
+        # Record process ownership before waiting; event evidence is read only after BLDT exits.
         self._process_path = log_prefix + '.process.json'
+        # UTC bounds select this invocation's events; retain full XML for diagnosing rejected sleep.
         output = self._powershell(r"""
             New-Item -ItemType Directory -Path (Split-Path -Parent $prefix) -Force | Out-Null
             if (Test-Path -LiteralPath "$prefix.process.json") {
@@ -622,6 +660,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _report_files(self):
         """Snapshot native report metadata without writing extra state on the DUT."""
+        # Resolve Intel's report root on the DUT and return relative path/size/time records.
         output = self._powershell(r"""
             $root = Join-Path (Get-Item -LiteralPath $env:USERPROFILE).FullName 'Intel\BatteryLifeDiagnostic'
             $files = @(
@@ -644,6 +683,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
     def _stage_reports(self, before, report_dir):
         """Stage changed reports and required HTML assets for normal HOBL collection."""
+        # Intel report root -> DUT staging here; teardown retrieves staged files to the host.
         after = self._report_files()
         if after['root'] != before['root']:
             raise RuntimeError('BLDT report directory changed during the run.')
@@ -651,6 +691,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
             name: metadata for name, metadata in after['files'].items()
             if before['files'].get(name) != metadata
         }
+        # Unchanged shared assets are still needed to render newly generated HTML.
         selected = {
             name: metadata for name, metadata in after['files'].items()
             if name in changed or PureWindowsPath(name).parts[0].lower() == 'assets'
@@ -658,9 +699,11 @@ class BldtModernStandby(core.app_scenario.Scenario):
         files = []
         for name, (size, _) in selected.items():
             relative = PureWindowsPath(name)
+            # Reject paths that could escape the staging directory.
             if relative.drive or relative.root or '..' in relative.parts:
                 raise RuntimeError(f'Invalid relative BLDT report path: {name}')
             files.append({'path': name, 'size': size})
+        # Batch metadata to keep encoded commands manageable; file contents remain on the DUT.
         for start in range(0, len(files), 20):
             self._powershell(r"""
             foreach ($file in (ConvertFrom-Json -InputObject $files)) {
@@ -673,6 +716,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
                 }
             }
         """, root=after['root'], destination=report_dir, files=json.dumps(files[start:start + 20]))
+        # Group by stem first; _validate_reports checks native identity instead of a filename prefix.
         report_sets = {}
         for name, (size, _) in changed.items():
             relative = PureWindowsPath(name)

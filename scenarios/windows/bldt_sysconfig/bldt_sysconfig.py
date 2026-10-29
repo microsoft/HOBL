@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"""Prepare Intel BLDT, run SysConfig once, and stage its reports for HOBL."""
+"""Coordinate SysConfig on the host; run prep and Intel BLDT remotely on the DUT."""
 
 import base64
 import csv
@@ -16,19 +16,25 @@ from core.parameters import Params
 
 
 class BldtSysconfig(core.app_scenario.Scenario):
-    """Check system power configuration with Intel BLDT and collect its reports.
+    """Run Intel's system power-configuration checks through HOBL.
 
-    Steps:
-    1. Upload the prep script if missing or changed; install or repair BLDT only when needed.
-    2. Run SysConfigChecks once on AC (default) or DC.
-    3. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
+    Intel workload: SysConfigChecks examines configuration relevant to power efficiency
+    and produces diagnostic findings in native HTML, JSON and ZIP reports.
 
-    Prep automatically stops any existing BLDT session before installation or collection.
-    SysConfig runs no AI analysis and accepts either BLDT edition without AI models.
+    HOBL lifecycle:
+    1. Before: refresh the DUT prep script, close existing BLDT sessions, and discover
+       either BLDT edition; install or repair only when needed.
+    2. Run: invoke the discovered executable with the selected AC/DC assessment mode.
+       This scenario does not control the charger or use DAQ measurement.
+    3. After: require fresh matching reports, stage them with shared HTML assets and
+       logs for host collection, and write runtime/version metrics to CSV.
+
+    scenario_runtime measures native BLDT execution, not preparation or collection.
+    No AI analysis or AI models are required.
     Success means complete execution and reports, not passing every Intel check.
     """
 
-    # Diagnostic/preparation workload: do not start normal power measurements.
+    # Skip normal DAQ callbacks; this does not enable HOBL's installation-only mode.
     is_prep = True
     module = __module__.split('.')[-1]
 
@@ -37,20 +43,23 @@ class BldtSysconfig(core.app_scenario.Scenario):
 
     def setUp(self):
         """Read parameters, ensure BLDT is ready, then complete HOBL setup."""
+        # Validate the selected Intel power mode before any remote preparation.
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
 
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_sysconfig:power_source must be AC or DC.')
 
+        # Discover/install BLDT before entering the framework's normal setup lifecycle.
         self.prep()
         super().setUp()
 
     def prep(self):
         """Discover on every invocation; install/repair only when discovery requires it."""
-        # HOBL may call prep again after setUp in prep-only mode. Reuse this invocation's validated result, not a marker left by an earlier run.
+        # HOBL can call prep twice; reuse successful discovery only within this instance.
         if getattr(self, 'installation', None) is not None:
             return
 
+        # The prep marker records a previous setup; BLDT may no longer be installed on the DUT
         needs_marker = bool(self.checkPrepStatus(['bldt']))
         script = Path(__file__).with_name('bldt_sysconfig_resources') / 'bldt_sysconfig_prep.ps1'
         remote_script = ntpath.join(self.dut_exec_path, script.name)
@@ -68,10 +77,13 @@ class BldtSysconfig(core.app_scenario.Scenario):
             if not json.loads(self._powershell(hash_check, **hash_args)):
                 logging.info("BLDT prep script is missing or changed; uploading %s.", remote_script)
                 self._upload(str(script), self.dut_exec_path, check_modified=False)
+                # Verify the received bytes rather than trusting upload completion.
                 if not json.loads(self._powershell(hash_check, **hash_args)):
                     raise RuntimeError('BLDT prep script hash mismatch after upload.')
             else:
                 logging.info("BLDT prep script is current; skipping upload.")
+            # The DUT script decides whether to reuse, install or repair BLDT.
+            # It writes details to a log file and returns installation metadata as JSON.
             output = self._powershell(
                 '& $prepScript -CacheRoot $cache -LogRoot $logs',
                 timeout=32460, prepScript=remote_script,
@@ -85,6 +97,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
             except Exception:
                 logging.exception("Could not retrieve BLDT preparation logs after setup failed.")
             raise
+        # Save the discovered executable/version for execution and record prep completion.
         self.installation = prepared['installation']
         logging.info("BLDT ready: %s", self.installation)
         if needs_marker or prepared['installed']:
@@ -93,11 +106,11 @@ class BldtSysconfig(core.app_scenario.Scenario):
     def runTest(self):
         """Run Intel's checks, stage fresh reports, and write an execution summary."""
 
-        # Check what reports already exist before running the checks (so we know what was newly generated by this test)
+        # An unchanged report from an earlier assessment cannot satisfy this run.
         before = self._report_files()
         logging.info("Running BLDT SysConfigChecks on %s.", self.power_source)
         try:
-            # invoke BLDT with SysConfigChecks and the specified power source paraemter
+            # Use the discovered executable; 900 seconds is a timeout, not a duration.
             result = self._run_process(
                 self.installation['executable'],
                 f'--type SysConfigChecks --params pwrsrc:{self.power_source} --telemetry false',
@@ -116,6 +129,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
         reports = self._stage_reports(before, self.dut_data_path)
         if result['exit_code'] != 0:
             raise RuntimeError(f"BLDT SysConfigChecks failed ({result['exit_code']}); see its logs.")
+        # All three formats must share a report stem, not come from different assessments.
         required = {'html', 'json', 'zip'}
         if not any(required <= formats for formats in reports['sets'].values()):
             missing = '; '.join(
@@ -124,7 +138,8 @@ class BldtSysconfig(core.app_scenario.Scenario):
             ) or 'no fresh, nonempty SysConfigChecks HTML, JSON or ZIP reports'
             raise RuntimeError(f'BLDT did not produce a complete matching report set: {missing}.')
 
-        # These describe execution, not the pass/fail findings inside Intel's HTML.
+        # Execution success is separate from Intel's diagnostic findings.
+        # power_source records the requested mode, not a measured power state.
         metrics = {
             'scenario_runtime': round(result['seconds'], 3),
             'bldt_version': self.installation['version'],
@@ -151,6 +166,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
     def kill(self):
         """Stop only a BLDT process launched by this run, never an existing session."""
         # HOBL creates a new scenario instance for cleanup; ownership must survive on the DUT.
+        # PID plus start time protects against stopping a different process after PID reuse.
         path = ntpath.join(self.dut_data_path, 'bldt.process.json')
         try:
             self._powershell(r"""
@@ -172,6 +188,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
 
     def _powershell(self, script, timeout=300, **values):
         """Run a Windows operation on the DUT through HOBL, propagating failures."""
+        # Bind caller values as literals, then wrap the remote script with explicit failure handling.
         assignments = '\n'.join(f'${name} = {self._quote(value)}' for name, value in values.items())
         command = (
             "$ErrorActionPreference = 'Stop'\n"
@@ -180,8 +197,9 @@ class BldtSysconfig(core.app_scenario.Scenario):
             "Write-Output (' ERROR - ' + $_.Exception.Message)\nexit 1\n}"
         )
         # Suppress progress and CLIXML serialization so RPC output remains parseable JSON.
-        # Quoting protects values; UTF-16LE Base64 transports the command intact.
+        # Quoting protects values; UTF-16LE Base64 transports the command, not encrypts it.
         encoded = base64.b64encode(command.encode('utf-16-le')).decode('ascii')
+        # HOBL transports this command to the DUT and returns its output to the host.
         return self._call(
             ['powershell.exe',
              f'-NoProfile -NonInteractive -OutputFormat Text -ExecutionPolicy Bypass -EncodedCommand {encoded}'],
@@ -190,6 +208,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
 
     def _run_process(self, executable, arguments, log_prefix, timeout, working_directory):
         """Capture output and enforce a DUT-side timeout, not just an RPC timeout."""
+        # DUT wall-clock timing includes BLDT startup, but not prep or report staging.
         # Retain the process handle so Windows PowerShell can reliably read ExitCode.
         # Give RPC extra time for termination and returning the measured result.
         output = self._powershell(r"""
@@ -236,6 +255,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
             [pscustomobject]@{ root = $root; files = $files } | ConvertTo-Json -Depth 4 -Compress
         """)
         snapshot = json.loads(output)
+        # Relative paths preserve Intel's layout; metadata comparisons detect fresh output.
         snapshot['files'] = {
             item['path']: (item['size'], item['modified']) for item in snapshot['files']
         }
@@ -243,9 +263,11 @@ class BldtSysconfig(core.app_scenario.Scenario):
 
     def _stage_reports(self, before, report_dir):
         """Select fresh output in Python, then copy it on the DUT for HOBL teardown."""
+        # Intel report root -> DUT staging folder here; DUT -> host during teardown.
         after = self._report_files()
         if after['root'] != before['root']:
             raise RuntimeError('BLDT report directory changed during the run.')
+        # Compare snapshots to select new or modified files, not historical results.
         changed = {
             name: metadata for name, metadata in after['files'].items()
             if before['files'].get(name) != metadata
@@ -258,6 +280,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
         files = []
         for name, (size, _) in selected.items():
             relative = PureWindowsPath(name)
+            # Never let a relative report path escape the staging directory.
             if relative.drive or relative.root or '..' in relative.parts:
                 raise RuntimeError(f'Invalid relative BLDT report path: {name}')
             files.append({'path': name, 'size': size})
@@ -276,6 +299,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
                 }
             }
         """, root=after['root'], destination=report_dir, files=json.dumps(files[start:start + 20]))
+        # Only fresh, nonempty native report files count; assets are collected separately.
         report_sets = {}
         for name, (size, _) in changed.items():
             relative = PureWindowsPath(name)

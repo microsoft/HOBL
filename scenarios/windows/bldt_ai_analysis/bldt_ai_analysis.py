@@ -20,24 +20,29 @@ from core.parameters import Params
 
 
 class BldtAiAnalysis(core.app_scenario.Scenario):
-    """Run Intel's Software Hygiene AI analysis on an existing report.
+    """Run Intel's AI analysis of an existing Software Hygiene report.
 
-    Steps:
-    1. Install the AI edition and upload the selected host JSON report.
-    2. Run BLDT's AIAnalysis flow, including native model initialization (Global region).
-    3. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
+    Intel workload: AIAnalysis initializes native models and analyzes the supplied
+    Software Hygiene data, producing findings in HTML, JSON and ZIP reports.
+    It does not collect a new diagnostic trace.
 
-    Prep automatically stops any existing BLDT session before installation or analysis.
-    AC power is recommended, not required; no power checks or charger control.
-    No DAQ measurement or new diagnostic collection.
-    scenario_runtime measures BLDT, including its initialization but excluding MSI prep.
-    Prep-only mode installs BLDT without running analysis or requiring an input report.
-    Missing WMI source data is logged as skipped; other analyzer errors fail the run.
+    HOBL lifecycle:
+    1. Before: validate the host's native source JSON, refresh prep, close existing BLDT
+       sessions, and ensure the AI edition is installed; upload the exact source bytes
+       under Intel's expected filename without overwriting a different native report.
+    2. Run: invoke Intel's AIAnalysis flow on that input.
+    3. After: require fresh matching reports tied to the input hash, check module/log
+       errors, write CSV metrics, and collect reports/assets/logs to the host.
+       Normalize nonstandard numeric values to null for browser rendering, retaining
+       unmodified HTML/JSON/ZIP files in intel_originals when repair is needed.
+
+    No DAQ measurement, power checks or charger control; AC is recommended, not required.
+    scenario_runtime includes native initialization/analysis, not prep or host report repair.
+    Prep-only mode needs no input and runs no analysis.
     Success means complete execution and reports, not passing every Intel health check.
-    Collected reports normalize Intel's non-JSON numeric values to null for browser rendering.
-    Unmodified bundles are retained in intel_originals when normalization is needed.
     """
 
+    # Analysis runs on the DUT, but HOBL treats it as unmeasured prep rather than a DAQ workload.
     is_prep = True
     module = __module__.split('.')[-1]
     Params.setDefault(
@@ -46,9 +51,11 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
     )
 
     def setUp(self):
+        """Validate the selected host report before preparing the DUT."""
         self.input_path = None
         self.no_wmi_data = False
         if not self.prep_run_only:
+            # Accept native Software Hygiene data, not a HOBL metrics CSV or an AI output.
             self.input_path = Path(Params.get(self.module, 'input_file').strip())
             if not self.input_path.is_absolute() or not self.input_path.is_file():
                 raise ValueError('bldt_ai_analysis:input_file must be an existing absolute HOST file path.')
@@ -60,11 +67,14 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
                 or not isinstance(report.get('data'), list) or not report['data']
             ):
                 raise ValueError('input_file must be a native Software Hygiene JSON report, not HOBL metrics.')
+            # Derive Intel's expected name from report metadata, even if the host file was renamed.
             native_source = ntpath.basename(str(report.get('source', '')))
             if not re.fullmatch(r'SWHygiene_[A-Za-z0-9_-]+\.zip', native_source):
                 raise ValueError('input_file must retain its native SWHygiene source ZIP filename.')
             self.input_relative = ntpath.splitext(native_source)[0] + '.json'
+            # Preserve the input bytes; this digest later binds the native ZIP to this exact report.
             self.input_sha256 = hashlib.sha256(source).hexdigest()
+            # Only an explicit native no-activity result can justify the narrow WMI exception.
             wmi = [item for item in report['data']
                    if isinstance(item, dict) and isinstance(item.get('Config'), dict)
                    and item['Config'].get('type') == 'wmiActivity']
@@ -78,12 +88,14 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
 
     def prep(self):
         """Install the AI edition; leave model setup and analysis to Intel's native flow."""
+        # Reuse preparation within this instance, not a marker as proof of installation health.
         if getattr(self, 'installation', None) is not None:
             return
         script = Path(__file__).with_name('bldt_ai_analysis_resources') / 'bldt_ai_analysis_prep.ps1'
         remote_script = ntpath.join(self.dut_exec_path, script.name)
         try:
             self._upload_verified(script, remote_script)
+            # The DUT script returns its discovered executable and version after install/repair.
             prepared = json.loads(self._powershell(
                 '& $prepScript -CacheRoot $cache -LogRoot $logs',
                 timeout=32460, prepScript=remote_script,
@@ -96,6 +108,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
             self.installation = prepared
             logging.info("BLDT AI edition ready: %s", prepared)
         except Exception:
+            # A setup failure can bypass normal teardown; retain available preparation logs.
             try:
                 self._copy_data_from_remote(self.result_dir)
             except Exception:
@@ -104,6 +117,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
 
     def _upload_verified(self, source, target, expected=None, preserve_existing=False):
         """Upload only missing/changed files and verify the bytes used by the DUT."""
+        # Script updates may replace old bytes; native source reports must not be overwritten.
         expected = expected or hashlib.sha256(source.read_bytes()).hexdigest()
         check = """
             Import-Module (Join-Path $PSHOME 'Modules\\Microsoft.PowerShell.Utility\\Microsoft.PowerShell.Utility.psd1')
@@ -123,15 +137,19 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
         directory = ntpath.dirname(target)
         self._powershell('New-Item -ItemType Directory -Path $path -Force | Out-Null', path=directory)
         # HOBL uploads into a directory and preserves the source basename.
+        # Stage a temporary host copy with Intel's required basename, leaving the user's file alone.
         with tempfile.TemporaryDirectory() as temporary:
             staged = Path(temporary, ntpath.basename(target))
             shutil.copyfile(source, staged)
             self._upload(str(staged), directory, check_modified=False)
+        # Verify the DUT copy rather than assuming a successful transfer preserved the bytes.
         if not json.loads(self._powershell(check, path=target, expected=expected)):
             raise RuntimeError(f'BLDT AI file hash mismatch after upload: {target}')
 
     @staticmethod
     def _check_result(result, phase, skipped_wmi_error=''):
+        """Reject exit/log failures, allowing only the specifically validated WMI no-data messages."""
+        # Whitespace normalization accommodates native line formatting, not arbitrary error text.
         allowed = {
             ' '.join(f'ERROR - Error analyzing wmiActivity: {skipped_wmi_error}'.split()),
             ' '.join(f'ERROR - Analysis failed: {skipped_wmi_error}'.split()),
@@ -142,22 +160,27 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
             raise RuntimeError(f'BLDT AI {phase} failed: {detail}. See its stdout/stderr logs.')
 
     def runTest(self):
+        """Run native AIAnalysis once and validate fresh output against the selected source."""
         if self.prep_run_only:
             return
+        # The input is already staged; only files changed by this analysis count as fresh output.
         before = self._report_files()
         try:
+            # Let Intel initialize its models and orchestrate analysis through its outer CLI.
             result = self._run_process(
                 self.installation['executable'],
                 f'--type AIAnalysis --params "inputFile:{self.input_relative};region:global" --telemetry=false',
                 ntpath.join(self.dut_data_path, 'bldt_ai_analysis'), 10800,
             )
         except Exception:
+            # Preserve partial Intel reports for diagnosis without turning execution failure into success.
             try:
                 self._stage_reports(before, self.dut_data_path)
             except Exception:
                 logging.exception("Could not stage partial BLDT AI reports after execution failed.")
             raise
         reports = self._stage_reports(before, self.dut_data_path)
+        # Runtime includes native model initialization, but excludes MSI prep and host report repair.
         metrics = {
             'scenario_runtime': round(result['seconds'], 3),
             'bldt_exit_code': result['exit_code'],
@@ -173,6 +196,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
         logging.info("========== BLDT AI analysis metrics ==========")
         for key, value in metrics.items():
             logging.info("%s: %s", key, value)
+        # Persist metrics first, then require exactly one complete report set for this native input.
         if result['exit_code'] != 0:
             self._check_result(result, 'analysis')
         complete = [
@@ -182,9 +206,11 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
         if len(complete) != 1:
             self._check_result(result, 'analysis')
             raise RuntimeError('BLDT did not produce one fresh, nonempty matching AIAnalysis HTML/JSON/ZIP report set.')
+        # Validate source identity and inspect module errors even when the process exited zero.
         analysis = self._read_analysis(ntpath.join(self.dut_data_path, complete[0]))
         skipped_wmi_error = ''
         for error in analysis['errors']:
+            # A no-WMI source plus its known missing-columns error is skipped, never fabricated.
             if (self.no_wmi_data and error['module'] == 'wmiActivity'
                     and error['message'].startswith('WMI Activity validation failed: ["Missing required columns:')):
                 skipped_wmi_error = error['message']
@@ -194,12 +220,14 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
                 )
             else:
                 raise RuntimeError(f"BLDT AI module error: {error['module']}: {error['message']}")
+        # Reject unexplained error totals; do not let an omitted module hide a native failure.
         if analysis['error_count'] != len(analysis['errors']):
             raise RuntimeError('BLDT AI report has inconsistent module error counts; see analysis_report.json.')
         self._check_result(result, 'analysis', skipped_wmi_error)
 
     def _report_files(self):
         """Snapshot Intel's report tree so old bundles cannot satisfy this invocation."""
+        # Resolve the current DUT user's report root and return metadata, not report contents.
         snapshot = json.loads(self._powershell(r"""
             $root = Join-Path (Get-Item -LiteralPath $env:USERPROFILE).FullName 'Intel\BatteryLifeDiagnostic'
             $files = @(
@@ -221,6 +249,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
 
     def _stage_reports(self, before, destination):
         """Preserve Intel's folders and shared HTML assets, like the other BLDT scenarios."""
+        # Intel report root -> DUT staging here; base teardown later copies staging to the host.
         after = self._report_files()
         if after['root'] != before['root']:
             raise RuntimeError('BLDT report directory changed during the run.')
@@ -228,6 +257,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
             name: metadata for name, metadata in after['files'].items()
             if before['files'].get(name) != metadata
         }
+        # Fresh HTML still depends on shared assets even when their timestamps did not change.
         selected = {
             name: metadata for name, metadata in after['files'].items()
             if name in changed or PureWindowsPath(name).parts[0].lower() == 'assets'
@@ -235,9 +265,11 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
         files = []
         for name, (size, _) in selected.items():
             path = PureWindowsPath(name)
+            # Relative paths must remain inside the staging tree.
             if path.drive or path.root or '..' in path.parts:
                 raise RuntimeError(f'Invalid relative BLDT report path: {name}')
             files.append({'path': name, 'size': size})
+        # Batch path metadata into manageable remote commands and verify copied sizes.
         for start in range(0, len(files), 20):
             self._powershell(r"""
                 foreach ($file in (ConvertFrom-Json -InputObject $files)) {
@@ -250,6 +282,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
                     }
                 }
             """, root=after['root'], destination=destination, files=json.dumps(files[start:start + 20]))
+        # Only the selected input's <native stem>.AIAnalysis reports can satisfy this run.
         report_sets = {}
         for name, (size, _) in changed.items():
             path = PureWindowsPath(name)
@@ -264,6 +297,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
 
     def _read_analysis(self, stem):
         """Validate the native bundle and read only its execution-error summary."""
+        # Check outer identity, hash the bundled source bytes, then inspect analyzer module errors.
         return json.loads(self._powershell(r"""
             $report = Get-Content -LiteralPath "$stem.json" -Raw | ConvertFrom-Json
             if ($report.name -ne 'AIAnalysis' -or $report.data -isnot [array] -or $report.data.Count -eq 0) {
@@ -302,6 +336,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
 
     def tearDown(self):
         """Collect native reports and repair nonstandard JSON without changing the findings."""
+        # Repair only host-collected copies after base collection; leave native DUT files untouched.
         super().tearDown()
         for bundle in Path(self.result_dir).rglob('*.AIAnalysis.zip'):
             if 'intel_originals' not in bundle.relative_to(self.result_dir).parts:
@@ -311,12 +346,14 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
     def _repair_report_bundle(bundle):
         """Normalize analysis data in all native formats, retaining Intel's original files."""
         def normalize(text):
+            # parse_constant maps bare NaN/Infinity values to None; quoted text remains unchanged.
             constants = []
             data = json.loads(text, parse_constant=lambda value: constants.append(value))
             if not constants:
                 return text
             return json.dumps(data, indent=2, ensure_ascii=True, allow_nan=False)
 
+        # Intel embeds analyzer JSON strings in outer widgets and three HTML ingest calls.
         html_path = bundle.with_suffix('.html')
         json_path = bundle.with_suffix('.json')
         html = html_path.read_text(encoding='utf-8-sig')
@@ -351,9 +388,11 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
                 literal = json.dumps(normalized, ensure_ascii=True)
                 literal = literal.replace('<', r'\u003c').replace('>', r'\u003e').replace('&', r'\u0026')
                 replacements.append((start, end, literal))
+        # Apply replacements from the end so earlier character offsets remain valid.
         for start, end, literal in reversed(replacements):
             html = html[:start] + literal + html[end:]
 
+        # Keep outer HTML/JSON and both nested analyzer copies aligned with the repaired bundle.
         with zipfile.ZipFile(bundle) as archive:
             required = {
                 html_path.name, json_path.name, 'analysis_report.json',
@@ -369,17 +408,20 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
                 text != archive.read(name).decode('utf-8-sig')
                 for name, text in normalized_analysis.items()
             )
+            # Leave already-standard reports byte-for-byte unchanged.
             if not (changed_widgets or replacements or changed_archive):
                 return
             if (archive.read(html_path.name) != html_path.read_bytes()
                     or archive.read(json_path.name) != json_path.read_bytes()):
                 raise RuntimeError('Native HTML/JSON differ from their ZIP copies; refusing to overwrite them.')
+            # Refuse mismatched outer copies or conflicting backups instead of overwriting evidence.
             originals = bundle.parent / 'intel_originals'
             paths = (html_path, json_path, bundle)
             for path in paths:
                 backup = originals / path.name
                 if backup.exists() and backup.read_bytes() != path.read_bytes():
                     raise RuntimeError(f'An earlier original backup already exists: {backup}')
+            # Build all replacements beside the originals before publishing any repaired file.
             with tempfile.TemporaryDirectory(dir=bundle.parent) as temporary:
                 staged = Path(temporary)
                 (staged / html_path.name).write_text(html, encoding='utf-8')
@@ -396,6 +438,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
                         else:
                             content = archive.read(entry)
                         repaired.writestr(entry, content)
+                # Preserve native evidence before replacing files; restore published files on OSError.
                 originals.mkdir(exist_ok=True)
                 for path in paths:
                     if not (originals / path.name).exists():
@@ -418,6 +461,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
 
     def kill(self):
         """Stop only the recorded process from this invocation, if still running."""
+        # Match PID and start ticks so a reused PID cannot identify an unrelated process.
         path = getattr(self, '_process_path', None)
         if not path:
             return
@@ -435,6 +479,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
             logging.exception("Could not stop the BLDT AI process; check the DUT.")
 
     def _powershell(self, script, timeout=300, **values):
+        """Bind literal values, transport PowerShell through RPC, and propagate command errors."""
         assignments = '\n'.join(
             f"${name} = '" + str(value).replace("'", "''") + "'" for name, value in values.items()
         )
@@ -443,6 +488,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
             f"{assignments}\ntry {{\n{script}\n}} catch {{\n"
             "Write-Output (' ERROR - ' + $_.Exception.Message)\nexit 1\n}"
         )
+        # PowerShell expects UTF-16LE Base64 transport; this is encoding, not encryption.
         encoded = base64.b64encode(command.encode('utf-16-le')).decode('ascii')
         return self._call(
             ['powershell.exe',
@@ -452,7 +498,9 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
 
     def _run_process(self, executable, arguments, prefix, timeout):
         """Use Intel's native CLI with captured logs and a DUT-side timeout."""
+        # Persist process ownership and use a stopwatch for total native execution time.
         self._process_path = prefix + '.process.json'
+        # Capture both native error formats; exit zero alone does not prove analyzer success.
         return json.loads(self._powershell(r"""
             New-Item -ItemType Directory -Path (Split-Path -Parent $prefix) -Force | Out-Null
             $timer = [Diagnostics.Stopwatch]::StartNew()

@@ -1,13 +1,16 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+# Runs on the DUT. Python supplies these paths; defaults also allow direct invocation.
 param(
     [string]$CacheRoot = '',
     [string]$LogRoot = ''
 )
 
+# Fail on PowerShell errors and suppress progress so Python receives clean command output.
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
+# Keep fallback working paths on the script's drive, not necessarily the OS drive.
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
 if (-not $CacheRoot) { $CacheRoot = "$scriptDrive\hobl_bin\bldt_resources" }
 if (-not $LogRoot) { $LogRoot = "$scriptDrive\hobl_data" }
@@ -19,11 +22,13 @@ function log {
 }
 
 function Close-Bldt {
+    # Existing GUI/backend instances can block CLI startup. This closes any BLDT session, unlike per-run cancellation, which only stops its recorded PID/start-time pair.
     $running = @(Get-Process | Where-Object { $_.ProcessName -in 'BatteryLifeDiagnosticTool', 'bldtUI' })
     foreach ($process in $running) {
         if ($process.HasExited) { continue }
         log "Stopping existing BLDT session: $($process.ProcessName) (PID $($process.Id))"
         try { Stop-Process -Id $process.Id -Force -ErrorAction Stop }
+        # A process can exit between discovery and Stop-Process; other failures propagate.
         catch { if (-not $process.HasExited) { throw } }
         if (-not $process.WaitForExit(10000)) {
             throw "BLDT process $($process.Id) did not exit; cannot safely continue prep."
@@ -33,6 +38,7 @@ function Close-Bldt {
 
 function Get-BldtState {
     # Registry fallbacks support custom paths and incomplete installations.
+    # Check both registry views rather than assuming a Program Files location.
     $paths = @()
     $registrations = @{}
     $aiRegistered = $false
@@ -50,6 +56,7 @@ function Get-BldtState {
             })
             foreach ($entry in $entries) {
                 if ($entry.PSChildName -eq '{E7ED588D-B332-4B9D-A0C0-90B1CC1403B2}') {
+                    # Remember the edition even if its executable is missing.
                     $aiRegistered = $true
                 }
                 $entryPaths = @($entry.InstallLocation)
@@ -58,6 +65,7 @@ function Get-BldtState {
                     $entryPaths += $intelPath
                 }
                 if ($entry.DisplayIcon) {
+                    # DisplayIcon may include an icon index after the executable path.
                     $icon = $entry.DisplayIcon -replace ',\s*-?\d+\s*$', ''
                     $entryPaths += Split-Path -Parent $icon.Trim('"')
                 }
@@ -68,6 +76,7 @@ function Get-BldtState {
             }
         }
     }
+    # Validate candidate executables and attach matching version/edition metadata.
     $installations = @(
         foreach ($path in $paths | Where-Object { $_ } | Select-Object -Unique) {
             $exe = Join-Path $path 'BatteryLifeDiagnosticTool.exe'
@@ -97,6 +106,7 @@ function Get-BldtState {
 
 function Select-BldtInstallation {
     param([object]$State)
+    # SysConfig needs neither AI models nor a specific edition; reuse either 3.1.1 build.
     foreach ($installation in $State.installations) {
         if ($installation.version -like '3.1.1.*') {
             return $installation
@@ -106,6 +116,7 @@ function Select-BldtInstallation {
 
 function Get-BldtPackage {
     param([string]$Edition)
+    # Select the download filename and MSI product identity for the edition being preserved.
     # Exact hashes pin the downloaded archive and the MSI extracted from it.
     if ($Edition -eq 'ai') {
         return @{
@@ -125,6 +136,7 @@ function Get-BldtPackage {
 
 function Get-BldtFileHash {
     param([string]$Path)
+    # A missing cache file cannot match the expected package hash.
     if (Test-Path -LiteralPath $Path -PathType Leaf) {
         return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash
     }
@@ -163,7 +175,7 @@ function Install-Bldt {
         log "Reusing verified BLDT package: $archive"
     }
 
-    # 3. Verify the exact installer, then check Intel's Authenticode signature.
+    # 3. The hash pins the exact installer; Authenticode also verifies Intel as publisher.
     log "Extracting BLDT package to $expanded"
     Expand-Archive -LiteralPath $archive -DestinationPath $expanded -Force
     $installers = @(Get-ChildItem -LiteralPath $expanded -Filter ($package.stem + '.msi') -File -Recurse)
@@ -180,7 +192,8 @@ function Install-Bldt {
         throw 'BLDT MSI does not have a valid Intel signature.'
     }
 
-    # 4. Repair a registered product instead of silently treating it as ready.
+    # 4. This path is reached only when discovery found no acceptable installation.
+    # Use MSI repair for a registered product, or /i for a new installation.
     $installer = New-Object -ComObject WindowsInstaller.Installer
     try { $repair = $installer.ProductState($package.product) -ge 3 }
     finally { [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($installer) }
@@ -190,13 +203,17 @@ function Install-Bldt {
     if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
         throw "Windows Installer executable not found: $exe"
     }
+    $sourceDir = Split-Path -Parent $msi
+    # Intel's AI MSI sets this property only in its UI sequence, which /qn skips.
+    # The source must be explicit even when the process working directory is correct.
     $arguments = "$mode `"$msi`" /qn /norestart REBOOT=ReallySuppress " +
-        "WIXUI_EXITDIALOGOPTIONALCHECKBOX=0 /L*v `"$prefix.msi.log`""
-    log "Installing BLDT $Edition using $exe; MSI log: $prefix.msi.log"
-    $process = Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory (Split-Path -Parent $msi) `
+        "INSTALLER_SOURCE_DIR=`"$sourceDir`" WIXUI_EXITDIALOGOPTIONALCHECKBOX=0 /L*v `"$prefix.msi.log`""
+    log "Installing BLDT $Edition using $exe; source: $sourceDir; MSI log: $prefix.msi.log"
+    $process = Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory $sourceDir `
         -RedirectStandardOutput "$prefix.stdout.log" -RedirectStandardError "$prefix.stderr.log" -PassThru
     try {
         # An RPC timeout alone would leave the installer running on the DUT.
+        # WaitForExit uses milliseconds: 10800000 allows at most three hours.
         $null = $process.Handle
         if (-not $process.WaitForExit(10800000)) {
             Stop-Process -Id $process.Id -Force
@@ -210,6 +227,7 @@ function Install-Bldt {
         $process.Dispose()
     }
     if ($code -in 1641, 3010) {
+        # Suppress automatic reboot, but do not claim readiness when MSI requires one.
         throw 'BLDT installation requires a DUT reboot; reboot and rerun prep.'
     }
     if ($code -ne 0) { throw "BLDT installation failed ($code); see the MSI log." }
@@ -220,12 +238,14 @@ function Initialize-Bldt {
     $state = Get-BldtState
     log ("BLDT discovery: " + ($state | ConvertTo-Json -Depth 4 -Compress))
     $installation = Select-BldtInstallation $state
+    # Reuse an accepted installation; only missing/unsupported discovery enters install or repair.
     $installed = $false
     if ($null -eq $installation) {
         # Preserve an existing AI edition, even when its executable is missing.
         $edition = if ($state.ai_registered -or
             @($state.installations | Where-Object edition -eq 'ai').Count -gt 0) { 'ai' } else { 'standard' }
         Install-Bldt $edition
+        # Installer exit code zero is insufficient: verify discovery succeeds afterward.
         $state = Get-BldtState
         log ("BLDT discovery after prep: " + ($state | ConvertTo-Json -Depth 4 -Compress))
         $installation = Select-BldtInstallation $state
@@ -233,19 +253,23 @@ function Initialize-Bldt {
         $installed = $true
     }
     log ("BLDT ready: " + ($installation | ConvertTo-Json -Compress))
+    # installed means this invocation performed install/repair, not simply that BLDT exists.
     return [pscustomobject]@{ installation = $installation; installed = $installed }
 }
 
 try {
+    # Entry point: initialize logging/modules, clear blocking BLDT sessions, then ensure readiness.
     New-Item -ItemType Directory -Path $LogRoot -Force | Out-Null
     Set-Content -LiteralPath (Join-Path $LogRoot 'bldt_sysconfig_prep.log') -Value '-- BLDT prep --' -Encoding UTF8
     # Use this PowerShell's modules, not PowerShell 7 modules from PSModulePath.
     foreach ($name in @('Microsoft.PowerShell.Utility', 'Microsoft.PowerShell.Archive', 'Microsoft.PowerShell.Security')) {
         Import-Module (Join-Path $PSHOME "Modules\$name\$name.psd1")
     }
+    # Function definitions above do not run until this entry point calls them.
     Close-Bldt
     Initialize-Bldt | ConvertTo-Json -Depth 4 -Compress
 } catch {
+    # Python receives a nonzero exit; keep the actionable failure in the DUT log as well.
     $message = " ERROR - $($_.Exception.Message)"
     Write-Output $message
     Add-Content -LiteralPath (Join-Path $LogRoot 'bldt_sysconfig_prep.log') -Value $message -Encoding UTF8

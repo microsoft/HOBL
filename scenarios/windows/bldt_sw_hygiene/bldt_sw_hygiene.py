@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"""Prepare Intel BLDT, run Software Hygiene once, and stage its reports for HOBL."""
+"""Coordinate Software Hygiene on the host; run prep and Intel collection on the DUT."""
 
 import base64
 import csv
@@ -18,28 +18,31 @@ from core.parameters import Params
 
 
 class _BatteryStateTimeout(RuntimeError):
-    """The DUT responded, but did not reach the requested battery state in time."""
+    """Distinguish a power-transition timeout from RPC or malformed-response failures."""
 
 
 class BldtSwHygiene(core.app_scenario.Scenario):
-    """Assess software hygiene with Intel BLDT and collect its reports.
+    """Run Intel's software-related power diagnostics through HOBL.
 
-    Steps:
-    1. Upload the prep script if missing or changed; install or repair BLDT only when needed.
-    2. Reach min_battery_charge and confirm the selected power source before measurement.
-    3. Run SWHygiene once on DC (default) or AC.
-    4. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
-    5. Restore charging after measurement.
+    Intel workload: SWHygiene collects system/process activity and power-related traces
+    to investigate software power use, producing native HTML, JSON and ZIP reports.
+    Its native JSON can later be supplied to the separate AI Analysis scenario.
 
-    Prep automatically stops any existing BLDT session before installation or collection.
-    Charger control is automated or manual; manual reconnect timeouts only warn.
-    scenario_runtime measures the BLDT process, excluding charging and report collection.
-    Either BLDT edition works without AI models; no AI analysis is run.
-    Debug providers, process grouping and hidden processes are disabled; lost-event tolerance is zero.
+    HOBL lifecycle:
+    1. Before: refresh prep, close existing BLDT sessions, and ensure either edition
+       is installed; reach the starting charge and verify AC/DC using manual or
+       automated charger control before starting DAQ measurement.
+    2. Run: invoke SWHygiene with the selected power mode and collection timings.
+    3. After: require fresh matching reports, write CSV metrics, stop measurement,
+       retrieve native reports/assets/logs to the host, then restore charging.
+
+    scenario_runtime measures BLDT execution, excluding charging and report collection.
+    Manual reconnect timeouts only warn. No AI analysis or AI models are required.
     Prep-only mode skips charging and the workload.
     Success means complete execution and reports, not passing every Intel check.
     """
 
+    # Live collection uses normal DAQ callbacks; the separate AI scenario analyzes its JSON.
     module = __module__.split('.')[-1]
 
     Params.setDefault(
@@ -89,6 +92,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     @staticmethod
     def _get_integer_parameter(name, minimum, maximum):
+        """Parse one numeric setting and reject values outside its supported range."""
         value = Params.get(BldtSwHygiene.module, name)
         try:
             parsed = int(value)
@@ -105,7 +109,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         # HOBL can call prep again in prep-only mode within the same invocation.
         if getattr(self, 'installation', None) is not None:
             return
-        # The marker records prep completion; live discovery still checks for missing artifacts.
+        # A marker is bookkeeping, not proof the installation still exists on the DUT.
         needs_marker = bool(self.checkPrepStatus(['bldt']))
         script = Path(__file__).with_name('bldt_sw_hygiene_resources') / 'bldt_sw_hygiene_prep.ps1'
         remote_script = ntpath.join(self.dut_exec_path, script.name)
@@ -125,6 +129,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
                     raise RuntimeError('BLDT prep script hash mismatch after upload.')
             else:
                 logging.info("BLDT prep script is current; skipping upload.")
+            # Refreshing the script does not force reinstall; the DUT performs live discovery.
             output = self._powershell(
                 '& $prepScript -CacheRoot $cache -LogRoot $logs',
                 timeout=32460, prepScript=remote_script,
@@ -132,11 +137,13 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             )
             prepared = json.loads(output)
         except Exception:
+            # Setup failure may skip teardown, so preserve available preparation logs here.
             try:
                 self._copy_data_from_remote(self.result_dir)
             except Exception:
                 logging.exception("Could not retrieve BLDT preparation logs after setup failed.")
             raise
+        # Save the discovered executable/version and update shared prep bookkeeping.
         self.installation = prepared['installation']
         logging.info("BLDT ready: %s", self.installation)
         if needs_marker or prepared['installed']:
@@ -144,6 +151,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def _get_battery_state(self):
         """Read actual DUT power state rather than trusting a relay acknowledgment."""
+        # Query Windows on the DUT; JSON keeps charge and power fields unambiguous over RPC.
         command = (
             "$ErrorActionPreference = 'Stop'; "
             "$ProgressPreference = 'SilentlyContinue'; "
@@ -159,6 +167,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         lines = [line.strip() for line in output.splitlines() if line.strip()]
         if not lines:
             raise RuntimeError('BLDT Software Hygiene could not read the DUT battery state.')
+        # Unknown power and malformed readings must not be interpreted as ready to measure.
         try:
             json_lines = [line for line in lines if line.startswith('{')]
             if len(json_lines) != 1:
@@ -173,6 +182,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             raise RuntimeError(
                 f'BLDT Software Hygiene received an invalid battery-state response: {output!r}'
             ) from error
+        # Require a real system battery and a usable charge reading before proceeding.
         if 'NoSystemBattery' in state.get('battery_charge_status', ''):
             raise RuntimeError('BLDT Software Hygiene requires a DUT with a system battery.')
         if not 0 <= state['battery_percent'] <= 100:
@@ -183,6 +193,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def _request_charger(self, callback, action):
         """Prompt an operator or use the existing host-side charger callback."""
+        # Manual mode sends no relay command; both modes verify Windows state afterward.
         if self.charger_mode == 'manual':
             instruction = 'Connect the charger' if action == 'charge_on' else 'Unplug the charger'
             logging.warning(
@@ -200,6 +211,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def _wait_for_state(self, description, predicate, timeout_seconds, poll_seconds=30):
         """Bound charging and physical transition waits using a monotonic deadline."""
+        # Wall-clock corrections must not extend or shorten a charging deadline.
         deadline = time.monotonic() + timeout_seconds
         while True:
             state = self._get_battery_state()
@@ -218,6 +230,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             time.sleep(min(poll_seconds, remaining))
 
     def _ensure_charger_on(self):
+        # Callback acknowledgment alone does not establish that the DUT receives AC power.
         state = self._get_battery_state()
         if state['power_line_status'] != 'Online':
             self._request_charger(self.charge_on_call, 'charge_on')
@@ -245,6 +258,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
                 self.restore_charging = True
                 return
         self._ensure_charger_on()
+        # Reach the charge threshold before disconnecting for DC collection.
         logging.info(
             "Keep the charger connected until the battery reaches %d%% "
             "(charging timeout: %d minutes).",
@@ -296,12 +310,14 @@ class BldtSwHygiene(core.app_scenario.Scenario):
                 )
             self.restore_charging = False
         except Exception:
+            # Cleanup must not replace an earlier assessment failure with a restoration error.
             if not best_effort:
                 raise
             logging.exception("Failed to restore charging after BLDT Software Hygiene.")
 
     def setUp(self):
         """Prepare installation and power before entering HOBL's measured lifecycle."""
+        # Validate settings before operating the charger or installing tools.
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_sw_hygiene:power_source must be AC or DC.')
@@ -334,6 +350,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         )
         self.bldt_timeout_minutes = math.ceil(collection_seconds / 60)
 
+        # Charger commands come from the device profile, not Intel's collection parameters.
         self.charge_on_call = Params.get('global', 'charge_on_call')
         self.charge_off_call = Params.get('global', 'charge_off_call')
         if not self.prep_run_only and self.charger_mode == 'automated' and self.power_source == 'DC' and (
@@ -352,6 +369,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             core.app_scenario.Scenario.setUp(self)
             return
 
+        # Make AC available for preparation when required, without starting DAQ measurement.
         if self.charger_mode == 'automated':
             self._ensure_charger_on()
         else:
@@ -359,6 +377,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             if self.power_source == 'AC' or state['battery_percent'] < self.min_battery_charge:
                 self._ensure_charger_on()
 
+        # Preparation may take time; recheck charge and the selected source after it completes.
         self.prep()
 
         try:
@@ -375,6 +394,8 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             return
         # Intel retains earlier reports; only new or changed files can satisfy this run.
         before = self._report_files()
+        # Software Hygiene uses socwatch_pwrsrc, unlike Battery Life's pwrsrc parameter.
+        # Keep optional debug/report settings fixed; this flow collects data, not AI findings.
         parameters = (
             f'min_battery_charge:{self.min_battery_charge};'
             f'socwatch_duration:{self.socwatch_duration};'
@@ -405,7 +426,9 @@ class BldtSwHygiene(core.app_scenario.Scenario):
                 logging.exception("Could not stage partial BLDT reports after execution failed.")
             raise
 
+        # Preserve native output before evaluating execution and report completeness.
         reports = self._stage_reports(before, self.dut_data_path)
+        # These summarize execution/settings; diagnostic findings stay in Intel's native reports.
         metrics = {
             # DUT-side process time excludes report staging, RPC overhead and charger waits.
             'scenario_runtime': round(result['seconds'], 3),
@@ -423,6 +446,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             'allow_lost_events': 0,
             'report_file_count': reports['files'],
         }
+        # Write host metrics separately; the native SWHygiene JSON is the AI scenario's input.
         directory = Path(self.result_dir)
         directory.mkdir(parents=True, exist_ok=True)
         with (directory / 'bldt_sw_hygiene_results.csv').open('w', newline='', encoding='utf-8') as stream:
@@ -443,6 +467,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def tearDown(self):
         """Stop measurement and collect results before attempting charger restoration."""
+        # Reconnecting the charger must not contaminate the measured workload power trace.
         try:
             logging.info("Collecting BLDT Software Hygiene logs, metrics, and reports.")
             core.app_scenario.Scenario.tearDown(self)
@@ -454,6 +479,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     def kill(self):
         """Stop only this run's BLDT process and attempt to restore charging."""
         # HOBL creates a new scenario instance for cleanup; ownership must survive on the DUT.
+        # Matching PID and start time avoids stopping an unrelated process after PID reuse.
         path = ntpath.join(self.dut_data_path, 'bldt_sw_hygiene.process.json')
         try:
             self._powershell(r"""
@@ -476,6 +502,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def _powershell(self, script, timeout=300, **values):
         """Keep JSON replies free of progress serialization and propagate remote errors."""
+        # Bind literal values and turn remote PowerShell failures into nonzero command exits.
         assignments = '\n'.join(f'${name} = {self._quote(value)}' for name, value in values.items())
         command = (
             "$ErrorActionPreference = 'Stop'\n"
@@ -483,6 +510,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             f"{assignments}\ntry {{\n{script}\n}} catch {{\n"
             "Write-Output (' ERROR - ' + $_.Exception.Message)\nexit 1\n}"
         )
+        # PowerShell expects UTF-16LE Base64; this transports commands, not encrypts them.
         encoded = base64.b64encode(command.encode('utf-16-le')).decode('ascii')
         return self._call(
             ['powershell.exe',
@@ -492,6 +520,8 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def _run_process(self, executable, arguments, log_prefix, timeout, working_directory):
         """Capture output and stop a timed-out process on the DUT, not just the RPC."""
+        # Time BLDT startup/execution, excluding prep, charger waits and report staging.
+        # Persist PID/start time so cancellation can locate this run's process.
         output = self._powershell(r"""
             New-Item -ItemType Directory -Path (Split-Path -Parent $prefix) -Force | Out-Null
             $timer = [Diagnostics.Stopwatch]::StartNew()
@@ -520,6 +550,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def _report_files(self):
         """Snapshot native report metadata without writing extra state on the DUT."""
+        # Resolve Intel's report root on the DUT and return relative path/size/time records.
         output = self._powershell(r"""
             $root = Join-Path (Get-Item -LiteralPath $env:USERPROFILE).FullName 'Intel\BatteryLifeDiagnostic'
             $files = @(
@@ -542,9 +573,11 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
     def _stage_reports(self, before, report_dir):
         """Stage changed reports and required HTML assets for normal HOBL collection."""
+        # Intel report root -> DUT staging folder here; DUT -> host during teardown.
         after = self._report_files()
         if after['root'] != before['root']:
             raise RuntimeError('BLDT report directory changed during the run.')
+        # New or modified metadata distinguishes fresh output from historical reports.
         changed = {
             name: metadata for name, metadata in after['files'].items()
             if before['files'].get(name) != metadata
@@ -557,6 +590,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         files = []
         for name, (size, _) in selected.items():
             relative = PureWindowsPath(name)
+            # Reject paths that could escape the staging directory.
             if relative.drive or relative.root or '..' in relative.parts:
                 raise RuntimeError(f'Invalid relative BLDT report path: {name}')
             files.append({'path': name, 'size': size})
@@ -573,6 +607,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
                 }
             }
         """, root=after['root'], destination=report_dir, files=json.dumps(files[start:start + 20]))
+        # Group matching formats by relative stem; reports from different runs cannot combine.
         report_sets = {}
         for name, (size, _) in changed.items():
             relative = PureWindowsPath(name)

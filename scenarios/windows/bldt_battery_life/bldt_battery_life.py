@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"""Prepare Intel BLDT, run Battery Life once, and stage its reports for HOBL."""
+"""Coordinate Battery Life on the host; run prep and Intel BLDT remotely on the DUT."""
 
 import base64
 import csv
@@ -18,27 +18,30 @@ from core.parameters import Params
 
 
 class _BatteryStateTimeout(RuntimeError):
-    """The DUT responded, but did not reach the requested battery state in time."""
+    """Distinguish a power-transition timeout from RPC or malformed-response failures."""
 
 
 class BldtBatteryLife(core.app_scenario.Scenario):
-    """Assess battery life with Intel BLDT and collect its reports.
+    """Run Intel's battery-life diagnostics through HOBL.
 
-    Steps:
-    1. Upload the prep script if missing or changed; install or repair BLDT only when needed.
-    2. Reach min_battery_charge and confirm the selected power source before measurement.
-    3. Run batteryLife once on DC (default) or AC.
-    4. Collect fresh matching HTML, JSON and ZIP reports, assets, logs and metrics.
-    5. Restore charging after measurement.
+    Intel workload: batteryLife collects SoC Watch and Windows energy-report diagnostics
+    for battery-life investigation and produces native HTML, JSON and ZIP reports.
 
-    Prep automatically stops any existing BLDT session before installation or collection.
-    Charger control is automated or manual; manual reconnect timeouts only warn.
-    scenario_runtime measures the BLDT process, excluding charging and report collection.
-    Either BLDT edition works without AI models; no AI analysis is run.
+    HOBL lifecycle:
+    1. Before: refresh prep, close existing BLDT sessions, and ensure either edition
+       is installed; reach the starting charge and verify AC/DC using manual or
+       automated charger control before starting DAQ measurement.
+    2. Run: invoke batteryLife with the selected power mode and collection timings.
+    3. After: require fresh matching reports, write CSV metrics, stop measurement,
+       retrieve native reports/assets/logs to the host, then restore charging.
+
+    scenario_runtime measures BLDT execution, excluding charging and report collection.
+    Manual reconnect timeouts only warn. No AI analysis or AI models are required.
     Prep-only mode skips charging and the workload.
     Success means complete execution and reports, not passing every Intel check.
     """
 
+    # Unlike SysConfig, this is a measured scenario: normal DAQ callbacks remain enabled.
     module = __module__.split('.')[-1]
 
     Params.setDefault(
@@ -88,6 +91,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     @staticmethod
     def _get_integer_parameter(name, minimum, maximum):
+        """Parse one numeric setting and reject values outside its supported range."""
         value = Params.get(BldtBatteryLife.module, name)
         try:
             parsed = int(value)
@@ -104,7 +108,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         # HOBL can call prep again in prep-only mode within the same invocation.
         if getattr(self, 'installation', None) is not None:
             return
-        # The marker records prep completion; live discovery still checks for missing artifacts.
+        # A marker is bookkeeping, not proof the installation still exists on the DUT.
         needs_marker = bool(self.checkPrepStatus(['bldt']))
         script = Path(__file__).with_name('bldt_battery_life_resources') / 'bldt_battery_life_prep.ps1'
         remote_script = ntpath.join(self.dut_exec_path, script.name)
@@ -124,6 +128,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
                     raise RuntimeError('BLDT prep script hash mismatch after upload.')
             else:
                 logging.info("BLDT prep script is current; skipping upload.")
+            # Updating this script does not force reinstall: the DUT performs live discovery.
             output = self._powershell(
                 '& $prepScript -CacheRoot $cache -LogRoot $logs',
                 timeout=32460, prepScript=remote_script,
@@ -131,11 +136,13 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             )
             prepared = json.loads(output)
         except Exception:
+            # Setup failure may skip normal teardown, so retrieve diagnostic logs here.
             try:
                 self._copy_data_from_remote(self.result_dir)
             except Exception:
                 logging.exception("Could not retrieve BLDT preparation logs after setup failed.")
             raise
+        # Save the actual executable/version and update the shared prep bookkeeping.
         self.installation = prepared['installation']
         logging.info("BLDT ready: %s", self.installation)
         if needs_marker or prepared['installed']:
@@ -143,6 +150,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def _get_battery_state(self):
         """Read actual DUT power state rather than trusting a relay acknowledgment."""
+        # Query Windows on the DUT; JSON keeps charge and power fields unambiguous over RPC.
         command = (
             "$ErrorActionPreference = 'Stop'; "
             "$ProgressPreference = 'SilentlyContinue'; "
@@ -158,6 +166,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         lines = [line.strip() for line in output.splitlines() if line.strip()]
         if not lines:
             raise RuntimeError('BLDT Battery Life could not read the DUT battery state.')
+        # Do not interpret unknown power or invalid charge readings as ready to measure.
         try:
             json_lines = [line for line in lines if line.startswith('{')]
             if len(json_lines) != 1:
@@ -172,6 +181,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             raise RuntimeError(
                 f'BLDT Battery Life received an invalid battery-state response: {output!r}'
             ) from error
+        # Require a real system battery and a usable charge reading before proceeding.
         if 'NoSystemBattery' in state.get('battery_charge_status', ''):
             raise RuntimeError('BLDT Battery Life requires a DUT with a system battery.')
         if not 0 <= state['battery_percent'] <= 100:
@@ -182,6 +192,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def _request_charger(self, callback, action):
         """Prompt an operator or use the existing host-side charger callback."""
+        # Manual mode sends no relay command; both modes verify Windows state afterward.
         if self.charger_mode == 'manual':
             instruction = 'Connect the charger' if action == 'charge_on' else 'Unplug the charger'
             logging.warning(
@@ -199,6 +210,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def _wait_for_state(self, description, predicate, timeout_seconds, poll_seconds=30):
         """Bound charging and physical transition waits using a monotonic deadline."""
+        # Monotonic time is unaffected by wall-clock corrections during long charging waits.
         deadline = time.monotonic() + timeout_seconds
         while True:
             state = self._get_battery_state()
@@ -217,6 +229,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             time.sleep(min(poll_seconds, remaining))
 
     def _ensure_charger_on(self):
+        # A successful callback alone does not establish that the DUT receives AC power.
         state = self._get_battery_state()
         if state['power_line_status'] != 'Online':
             self._request_charger(self.charge_on_call, 'charge_on')
@@ -244,6 +257,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
                 self.restore_charging = True
                 return
         self._ensure_charger_on()
+        # Charging completes before measurement; DC tests disconnect only after this threshold.
         logging.info(
             "Keep the charger connected until the battery reaches %d%% "
             "(charging timeout: %d minutes).",
@@ -295,12 +309,14 @@ class BldtBatteryLife(core.app_scenario.Scenario):
                 )
             self.restore_charging = False
         except Exception:
+            # Error/cancellation cleanup must not replace the original assessment failure.
             if not best_effort:
                 raise
             logging.exception("Failed to restore charging after BLDT Battery Life.")
 
     def setUp(self):
         """Prepare installation and power before entering HOBL's measured lifecycle."""
+        # Validate text and numeric settings before operating the charger or installing tools.
         self.power_source = Params.get(self.module, 'power_source').strip().upper()
         if self.power_source not in ('AC', 'DC'):
             raise ValueError('bldt_battery_life:power_source must be AC or DC.')
@@ -333,6 +349,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         )
         self.bldt_timeout_minutes = math.ceil(collection_seconds / 60)
 
+        # Charger commands belong to the device profile, not to the Intel executable.
         self.charge_on_call = Params.get('global', 'charge_on_call')
         self.charge_off_call = Params.get('global', 'charge_off_call')
         if not self.prep_run_only and self.charger_mode == 'automated' and self.power_source == 'DC' and (
@@ -351,6 +368,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             core.app_scenario.Scenario.setUp(self)
             return
 
+        # Make AC available for preparation when required, without starting DAQ measurement.
         if self.charger_mode == 'automated':
             self._ensure_charger_on()
         else:
@@ -358,6 +376,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             if self.power_source == 'AC' or state['battery_percent'] < self.min_battery_charge:
                 self._ensure_charger_on()
 
+        # Prep may take time; recheck charge and the selected source after it completes.
         self.prep()
 
         try:
@@ -374,6 +393,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             return
         # Intel retains earlier reports; only new or changed files can satisfy this run.
         before = self._report_files()
+        # These are Intel collection settings, not a battery-to-empty rundown request.
         parameters = (
             f'min_battery_charge:{self.min_battery_charge};'
             f'socwatch_duration:{self.socwatch_duration};'
@@ -402,7 +422,9 @@ class BldtBatteryLife(core.app_scenario.Scenario):
                 logging.exception("Could not stage partial BLDT reports after execution failed.")
             raise
 
+        # Preserve native output before evaluating execution and report completeness.
         reports = self._stage_reports(before, self.dut_data_path)
+        # Record execution separately from Intel's diagnostic findings, even for nonzero exits.
         metrics = {
             # DUT-side process time excludes report staging, RPC overhead and charger waits.
             'scenario_runtime': round(result['seconds'], 3),
@@ -416,6 +438,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             'energy_rpt_duration': self.energy_rpt_duration,
             'report_file_count': reports['files'],
         }
+        # Write the host-side execution summary separately from Intel's diagnostic reports.
         directory = Path(self.result_dir)
         directory.mkdir(parents=True, exist_ok=True)
         with (directory / 'bldt_battery_life_results.csv').open('w', newline='', encoding='utf-8') as stream:
@@ -423,6 +446,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         logging.info("========== BLDT Battery Life metrics ==========")
         for key, value in metrics.items():
             logging.info("%s: %s", key, value)
+        # A diagnostic finding is not an execution failure; require exit zero and a full bundle.
         if result['exit_code'] != 0:
             raise RuntimeError(f"BLDT Battery Life failed ({result['exit_code']}); see its logs.")
         # Require all formats from one report, rather than combining unrelated report sets.
@@ -436,6 +460,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def tearDown(self):
         """Stop measurement and collect results before attempting charger restoration."""
+        # Charger reconnection must not contaminate the recorded workload power trace.
         try:
             logging.info("Collecting BLDT Battery Life logs, metrics, and reports.")
             core.app_scenario.Scenario.tearDown(self)
@@ -447,6 +472,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
     def kill(self):
         """Stop only this run's BLDT process and attempt to restore charging."""
         # HOBL creates a new scenario instance for cleanup; ownership must survive on the DUT.
+        # Match both PID and start time so PID reuse cannot target an unrelated process.
         path = ntpath.join(self.dut_data_path, 'bldt_battery_life.process.json')
         try:
             self._powershell(r"""
@@ -469,6 +495,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def _powershell(self, script, timeout=300, **values):
         """Keep JSON replies free of progress serialization and propagate remote errors."""
+        # Bind literal values and turn remote PowerShell failures into nonzero command exits.
         assignments = '\n'.join(f'${name} = {self._quote(value)}' for name, value in values.items())
         command = (
             "$ErrorActionPreference = 'Stop'\n"
@@ -476,6 +503,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             f"{assignments}\ntry {{\n{script}\n}} catch {{\n"
             "Write-Output (' ERROR - ' + $_.Exception.Message)\nexit 1\n}"
         )
+        # PowerShell expects UTF-16LE Base64; this transports commands, not encrypts them.
         encoded = base64.b64encode(command.encode('utf-16-le')).decode('ascii')
         return self._call(
             ['powershell.exe',
@@ -485,6 +513,8 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def _run_process(self, executable, arguments, log_prefix, timeout, working_directory):
         """Capture output and stop a timed-out process on the DUT, not just the RPC."""
+        # Wall-clock timing includes BLDT startup, but excludes prep, charging and staging.
+        # Persist PID/start time for cleanup; releasing the process object does not stop it.
         output = self._powershell(r"""
             New-Item -ItemType Directory -Path (Split-Path -Parent $prefix) -Force | Out-Null
             $timer = [Diagnostics.Stopwatch]::StartNew()
@@ -513,6 +543,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def _report_files(self):
         """Snapshot native report metadata without writing extra state on the DUT."""
+        # Resolve Intel's report root on the DUT and return relative path/size/time records.
         output = self._powershell(r"""
             $root = Join-Path (Get-Item -LiteralPath $env:USERPROFILE).FullName 'Intel\BatteryLifeDiagnostic'
             $files = @(
@@ -535,9 +566,11 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
     def _stage_reports(self, before, report_dir):
         """Stage changed reports and required HTML assets for normal HOBL collection."""
+        # Intel report root -> DUT staging folder here; DUT -> host during teardown.
         after = self._report_files()
         if after['root'] != before['root']:
             raise RuntimeError('BLDT report directory changed during the run.')
+        # Metadata differences identify fresh output; unchanged historical reports do not count.
         changed = {
             name: metadata for name, metadata in after['files'].items()
             if before['files'].get(name) != metadata
@@ -550,6 +583,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         files = []
         for name, (size, _) in selected.items():
             relative = PureWindowsPath(name)
+            # Reject paths that could escape the staging directory.
             if relative.drive or relative.root or '..' in relative.parts:
                 raise RuntimeError(f'Invalid relative BLDT report path: {name}')
             files.append({'path': name, 'size': size})
@@ -566,6 +600,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
                 }
             }
         """, root=after['root'], destination=report_dir, files=json.dumps(files[start:start + 20]))
+        # Match all formats by relative stem; filenames from different runs cannot combine.
         report_sets = {}
         for name, (size, _) in changed.items():
             relative = PureWindowsPath(name)
