@@ -20,8 +20,8 @@ class Tool(Scenario):
     '''
     module = __module__.split('.')[-1]
     # Set default parameters
-    Params.setDefault(module, 'brightness', '150nits') # 65 or 65% or 150nits
-    Params.setDefault(module, 'nits_map', '100nits:50% 150nits:65%')
+    Params.setDefault(module, 'brightness', '150nits', desc="The desired display brightness, specified in nits (e.g., '150nits')") # 65 or 65% or 150nits
+    Params.setDefault(module, 'nits_map', '100nits:50% 150nits:65%', desc="A mapping of nits values to corresponding brightness slider percentages (e.g., '100nits:50% 150nits:65%')")
     
     # Initialize parameters
     brightness = ""

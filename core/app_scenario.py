@@ -673,6 +673,15 @@ class Scenario(unittest.TestCase):
         else:
             self._callback(callback_test_begin)
 
+        # Create a list of files that need to be processed for roll_up metrics
+        files_to_process = ["run_info.csv", "study_vars.csv", self.testname + "_ConfigPre.csv", self.testname + "_ConfigPost.csv", "Config.csv"]
+
+        # Append files to process to the roll-up list, creating it if needed.
+        roll_up_file = os.path.join(self.result_dir, "roll_up_files.txt")
+        with open(roll_up_file, "a") as f:
+            for file in files_to_process:
+                f.write(file + "\n")
+
     def runScenario(self):
         self.scenario_start_time = time.time()
         self.scenario_prev_time = self.scenario_start_time

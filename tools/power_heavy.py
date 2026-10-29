@@ -68,9 +68,22 @@ class Tool(Scenario):
 
         logging.info("Power Heavy Tool - Running Parse_power_heavy.exe on " + etl_trace)
 
-        base_name = self.scenario.result_dir + "\\" + self.scenario.testname
-        self._host_call("utilities\\proprietary\\ParsePowerHeavy\\Parse_power_heavy.exe -m all -i " + etl_trace + " -o " + base_name, expected_exit_code="")
+        # Create output dir for power_heavy results
+        output_path = os.path.join(self.scenario.result_dir, self.module)
+        os.makedirs(output_path, exist_ok=True)
 
+        output_name = output_path + "\\" + self.scenario.testname
+        base_name = self.scenario.result_dir + "\\" + self.scenario.testname
+        self._host_call("utilities\\proprietary\\ParsePowerHeavy\\Parse_power_heavy.exe -m all -i " + etl_trace + " -o " + output_name, expected_exit_code="")
+
+        # Create a list of files that need to be processed for roll_up metrics
+        roll_up_file_path = os.path.relpath(output_name, self.scenario.result_dir)
+        files_to_process = [roll_up_file_path + "_power_heavy_summary.csv"]
+        # Append files to process to the roll-up list, creating it if needed.
+        roll_up_file = os.path.join(self.scenario.result_dir, "roll_up_files.txt")
+        with open(roll_up_file, "a") as f:
+            for file in files_to_process:
+                f.write(file + "\n")
     #     power_light_file_path = base_name + "_power_light.csv"
     #     if os.path.exists(power_light_file_path):
     #         try:

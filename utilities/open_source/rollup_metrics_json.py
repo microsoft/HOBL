@@ -21,16 +21,16 @@ def main():
     arg_parser.add_argument('-recurse', '-r', help='Search directories recursively.', action="store_true")
     arg_parser.add_argument('-dir', '-d', nargs='?', default='.', help='Directory to start search')
     arg_parser.add_argument('-goals', '-g', nargs='?', default='', help='Directory to start search')
-    arg_parser.add_argument('-files', '-f', nargs='*', default=['*.csv'], help='list of .csv files, can use wildcards.')
+    arg_parser.add_argument('-files', '-f', nargs='*', default=['*.csv'], help='Accepted for compatibility; input CSVs are selected by the roll-up manifest.')
     arg_parser.add_argument('-warn_limit', '-w', nargs='*', default='', help='limit for warn in percent.')
     arg_parser.add_argument('-goal_limit', '-l', nargs='*', default='30', help='limit for goals in percent.')
     arg_parser.add_argument('-phase_power_type', '-p', default="Total", help='Phase report power type to be rolled up to metrics file.')
     arg_parser.add_argument('-fail_on', '-o', nargs='+', default='', help='Metrics to fail on')
     args = arg_parser.parse_args()
 
-    args.files =  ['rundown.csv', '*power_data.csv', 'maxim_summary*.csv', '*power_light_summary.csv', '*e3_power_summary.csv', '*ConfigPre.csv', '*ConfigPost.csv', '*top_processes.csv', '*socwatch.csv', '*.csv']
+    # Original pattern-priority list (no longer used):
+    # args.files = ['rundown.csv', '*power_data.csv', 'maxim_summary*.csv', '*power_light_summary.csv', '*e3_power_summary.csv', '*ConfigPre.csv', '*ConfigPost.csv', '*top_processes.csv', '*socwatch.csv', '*.csv']
     print (args.dir)
-    print (args.files)
     print (args.goals)
     # print ("Goal limit: " + args.goal_limit[0])
     # print ("Warn limit: " + args.warn_limit[0])
@@ -44,8 +44,6 @@ def main():
     # print ("Warn limit: " + str(round(warn_limit,3)))
 
     dirpath = os.path.abspath(args.dir)
-    for basepath in args.files:
-        print ("Basepath: " + basepath)
 
     # List of csv files we don't want to rollup.
     exception_list = [
@@ -127,70 +125,91 @@ def main():
         rails = {"Mean":{}}
         # metrics = []
 
-        # Loop through .csv files we want to roll up
-        for arg_file in args.files:
-            match = False
-            # Loop through files in run folder and read .csv files that match arg list
-            for file in files: 
-                # print("File: " + file)
-                if glob.fnmatch.fnmatch(file, arg_file):
-                    if is_exception(file):
-                        continue
-                    # Don't rollup files under the "socwatch" or "phm" folders
-                    if root[-8:].lower() == "socwatch":
-                        break
-                    if root[-3:].lower() == "phm":
-                        break
-                    match = True
-                    found_one = True
-                    print (u"Processing: " + root + os.sep + file)
-                    inputfile = root + os.sep + file
-                    with open(inputfile) as csvfile:
-                        try:
-                            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-                            for r in reader:
-                                if "rails.csv" in file:
-                                    if len(r) == 5:
-                                        # rail_key = r[0].split()[-1].lower()
-                                        # if rail_key in rails["mean"].keys():
-                                        if "power" in r[0].lower() or "voltage" in r[0].lower():
-                                            rails["Mean"][r[0]] = r[2]
-                                            # rails["maximum"][rail_key][r[0]] = r[3]
-                                            # rails["minimum"][rail_key][r[0]] = r[4]
-                                elif len(r) > 1:
-                                    if r[1] == "NaN":
-                                        r[1] = ""
-                                    m = round(float(r[1]), 3) if is_float(r[1]) else r[1]
-                                    try:
-                                        # Check if the string is "nan"
-                                        if str(m).lower() == "nan":
-                                            continue
-                                    except:
-                                        pass
-                                    if "_power_data.csv" in file:
-                                        daq_metrics[r[0]] = m
-                                    elif "_power_light.csv" in file:
-                                        pm_metrics[r[0]] = m
-                                    elif "_power_light_summary.csv" in file:
-                                        pm_summary_metrics[r[0]] = m
-                                    elif "_e3_power_summary.csv" in file:
-                                        e3_metrics[r[0]] = m
-                                    elif "Config.csv" in file:
-                                        full_config_metrics[r[0]] = r[1]
-                                    elif "ConfigPre.csv" in file:
-                                        config_metrics[r[0]] = r[1]
-                                    elif "ConfigPost.csv" in file:
-                                        config_metrics[r[0]] = r[1]
-                                    elif "run_info.csv" in file:
-                                        run_info_metrics[r[0]] = r[1]
-                                    elif "study_vars.csv" in file:
-                                        simplied_key = r[0].replace("VAR_", '')
-                                        study_var_metrics[simplied_key] = r[1]
-                                    else:
-                                        metrics[r[0]] = m
-                        except:
-                            print (u"WARNING - Could not read: " + inputfile)
+        # Only process files explicitly listed by tools for this directory.
+        input_files = []
+        roll_up_file = os.path.join(root, "roll_up_files.txt")
+        if os.path.isfile(roll_up_file):
+            seen_files = set()
+            try:
+                with open(roll_up_file) as manifest:
+                    for line in manifest:
+                        path = line.strip()
+                        if not path:
+                            continue
+                        if not os.path.isabs(path):
+                            path = os.path.join(root, path)
+                        normalized_path = os.path.normcase(os.path.abspath(path))
+                        if normalized_path in seen_files:
+                            continue
+                        seen_files.add(normalized_path)
+                        if not os.path.isfile(path):
+                            print("File listed in roll_up_files.txt not found: " + path)
+                            continue
+                        input_files.append(path)
+            except OSError as error:
+                print("Could not read: " + roll_up_file + ": " + str(error))
 
+        match = False
+        for inputfile in input_files:
+            file = os.path.basename(inputfile)
+            if not glob.fnmatch.fnmatch(file, '*.csv'):
+                continue
+            if is_exception(file):
+                print("Skipping exception file: " + file)
+                continue
+            # Don't rollup files under the "socwatch" or "phm" folders
+            if root[-8:].lower() == "socwatch":
+                break
+            if root[-3:].lower() == "phm":
+                break
+            match = True
+            found_one = True
+            print (u"Processing: " + inputfile)
+            with open(inputfile) as csvfile:
+                try:
+                    reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                    for r in reader:
+                        if "rails.csv" in file:
+                            if len(r) == 5:
+                                # rail_key = r[0].split()[-1].lower()
+                                # if rail_key in rails["mean"].keys():
+                                if "power" in r[0].lower() or "voltage" in r[0].lower():
+                                    rails["Mean"][r[0]] = r[2]
+                                    # rails["maximum"][rail_key][r[0]] = r[3]
+                                    # rails["minimum"][rail_key][r[0]] = r[4]
+                        elif len(r) > 1:
+                            if r[1] == "NaN":
+                                r[1] = ""
+                            m = round(float(r[1]), 3) if is_float(r[1]) else r[1]
+                            try:
+                                # Check if the string is "nan"
+                                if str(m).lower() == "nan":
+                                    continue
+                            except:
+                                pass
+                            if "_power_data.csv" in file:
+                                daq_metrics[r[0]] = m
+                            elif "_power_light.csv" in file:
+                                pm_metrics[r[0]] = m
+                            elif "_power_light_summary.csv" in file:
+                                pm_summary_metrics[r[0]] = m
+                            elif "_e3_power_summary.csv" in file:
+                                e3_metrics[r[0]] = m
+                            elif "Config.csv" in file:
+                                full_config_metrics[r[0]] = r[1]
+                            elif "ConfigPre.csv" in file:
+                                config_metrics[r[0]] = r[1]
+                            elif "ConfigPost.csv" in file:
+                                config_metrics[r[0]] = r[1]
+                            elif "run_info.csv" in file:
+                                run_info_metrics[r[0]] = r[1]
+                            elif "study_vars.csv" in file:
+                                simplied_key = r[0].replace("VAR_", '')
+                                study_var_metrics[simplied_key] = r[1]
+                            else:
+                                metrics[r[0]] = m
+                except:
+                    print (u"WARNING - Could not read: " + inputfile)
         run_name = os.path.basename(root)
         # if 'Scenario' in metrics:
         #     act_scenario = metrics["Scenario"]
@@ -205,7 +224,10 @@ def main():
         #     metrics['Test Name'] = run_name[0:-4]
 
         if not match:
-            print (u"File not found: " + root + os.sep + arg_file)
+            # print (u"File not found: " + root + os.sep + arg_file)
+            print(u"No matching roll-up files found in: " + root)
+
+
 
         if found_one:
             # We don't want to generate *metrics.csv file for phase folders, except for level 1 abl_prod, abl_idle, and abl_web
@@ -262,7 +284,6 @@ def main():
 
                 # # Add Config data to run
                 # run_obj["Config"] = config_obj[0]
-
                 # Initialize sections
                 for key in run_info_metrics.keys():
                     run_obj[key] = run_info_metrics[key]

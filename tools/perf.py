@@ -14,6 +14,8 @@ import os
 class Tool(Scenario):
     '''
     Calculates a MOS score from an abl_perf run.
+
+    Collects an ETL trace with abl_perf.wprp and will parse results from it to calculate a MOS score.
     '''
     module = __module__.split('.')[-1]
     # Set default parameters
@@ -48,9 +50,10 @@ class Tool(Scenario):
         # result_dir contains the full path to the results directory, and ends in <testname>_<iteration>
 
         etl_trace = self.scenario.result_dir + "\\" + self.scenario.testname + ".etl"
-        perf_output = self.scenario.result_dir + "\\" + self.scenario.testname
+        os.makedirs(os.path.join(self.scenario.result_dir, f"{self.module}"), exist_ok=True)
+        perf_output = self.scenario.result_dir + "\\" + f"{self.module}\\" + self.scenario.testname
         mos_input = perf_output + "_PerfResult.csv"
-        mos_output = self.scenario.result_dir + "\\" + self.scenario.testname
+        mos_output = self.scenario.result_dir + "\\" + f"{self.module}\\" + self.scenario.testname
 
         logging.info("Perf Tool - Running PerfMeasure on " + etl_trace)
 

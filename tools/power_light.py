@@ -79,10 +79,24 @@ class Tool(Scenario):
 
         logging.info("Power Light Tool - Running parse_power_light.exe on " + etl_trace)
 
-        base_name = self.scenario.result_dir + "\\" + self.scenario.testname
-        self._host_call("utilities\\proprietary\\ParsePowerLight\\parse_power_light.exe -m all -f " + etl_trace + " -o " + base_name, expected_exit_code="")
+        # Create output dir for power_light results
+        output_path = os.path.join(self.scenario.result_dir, self.module)
+        os.makedirs(output_path, exist_ok=True)
 
-        power_light_file_path = base_name + "_power_light.csv"
+        output_name = output_path + "\\" + self.scenario.testname
+        base_name = self.scenario.result_dir + "\\" + self.scenario.testname
+        self._host_call("utilities\\proprietary\\ParsePowerLight\\parse_power_light.exe -m all -f " + etl_trace + " -o " + output_name, expected_exit_code="")
+
+        # Create a list of files that need to be processed for roll_up metrics
+        roll_up_file_path = os.path.relpath(output_name, self.scenario.result_dir)
+        files_to_process = [roll_up_file_path + "_power_light.csv", roll_up_file_path + "_power_light_summary.csv", roll_up_file_path + "_top_processes.csv", roll_up_file_path + "_cstate.csv", roll_up_file_path + "_e3_power_summary.csv"]
+        # Append files to process to the roll-up list, creating it if needed.
+        roll_up_file = os.path.join(self.scenario.result_dir, "roll_up_files.txt")
+        with open(roll_up_file, "a") as f:
+            for file in files_to_process:
+                f.write(file + "\n")
+
+        power_light_file_path = output_name + "_power_light.csv"
         if os.path.exists(power_light_file_path):
             try:
                 rails_table = pd.read_csv(power_light_file_path, header=None, index_col=0)
@@ -152,7 +166,7 @@ class Tool(Scenario):
                 if total_standby != float('-inf'):
                     results["PM Total Standby Power (W)"] = total_standby
 
-                outfile = self.scenario.result_dir + "\\" + self.scenario.testname + "_power_light_summary.csv"
+                outfile = self.scenario.result_dir + "\\" + f"{self.module}\\" + self.scenario.testname + "_power_light_summary.csv"
                 pd.DataFrame.from_dict(results, orient='index').to_csv(outfile, float_format='%0.3f', header=False)
 
             except:
