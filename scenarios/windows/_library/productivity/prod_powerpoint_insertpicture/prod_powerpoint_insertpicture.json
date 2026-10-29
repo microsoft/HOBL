@@ -75,8 +75,8 @@
         ],
         "description": "Use the OneDrive picture path on W365",
         "enabled": true,
-        "id": "PPIPF01",
         "eval_method": "==",
+        "id": "PPIPF01",
         "left_term": "[global:platform]",
         "right_term": "W365",
         "type": "If"
@@ -89,7 +89,7 @@
                 "description": "Enter the local picture path and insert the picture (Enter)",
                 "enabled": true,
                 "id": "PPIPT06",
-                "text": "[userprofile]\\[image_path]\ue007",
+                "text": "[userprofile]\\OneDrive\\[image_path]\ue007",
                 "type": "Type",
                 "typing_delay": "[typing_delay]"
             }

@@ -47,16 +47,6 @@
     },
     {
         "children": [],
-        "delay": "2",
-        "description": "Open the Animations tab (Alt+A)",
-        "enabled": false,
-        "id": "PPR1T02",
-        "text": "\ue00aa",
-        "type": "Type",
-        "typing_delay": "400"
-    },
-    {
-        "children": [],
         "delay": "0.5",
         "description": "Animations Tab",
         "enabled": true,
@@ -130,16 +120,6 @@
         "enabled": true,
         "id": "PPR1T04B",
         "text": "\ue011\ue015\ue014\ue014\ue007",
-        "type": "Type",
-        "typing_delay": "600"
-    },
-    {
-        "children": [],
-        "delay": "4",
-        "description": "Set the Fly In direction to From Bottom (Alt+A, O, B)",
-        "enabled": false,
-        "id": "PPR1T05",
-        "text": "\ue00aaob",
         "type": "Type",
         "typing_delay": "600"
     },
