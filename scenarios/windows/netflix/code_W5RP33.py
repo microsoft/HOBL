@@ -9,7 +9,7 @@ import csv
 
 def run(scenario):
     logging.debug('Executing code block: code_W5RP33.py')
-    
+
     hud_content = scenario._call(["powershell", "Get-Clipboard"])
 
     section = "global"

@@ -72,7 +72,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "UC6NK7",
-                "include_path": "..\\_library\\web\\web_setup",
+                "include_path": "scenarios\\windows\\_library\\web\\web_setup",
                 "type": "Include"
             },
             {
@@ -81,7 +81,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "W5KVUU",
-                "include_path": "..\\_library\\web\\web_clear_cache",
+                "include_path": "scenarios\\windows\\_library\\web\\web_clear_cache",
                 "type": "Include"
             },
             {
@@ -90,7 +90,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "W5MTC9",
-                "include_path": "..\\_library\\web\\web_enter_address",
+                "include_path": "scenarios\\windows\\_library\\web\\web_enter_address",
                 "params": [
                     {
                         "name": "web_site_address",
@@ -116,7 +116,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "W5NXC9",
-                "include_path": "..\\_library\\web\\web_enter_address",
+                "include_path": "scenarios\\windows\\_library\\web\\web_enter_address",
                 "params": [
                     {
                         "name": "web_site_address",
@@ -204,7 +204,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "W5P848",
-                "include_path": "..\\_library\\web\\web_enter_address",
+                "include_path": "scenarios\\windows\\_library\\web\\web_enter_address",
                 "params": [
                     {
                         "name": "web_site_address",
@@ -284,6 +284,17 @@
             },
             {
                 "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Clear clipboard",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1X5TH3R.py"
+                        ],
+                        "id": "1X5TH3R",
+                        "type": "Code"
+                    },
                     {
                         "children": [],
                         "delay": "3",
@@ -367,7 +378,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "UEY3W9",
-                "include_path": "..\\_library\\web\\web_close_browser",
+                "include_path": "scenarios\\windows\\_library\\web\\web_close_browser",
                 "type": "Include"
             },
             {
@@ -376,7 +387,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "V4JFP1",
-                "include_path": "..\\_library\\web\\web_kill",
+                "include_path": "scenarios\\windows\\_library\\web\\web_kill",
                 "type": "Include"
             }
         ],
