@@ -325,83 +325,39 @@
         "type": "End If"
     },
     {
-        "children": [
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1L8MWR0",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_open",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1FXHYE6",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1L8MWJH",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_open",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1FXHU97",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "3",
-                "description": "3",
-                "enabled": true,
-                "id": "1HEPN1V",
-                "type": "Delay"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1FXJTXM",
-                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "5",
-                "description": "",
-                "enabled": true,
-                "id": "1H6X7Y5",
-                "type": "Delay"
-            }
-        ],
+        "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
-        "eval_method": "in",
-        "id": "1FXHP79",
-        "left_term": "productivity",
-        "right_term": "[minwin_workloads]",
-        "type": "If"
+        "id": "1L8MWR0",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_open",
+        "type": "Include"
     },
     {
         "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1FXHP7A",
-        "type": "End If"
+        "id": "1FXHYE6",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "",
+        "enabled": true,
+        "id": "1X5F50V",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1FXJTXM",
+        "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+        "type": "Include"
     },
     {
         "children": [],
@@ -632,50 +588,6 @@
         "children": [
             {
                 "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1L8MXVP",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_open",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1H28KCM",
-                "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "2",
-                "description": "",
-                "enabled": true,
-                "id": "1P5T1RC",
-                "type": "Delay"
-            }
-        ],
-        "description": "",
-        "enabled": true,
-        "eval_method": "in",
-        "id": "1FUNWTF",
-        "left_term": "productivity",
-        "right_term": "[minwin_workloads]",
-        "type": "If"
-    },
-    {
-        "children": [],
-        "description": "",
-        "enabled": true,
-        "id": "1FUNWTH",
-        "type": "End If"
-    },
-    {
-        "children": [
-            {
-                "children": [],
                 "delay": "5",
                 "description": "",
                 "enabled": true,
@@ -713,7 +625,68 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1H6JM1M",
+        "id": "1L8MWJH",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_open",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1FXHU97",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "3",
+        "enabled": true,
+        "id": "1HEPN1V",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1L8MXVP",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_open",
+        "type": "Include"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "5",
+                "description": "",
+                "enabled": true,
+                "id": "1H6X7Y5",
+                "type": "Delay"
+            }
+        ],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1H28KCM",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "",
+        "enabled": true,
+        "id": "1X5F4NU",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1X5F4LP",
         "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
         "type": "Include"
     },
@@ -899,64 +872,46 @@
         "type": "End If"
     },
     {
-        "children": [
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1NA645R",
-                "include_path": "scenarios\\windows\\_library\\enterprise_collab\\file_explorer_launch",
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0.0",
-                "description": "Search Excel Doc FamilyBudget.xlsx",
-                "enabled": true,
-                "id": "1ULEWPH",
-                "type": "Comment"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1U7VK8V",
-                "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
-                "params": [
-                    {
-                        "name": "[file_name]",
-                        "val_options": "",
-                        "value": "FamilyBudget.xlsx"
-                    }
-                ],
-                "type": "Include"
-            },
-            {
-                "children": [],
-                "delay": "0",
-                "description": "",
-                "enabled": true,
-                "id": "1V972VR",
-                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
-                "type": "Include"
-            }
-        ],
+        "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
-        "eval_method": "in",
-        "id": "1L8PHXP",
-        "left_term": "file_explorer",
-        "right_term": "[minwin_workloads]",
-        "type": "If"
+        "id": "1NA645R",
+        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\file_explorer_launch",
+        "type": "Include"
     },
     {
         "children": [],
+        "delay": "0.0",
+        "description": "Search Excel Doc FamilyBudget.xlsx",
+        "enabled": true,
+        "id": "1ULEWPH",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1L8PHXR",
-        "type": "End If"
+        "id": "1U7VK8V",
+        "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
+        "params": [
+            {
+                "name": "[file_name]",
+                "val_options": "",
+                "value": "FamilyBudget.xlsx"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1V972VR",
+        "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+        "type": "Include"
     },
     {
         "children": [],
