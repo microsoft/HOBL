@@ -889,5 +889,24 @@
         "enabled": true,
         "id": "YTVRVJ",
         "type": "Delay"
+    },
+    {
+        "capture_id": "YV203Y",
+        "children": [],
+        "delay": "2",
+        "description": "Main",
+        "enabled": false,
+        "exception_on": "No match",
+        "file_name": [
+            "main_bot.png"
+        ],
+        "h": "0.021",
+        "id": "1WTWJXT",
+        "match_threshold": "",
+        "scale": "",
+        "type": "Check",
+        "w": "0.023",
+        "x": "0.131",
+        "y": "0.369"
     }
 ]
