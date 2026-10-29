@@ -14,9 +14,13 @@ class Procyon(core.app_scenario.Scenario):
     # Set default parameters:
     default_params.run()
 
+    is_benchmark = True
+
     actions = None
 
     def setUp(self):
+        self.toolCallBacks("testBeginEarlyCallback")
+
         # Load actions JSON.
         actions_json = os.path.join(os.path.dirname(__file__), "procyon.json")
         self.actions = self.load_action_json(actions_json)
@@ -28,6 +32,10 @@ class Procyon(core.app_scenario.Scenario):
 
         # Call base class setUp() to dump config, call tool callbacks, and start measurment
         core.app_scenario.Scenario.setUp(self)
+
+
+    def prep(self):
+        pass
 
 
     def runTest(self):
@@ -60,7 +68,7 @@ class Procyon(core.app_scenario.Scenario):
             self._kill("procyon.exe")
         except:
             pass
-        
+
         try:
             self._kill("Excel.exe Powerpnt.exe Winword.exe")
         except:
