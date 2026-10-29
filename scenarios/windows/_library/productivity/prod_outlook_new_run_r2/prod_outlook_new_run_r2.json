@@ -9,7 +9,7 @@
         "id": "PONR3I00",
         "type": "Information"
     },
-    {  
+    {
         "children": [],
         "delay": "0",
         "description": "Begin recording the New Outlook compose and attachment phase",
@@ -103,7 +103,7 @@
             {
                 "name": "[file_source]",
                 "val_options": "OneDrive,Local",
-                "value": "Local"
+                "value": "OneDrive"
             },
             {
                 "name": "[file_path]",
