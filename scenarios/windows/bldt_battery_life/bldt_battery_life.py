@@ -410,7 +410,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         try:
             result = self._run_process(
                 self.installation['executable'],
-                f'--type batteryLife --params "{parameters}" --telemetry false',
+                f'--type batteryLife --params "{parameters}" --telemetry=false',
                 ntpath.join(self.dut_data_path, 'bldt_battery_life'),
                 self.bldt_timeout_minutes * 60,
                 ntpath.dirname(self.installation['executable']),

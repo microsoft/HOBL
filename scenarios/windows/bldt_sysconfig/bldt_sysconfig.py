@@ -113,7 +113,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
             # Use the discovered executable; 900 seconds is a timeout, not a duration.
             result = self._run_process(
                 self.installation['executable'],
-                f'--type SysConfigChecks --params pwrsrc:{self.power_source} --telemetry false',
+                f'--type SysConfigChecks --params pwrsrc:{self.power_source} --telemetry=false',
                 ntpath.join(self.dut_data_path, 'bldt'), 900,
                 ntpath.dirname(self.installation['executable']),
             )

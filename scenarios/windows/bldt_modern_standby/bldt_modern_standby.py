@@ -41,6 +41,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
        CSV metrics, stop measurement, collect reports/assets/logs, then restore charging.
 
     scenario_runtime includes BLDT and standby, excluding charging and report collection.
+    Wake scheduling allows five minutes for startup; slow sleep entry can still fail validation.
     Manual reconnect timeouts only warn. No AI analysis or AI models are required.
     Prep-only mode skips charging and the workload.
     Success means the event interval and reports meet validation, not every Intel check passes.
@@ -446,7 +447,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
             try:
                 result = self._run_process(
                     self.installation['executable'],
-                    f'--type mosTest --params "{parameters}" --telemetry false',
+                    f'--type mosTest --params "{parameters}" --telemetry=false',
                     ntpath.join(self.dut_data_path, 'bldt_modern_standby'),
                     self.bldt_timeout_seconds,
                     ntpath.dirname(self.installation['executable']),
@@ -559,19 +560,22 @@ class BldtModernStandby(core.app_scenario.Scenario):
         # Do not send a cleanup toggle: an ambiguous second pulse could put an awake DUT to sleep.
         if hasattr(self, '_standby_cancelled'):
             self._standby_cancelled.set()
-        if getattr(self, '_process_path', None):
-            try:
-                self._powershell(r"""
-                    if (Test-Path -LiteralPath $path) {
-                        $saved = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
-                        $process = Get-Process | Where-Object { $_.Id -eq $saved.pid }
-                        if ($process -and [string]$process.StartTime.ToUniversalTime().Ticks -eq $saved.started) {
-                            Stop-Process -Id $process.Id -Force
-                        }
+        # A fresh HOBL cleanup instance reconstructs the path without running setUp.
+        path = getattr(self, '_process_path', None) or ntpath.join(
+            self.dut_data_path, 'bldt_modern_standby.process.json'
+        )
+        try:
+            self._powershell(r"""
+                if (Test-Path -LiteralPath $path) {
+                    $saved = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+                    $process = Get-Process | Where-Object { $_.Id -eq $saved.pid }
+                    if ($process -and [string]$process.StartTime.ToUniversalTime().Ticks -eq $saved.started) {
+                        Stop-Process -Id $process.Id -Force
                     }
-                """, timeout=30, path=self._process_path)
-            except Exception:
-                logging.exception("Could not stop BLDT; check the DUT manually. No cleanup wake pulse will be sent.")
+                }
+            """, timeout=30, path=path)
+        except Exception:
+            logging.exception("Could not stop BLDT; check the DUT manually. No cleanup wake pulse will be sent.")
         self._restore_charging(best_effort=True)
 
     @staticmethod
@@ -649,7 +653,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
                     exit_code = $process.ExitCode; seconds = ($finished - $started).TotalSeconds
                     events = @($events | Select-Object id, record_id, seconds, utc)
                     errors = @(Select-String -LiteralPath "$prefix.stdout.log", "$prefix.stderr.log" `
-                        -Pattern '^\s*ERROR:\s*' | ForEach-Object { $_.Line.Trim() })
+                        -Pattern '^\s*ERROR(?:\s*:\s*|\s+-\s+)' | ForEach-Object { $_.Line.Trim() })
                 } | ConvertTo-Json -Depth 4 -Compress
             } finally {
                 $process.Dispose()

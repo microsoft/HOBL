@@ -39,6 +39,7 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
     No DAQ measurement, power checks or charger control; AC is recommended, not required.
     scenario_runtime includes native initialization/analysis, not prep or host report repair.
     Prep-only mode needs no input and runs no analysis.
+    Report-processing failures remain fatal and are identified separately from analysis errors.
     Success means complete execution and reports, not passing every Intel health check.
     """
 
@@ -340,7 +341,16 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
         super().tearDown()
         for bundle in Path(self.result_dir).rglob('*.AIAnalysis.zip'):
             if 'intel_originals' not in bundle.relative_to(self.result_dir).parts:
-                self._repair_report_bundle(bundle)
+                try:
+                    self._repair_report_bundle(bundle)
+                except (OSError, ValueError, KeyError, TypeError, RuntimeError, zipfile.BadZipFile) as error:
+                    raise RuntimeError(
+                        f'BLDT AI report processing failed for {bundle.name}: {error}. '
+                        'This failure occurred after result collection, not during Intel analysis. '
+                        'Intel originals are retained in the report directory '
+                        'or intel_originals. A persistent report-layout error requires a compatibility '
+                        'fix; rerunning alone may not resolve it.'
+                    ) from error
 
     @staticmethod
     def _repair_report_bundle(bundle):
@@ -462,9 +472,10 @@ class BldtAiAnalysis(core.app_scenario.Scenario):
     def kill(self):
         """Stop only the recorded process from this invocation, if still running."""
         # Match PID and start ticks so a reused PID cannot identify an unrelated process.
-        path = getattr(self, '_process_path', None)
-        if not path:
-            return
+        # A fresh HOBL cleanup instance reconstructs the path without running setUp.
+        path = getattr(self, '_process_path', None) or ntpath.join(
+            self.dut_data_path, 'bldt_ai_analysis.process.json'
+        )
         try:
             self._powershell("""
                 if (Test-Path -LiteralPath $path) {

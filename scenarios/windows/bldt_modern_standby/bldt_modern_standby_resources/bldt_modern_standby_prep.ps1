@@ -202,10 +202,12 @@ function Install-Bldt {
     if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
         throw "Windows Installer executable not found: $exe"
     }
+    # Pass the MSI source directory explicitly for silent installation.
+    $sourceDir = Split-Path -Parent $msi
     $arguments = "$mode `"$msi`" /qn /norestart REBOOT=ReallySuppress " +
-        "WIXUI_EXITDIALOGOPTIONALCHECKBOX=0 /L*v `"$prefix.msi.log`""
-    log "Installing BLDT $Edition using $exe; MSI log: $prefix.msi.log"
-    $process = Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory (Split-Path -Parent $msi) `
+        "INSTALLER_SOURCE_DIR=`"$sourceDir`" WIXUI_EXITDIALOGOPTIONALCHECKBOX=0 /L*v `"$prefix.msi.log`""
+    log "Installing BLDT $Edition using $exe; source: $sourceDir; MSI log: $prefix.msi.log"
+    $process = Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory $sourceDir `
         -RedirectStandardOutput "$prefix.stdout.log" -RedirectStandardError "$prefix.stderr.log" -PassThru
     try {
         # An RPC timeout alone would leave the installer running on the DUT.
