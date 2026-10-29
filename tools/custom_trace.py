@@ -75,15 +75,24 @@ class Tool(Scenario):
     def testEndCallback(self):
         logging.info("Stopping screenshot thread. Stopping and saving ETL trace.")
         self.thread.event.set()
-        if self.thread.activeEtl:
-            try:
-                self.thread.stop_etl()
-            except:
-                pass
+        # if self.thread.activeEtl:
+        #     try:
+        #         self.thread.stop_etl()
+        #     except:
+        #         pass
         self.thread.join()
         return
         
     def dataReadyCallback(self):
+        # output_name = os.path.join(self.scenario.result_dir, self.module, self.scenario.testname)
+        # Create a list of files that need to be processed for roll_up metrics
+        roll_up_file_path = f"{self.module}\\{self.scenario.testname}"
+        files_to_process = [roll_up_file_path + "_top_processes.csv", roll_up_file_path + "_e3_power_summary.csv"]
+        # Append files to process to the roll-up list, creating it if needed.
+        roll_up_file = os.path.join(self.scenario.result_dir, "roll_up_files.txt")
+        with open(roll_up_file, "a") as f:
+            for file in files_to_process:
+                f.write(file + "\n")
         # Do 1 more check if test result is passed in case of another thread ending the test. 
         if self.testResult:
             if self.enable_check == 1:
@@ -133,7 +142,8 @@ class EtlThread(threading.Thread):
         time.sleep(self.start_delay)
         while not self.event.is_set():
             self.start_etl()
-            time.sleep(self.trace_duration)
+            self.event.wait(self.trace_duration)
+            # time.sleep(self.trace_duration)
             self.stop_etl()
             if self.enable_check == 1:
                 if not self.check_result():
@@ -161,6 +171,7 @@ class EtlThread(threading.Thread):
         Periodically stop ETL traces.
         '''
         # stop the ETL trace
+        self.activeEtl = False
         output_path = os.path.join(self.scenario.dut_data_path, self.module)
         self.scenario._remote_make_dir(output_path)
         outfile = os.path.join(output_path, self.scenario.testname + ".etl")
@@ -172,8 +183,6 @@ class EtlThread(threading.Thread):
         basename = os.path.join(self.host_output_path, self.scenario.testname)
 
         self.scenario._host_call("utilities\\proprietary\\ParsePowerLight\\parse_power_light.exe -m e3 -f " + basename + ".etl" + " -o " + basename, expected_exit_code="")
-
-        self.activeEtl = False
 
     def check_result(self):
         '''

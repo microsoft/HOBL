@@ -318,3 +318,13 @@ class Tool(Scenario):
         )
 
         df.to_csv(self.trace_path_result, index=False)
+
+        # Create a list of files that need to be processed for roll_up metrics
+        # take the csv_name and just remove the result_dir part to get a relative path for roll-up
+        roll_up_file = os.path.relpath(self.csv_path_result, self.scenario.result_dir)
+        files_to_process = [roll_up_file]
+        # Append files to process to the roll-up list, creating it if needed.
+        roll_up_file = os.path.join(self.scenario.result_dir, "roll_up_files.txt")
+        with open(roll_up_file, "a") as f:
+            for file in files_to_process:
+                f.write(file + "\n")

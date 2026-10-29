@@ -107,4 +107,13 @@ class Tool(Scenario):
                 writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
                 writer.writerow(row1)
                 writer.writerow(row2)
+
+            # Create a list of files that need to be processed for roll_up metrics
+            roll_up_file_path = os.path.relpath(drips_csv, self.scenario.result_dir)
+            files_to_process = [roll_up_file_path]
+            # Append files to process to the roll-up list, creating it if needed.
+            roll_up_file = os.path.join(self.scenario.result_dir, "roll_up_files.txt")
+            with open(roll_up_file, "a") as f:
+                for file in files_to_process:
+                    f.write(file + "\n")
         pass

@@ -118,5 +118,14 @@ class Tool(Scenario):
             outfile = self.scenario.result_dir + "\\" + f"{self.module}\\" + self.scenario.testname + "_PHM.csv"
             self._host_call("python.exe utilities\\open_source\\parse_socwatch.py" + " -i " + infile + " -o " + outfile)
 
+            # Create a list of files that need to be processed for roll_up metrics
+            roll_up_file = os.path.relpath(outfile, self.scenario.result_dir)
+            files_to_process = [roll_up_file]  # Add the PHM output file to the roll-up list
+            # Append files to process to the roll-up list, creating it if needed.
+            roll_up_file = os.path.join(self.scenario.result_dir, "roll_up_files.txt")
+            with open(roll_up_file, "a") as f:
+                for file in files_to_process:
+                    f.write(file + "\n")
+
     def testTimeoutCallback(self):
         self.conn_timeout = True
