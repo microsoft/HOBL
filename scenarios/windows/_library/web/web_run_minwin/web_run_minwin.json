@@ -629,13 +629,40 @@
         "type": "End If"
     },
     {
-        "children": [],
-        "delay": "5",
+        "children": [
+            {
+                "children": [],
+                "delay": "5",
+                "description": "",
+                "enabled": true,
+                "id": "1V9CTMV",
+                "include_path": "scenarios\\windows\\_library\\Teams\\teams_switch_to",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1X53J1F",
+                "include_path": "scenarios\\windows\\_library\\Teams\\teams_leave_meeting",
+                "type": "Include"
+            }
+        ],
         "description": "",
         "enabled": true,
-        "id": "1V9CTMV",
-        "include_path": "scenarios\\windows\\_library\\Teams\\teams_switch_to",
-        "type": "Include"
+        "eval_method": "==",
+        "id": "1X53HF1",
+        "left_term": "[background_teams]",
+        "right_term": "1",
+        "type": "If"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1X53HF2",
+        "type": "End If"
     },
     {
         "children": [
@@ -1049,15 +1076,6 @@
         "enabled": true,
         "id": "13JWCNL",
         "type": "End If"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1ULET98",
-        "include_path": "scenarios\\windows\\_library\\Teams\\teams_switch_to",
-        "type": "Include"
     },
     {
         "children": [],

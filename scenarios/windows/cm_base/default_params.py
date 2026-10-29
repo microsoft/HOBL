@@ -16,8 +16,9 @@ def run():
     return
 
 def run_user_only():
+    import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_collect_logs')
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_setup')
-    import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_teardown')
+    import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_switch_to')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\perf_setup')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\perf_teardown')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_kill')
