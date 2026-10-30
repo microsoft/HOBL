@@ -1,0 +1,117 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "",
+        "enabled": true,
+        "id": "1TK60KL",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Select Cells",
+        "enabled": true,
+        "id": "1TK60UT",
+        "text": "\ue009g",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Range (C2:C400001)",
+        "enabled": true,
+        "id": "1TK615K",
+        "text": "C2:C400001\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK64KJ",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_top_ribbon",
+        "type": "Include"
+    },
+    {
+        "capture_id": "1TK64CP",
+        "children": [],
+        "delay": "2",
+        "description": "Data Tab",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1TK6538.png"
+        ],
+        "id": "1TK6538",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Sort Button",
+        "enabled": true,
+        "file_name": [
+            "image_1TK68PR.png"
+        ],
+        "h": "0.270",
+        "id": "1TK68PR",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.340",
+        "x": "0.372",
+        "y": "0.013"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6E6E",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "ExcelSortData"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "capture_id": "1TK68PR",
+        "children": [],
+        "delay": "2",
+        "description": "",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VAMWNY.png"
+        ],
+        "id": "1VAMWNY",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "",
+        "enabled": true,
+        "id": "1TK6EWW",
+        "type": "Delay"
+    }
+]
