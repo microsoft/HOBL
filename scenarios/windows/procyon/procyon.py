@@ -63,13 +63,7 @@ class Procyon(core.app_scenario.Scenario):
 
 
     def kill(self):
-        # In case of scenario failure or termination, kill any applications left open here:
         try:
-            self._kill("procyon.exe")
-        except:
-            pass
-
-        try:
-            self._kill("Excel.exe Powerpnt.exe Winword.exe")
+            self._kill("procyon.exe Excel.exe Powerpnt.exe Winword.exe")
         except:
             pass
