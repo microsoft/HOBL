@@ -12,18 +12,7 @@
     {
         "children": [],
         "delay": "0.0",
-        "description": "",
-        "enabled": true,
-        "id": "1LCXMCT",
-        "name": "[test]",
-        "type": "Set Default",
-        "val_options": "office_productivity,essentials,video_playback_batterylife,photo_editing,video_editing,ai_computer_vision_winml,ai_computer_vision_snpe,ai_computer_vision_openvino,ai_computer_vision_tensorrt,ai_computer_vision_ryzenai",
-        "value": "office_productivity"
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "Number of time to iterate the benchmark",
+        "description": "Number of times to iterate",
         "enabled": true,
         "id": "1LCXM0J",
         "name": "[loops]",
@@ -32,48 +21,14 @@
         "value": "1"
     },
     {
-        "children": [],
-        "delay": "0.0",
-        "description": "Procyon activation key to be used during setup",
-        "enabled": true,
-        "id": "1LCXNX5",
-        "name": "[key]",
-        "type": "Set Default",
-        "val_options": "",
-        "value": ""
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "Path on host to Procyon setup files",
-        "enabled": true,
-        "id": "1LE67UW",
-        "name": "[host_path]",
-        "type": "Set Default",
-        "val_options": "",
-        "value": ""
-    },
-    {
         "children": [
             {
                 "children": [],
                 "delay": "0",
-                "description": "Procyon setup",
+                "description": "Setup Procyon",
                 "enabled": true,
-                "id": "1LE67A6",
+                "id": "1LXAFJM",
                 "include_path": "scenarios\\windows\\_library\\procyon\\procyon_setup",
-                "params": [
-                    {
-                        "name": "[host_path]",
-                        "val_options": "",
-                        "value": "[host_path]"
-                    },
-                    {
-                        "name": "[key]",
-                        "val_options": "",
-                        "value": "[key]"
-                    }
-                ],
                 "type": "Include"
             }
         ],
@@ -90,7 +45,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "1LE6NL4",
-                "name": "[procyon_run:loop_number]",
+                "name": "[procyon:loop_number]",
                 "type": "Set",
                 "value": "1"
             },
@@ -101,15 +56,8 @@
                         "delay": "0",
                         "description": "Run Procyon",
                         "enabled": true,
-                        "id": "1LEPNM3",
+                        "id": "1LXAJN5",
                         "include_path": "scenarios\\windows\\_library\\procyon\\procyon_run",
-                        "params": [
-                            {
-                                "name": "[test_definition]",
-                                "val_options": "office_productivity,video_playback_batterylife,photo_editing,video_editing,ai_computer_vision_winml,ai_computer_vision_snpe,ai_computer_vision_openvino,ai_computer_vision_tensorrt",
-                                "value": "[test]"
-                            }
-                        ],
                         "type": "Include"
                     },
                     {
@@ -118,7 +66,7 @@
                         "description": "",
                         "enabled": true,
                         "id": "1LE6P1K",
-                        "name": "[procyon_run:loop_number]",
+                        "name": "[procyon:loop_number]",
                         "type": "Increment",
                         "value": "1"
                     }

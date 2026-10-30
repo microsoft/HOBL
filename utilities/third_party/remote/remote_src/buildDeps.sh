@@ -2,7 +2,7 @@
 
 usage() {
     echo "Usage: $0 -a <arch>"
-    echo "  -a: Target architecture. Supported: x64, ARM64. (Default: x64)"
+    echo "  -a: Target architecture. Supported values: x64, ARM64, macos (default: x64)"
     exit 1
 }
 
@@ -19,12 +19,17 @@ while getopts "a:" opt; do
     esac
 done
 
-if [ "$ARCH" != "x64" ] && [ "$ARCH" != "ARM64" ]; then
+if [ "$ARCH" != "x64" ] && [ "$ARCH" != "ARM64" ] && [ "$ARCH" != "macos" ]; then
     echo "Error: Unsupported architecture: $ARCH"
     usage
 fi
 
 echo "Building for architecture: $ARCH"
+
+if [ "$ARCH" == "macos" ]; then
+    brew install libpng jpeg-turbo
+    exit
+fi
 
 DEPS_DIR="deps"
 mkdir -p "$DEPS_DIR"

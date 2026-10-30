@@ -1,6 +1,6 @@
 # Portions Copyright (c) 2026 Microsoft Corporation
 
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.5)
 
 set(PROJECT_LANGUAGES C)
 
@@ -71,7 +71,7 @@ option(WITH_GCRYPT "Search for Libgcrypt to use as crypto backend" ON)
 option(WITH_FFMPEG "Search for FFMPEG to build an example VNC to MPEG encoder" ON)
 option(WITH_TIGHTVNC_FILETRANSFER "Enable filetransfer if there is pthreads support" ON)
 option(WITH_24BPP "Allow 24 bpp" ON)
-option(WITH_IPv6 "Enable IPv6 Support" ON)
+option(WITH_IPv6 "Enable IPv6 Support" OFF)
 option(WITH_WEBSOCKETS "Build with websockets support" ON)
 option(WITH_SASL "Build with SASL support" ON)
 option(WITH_XCB "Build with XCB support" ON)
@@ -683,10 +683,12 @@ if(WITH_EXAMPLES)
   endif(Qt5Widgets_FOUND AND WITH_QT AND DEFINED CMAKE_CXX_COMPILER)
 endif(WITH_EXAMPLES)
 
-add_executable(remote_remote remote/remote.c)
-set_target_properties(remote_remote PROPERTIES OUTPUT_NAME remote)
-set_target_properties(remote_remote PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/remote)
-target_link_libraries(remote_remote vncserver dxgi d3d11 dxguid shcore pathcch ${CMAKE_THREAD_LIBS_INIT})
+if(WIN32)
+  add_executable(remote_remote remote/remote.c)
+  set_target_properties(remote_remote PROPERTIES OUTPUT_NAME remote)
+  set_target_properties(remote_remote PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/remote)
+  target_link_libraries(remote_remote vncserver dxgi d3d11 dxguid shcore pathcch ${CMAKE_THREAD_LIBS_INIT})
+endif(WIN32)
 
 #
 # them tests
