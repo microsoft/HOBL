@@ -1,0 +1,90 @@
+[
+    {
+        "author": "jewilder",
+        "capture_device": "Surface Laptop 7 15in,  light theme, 150% scaling",
+        "children": [],
+        "create_date": "2025-02-15",
+        "description": "Browse Google Images for London",
+        "enabled": true,
+        "id": "U015LL",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1U94R68",
+        "name": "[up_count]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1U94RJ3",
+        "name": "[down_count]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "1"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Down",
+                "direction": "down",
+                "enabled": true,
+                "id": "1U94U2A",
+                "type": "Scroll",
+                "x": "0.258",
+                "y": "0.252"
+            }
+        ],
+        "count": "[down_count]",
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1U94RYF",
+        "type": "Loop"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1U94RYH",
+        "type": "End Loop"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Up",
+                "direction": "up",
+                "enabled": true,
+                "id": "1U94U2J",
+                "type": "Scroll",
+                "x": "0.258",
+                "y": "0.252"
+            }
+        ],
+        "count": "[up_count]",
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1U94T1X",
+        "type": "Loop"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1U94T1Y",
+        "type": "End Loop"
+    }
+]

@@ -15,7 +15,7 @@
         "description": "",
         "enabled": true,
         "id": "V2MREH",
-        "include_path": "..\\..\\misc\\recording_phase_begin",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
         "type": "Include"
     },
     {
@@ -23,8 +23,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "UHA3YA",
-        "include_path": "..\\prod_outlook_switchto",
+        "id": "1UMX4AA",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_switchto",
         "type": "Include"
     },
     {
@@ -41,7 +41,7 @@
         "description": "",
         "enabled": true,
         "id": "V2MRHL",
-        "include_path": "..\\..\\misc\\recording_phase_end",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
         "params": [
             {
                 "name": "[phase_category]",
