@@ -11,9 +11,9 @@ import core.app_scenario
 
 
 class BldtSysconfig(core.app_scenario.Scenario):
-    """Intel's Battery Life Diagnostic Tool - System Configuration Checks.
+    """Intel's Battery Life Diagnostic Tool - System Config Checker.
 
-    Intel workload: SysConfigChecks examines configuration relevant to power efficiency
+    Intel workload: System Config examines configuration relevant to power efficiency
     and produces diagnostic findings in native HTML, JSON and ZIP reports.
 
     HOBL lifecycle:
@@ -33,6 +33,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
     module = __module__.split('.')[-1]
     prep_version = '1'
     execution_timeout = 900
+    powershell_script = 'bldt_sysconfig_prep.ps1'
 
     def setUp(self):
         """Prepare BLDT and enter HOBL setup."""
@@ -57,10 +58,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
         """Run BLDT SysConfigChecks and collect its reports."""
 
         self.power_source = self._get_power_source()
-        logging.info(
-            'Running BLDT SysConfigChecks on %s.',
-            self.power_source,
-        )
+        logging.info('Running BLDT SysConfigChecks on %s.', self.power_source)
 
         result = self._run_sysconfig_checks()
         reports = self._copy_reports(result['started_utc'])
@@ -93,13 +91,22 @@ class BldtSysconfig(core.app_scenario.Scenario):
         return
 
 
+    def _get_power_source(self):
+        """Return AC or DC from the DUT's current power-line state."""
+
+        state = int(self._call(['powershell', '(Get-WmiObject -Class Win32_Battery -ea 0).BatteryStatus'], timeout=10))
+
+        if state == 1:
+            return 'DC'
+        if state == 2:
+            return 'AC'
+        raise RuntimeError(f'Could not determine the DUT power source: {state}.')
 
     def _install_bldt(self):
         """Upload and run the BLDT installation script."""
 
-        script_name = 'bldt_sysconfig_prep.ps1'
-        local_script = os.path.join(os.path.dirname(__file__), 'bldt_sysconfig_resources', script_name)
-        remote_script = f'{self.dut_exec_path}\\{script_name}'
+        local_script = os.path.join(os.path.dirname(__file__), 'bldt_sysconfig_resources', self.powershell_script)
+        remote_script = f'{self.dut_exec_path}\\{self.powershell_script}'
 
         self._upload(local_script, self.dut_exec_path, check_modified=False)
 
@@ -112,12 +119,10 @@ class BldtSysconfig(core.app_scenario.Scenario):
                     f'-DataRoot "{self.dut_data_path}"'
                 ), ], timeout=10860)
 
-
     def _discover_bldt(self):
         """Return the installed BLDT executable path."""
 
-        script_name = 'bldt_sysconfig_prep.ps1'
-        remote_script = f'{self.dut_exec_path}\\{script_name}'
+        remote_script = f'{self.dut_exec_path}\\{self.powershell_script}'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Discover '
@@ -129,12 +134,10 @@ class BldtSysconfig(core.app_scenario.Scenario):
         logging.info('Using BLDT executable: %s', executable)
         return executable
 
-
     def _run_sysconfig_checks(self):
         """Run SysConfigChecks and return its start time and exit code."""
 
-        script_name = 'bldt_sysconfig_prep.ps1'
-        remote_script = f'{self.dut_exec_path}\\{script_name}'
+        remote_script = f'{self.dut_exec_path}\\{self.powershell_script}'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Run '
@@ -147,24 +150,10 @@ class BldtSysconfig(core.app_scenario.Scenario):
 
         return json.loads(output)
 
-
-    def _get_power_source(self):
-        """Return AC or DC from the DUT's current power-line state."""
-
-        state = int(self._call(['powershell', '(Get-WmiObject -Class Win32_Battery -ea 0).BatteryStatus'], timeout=10))
-
-        if state == 1:
-            return 'DC'
-        if state == 2:
-            return 'AC'
-        raise RuntimeError(f'Could not determine the DUT power source: {state}.')
-
-
     def _copy_reports(self, started_utc):
-        """Copy current native BLDT reports into the DUT result directory."""
+        """Copy current native System Config Checker reports into the DUT result directory."""
 
-        script_name = 'bldt_sysconfig_prep.ps1'
-        remote_script = f'{self.dut_exec_path}\\{script_name}'
+        remote_script = f'{self.dut_exec_path}\\{self.powershell_script}'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action CopyReports '
