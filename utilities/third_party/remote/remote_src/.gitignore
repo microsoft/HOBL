@@ -7,6 +7,8 @@ LibVNCServer*.tar.gz
 build/
 build_x64/
 build_ARM64/
+build_macos/
+install_macos/
 doc/html/
 .ccls-cache
 .cachexs

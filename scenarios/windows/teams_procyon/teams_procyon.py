@@ -15,12 +15,16 @@ class TeamsProcyon(core.app_scenario.Scenario):
 
     prep_scenarios = ["teams_install", "office_install"]
 
+    is_benchmark = True
+
     # Set default parameters:
     default_params.run()
 
     actions = None
 
     def setUp(self):
+        self.toolCallBacks("testBeginEarlyCallback")
+
         # Load actions JSON.
         actions_json = os.path.join(os.path.dirname(__file__), "teams_procyon.json")
         self.actions = self.load_action_json(actions_json)
@@ -35,20 +39,7 @@ class TeamsProcyon(core.app_scenario.Scenario):
 
 
     def prep(self):
-        # if not self.checkPrepStatusNew([(self.module, self.prep_version)]):
-        #     return
-
-        logging.info("Preparing for first use.")
-        self.target = f"{self.dut_exec_path}\\Procyon"
-
-        logging.info(f"Uploading Procyon files to {self.dut_exec_path}")
-        self._upload(self.resolve(f"scenarios\\windows\\{self.module}\\Procyon"), self.dut_exec_path)
-
-        cmd = ("-ExecutionPolicy Bypass" f" -File {self.target}\\x86_Procyon_Setup.ps1")
-
-        self._call(["powershell.exe", cmd], log_output=False, fail_on_exception=False, expected_exit_code="")
-
-        self.createPrepStatusControlFile()
+        pass
 
 
     def runTest(self):
@@ -76,7 +67,13 @@ class TeamsProcyon(core.app_scenario.Scenario):
 
 
     def kill(self):
-        self._call([
-            "powershell.exe",
-            f"Get-CimInstance Win32_Process | Where-Object {{ $_.CommandLine -like '*Procyon*' }} | ForEach-Object {{ Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }}"
-        ], expected_exit_code="")
+        try:
+            self._kill("procyon.exe Excel.exe Powerpnt.exe Winword.exe")
+        except:
+            pass
+
+        try:
+            for _ in range(2):
+                self._kill("ms-teams.exe", force=True)
+        except:
+            pass
