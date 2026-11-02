@@ -121,7 +121,7 @@
         "description": "Send Request to delete Bots Meeting",
         "enabled": true,
         "file_name": [
-            "code_YTVVTX.py"
+            "../../../../windows/_library/Teams/teams_leave_meeting/code_YTVVTX.py"
         ],
         "id": "YTVVTX",
         "type": "Code"

@@ -14,7 +14,7 @@ def run():
     return
 
 def run_user_only():
-    Params.setUserDefault('teams', 'meeting_time', '120', desc='Set the time in minutes that the meeting can last up to. Default is 120min.', valOptions=[])
+    Params.setUserDefault('teams', 'meeting_time', '0', desc='Set the time in minutes that the meeting can last up to. Default is 120min.', valOptions=[])
     Params.setUserDefault('teams', 'access_key', '-1', desc='The access key for the Teams Bots Server. Contact HOBL Support to inquire for a key.', valOptions=[])
     Params.setUserDefault('teams', 'number_of_bots', '1', desc='Sets the number of bots to have in the meeting.', valOptions=['1', '2', '4', '8', '9'])
     Params.setUserDefault('teams', 'bots_send_video', '1', desc='Set to 1 if bots should have their cameras on. Set to 0 for audio only calls.', valOptions=['0', '1'])

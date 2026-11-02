@@ -779,7 +779,7 @@
         "description": "Make a request to the bots to Subscribe to the DUT at the given resolution",
         "enabled": true,
         "file_name": [
-            "code_YTX59E.py"
+            "../../../../windows/_library/Teams/teams_join_meeting/code_YTX59E.py"
         ],
         "id": "YTX59E",
         "type": "Code"
