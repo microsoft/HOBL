@@ -75,19 +75,7 @@ class Tool(Scenario):
         # take the csv_name and just remove the result_dir part to get a relative path for roll-up
         roll_up_file = os.path.relpath(csv_name, self.scenario.result_dir)
         files_to_process = [roll_up_file]
-        # Append files to process to the roll-up list, creating it if needed.
-        roll_up_file = os.path.join(self.scenario.result_dir, "roll_up_files.txt")
-        with open(roll_up_file, "a+") as f:
-            f.seek(0)
-            contents = f.read()
-            existing_files = set(contents.splitlines())
-            for file in files_to_process:
-                if file not in existing_files:
-                    if contents and not contents.endswith("\n"):
-                        f.write("\n")
-                    f.write(file + "\n")
-                    existing_files.add(file)
-                    contents = "\n"
+        self.scenario._register_roll_up_files(files_to_process)
            
 
     def dataReadyCallback(self):

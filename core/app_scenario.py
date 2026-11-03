@@ -676,19 +676,7 @@ class Scenario(unittest.TestCase):
         # Create a list of files that need to be processed for roll_up metrics
         files_to_process = ["run_info.csv", "study_vars.csv", self.testname + "_ConfigPre.csv", self.testname + "_ConfigPost.csv", "Config.csv"]
 
-        # Append files to process to the roll-up list, creating it if needed.
-        roll_up_file = os.path.join(self.result_dir, "roll_up_files.txt")
-        with open(roll_up_file, "a+") as f:
-            f.seek(0)
-            contents = f.read()
-            existing_files = set(contents.splitlines())
-            for file in files_to_process:
-                if file not in existing_files:
-                    if contents and not contents.endswith("\n"):
-                        f.write("\n")
-                    f.write(file + "\n")
-                    existing_files.add(file)
-                    contents = "\n"
+        self._register_roll_up_files(files_to_process)
 
     def runScenario(self):
         self.scenario_start_time = time.time()
@@ -4443,8 +4431,20 @@ class Scenario(unittest.TestCase):
         rpc.plugin_call(self.dut_ip, self.rpc_port, "InputInject", "Type", "\ue007", 50) # Press Enter to execute the command
         time.sleep(5)  # Wait for the command to execute
 
-
-        
+    def _register_roll_up_files(self, files_to_process):
+        '''Append entries not already listed in the result directory's roll-up manifest.'''
+        roll_up_file = os.path.join(self.result_dir, "roll_up_files.txt")
+        with open(roll_up_file, "a+") as f:
+            f.seek(0)
+            contents = f.read()
+            existing_files = set(contents.splitlines())
+            for file in files_to_process:
+                if file not in existing_files:
+                    if contents and not contents.endswith("\n"):
+                        f.write("\n")
+                    f.write(file + "\n")
+                    existing_files.add(file)
+                    contents = "\n"
 
 
 class thread_with_exception(threading.Thread):
