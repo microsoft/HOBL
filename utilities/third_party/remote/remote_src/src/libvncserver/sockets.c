@@ -103,6 +103,12 @@ int deny_severity=LOG_WARNING;
 int rfbMaxClientWait = 20000;   /* time (ms) after which we decide client has
                                    gone away - needed to stop us hanging */
 
+#ifdef WIN32
+    #define RFB_SOCKET_REUSE_OPTION SO_EXCLUSIVEADDRUSE
+#else
+    #define RFB_SOCKET_REUSE_OPTION SO_REUSEADDR
+#endif
+
 static rfbBool
 rfbNewConnectionFromSock(rfbScreenInfoPtr rfbScreen, rfbSocket sock)
 {
@@ -990,7 +996,7 @@ rfbListenOnTCPPort(int port,
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == RFB_INVALID_SOCKET) {
 	return RFB_INVALID_SOCKET;
     }
-    if (setsockopt(sock, SOL_SOCKET, SO_EXCLUSIVEADDRUSE,
+    if (setsockopt(sock, SOL_SOCKET, RFB_SOCKET_REUSE_OPTION,
 		   (const char *)&one, sizeof(one)) < 0) {
 	rfbCloseSocket(sock);
 	return RFB_INVALID_SOCKET;

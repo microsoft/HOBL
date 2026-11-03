@@ -2049,6 +2049,9 @@ class Scenario(unittest.TestCase):
         latest = None
 
         for p in paths:
+            if not p:
+                continue
+
             path = Path(self.resolve(p))
 
             if not path.exists():
@@ -2080,7 +2083,11 @@ class Scenario(unittest.TestCase):
                     prep_str = f"{prep[0]}{prep[1]}"
             else:
                 prep_str = prep
-            if not self._check_remote_file_exists("prep_status\\" + prep_str):
+            if self.platform.lower() == "macos" or self.platform.lower() == "linux":
+                path = f"prep_status/{prep_str}"
+            else:
+                path = f"prep_status\\{prep_str}"
+            if not self._check_remote_file_exists(path):
                 prep_scenarios_to_run.append(prep)
         return prep_scenarios_to_run
 

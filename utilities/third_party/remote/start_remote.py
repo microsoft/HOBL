@@ -5,6 +5,7 @@
 # Start remote
 ##
 
+from urllib.parse import quote
 from core.parameters import Params
 import argparse
 
@@ -63,6 +64,8 @@ def main():
                 computer_name = f"{computer_name};"
             else:
                 computer_name = ""
+
+            share_password = quote(share_password, safe="")
 
             volume_path = "/Users/Shared/mnt/z"
             share_path  = share_path.lstrip("\\").replace("\\", "/")

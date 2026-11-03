@@ -20,17 +20,6 @@
     {
         "children": [],
         "delay": "0.0",
-        "description": "Workload to run",
-        "enabled": true,
-        "id": "1HV5R1F",
-        "name": "[procyon:test]",
-        "type": "Set Default",
-        "val_options": "office_productivity,essentials,video_playback_batterylife,photo_editing,video_editing,ai_computer_vision_winml,ai_computer_vision_snpe,ai_computer_vision_openvino,ai_computer_vision_tensorrt,ai_computer_vision_ryzenai",
-        "value": "office_productivity"
-    },
-    {
-        "children": [],
-        "delay": "0.0",
         "description": "Number of seconds to wait and let the device warm up before starting the Procyon run.",
         "enabled": true,
         "id": "1HV5WL9",
@@ -38,28 +27,6 @@
         "type": "Set Default",
         "val_options": "",
         "value": "1800"
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "The path on the host where the Procyon installer has been downloaded.",
-        "enabled": true,
-        "id": "1L9EU5K",
-        "name": "[procyon:host_path]",
-        "type": "Set Default",
-        "val_options": "",
-        "value": ""
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "Procyon license key",
-        "enabled": true,
-        "id": "1L9FP9K",
-        "name": "[procyon:key]",
-        "type": "Set Default",
-        "val_options": "",
-        "value": ""
     },
     {
         "children": [],
