@@ -42,24 +42,24 @@ def main():
 
     # List of csv files we don't want to rollup.
     exception_list = [
-        "*_metrics.csv",
-        "*_full_processes.csv",
-        "*_PerfResult.csv",
-        "batlog.csv",
-        "log.csv",
-        "maxim_trace_*.csv",
-        "*_pm.csv",
-        # "*_power_light.csv",
-        "*_session_summary.csv",
-        "phase_time.csv",
-        "scenario_events.csv",
-        "*_power_heavy.csv",
-        "*_DAQ.csv",
-        "srumutil.csv",
-        "*rails.csv",
-        "combined_trace_data.csv",
-        "*fan_log.csv",
-        "*temp_log.csv"
+        # "*_metrics.csv",
+        # "*_full_processes.csv",
+        # "*_PerfResult.csv",
+        # "batlog.csv",
+        # "log.csv",
+        # "maxim_trace_*.csv",
+        # "*_pm.csv",
+        # # "*_power_light.csv",
+        # "*_session_summary.csv",
+        # "phase_time.csv",
+        # "scenario_events.csv",
+        # "*_power_heavy.csv",
+        # "*_DAQ.csv",
+        # "srumutil.csv",
+        "*rails.csv"
+        # "combined_trace_data.csv",
+        # "*fan_log.csv",
+        # "*temp_log.csv"
     ]
 
     def is_exception(file):
@@ -135,6 +135,9 @@ def main():
                         input_files.append(path)
             except OSError as error:
                 print("Could not read: " + roll_up_file + ": " + str(error))
+
+        # Use filename order within each pattern, without adding unlisted files.
+        input_files.sort(key=lambda path: os.path.normcase(os.path.basename(path)))
 
         # Loop through .csv files we want to roll up
         for arg_file in args.files:

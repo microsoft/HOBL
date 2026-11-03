@@ -45,31 +45,31 @@ def main():
 
     dirpath = os.path.abspath(args.dir)
 
-    # List of csv files we don't want to rollup.
-    exception_list = [
-        "*_metrics.csv",
-        "*_full_processes.csv",
-        "*_PerfResult.csv",
-        "batlog.csv",
-        "log.csv",
-        "maxim_trace_*.csv",
-        "*_pm.csv",
-        "*_session_summary.csv",
-        "phase_time.csv",
-        "scenario_events.csv",
-        "*_power_heavy.csv",
-        "srumutil.csv",
-        "*_DAQ.csv",
-        "combined_trace_data.csv",
-        "*fan_log.csv",
-        "*temp_log.csv"
-    ]
+    # # List of csv files we don't want to rollup.
+    # exception_list = [
+    #     "*_metrics.csv",
+    #     "*_full_processes.csv",
+    #     "*_PerfResult.csv",
+    #     "batlog.csv",
+    #     "log.csv",
+    #     "maxim_trace_*.csv",
+    #     "*_pm.csv",
+    #     "*_session_summary.csv",
+    #     "phase_time.csv",
+    #     "scenario_events.csv",
+    #     "*_power_heavy.csv",
+    #     "srumutil.csv",
+    #     "*_DAQ.csv",
+    #     "combined_trace_data.csv",
+    #     "*fan_log.csv",
+    #     "*temp_log.csv"
+    # ]
 
-    def is_exception(file):
-        for exception in exception_list:
-            if glob.fnmatch.fnmatch(file, exception):
-                return True
-        return False
+    # def is_exception(file):
+    #     for exception in exception_list:
+    #         if glob.fnmatch.fnmatch(file, exception):
+    #             return True
+    #     return False
 
     def is_float(value):
         try:
@@ -152,11 +152,11 @@ def main():
         match = False
         for inputfile in input_files:
             file = os.path.basename(inputfile)
-            if not glob.fnmatch.fnmatch(file, '*.csv'):
-                continue
-            if is_exception(file):
-                print("Skipping exception file: " + file)
-                continue
+            # if not glob.fnmatch.fnmatch(file, '*.csv'):
+            #     continue
+            # if is_exception(file):
+            #     print("Skipping exception file: " + file)
+            #     continue
             # Don't rollup files under the "socwatch" or "phm" folders
             if root[-8:].lower() == "socwatch":
                 break
