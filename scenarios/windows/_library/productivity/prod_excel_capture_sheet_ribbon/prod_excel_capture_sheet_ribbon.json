@@ -1,0 +1,28 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "",
+        "enabled": true,
+        "id": "1TK5KR1",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "Sheet Tab",
+        "enabled": true,
+        "file_name": [
+            "image_1TK5L73.png"
+        ],
+        "h": "0.208",
+        "id": "1TK5L73",
+        "recapture": true,
+        "type": "Capture",
+        "w": "0.734",
+        "x": "0.003",
+        "y": "0.794"
+    }
+]

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<InstrumentationManifest>
+  <Instrumentation>
+    <Regions>
+      <RegionRoot Guid="{51492ddb-962f-a417-b4d3-c11aa37b2c29}" Name="Code Markers" FriendlyName="Office Code Markers">
+        <Region Guid="{ad67aa07-e877-1300-3ad6-61b613d299f6}" Name="PrintStart_PrintEnd" FriendlyName="Print">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001f9" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fa" />
+          </Stop>
+        </Region>
+        <Region Guid="{107dc1a3-105f-4c05-89f3-da0577461787}" Name="PrintPageStart_PrintPageEnd" FriendlyName="PrintPage">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000815" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000816" />
+          </Stop>
+        </Region>
+        <Region Guid="{f83e2367-4d25-4026-b09f-ba5a39f2f554}" Name="PPTSlideShowAdvanceSlideStart_PPTSlideShowAdvanceSlideEnd" FriendlyName="PPTSlideShowAdvanceSlide">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000ccc" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000ccd" />
+          </Stop>
+        </Region>
+        <Region Guid="{c9787a3f-b6e9-006e-5bb6-03aad2f9b161}" Name="ExcelApplyTableStyleStart_ExcelApplyTableStyleStop" FriendlyName="ExcelApplyTableStyle">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x0000097f" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000980" />
+          </Stop>
+        </Region>
+        <Region Guid="{f508bd27-4b45-6dd5-f8cc-9b83a9d044ec}" Name="ExcelInsertSheetStart_ExcelInsertSheetEnd" FriendlyName="ExcelInsertSheet">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x0000c39d" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x0000c39e" />
+          </Stop>
+        </Region>
+        <Region Guid="{a1edaf0c-77d1-99d6-903f-4acd126fc2ce}" Name="ExcelSortStart_ExcelSortStop" FriendlyName="ExcelSort">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000835" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000836" />
+          </Stop>
+        </Region>
+        <Region Guid="{5ceca737-a752-5994-1e8a-e5f6f78bd44a}" Name="SaveStart_SaveEnd" FriendlyName="Save">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fb" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fc" />
+          </Stop>
+        </Region>
+        <Region Guid="{05fec1bc-459e-4ef0-9ced-63a32409ed45}" Name="OpenStart_OpenEnd" FriendlyName="Open">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001f7" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001f8" />
+          </Stop>
+        </Region>
+        <Region Guid="{cdb08b68-b184-9e56-5d5b-3a189d48ab56}" Name="CutBegin_CutEnd" FriendlyName="Cut">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x0000023e" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x0000023f" />
+          </Stop>
+        </Region>
+        <Region Guid="{54d11bca-d7e9-4c6f-b9c5-e1300850ca2b}" Name="PasteBegin_PasteEnd" FriendlyName="Paste">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000236" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000237" />
+          </Stop>
+        </Region>
+        <Region Guid="{9d5081d6-ac1e-6000-ec9b-45a054d4035a}" Name="WordReplaceAllStart_WordReplaceAllEnd" FriendlyName="WordReplaceAll">
+          <Match>
+            <Event TID="true" PID="true">
+              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
+            </Event>
+          </Match>
+          <Start>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000296" />
+          </Start>
+          <Stop>
+            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
+            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000297" />
+          </Stop>
+        </Region>
+      </RegionRoot>
+    </Regions>
+  </Instrumentation>
+</InstrumentationManifest>

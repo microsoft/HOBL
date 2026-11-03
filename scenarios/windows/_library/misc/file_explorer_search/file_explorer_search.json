@@ -1,0 +1,85 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-26",
+        "description": "",
+        "enabled": true,
+        "id": "1TY52VK",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1TY53P5",
+        "name": "[file_name]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": ""
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Focus at FE Search Bar",
+        "enabled": true,
+        "id": "1TY5307",
+        "text": "\ue009f",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TY5E8V",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "file_explorer_search_start"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "File Name",
+        "enabled": true,
+        "id": "1TY541F",
+        "text": "[file_name]\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1TY5EXW",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "file_explorer_search_end"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Discard Search",
+        "enabled": true,
+        "id": "1TY567J",
+        "text": "\ue003",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    }
+]

@@ -1,0 +1,70 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-09-21",
+        "description": "",
+        "enabled": true,
+        "id": "1V7W15Y",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1V7W6YV",
+        "name": "[revisit_tag]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": ""
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1V7WT9V",
+        "include_path": "scenarios\\windows\\_library\\web\\web_tab_switch",
+        "params": [
+            {
+                "name": "[tab_number]",
+                "val_options": "",
+                "value": "7"
+            },
+            {
+                "name": "[tab_name]",
+                "val_options": "",
+                "value": "[revisit_tag]"
+            },
+            {
+                "name": "[archive_name]",
+                "val_options": "",
+                "value": "youtubetos"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1V7W9N3",
+        "include_path": "scenarios\\windows\\_library\\web\\web_resume_video",
+        "params": [
+            {
+                "name": "[duration]",
+                "val_options": "",
+                "value": "30"
+            },
+            {
+                "name": "[etw_tag]",
+                "val_options": "",
+                "value": "[revisit_tag]_video_play"
+            }
+        ],
+        "type": "Include"
+    }
+]

@@ -1,0 +1,49 @@
+[
+    {
+        "author": "",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-12",
+        "description": "",
+        "enabled": true,
+        "id": "1T80J7U",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1T80JM9",
+        "name": "[event_tag]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": ""
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1T80K36",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "[event_tag]"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Save Document",
+        "enabled": true,
+        "id": "1T80JAK",
+        "text": "\ue009s",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    }
+]

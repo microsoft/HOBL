@@ -1,0 +1,201 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "children": [],
+        "create_date": "2025-02-28",
+        "description": "Compose an email, paste a captured snippet, open the discard dialog, and cancel it in New Outlook",
+        "enabled": true,
+        "id": "UN67LF",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Begin recording the New Outlook compose phase",
+        "enabled": true,
+        "id": "V2N136",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U6NJ6F",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_open",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Use the shortened email body when enabled",
+        "enabled": true,
+        "id": "PSECST00",
+        "name": "[short_typing]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Open a new email compose form",
+        "enabled": true,
+        "id": "UPWC04",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Open a new email compose form in New Outlook",
+        "enabled": true,
+        "id": "1TP314P",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_create_email",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Type recipient email address",
+        "enabled": true,
+        "id": "UPNEN8",
+        "text": "bogus@outlook.com",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1.5",
+        "description": "Move focus from recipient to subject (Tab twice)",
+        "enabled": true,
+        "id": "V3V5XK",
+        "text": "\ue004\ue004",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Type email subject",
+        "enabled": true,
+        "id": "UPNME6",
+        "text": "Manarola\ue00dtrip!\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "15",
+                "description": "Type shortened email body",
+                "enabled": true,
+                "id": "UPTF4S",
+                "text": "We\ue00dare\ue00dthrilled\ue00dto\ue00dhave\ue00dyou\ue00djoin\ue00dus\ue00don\ue00dthis\ue00dunforgettable\ue00djourney\ue00dto\ue00dManarola!\nGet\ue00dready\ue00dfor\ue00dstunning\ue00dviews\ue00dand\ue00dlocal\ue00dflavors.\n",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Type the shortened email body when short typing is enabled",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "PSECST01",
+        "left_term": "[short_typing]",
+        "right_term": "1",
+        "type": "If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "122",
+                "description": "Type full email body",
+                "enabled": true,
+                "id": "UPTF4X",
+                "text": "We\ue00dare\ue00dthrilled\ue00dto\ue00dhave\ue00dyou\ue00djoin\ue00dus\ue00don\ue00dthis\ue00dunforgettable\ue00djourney\ue00dto\ue00dManarola,\ue00dthe\ue00djewel\ue00dof\ue00dCinque\ue00dTerre!\n\n\ue009b\ue009What\ue00dto\ue00dExpect:\n\n\ue009\ue008l\ue008\ue009Stunning\ue00dViews:\ue00d\ue00d\ue009b\ue009Get\ue00dready\ue00dfor\ue00dthe\ue00dpastel-hued\ue00dhouses\ue00dclinging\ue00dto\ue00dcliffs,\ue00doverlooking\ue00dthe\ue00dazure\ue00dMediterranean\ue00dSea.\nSunset\ue00dMagic:\ue00d\ue00dDo\ue00dnot\ue00dmiss\ue00dthe\ue00dNessun\ue00dDorma\ue00d-\ue00dthe\ue00dperfect\ue00dspot\ue00dto\ue00dsip\ue00dwine\ue00dwhile\ue00dwatching\ue00dthe\ue00dsun\ue00ddip\ue00dbehind\ue00dthe\ue00dvineyards.\nExplore:\ue00d\ue00dWander\ue00dthe\ue00dcharming\ue00dstreets,\ue00dswim\ue00din\ue00dcrystal-clear\ue00dwaters,\ue00dand\ue00dhike\ue00dthe\ue00dscenic\ue00dtrails.\nLocal\ue00dFlavors:\ue00d\ue00dIndulge\ue00din\ue00dfresh\ue00dseafood,\ue00dpest,\ue00dand\ue00dgelato.\n\n\nFeel\ue00dfree\ue00dto\ue00dreach\ue00dout\ue00dif\ue00dyou\ue00dhave\ue00dany\ue00dquestions.\ue00d\ue00dBuon\ue00dviaggio!\n",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Type the full email body when short typing is disabled",
+        "enabled": true,
+        "id": "PSECST02",
+        "type": "Else"
+    },
+    {
+        "children": [],
+        "description": "Complete the email body selection",
+        "enabled": true,
+        "id": "PSECST03",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Paste the captured snippet into the email body",
+        "enabled": true,
+        "id": "UPW24R",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "6.5",
+        "description": "Paste captured snippet (Ctrl+V)",
+        "enabled": true,
+        "id": "UPVYR4",
+        "text": "\ue009v",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Open and cancel the discard confirmation dialog",
+        "enabled": true,
+        "id": "UPW52H",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Open the discard confirmation dialog (Escape)",
+        "enabled": true,
+        "id": "1LEHH46",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Cancel the discard confirmation dialog (Escape)",
+        "enabled": true,
+        "id": "1TVCU51",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "End recording the New Outlook compose phase",
+        "enabled": true,
+        "id": "V2N15P",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_outlook"
+            }
+        ],
+        "type": "Include"
+    }
+]
