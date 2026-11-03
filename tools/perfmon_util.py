@@ -325,6 +325,14 @@ class Tool(Scenario):
         files_to_process = [roll_up_file]
         # Append files to process to the roll-up list, creating it if needed.
         roll_up_file = os.path.join(self.scenario.result_dir, "roll_up_files.txt")
-        with open(roll_up_file, "a") as f:
+        with open(roll_up_file, "a+") as f:
+            f.seek(0)
+            contents = f.read()
+            existing_files = set(contents.splitlines())
             for file in files_to_process:
-                f.write(file + "\n")
+                if file not in existing_files:
+                    if contents and not contents.endswith("\n"):
+                        f.write("\n")
+                    f.write(file + "\n")
+                    existing_files.add(file)
+                    contents = "\n"
