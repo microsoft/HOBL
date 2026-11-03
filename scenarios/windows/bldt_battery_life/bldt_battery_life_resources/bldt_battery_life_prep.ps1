@@ -100,6 +100,7 @@ function Invoke-BatteryLife {
     $parameters = "min_battery_charge:0;socwatch_duration:$CollectionDurationSeconds;socwatch_delay:0;pwrsrc:DC;energy_rpt_duration:$CollectionDurationSeconds"
     $arguments = @('--type', 'batteryLife', '--params', $parameters, '--telemetry=false')
     $startedUtc = [DateTime]::UtcNow.ToString('o')
+    $timer = [Diagnostics.Stopwatch]::StartNew()
     $process = Start-Process -FilePath $Executable -ArgumentList $arguments -WorkingDirectory $workingDirectory -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog -PassThru
 
     try {
@@ -110,7 +111,12 @@ function Invoke-BatteryLife {
         }
 
         $process.WaitForExit()
-        [pscustomobject]@{ started_utc = $startedUtc; exit_code = $process.ExitCode } | ConvertTo-Json -Compress
+        $timer.Stop()
+        [pscustomobject]@{
+            started_utc = $startedUtc
+            exit_code = $process.ExitCode
+            seconds = [math]::Round($timer.Elapsed.TotalSeconds, 3)
+        } | ConvertTo-Json -Compress
     } finally {
         $process.Dispose()
     }
