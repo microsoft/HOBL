@@ -226,6 +226,11 @@
                 "name": "[enable_pause]",
                 "val_options": "0,1",
                 "value": "1"
+            },
+            {
+                "name": "[duration]",
+                "val_options": "",
+                "value": "120"
             }
         ],
         "type": "Include"
