@@ -167,6 +167,9 @@ def main():
             print (u"Processing: " + inputfile)
             with open(inputfile) as csvfile:
                 try:
+                    if "rails.json" in file:
+                        rails["Mean"].update({key: str(value) for key, value in json.load(csvfile).items()})
+                        continue
                     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
                     for r in reader:
                         if "rails.csv" in file:

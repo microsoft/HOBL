@@ -123,6 +123,8 @@ def main():
                         path = line.strip()
                         if not path:
                             continue
+                        if not path.lower().endswith(".csv"):
+                            continue
                         if not os.path.isabs(path):
                             path = os.path.join(root, path)
                         normalized_path = os.path.normcase(os.path.abspath(path))
