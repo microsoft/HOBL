@@ -240,7 +240,7 @@
                         "id": "19V8920",
                         "name": "[teams:number_of_bots]",
                         "type": "Set",
-                        "value": "9"
+                        "value": "4"
                     },
                     {
                         "children": [],
