@@ -1,5 +1,12 @@
 # PyTorch Inference Workload
 
+> **Replacement in progress:** see `scenarios\windows\pytorch_inf_v2\README.md`
+> for a GPU-first Qwen3 benchmark (portable BF16 + INT4/NVFP4 quantized
+> lanes, stricter TTFT/prefill/decode metric separation, and several
+> correctness fixes vs. this scenario). `pytorch_inf` is left unchanged and
+> runnable side by side until `pytorch_inf_v2` is validated on real N1X
+> hardware.
+
 Runs text-generation inference with [PyTorch](https://pytorch.org/) + Hugging Face
 Transformers on `microsoft/Phi-4-mini-instruct`. It generates a response to a prompt and
 reports tokens/second, time-to-first-token (TTFT), and total generation time. GPU (CUDA 12.8)
