@@ -82,6 +82,10 @@ else
     exit 1
 fi
 
+# Use the prep-installed runtime, not a different Node selected by the profile.
+. "$BIN_DIR/mac_vscode_resources/mac_vscode_node.sh" || exit 1
+vscode_use_node || exit 1
+
 # Verify required commands are available
 log "-- Verifying required commands"
 check_command "node" || exit 1
