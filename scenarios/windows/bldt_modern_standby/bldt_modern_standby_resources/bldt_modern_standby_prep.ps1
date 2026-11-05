@@ -87,11 +87,11 @@ function Install-Bldt {
         $process = Start-Process -FilePath $msiexec -ArgumentList $arguments `
             -WorkingDirectory $installerDirectory -PassThru
 
-        # WaitForExit takes milliseconds; stop this installer after three hours.
+        # WaitForExit takes milliseconds; stop this installer after one hour.
         try {
-            if (-not $process.WaitForExit(10800000)) {
+            if (-not $process.WaitForExit(3600000)) {
                 Stop-Process -Id $process.Id -Force
-                throw 'BLDT installation timed out after 10800 seconds.'
+                throw 'BLDT installation timed out after 3600 seconds.'
             }
             $process.WaitForExit()
             $exitCode = $process.ExitCode
