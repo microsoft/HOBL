@@ -1,0 +1,141 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-19",
+        "description": "Stock productivity workload with serialized native annoyance probes",
+        "enabled": true,
+        "id": "PA00001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Annoyance probes to run",
+        "enabled": true,
+        "id": "PA00002",
+        "multiple": true,
+        "name": "[probes]",
+        "type": "Set Default",
+        "val_options": "mute_unmute,start_menu_show_apps,explorer_windows_scroll,explorer_pictures_thumbnails",
+        "value": "mute_unmute start_menu_show_apps explorer_windows_scroll explorer_pictures_thumbnails"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Collect whole-run ETW power and 1 Hz per-probe Energy Meter power",
+        "enabled": true,
+        "id": "PA00003",
+        "name": "[power_reporting]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Loaded-app idle duration for each Office application",
+        "enabled": true,
+        "id": "PA00005",
+        "name": "[idle_seconds_per_app]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "111"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Enable phase reporting",
+        "enabled": true,
+        "id": "PA00004",
+        "name": "[phase_reporting]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Set up stock productivity documents and Office theme",
+                "enabled": true,
+                "id": "PA00101",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
+                "params": [
+                    {
+                        "name": "[office_theme]",
+                        "val_options": "Colorful, Dark Gray, Black, White, System",
+                        "value": "System"
+                    }
+                ],
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "PA00100",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Open stock productivity applications",
+                "enabled": true,
+                "id": "PA00201",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_open",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Run native annoyance probes while loaded Office apps are idle",
+                "enabled": true,
+                "id": "PA00202",
+                "include_path": "scenarios\\windows\\_library\\productivity_annoyance\\productivity_annoyance_run",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Run the complete stock productivity action stream unchanged",
+                "enabled": true,
+                "id": "PA00204",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_run",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Close stock productivity applications",
+                "enabled": true,
+                "id": "PA00203",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_close",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "PA00200",
+        "type": "Run Test"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Stop lingering productivity processes",
+                "enabled": true,
+                "id": "PA00301",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_kill",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "PA00300",
+        "type": "Teardown"
+    }
+]

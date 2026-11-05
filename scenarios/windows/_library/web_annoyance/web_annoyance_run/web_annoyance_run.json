@@ -1,0 +1,34 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-19",
+        "description": "Run the complete stock web action stream with annoyance hook support",
+        "enabled": true,
+        "id": "WARUN001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "WARUN002",
+        "name": "[load_only]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Run the complete stock web workload",
+        "enabled": true,
+        "file_name": [
+            "code_run.py"
+        ],
+        "id": "WARUN003",
+        "type": "Code"
+    }
+]

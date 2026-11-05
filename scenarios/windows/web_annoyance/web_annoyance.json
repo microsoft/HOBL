@@ -1,0 +1,191 @@
+[
+    {
+        "author": "hobl",
+        "capture_device": "arm64-reference",
+        "children": [],
+        "create_date": "2026-08-18",
+        "description": "Web browsing with serialized native annoyance probes",
+        "enabled": true,
+        "id": "WA00001",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Number of workload iterations",
+        "enabled": true,
+        "id": "WA00002",
+        "name": "[loops]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Annoyance probes to run",
+        "enabled": true,
+        "id": "WA00005",
+        "multiple": true,
+        "name": "[probes]",
+        "type": "Set Default",
+        "val_options": "mute_unmute,start_menu_show_apps,explorer_windows_scroll,explorer_pictures_thumbnails",
+        "value": "mute_unmute start_menu_show_apps explorer_windows_scroll explorer_pictures_thumbnails"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Collect whole-run ETW power and 1 Hz per-probe Energy Meter power",
+        "enabled": true,
+        "id": "WA00006",
+        "name": "[power_reporting]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Enable web replay",
+        "enabled": true,
+        "id": "WA00003",
+        "name": "[web_replay_run]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Enable phase reporting",
+        "enabled": true,
+        "id": "WA00004",
+        "name": "[phase_reporting]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Set up stock web replay and browser",
+                "enabled": true,
+                "id": "WA00101",
+                "include_path": "scenarios\\windows\\_library\\web\\web_setup",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "WA00100",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Run the complete stock web workload with annoyance hooks",
+                        "enabled": true,
+                        "id": "WA00202",
+                        "include_path": "scenarios\\windows\\_library\\web_annoyance\\web_annoyance_run",
+                        "params": [
+                            {
+                                "name": "[load_only]",
+                                "val_options": "0,1",
+                                "value": "0"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Check web replay output",
+                        "enabled": true,
+                        "id": "WA00204",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_check",
+                        "params": [
+                            {
+                                "name": "[youtube_duration]",
+                                "val_options": "",
+                                "value": "90"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Close tabs opened by the stock web workload",
+                        "enabled": true,
+                        "id": "WA00207",
+                        "include_path": "scenarios\\windows\\_library\\web\\web_close_tabs",
+                        "params": [
+                            {
+                                "name": "[num_tabs_to_close]",
+                                "val_options": "",
+                                "value": "[web:tabs]"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "2",
+                        "description": "Iteration settling time",
+                        "enabled": true,
+                        "id": "WA00205",
+                        "type": "Delay"
+                    }
+                ],
+                "count": "[loops]",
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "WA00201",
+                "type": "Loop"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "WA00206",
+                "type": "End Loop"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "WA00200",
+        "type": "Run Test"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "2",
+                "description": "Close the foreground browser via Alt+F4",
+                "enabled": true,
+                "id": "WA00301",
+                "text": "\ue00a\ue034",
+                "type": "Type",
+                "typing_delay": "100"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Stop browser and web replay processes",
+                "enabled": true,
+                "id": "WA00302",
+                "include_path": "scenarios\\windows\\_library\\web\\web_kill",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "WA00300",
+        "type": "Teardown"
+    }
+]
