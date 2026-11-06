@@ -207,7 +207,7 @@ if args.dump or args.dump_verbose:
 
     sys.exit(0)
 
-# Check if we're runnign a scenario that shouldn't contact the DUT before
+# Check if we're running a scenario that shouldn't contact the DUT before
 # loading params, which can make calls to the DUT
 for scenario in ['comm_check', 'charge_off', 'charge_on', 'hard_reboot', 'sleep_wake', 'manual_offline', 'study_report', 'run_report', 'dut_setup']:
     if scenario in sys.argv:
@@ -869,6 +869,19 @@ if __name__ == '__main__':
 
                         # Run test
                         logging.info("Executing test: " + test_case + ", iteration: " + str(iteration) + ", attempt: " + str(attempt))
+
+                        # Re-initialize timing on the test instance.
+                        scenario_instance = test
+                        while isinstance(scenario_instance, unittest.TestSuite):
+                            scenario_instance = next(iter(scenario_instance), None)
+                        if scenario_instance is None:
+                            logging.warning("Could not resolve scenario instance")
+                        else:
+                            # logging.info("Resetting scenario start time for instance: %s", scenario_instance)
+                            scenario_instance.scenario_start_time = time.time()
+                            scenario_instance.scenario_prev_time = scenario_instance.scenario_start_time
+                            scenario_instance.scenario_accumulated_time = 0
+
                         result = unittest.TextTestRunner(stream=StreamToLogger(logging.getLogger(), logging.INFO), verbosity=0, resultclass=TextTestResult).run(test)
                     else:
                         logging.error("RunType.TestName must be less than 32 characters: " + run_type_name)
