@@ -3,7 +3,6 @@
 
 """Run Intel BLDT SysConfigChecks through HOBL."""
 
-import csv
 import json
 import logging
 import os
@@ -22,17 +21,16 @@ class BldtSysconfig(core.app_scenario.Scenario):
        either BLDT edition; install or repair only when needed.
     2. Run: invoke the discovered executable with the selected AC/DC assessment mode.
        This scenario does not control the charger or use DAQ measurement.
-    3. After: require fresh matching reports, stage them with shared HTML assets and
-       logs for host collection, and write runtime/version metrics to CSV.
+    3. After: require fresh matching reports and stage them with shared HTML assets
+       and logs for host collection.
 
-    scenario_runtime measures native BLDT execution, not preparation or collection.
     No AI analysis or AI models are required.
     Success means complete execution and reports, not passing every Intel check.
     """
 
     is_prep = True
     module = __module__.split('.')[-1]
-    prep_version = '1'
+    prep_version = '2'
     execution_timeout = 900
 
     def setUp(self):
@@ -62,7 +60,6 @@ class BldtSysconfig(core.app_scenario.Scenario):
 
         result = self._run_sysconfig_checks()
         reports = self._copy_reports(result['started_utc'])
-        self._write_metrics(result['seconds'])
 
         logging.info('Collected BLDT reports: %s', reports)
 
@@ -101,17 +98,6 @@ class BldtSysconfig(core.app_scenario.Scenario):
         if state == 2:
             return 'AC'
         raise RuntimeError(f'Could not determine the DUT power source: {state}.')
-
-    def _write_metrics(self, scenario_runtime):
-        """Write the required native workload runtime."""
-
-        os.makedirs(self.result_dir, exist_ok=True)
-        metrics_path = os.path.join(self.result_dir, 'bldt_sysconfig_results.csv')
-        with open(metrics_path, 'w', newline='', encoding='utf-8') as stream:
-            csv.writer(stream).writerow(['scenario_runtime', scenario_runtime])
-
-        logging.info('========== BLDT SysConfig metrics ==========')
-        logging.info('scenario_runtime: %ss', scenario_runtime)
 
     def _install_bldt(self):
         """Upload and run the BLDT installation script."""
@@ -156,8 +142,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Run '
             f'-PowerSource {self.power_source} '
-            f'-DataRoot "{self.dut_data_path}" '
-            f'-TimeoutSeconds {self.execution_timeout}'
+            f'-DataRoot "{self.dut_data_path}"'
         )
 
         output = self._call(['powershell.exe', arguments], timeout=self.execution_timeout + 60)

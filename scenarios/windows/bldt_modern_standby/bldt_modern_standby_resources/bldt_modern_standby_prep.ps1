@@ -12,7 +12,8 @@ param(
     [string]$DataRoot = '',
     # Sleep Study's history window in days, not how long the DUT should sleep.
     [int]$SleepStudyDays = 1,
-    [int]$TimeoutSeconds = 2400,
+    [ValidateSet('AC', 'DC')]
+    [string]$PowerSource = 'DC',
     [string]$StartedUtc = ''
 )
 
@@ -23,7 +24,8 @@ $ProgressPreference = 'SilentlyContinue'
 # Keep HOBL files on the script's drive when Python does not provide a path.
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
 if (-not $DataRoot) { $DataRoot = "$scriptDrive\hobl_data" }
-$logFile = Join-Path $DataRoot 'bldt_modern_standby_prep.log'
+$reportDirectory = Join-Path $DataRoot 'bldt_modern_standby_reports'
+$logFile = Join-Path $reportDirectory 'bldt_modern_standby_prep.log'
 
 # Keep diagnostic messages out of the structured results sent back to Python.
 function log {
@@ -52,15 +54,21 @@ function Get-BldtExecutable {
 }
 
 function Install-Bldt {
+    $executable = Get-BldtExecutable
+    if ($executable) {
+        log "BLDT already installed at: $executable"
+        return
+    }
+
     # Download Intel's standard BLDT package into a temporary working directory.
     $downloadUrl = 'https://downloadmirror.intel.com/925424/bldt_setup-v3.1.1.zip'
     $workDirectory = Join-Path $env:TEMP ("hobl_bldt_" + [guid]::NewGuid().ToString('N'))
     $archivePath = Join-Path $workDirectory 'bldt.zip'
     $extractPath = Join-Path $workDirectory 'extracted'
-    $msiLog = Join-Path $DataRoot 'bldt_modern_standby_install.log'
+    $msiLog = Join-Path $reportDirectory 'bldt_modern_standby_install.log'
 
     # Use a unique temporary folder; Out-Null discards directory-creation output.
-    New-Item -ItemType Directory -Path $DataRoot, $workDirectory -Force | Out-Null
+    New-Item -ItemType Directory -Path $reportDirectory, $workDirectory -Force | Out-Null
 
     try {
         log "Downloading BLDT from $downloadUrl"
@@ -114,20 +122,19 @@ function Install-Bldt {
 function Invoke-ModernStandby {
     param([string]$Executable)
 
-    New-Item -ItemType Directory -Path $DataRoot -Force | Out-Null
-    $stdoutLog = Join-Path $DataRoot 'bldt_modern_standby_stdout.log'
-    $stderrLog = Join-Path $DataRoot 'bldt_modern_standby_stderr.log'
-    $eventsLog = Join-Path $DataRoot 'bldt_modern_standby_events.json'
+    New-Item -ItemType Directory -Path $reportDirectory -Force | Out-Null
+    $stdoutLog = Join-Path $reportDirectory 'bldt_modern_standby_stdout.log'
+    $stderrLog = Join-Path $reportDirectory 'bldt_modern_standby_stderr.log'
+    $eventsLog = Join-Path $reportDirectory 'bldt_modern_standby_events.json'
     $workingDirectory = Split-Path -Parent $Executable
     # Intel's mosTest initiates sleep. The host-side Python scenario schedules the
     # external wake pulse, so waking does not depend on this sleeping DUT's script.
-    # sleep_pwrsrc requests DC assessment; it does not disconnect the charger.
-    $parameters = "min_battery_charge:0;sleep_study_days:$SleepStudyDays;enable_sleep:true;sleep_pwrsrc:DC"
+    # sleep_pwrsrc describes the detected source; it does not switch the charger.
+    $parameters = "min_battery_charge:0;sleep_study_days:$SleepStudyDays;enable_sleep:true;sleep_pwrsrc:$PowerSource"
     $arguments = @('--type', 'mosTest', '--params', $parameters, '--telemetry=false')
-    # Save UTC boundaries for event/report filtering and time native BLDT execution.
+    # Save UTC boundaries for event and report filtering.
     $started = [DateTime]::UtcNow
     $startedUtc = $started.ToString('o')
-    $timer = [Diagnostics.Stopwatch]::StartNew()
     # Save normal/error output to files; PassThru returns the process to monitor.
     $process = Start-Process -FilePath $Executable -ArgumentList $arguments `
         -WorkingDirectory $workingDirectory -RedirectStandardOutput $stdoutLog `
@@ -135,14 +142,8 @@ function Invoke-ModernStandby {
 
     try {
         $null = $process.Handle
-        # Convert the timeout to milliseconds; stop BLDT if it does not finish in time.
-        if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
-            Stop-Process -Id $process.Id -Force
-            throw "BLDT Modern Standby timed out after $TimeoutSeconds seconds."
-        }
-
         $process.WaitForExit()
-        $timer.Stop()
+        $process.WaitForExit()
         # Query Windows' own evidence of standby: 506 is entry, 507 is exit.
         # The XPath expression limits results to Kernel-Power events during this run.
         $finished = [DateTime]::UtcNow
@@ -169,11 +170,10 @@ function Invoke-ModernStandby {
         ConvertTo-Json -InputObject $events -Depth 3 |
             Set-Content -LiteralPath $eventsLog -Encoding UTF8
 
-        # Return the exit code, elapsed time, and nested event records as JSON.
+        # Return the exit code and nested event records as JSON.
         [pscustomobject]@{
             started_utc = $startedUtc
             exit_code = $process.ExitCode
-            seconds = [math]::Round($timer.Elapsed.TotalSeconds, 3)
             events = $events
         } | ConvertTo-Json -Depth 4 -Compress
     } finally {
@@ -187,7 +187,7 @@ function Copy-BldtReports {
 
     $started = [DateTime]::Parse($StartedUtc).ToUniversalTime()
     $reportRoot = Join-Path $env:USERPROFILE 'Intel\BatteryLifeDiagnostic'
-    $destination = Join-Path $DataRoot 'bldt_modern_standby_reports'
+    $destination = $reportDirectory
     if (-not (Test-Path -LiteralPath $reportRoot -PathType Container)) {
         throw "BLDT report directory was not found: $reportRoot"
     }
@@ -221,7 +221,7 @@ function Copy-BldtReports {
 # Execution reaches this block after defining the functions above.
 try {
     # Dispatch one operation requested by Python; -eq means "equals".
-    New-Item -ItemType Directory -Path $DataRoot -Force | Out-Null
+    New-Item -ItemType Directory -Path $reportDirectory -Force | Out-Null
 
     if ($Action -eq 'Install') {
         Install-Bldt
@@ -247,7 +247,7 @@ try {
     # Report the exception and signal script failure (exit 1) to Python.
     $message = " ERROR - $($_.Exception.Message)"
     Write-Output $message
-    if (Test-Path -LiteralPath $DataRoot) {
+    if (Test-Path -LiteralPath $reportDirectory -PathType Container) {
         Add-Content -LiteralPath $logFile -Value $message -Encoding UTF8 `
             -ErrorAction SilentlyContinue
     }

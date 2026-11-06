@@ -3,7 +3,6 @@
 
 """Run Intel BLDT Battery Life through HOBL."""
 
-import csv
 import json
 import logging
 import os
@@ -19,10 +18,10 @@ class BldtBatteryLife(core.app_scenario.Scenario):
     power-efficiency problems, then produces native HTML, JSON and ZIP reports.
 
     HOBL lifecycle:
-    1. Before: validate the collection duration and require the DUT to be on DC;
+    1. Before: validate the collection durations and detect the DUT power source;
        install or discover BLDT, then enter HOBL's normal measured lifecycle.
     2. Run: invoke batteryLife with no charge threshold or collection delay and use
-       the selected duration for both native collection phases.
+       independent durations for SoCWatch and Energy Report collection.
     3. After: stage current native reports, shared HTML assets and execution logs;
        HOBL teardown stops measurement and retrieves the DUT data.
 
@@ -34,24 +33,26 @@ class BldtBatteryLife(core.app_scenario.Scenario):
     module = __module__.split('.')[-1]
     prep_version = '1'
 
-    Params.setDefault(module, 'collection_duration_seconds', '600', desc='Duration of each Intel Battery Life collection phase in seconds.')
+    Params.setDefault(module, 'collection_duration', '600', desc='Intel Battery Life SoCWatch collection duration in seconds (10-3600).')
+    Params.setDefault(module, 'energy_report_duration', '600', desc='Intel Energy Report collection duration in seconds (10-3600).')
 
     def setUp(self):
-        """Read the duration, prepare BLDT, and enter HOBL setup."""
+        """Read the durations and power source, prepare BLDT, and enter HOBL setup."""
 
-        self.collection_duration_seconds = int(Params.get(self.module, 'collection_duration_seconds'))
+        self.collection_duration = int(Params.get(self.module, 'collection_duration'))
+        self.energy_report_duration = int(Params.get(self.module, 'energy_report_duration'))
 
-        if not 10 <= self.collection_duration_seconds <= 3600:
-            raise ValueError('bldt_battery_life:collection_duration_seconds must be between 10 and 3600.')
+        if not 10 <= self.collection_duration <= 3600:
+            logging.error('Invalid collection_duration: %d. Must be between 10 and 3600.', self.collection_duration)
+            raise ValueError('bldt_battery_life:collection_duration must be between 10 and 3600.')
+        if not 10 <= self.energy_report_duration <= 3600:
+            logging.error('Invalid energy_report_duration: %d. Must be between 10 and 3600.', self.energy_report_duration)
+            raise ValueError('bldt_battery_life:energy_report_duration must be between 10 and 3600.')
 
-        self.execution_timeout = (self.collection_duration_seconds * 2) + 300
+        self.execution_timeout = (self.collection_duration + self.energy_report_duration) + 300
 
-        if not self.prep_run_only and self._get_power_source() != 'DC':
-            raise RuntimeError(
-                'BLDT Battery Life requires the DUT to be running on battery power. '
-                'Run the "charge_off" scenario before this scenario or add the '
-                '"auto_charge" tool to the test plan.'
-            )
+        if not self.prep_run_only:
+            self.power_source = self._get_power_source()
 
         self.prep()
         super().setUp()
@@ -65,16 +66,17 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             self._install_bldt()
             self.createPrepStatusControlFile(prep_suffix)
 
-        self.bldt_executable = self._discover_bldt()
+        # Verify BLDT still exists even when the prep marker skips installation.
+        self._discover_bldt()
 
     def runTest(self):
         """Run Battery Life and collect Intel's native reports."""
 
-        logging.info('Running BLDT Battery Life on DC; each collection phase is %d seconds.', self.collection_duration_seconds)
+        logging.info( 'Running BLDT Battery Life on %s; collection_duration is %d seconds; energy_report_duration is %d seconds.',
+                     self.power_source, self.collection_duration, self.energy_report_duration)
 
         result = self._run_battery_life()
         reports = self._copy_reports(result['started_utc'])
-        self._write_metrics(result['seconds'])
 
         logging.info('Collected BLDT Battery Life reports: %s', reports)
 
@@ -115,17 +117,6 @@ class BldtBatteryLife(core.app_scenario.Scenario):
             return 'AC'
         raise RuntimeError(f'Could not determine the DUT power source: {state}.')
 
-    def _write_metrics(self, scenario_runtime):
-        """Write the required native workload runtime."""
-
-        os.makedirs(self.result_dir, exist_ok=True)
-        metrics_path = os.path.join(self.result_dir, 'bldt_battery_life_results.csv')
-        with open(metrics_path, 'w', newline='', encoding='utf-8') as stream:
-            csv.writer(stream).writerow(['scenario_runtime', scenario_runtime])
-
-        logging.info('========== BLDT Battery Life metrics ==========')
-        logging.info('scenario_runtime: %ss', scenario_runtime)
-
     def _install_bldt(self):
         """Upload and run the BLDT installation script."""
 
@@ -165,9 +156,10 @@ class BldtBatteryLife(core.app_scenario.Scenario):
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Run '
-            f'-CollectionDurationSeconds {self.collection_duration_seconds} '
+            f'-CollectionDurationSeconds {self.collection_duration} '
+            f'-EnergyReportDurationSeconds {self.energy_report_duration} '
+            f'-PowerSource {self.power_source} '
             f'-DataRoot "{self.dut_data_path}" '
-            f'-TimeoutSeconds {self.execution_timeout}'
         )
         output = self._call(
             ['powershell.exe', arguments],

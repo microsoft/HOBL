@@ -12,7 +12,9 @@ param(
     # A switch is an on/off input; request AI payloads only when analysis is enabled.
     [switch]$RequireAi,
     [int]$CollectionDurationSeconds = 600,
-    [int]$TimeoutSeconds = 1500,
+    [int]$WindowsPerformanceRecorderDurationSeconds = 600,
+    [ValidateSet('AC', 'DC')]
+    [string]$PowerSource = 'DC',
     [string]$StartedUtc = '',
     [ValidateSet('SWHygiene', 'AIAnalysis')]
     [string]$ReportKind = 'SWHygiene',
@@ -26,7 +28,8 @@ $ProgressPreference = 'SilentlyContinue'
 # Default to the script's drive, not a hardcoded drive; Python can supply DataRoot.
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
 if (-not $DataRoot) { $DataRoot = "$scriptDrive\hobl_data" }
-$logFile = Join-Path $DataRoot 'bldt_sw_hygiene_prep.log'
+$reportDirectory = Join-Path $DataRoot 'bldt_sw_hygiene_reports'
+$logFile = Join-Path $reportDirectory 'bldt_sw_hygiene_prep.log'
 
 # Keep diagnostic messages out of the structured results sent back to Python.
 function log {
@@ -87,10 +90,10 @@ function Install-Bldt {
     $workDirectory = Join-Path $env:TEMP ("hobl_bldt_" + [guid]::NewGuid().ToString('N'))
     $archivePath = Join-Path $workDirectory 'bldt.zip'
     $extractPath = Join-Path $workDirectory 'extracted'
-    $msiLog = Join-Path $DataRoot "bldt_sw_hygiene_$Edition.install.log"
+    $msiLog = Join-Path $reportDirectory "bldt_sw_hygiene_$Edition.install.log"
 
     # Out-Null discards directory-creation output so it cannot pollute Python's result.
-    New-Item -ItemType Directory -Path $DataRoot, $workDirectory -Force | Out-Null
+    New-Item -ItemType Directory -Path $reportDirectory, $workDirectory -Force | Out-Null
 
     try {
         log "Downloading BLDT $Edition edition from $downloadUrl"
@@ -191,7 +194,7 @@ function Find-BldtExecutable {
     $installation.executable
 }
 
-# Shared runner: Hygiene and AI use the same logging, timing, and timeout handling.
+# Shared runner: Hygiene and AI use the same logging and process handling.
 function Invoke-Bldt {
     param(
         [string]$Executable,
@@ -199,12 +202,11 @@ function Invoke-Bldt {
         [string]$LogPrefix
     )
 
-    New-Item -ItemType Directory -Path $DataRoot -Force | Out-Null
-    $stdoutLog = Join-Path $DataRoot "$LogPrefix.stdout.log"
-    $stderrLog = Join-Path $DataRoot "$LogPrefix.stderr.log"
-    # UTC identifies fresh reports; the stopwatch measures this workload's execution.
+    New-Item -ItemType Directory -Path $reportDirectory -Force | Out-Null
+    $stdoutLog = Join-Path $reportDirectory "$LogPrefix.stdout.log"
+    $stderrLog = Join-Path $reportDirectory "$LogPrefix.stderr.log"
+    # UTC identifies fresh reports.
     $startedUtc = [DateTime]::UtcNow.ToString('o')
-    $timer = [Diagnostics.Stopwatch]::StartNew()
     # Save normal/error output separately; PassThru returns the process to monitor.
     $process = Start-Process -FilePath $Executable -ArgumentList $Arguments `
         -WorkingDirectory (Split-Path -Parent $Executable) `
@@ -212,19 +214,11 @@ function Invoke-Bldt {
 
     try {
         $null = $process.Handle
-        # Convert seconds to milliseconds; fail instead of waiting indefinitely.
-        if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
-            Stop-Process -Id $process.Id -Force
-            throw "BLDT timed out after $TimeoutSeconds seconds."
-        }
-
         $process.WaitForExit()
-        $timer.Stop()
         # Build a result record and pipe (|) it to JSON conversion for Python.
         [pscustomobject]@{
             started_utc = $startedUtc
             exit_code = $process.ExitCode
-            seconds = [math]::Round($timer.Elapsed.TotalSeconds, 3)
         } | ConvertTo-Json -Compress
     } finally {
         $process.Dispose()
@@ -234,14 +228,17 @@ function Invoke-Bldt {
 function Invoke-SoftwareHygiene {
     param([string]$Executable)
 
-    # Intel options give SoC Watch and Windows Performance Recorder the same duration,
-    # with no minimum-charge gate or collection delay. DC does not switch the charger.
+    # Intel options use independent SoC Watch and Windows Performance Recorder durations,
+    # with no minimum-charge gate or collection delay. PowerSource describes the
+    # detected state; it does not switch the charger.
+    $windowsPerformanceRecorderDurationMilliseconds =
+        $WindowsPerformanceRecorderDurationSeconds * 1000
     $parameters = (
         "min_battery_charge:0;" +
         "socwatch_duration:$CollectionDurationSeconds;" +
         "socwatch_delay:0;" +
-        "socwatch_pwrsrc:DC;" +
-        "wpr_duration_power:$CollectionDurationSeconds;" +
+        "socwatch_pwrsrc:$PowerSource;" +
+        "wpr_duration_power:$windowsPerformanceRecorderDurationMilliseconds;" +
         "socwatch_cfg:false;groupByProcessName:false;" +
         "showHiddenProcesses:false;allow_lost_events:0"
     )
@@ -281,7 +278,7 @@ function Copy-BldtReports {
 
     $started = [DateTime]::Parse($StartedUtc).ToUniversalTime()
     $reportRoot = Join-Path $env:USERPROFILE 'Intel\BatteryLifeDiagnostic'
-    $destination = Join-Path $DataRoot 'bldt_sw_hygiene_reports'
+    $destination = $reportDirectory
     if (-not (Test-Path -LiteralPath $reportRoot -PathType Container)) {
         throw "BLDT report directory was not found: $reportRoot"
     }
@@ -338,7 +335,7 @@ function Copy-BldtReports {
 
 # Execution starts here after defining the functions: select one requested operation.
 try {
-    New-Item -ItemType Directory -Path $DataRoot -Force | Out-Null
+    New-Item -ItemType Directory -Path $reportDirectory -Force | Out-Null
 
     if ($Action -eq 'Install') {
         Install-RequiredBldt
@@ -369,7 +366,7 @@ try {
     # Report the exception and signal script failure (exit 1) to Python.
     $message = " ERROR - $($_.Exception.Message)"
     Write-Output $message
-    if (Test-Path -LiteralPath $DataRoot) {
+    if (Test-Path -LiteralPath $reportDirectory -PathType Container) {
         Add-Content -LiteralPath $logFile -Value $message -Encoding UTF8 `
             -ErrorAction SilentlyContinue
     }

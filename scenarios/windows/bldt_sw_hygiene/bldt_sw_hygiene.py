@@ -3,7 +3,6 @@
 
 """Run Intel BLDT Software Hygiene through HOBL."""
 
-import csv
 import json
 import logging
 import os
@@ -21,43 +20,52 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     affect battery life, then produces native HTML, JSON and ZIP reports.
 
     HOBL lifecycle:
-    1. Before: validate the duration and require the DUT to be on DC. Prepare the
+    1. Before: validate the durations and detect the DUT power source. Prepare the
        standard BLDT edition, or the AI edition only when AI analysis is requested.
     2. Run: invoke SWHygiene with no charge threshold or collection delay and use
-       the selected duration for both native collection phases. When requested, run
-       AIAnalysis on the generated JSON and collect its native reports.
+       independent durations for SoCWatch and Windows Performance Recorder. When
+       requested, run AIAnalysis on the generated JSON and collect its native reports.
     3. After: stop HOBL measurement and retrieve the staged reports and logs.
 
     This scenario does not control the charger or require a minimum charge level.
     """
 
     module = __module__.split('.')[-1]
-    prep_version = '2'
+    prep_version = '3'
 
-    Params.setDefault(module, 'collection_duration_seconds', '600', desc='Duration of each Intel Software Hygiene collection phase in seconds.')
+    Params.setDefault(module, 'collection_duration', '600', desc='Intel Software Hygiene SoCWatch collection duration in seconds (10-3600).')
+    Params.setDefault(module, 'windows_performance_recorder_duration', '600', desc='Intel Software Hygiene Windows Performance Recorder duration in seconds (10-3600).')
     Params.setDefault(module, 'run_ai_analysis', '0', desc='Run Intel AI analysis after the Software Hygiene collection (0 or 1).', valOptions=['0', '1'])
 
     def setUp(self):
         """Read settings, prepare BLDT, and enter HOBL setup."""
 
-        self.collection_duration_seconds = int(Params.get(self.module, 'collection_duration_seconds'))
-        if not 10 <= self.collection_duration_seconds <= 3600:
-            raise ValueError('bldt_sw_hygiene:collection_duration_seconds must be between 10 and 3600.')
+        self.collection_duration = int(Params.get(self.module, 'collection_duration'))
+        self.windows_performance_recorder_duration = int(
+            Params.get(self.module, 'windows_performance_recorder_duration')
+        )
+        if not 10 <= self.collection_duration <= 3600:
+            raise ValueError('bldt_sw_hygiene:collection_duration must be between 10 and 3600.')
+        if not 10 <= self.windows_performance_recorder_duration <= 3600:
+            raise ValueError(
+                'bldt_sw_hygiene:windows_performance_recorder_duration must be '
+                'between 10 and 3600.'
+            )
 
         ai_value = str(Params.get(self.module, 'run_ai_analysis')).strip()
         if ai_value not in ('0', '1'):
             raise ValueError('bldt_sw_hygiene:run_ai_analysis must be 0 or 1.')
 
         self.run_ai_analysis = ai_value == '1'
-        self.execution_timeout = (self.collection_duration_seconds * 2) + 300
+        self.execution_timeout = (
+            self.collection_duration
+            + self.windows_performance_recorder_duration
+            + 300
+        )
         self.hygiene_source_json = None
 
-        if not self.prep_run_only and self._get_power_source() != 'DC':
-            raise RuntimeError(
-                'BLDT Software Hygiene requires the DUT to be running on battery power. '
-                'Run the "charge_off" scenario before this scenario or add the '
-                '"auto_charge" tool to the test plan.'
-            )
+        if not self.prep_run_only:
+            self.power_source = self._get_power_source()
 
         self.prep()
         super().setUp()
@@ -81,8 +89,11 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             return
 
         logging.info(
-            'Running BLDT Software Hygiene on DC; each collection phase is %d seconds.',
-            self.collection_duration_seconds,
+            'Running BLDT Software Hygiene on %s; collection_duration is %d seconds; '
+            'windows_performance_recorder_duration is %d seconds.',
+            self.power_source,
+            self.collection_duration,
+            self.windows_performance_recorder_duration,
         )
         result = self._run_hygiene()
         reports = self._copy_reports(result['started_utc'], 'SWHygiene')
@@ -97,8 +108,6 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         if self.run_ai_analysis and not self.hygiene_source_json:
             raise RuntimeError('BLDT Software Hygiene did not produce a JSON report for AI analysis.')
 
-        scenario_runtime = result['seconds']
-
         if self.run_ai_analysis:
             logging.info('Running BLDT AI analysis.')
 
@@ -111,10 +120,6 @@ class BldtSwHygiene(core.app_scenario.Scenario):
                 raise RuntimeError(f"BLDT AI Analysis failed ({ai_result['exit_code']}); see its logs.")
             if not ai_reports['reports']:
                 raise RuntimeError('No BLDT AI Analysis reports were collected.')
-
-            scenario_runtime += ai_result['seconds']
-
-        self._write_metrics(round(scenario_runtime, 3))
 
     def tearDown(self):
         """Stop measurement and retrieve the staged reports and logs."""
@@ -192,17 +197,6 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         logging.info('Using BLDT executable: %s', executable)
         return executable
 
-    def _write_metrics(self, scenario_runtime):
-        """Write the required native workload runtime."""
-
-        os.makedirs(self.result_dir, exist_ok=True)
-        metrics_path = os.path.join(self.result_dir, 'bldt_sw_hygiene_results.csv')
-        with open(metrics_path, 'w', newline='', encoding='utf-8') as stream:
-            csv.writer(stream).writerow(['scenario_runtime', scenario_runtime])
-
-        logging.info('========== BLDT Software Hygiene metrics ==========')
-        logging.info('scenario_runtime: %ss', scenario_runtime)
-
     def _normalize_ai_reports(self):
         """Replace Intel's nonstandard NaN values in collected AI reports."""
 
@@ -272,9 +266,11 @@ class BldtSwHygiene(core.app_scenario.Scenario):
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action RunHygiene '
-            f'-CollectionDurationSeconds {self.collection_duration_seconds} '
-            f'-DataRoot "{self.dut_data_path}" '
-            f'-TimeoutSeconds {self.execution_timeout}'
+            f'-CollectionDurationSeconds {self.collection_duration} '
+            f'-WindowsPerformanceRecorderDurationSeconds '
+            f'{self.windows_performance_recorder_duration} '
+            f'-PowerSource {self.power_source} '
+            f'-DataRoot "{self.dut_data_path}"'
         )
         output = self._call(
             ['powershell.exe', arguments],
@@ -290,8 +286,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action RunAi '
             f'-InputFile "{self.hygiene_source_json}" '
-            f'-DataRoot "{self.dut_data_path}" '
-            f'-TimeoutSeconds 10800'
+            f'-DataRoot "{self.dut_data_path}"'
         )
         output = self._call(['powershell.exe', arguments], timeout=10860)
         return json.loads(output)

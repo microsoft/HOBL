@@ -3,7 +3,6 @@
 
 """Run Intel BLDT Modern Standby through HOBL."""
 
-import csv
 import json
 import logging
 import math
@@ -21,7 +20,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
     diagnostics and produces native reports including Windows Sleep Study.
 
     HOBL lifecycle:
-    1. Before: validate the requested sleep duration, require the DUT to be on DC,
+    1. Before: validate the requested sleep duration, detect the DUT power source,
        install or discover BLDT, and verify that an external host can wake the DUT.
     2. Run: start mosTest and leave the DUT undisturbed while the HOBL host sends one
        wake pulse after the requested sleep duration plus Intel startup allowance.
@@ -32,7 +31,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
     """
 
     module = __module__.split('.')[-1]
-    prep_version = '1'
+    prep_version = '2'
     minimum_sleep_duration_minutes = 20
     startup_allowance_seconds = 300
 
@@ -66,12 +65,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
         self.wake_timer = None
 
         if not self.prep_run_only:
-            if self._get_power_source() != 'DC':
-                raise RuntimeError(
-                    'BLDT Modern Standby requires the DUT to be running on battery power. '
-                    'Run the "charge_off" scenario before this scenario or add the '
-                    '"auto_charge" tool to the test plan.'
-                )
+            self.power_source = self._get_power_source()
             if not self.sleep_wake_call:
                 raise RuntimeError('BLDT Modern Standby requires global:sleep_wake_call in the device profile.')
             if self.async_comm != '1':
@@ -100,7 +94,11 @@ class BldtModernStandby(core.app_scenario.Scenario):
         if self.prep_run_only:
             return
 
-        logging.info('Running BLDT Modern Standby on DC for at least %d minutes.', self.sleep_duration_minutes)
+        logging.info(
+            'Running BLDT Modern Standby on %s for at least %d minutes.',
+            self.power_source,
+            self.sleep_duration_minutes,
+        )
 
         self.wake_timer = threading.Timer(self.wake_after_seconds, self._send_wake)
         self.wake_timer.daemon = True
@@ -119,7 +117,6 @@ class BldtModernStandby(core.app_scenario.Scenario):
             raise RuntimeError('The Modern Standby wake command failed.') from self.wake_error
 
         reports = self._copy_reports(result['started_utc'])
-        self._write_metrics(result['seconds'])
 
         logging.info('Collected BLDT Modern Standby reports: %s', reports)
 
@@ -194,17 +191,6 @@ class BldtModernStandby(core.app_scenario.Scenario):
         logging.info('Validated Modern Standby duration: %.3f seconds.', duration)
         return round(duration, 3)
 
-    def _write_metrics(self, scenario_runtime):
-        """Write the required native workload runtime."""
-
-        os.makedirs(self.result_dir, exist_ok=True)
-        metrics_path = os.path.join(self.result_dir, 'bldt_modern_standby_results.csv')
-        with open(metrics_path, 'w', newline='', encoding='utf-8') as stream:
-            csv.writer(stream).writerow(['scenario_runtime', scenario_runtime])
-
-        logging.info('========== BLDT Modern Standby metrics ==========')
-        logging.info('scenario_runtime: %ss', scenario_runtime)
-
     def _install_bldt(self):
         """Upload and run the BLDT installation script."""
 
@@ -245,8 +231,8 @@ class BldtModernStandby(core.app_scenario.Scenario):
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Run '
             f'-SleepStudyDays {self.sleep_study_days} '
-            f'-DataRoot "{self.dut_data_path}" '
-            f'-TimeoutSeconds {self.execution_timeout}'
+            f'-PowerSource {self.power_source} '
+            f'-DataRoot "{self.dut_data_path}"'
         )
         output = self._call(
             ['powershell.exe', arguments],

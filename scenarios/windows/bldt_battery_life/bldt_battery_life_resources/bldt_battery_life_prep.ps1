@@ -11,7 +11,9 @@ param(
     [string]$Action,
     [string]$DataRoot = '',
     [int]$CollectionDurationSeconds = 600,
-    [int]$TimeoutSeconds = 4800,
+    [int]$EnergyReportDurationSeconds = 600,
+    [ValidateSet('AC', 'DC')]
+    [string]$PowerSource = 'DC',
     [string]$StartedUtc = ''
 )
 
@@ -22,7 +24,9 @@ $ProgressPreference = 'SilentlyContinue'
 # Keep HOBL files on the script's drive when Python does not provide a path.
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
 if (-not $DataRoot) { $DataRoot = "$scriptDrive\hobl_data" }
-$logFile = Join-Path $DataRoot 'bldt_battery_life_prep.log'
+
+$reportDirectory = Join-Path $DataRoot 'bldt_battery_life_reports'
+$logFile = Join-Path $reportDirectory 'bldt_battery_life_prep.log'
 
 # Keep diagnostic messages in a file so they do not mix with results sent to Python.
 function log {
@@ -50,17 +54,23 @@ function Get-BldtExecutable {
     return $null
 }
 
-# Download and Install BLDT
+# Download and Install BLDT if it does not already exist
 function Install-Bldt {
+    $executable = Get-BldtExecutable
+    if ($executable) {
+        log "BLDT already installed at: $executable"
+        return
+    }
+
     # Download Intel's standard BLDT package into a temporary working directory.
     $downloadUrl = 'https://downloadmirror.intel.com/925424/bldt_setup-v3.1.1.zip'
     $workDirectory = Join-Path $env:TEMP ("hobl_bldt_" + [guid]::NewGuid().ToString('N'))
     $archivePath = Join-Path $workDirectory 'bldt.zip'
     $extractPath = Join-Path $workDirectory 'extracted'
-    $msiLog = Join-Path $DataRoot 'bldt_battery_life_install.log'
+    $msiLog = Join-Path $reportDirectory 'bldt_battery_life_install.log'
 
     # Use a unique temporary folder; Out-Null discards directory-creation output.
-    New-Item -ItemType Directory -Path $DataRoot, $workDirectory -Force | Out-Null
+    New-Item -ItemType Directory -Path $reportDirectory, $workDirectory -Force | Out-Null
 
     try {
         log "Downloading BLDT from $downloadUrl"
@@ -107,38 +117,29 @@ function Install-Bldt {
 function Invoke-BatteryLife {
     param([string]$Executable)
 
-    # Run both Intel collection phases for the same user-selected duration.
-    New-Item -ItemType Directory -Path $DataRoot -Force | Out-Null
-    $stdoutLog = Join-Path $DataRoot 'bldt_battery_life_stdout.log'
-    $stderrLog = Join-Path $DataRoot 'bldt_battery_life_stderr.log'
+    # Run Intel collection phases for their independently selected durations.
+    New-Item -ItemType Directory -Path $reportDirectory -Force | Out-Null
+    $stdoutLog = Join-Path $reportDirectory 'bldt_battery_life_stdout.log'
+    $stderrLog = Join-Path $reportDirectory 'bldt_battery_life_stderr.log'
     $workingDirectory = Split-Path -Parent $Executable
 
-    # Intel options request DC collection with no minimum-charge gate or start delay. Each phase gets this duration, not the whole run. pwrsrc does not switch a charger.
-    $parameters = "min_battery_charge:0;socwatch_duration:$CollectionDurationSeconds;socwatch_delay:0;pwrsrc:DC;energy_rpt_duration:$CollectionDurationSeconds"
+    # pwrsrc describes the detected power source; it does not switch a charger.
+    $parameters = "min_battery_charge:0;socwatch_duration:$CollectionDurationSeconds;socwatch_delay:0;pwrsrc:$PowerSource;energy_rpt_duration:$EnergyReportDurationSeconds"
     $arguments = @('--type', 'batteryLife', '--params', $parameters, '--telemetry=false')
 
-    # UTC timestamps identify fresh reports; the stopwatch measures BLDT execution.
+    # UTC timestamps identify fresh reports
     $startedUtc = [DateTime]::UtcNow.ToString('o')
-    $timer = [Diagnostics.Stopwatch]::StartNew()
-
     # Save normal/error output separately; PassThru returns the process for monitoring.
     $process = Start-Process -FilePath $Executable -ArgumentList $arguments -WorkingDirectory $workingDirectory -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog -PassThru
 
     try {
         $null = $process.Handle
-        # Convert seconds to milliseconds; fail instead of hanging the lab indefinitely.
-        if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
-            Stop-Process -Id $process.Id -Force
-            throw "BLDT Battery Life timed out after $TimeoutSeconds seconds."
-        }
         $process.WaitForExit()
-        $timer.Stop()
 
-        # Return a result record for Python, including start time, exit code, and elapsed seconds.
+        # Return a result record for Python, including start time and exit code
         [pscustomobject]@{
             started_utc = $startedUtc
             exit_code = $process.ExitCode
-            seconds = [math]::Round($timer.Elapsed.TotalSeconds, 3)
         } | ConvertTo-Json -Compress
     } finally {
         $process.Dispose()
@@ -152,7 +153,7 @@ function Copy-BldtReports {
 
     $started = [DateTime]::Parse($StartedUtc).ToUniversalTime()
     $reportRoot = Join-Path $env:USERPROFILE 'Intel\BatteryLifeDiagnostic'
-    $destination = Join-Path $DataRoot 'bldt_battery_life_reports'
+    $destination = $reportDirectory
     if (-not (Test-Path -LiteralPath $reportRoot -PathType Container)) { throw "BLDT report directory was not found: $reportRoot" }
 
     # Filter by both the workload name and timestamp to avoid collecting older runs.
@@ -182,7 +183,7 @@ function Copy-BldtReports {
 # This try-catch block handles the requested action and reports errors to Python.
 try {
     # Dispatch one operation requested by Python; -eq means "equals".
-    New-Item -ItemType Directory -Path $DataRoot -Force | Out-Null
+    New-Item -ItemType Directory -Path $reportDirectory -Force | Out-Null
 
     if ($Action -eq 'Install') {
         Install-Bldt
@@ -208,6 +209,6 @@ try {
     # Report the exception and signal script failure (exit 1) to Python.
     $message = " ERROR - $($_.Exception.Message)"
     Write-Output $message
-    if (Test-Path -LiteralPath $DataRoot) { Add-Content -LiteralPath $logFile -Value $message -Encoding UTF8 -ErrorAction SilentlyContinue }
+    if (Test-Path -LiteralPath $reportDirectory -PathType Container) {Add-Content -LiteralPath $logFile -Value $message -Encoding UTF8 -ErrorAction SilentlyContinue}
     exit 1
 }

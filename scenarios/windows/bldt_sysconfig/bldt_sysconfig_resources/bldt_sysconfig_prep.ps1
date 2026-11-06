@@ -12,9 +12,7 @@ param(
 
     [ValidateSet('AC', 'DC')]
     [string]$PowerSource = 'AC',
-
     [string]$DataRoot = '',
-    [int]$TimeoutSeconds = 900,
     [string]$StartedUtc = ''
 )
 
@@ -25,7 +23,8 @@ $ProgressPreference = 'SilentlyContinue'
 # Keep HOBL files on the script's drive when Python does not provide a path.
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
 if (-not $DataRoot) { $DataRoot = "$scriptDrive\hobl_data" }
-$logFile = Join-Path $DataRoot 'bldt_sysconfig_prep.log'
+$reportDirectory = Join-Path $DataRoot 'bldt_sysconfig_reports'
+$logFile = Join-Path $reportDirectory 'bldt_sysconfig_prep.log'
 
 # Write diagnostic messages to a file, keeping output available for Python's results.
 function log {
@@ -56,15 +55,21 @@ function Get-BldtExecutable {
 
 # Download and Install BLDT 
 function Install-Bldt {
+    $executable = Get-BldtExecutable
+    if ($executable) {
+        log "BLDT already installed at: $executable"
+        return
+    }
+
     # Download Intel's standard BLDT package into a temporary working directory.
     $downloadUrl = 'https://downloadmirror.intel.com/925424/bldt_setup-v3.1.1.zip'
     $workDirectory = Join-Path $env:TEMP ("hobl_bldt_" + [guid]::NewGuid().ToString('N'))
     $archivePath = Join-Path $workDirectory 'bldt.zip'
     $extractPath = Join-Path $workDirectory 'extracted'
-    $msiLog = Join-Path $DataRoot 'bldt_sysconfig_install.log'
+    $msiLog = Join-Path $reportDirectory 'bldt_sysconfig_install.log'
 
     # Use a unique temporary folder; Out-Null discards directory-creation output.
-    New-Item -ItemType Directory -Path $DataRoot, $workDirectory -Force | Out-Null
+    New-Item -ItemType Directory -Path $reportDirectory, $workDirectory -Force | Out-Null
 
     try {
         log "Downloading BLDT from $downloadUrl"
@@ -111,37 +116,29 @@ function Install-Bldt {
 function Invoke-SysConfigChecks {
     param([string]$Executable)
 
-    # Run Intel's workload, capture both output streams, and enforce the scenario timeout.
-    New-Item -ItemType Directory -Path $DataRoot -Force | Out-Null
-    $stdoutLog = Join-Path $DataRoot 'bldt_sysconfig_stdout.log'
-    $stderrLog = Join-Path $DataRoot 'bldt_sysconfig_stderr.log'
+    # Run Intel's workload and capture both output streams.
+    New-Item -ItemType Directory -Path $reportDirectory -Force | Out-Null
+    $stdoutLog = Join-Path $reportDirectory 'bldt_sysconfig_stdout.log'
+    $stderrLog = Join-Path $reportDirectory 'bldt_sysconfig_stderr.log'
     $workingDirectory = Split-Path -Parent $Executable
 
     # These are Intel CLI options, not PowerShell commands. AC/DC selects the assessment mode; it does not physically switch the charger's power.
     $arguments = @('--type', 'SysConfigChecks', '--params', "pwrsrc:$PowerSource", '--telemetry=false')
 
-    # UTC identifies fresh reports; the stopwatch only measures the workload.
+    # UTC identifies fresh reports.
     $startedUtc = [DateTime]::UtcNow.ToString('o')
-    $timer = [Diagnostics.Stopwatch]::StartNew()
 
     # Save normal/error output separately; PassThru returns the process for monitoring.
     $process = Start-Process -FilePath $Executable -ArgumentList $arguments -WorkingDirectory $workingDirectory -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog -PassThru
 
     try {
         $null = $process.Handle
-        # Set a time out for the workload, stop it if it exceeds the allowed duration
-        if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
-            Stop-Process -Id $process.Id -Force
-            throw "BLDT SysConfigChecks timed out after $TimeoutSeconds seconds."
-        }
         $process.WaitForExit()
-        $timer.Stop()
         
-        # Return a result record for Python, including start time, exit code, and elapsed seconds.
+        # Return a result record for Python, including start time and exit code.
         [pscustomobject]@{
             started_utc = $startedUtc
             exit_code = $process.ExitCode
-            seconds = [math]::Round($timer.Elapsed.TotalSeconds, 3)
         } | ConvertTo-Json -Compress
     } finally {
         $process.Dispose()
@@ -155,7 +152,7 @@ function Copy-BldtReports {
 
     $started = [DateTime]::Parse($StartedUtc).ToUniversalTime()
     $reportRoot = Join-Path $env:USERPROFILE 'Intel\BatteryLifeDiagnostic'
-    $destination = Join-Path $DataRoot 'bldt_sysconfig_reports'
+    $destination = $reportDirectory
 
     if (-not (Test-Path -LiteralPath $reportRoot -PathType Container)) { throw "BLDT report directory was not found: $reportRoot" }
 
@@ -186,7 +183,7 @@ function Copy-BldtReports {
 # This try-catch block handles the requested action and reports errors to Python.
 try {
     # Dispatch one operation requested by Python; -eq means "equals".
-    New-Item -ItemType Directory -Path $DataRoot -Force | Out-Null
+    New-Item -ItemType Directory -Path $reportDirectory -Force | Out-Null
 
     if ($Action -eq 'Install') {
         Install-Bldt
@@ -209,6 +206,6 @@ try {
     # Report the exception and signal script failure (exit 1) to the Python caller.
     $message = " ERROR - $($_.Exception.Message)"
     Write-Output $message
-    if (Test-Path -LiteralPath $DataRoot) { Add-Content -LiteralPath $logFile -Value $message -Encoding UTF8 -ErrorAction SilentlyContinue }
+    if (Test-Path -LiteralPath $reportDirectory -PathType Container) { Add-Content -LiteralPath $logFile -Value $message -Encoding UTF8 -ErrorAction SilentlyContinue }
     exit 1
 }
