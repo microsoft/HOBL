@@ -9,6 +9,7 @@ from core.app_scenario import Scenario
 import socket, select, json
 import logging, threading, time
 import sys
+import os
 
 class DAQSocketClient:
     def __init__(self, host="127.0.0.1", port=5000, timeout=5):
@@ -115,12 +116,13 @@ class Tool(Scenario):
     channel_input = Params.get(module, 'channels')
 
     output_filename = "thermal_daq_log.trace"
-    
 
     def initCallback(self, scenario):
         # Initialization code
         # Keep a pointer to the scenario that this tools is being run with
         self.scenario = scenario
+        self.host_result_path = os.path.join(self.scenario.result_dir, self.module)
+
         logging.info("Thermal DAQ Tool - initializing, associated with scenario: " + self.scenario._module)
 
         if self.channel_input is None:
@@ -190,7 +192,7 @@ class ThermalRecordThread(threading.Thread):
         self.client = DAQSocketClient(host=tool.thermal_daq_host, port=int(tool.thermal_daq_port))
         self.client.connect()
         self.stop_event = threading.Event()
-        self.data_log_file = open(f"{self.tool.scenario.result_dir}/{self.tool.output_filename}", "w")
+        self.data_log_file = open(f"{self.tool.host_result_path}/{self.tool.output_filename}", "w")
 
 
         # Set the channel names on the server

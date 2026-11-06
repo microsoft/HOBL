@@ -29,26 +29,28 @@ from selenium.common.exceptions import TimeoutException, WebDriverException, NoS
 class Tool(core.app_scenario.Scenario):
     '''
     Enable/disable specified MEP features.
+
+    Before scenario starts specified MEP features will be toggled according to the configured parameters.
     '''
     module = __module__.split('.')[-1]
 
     #Main toggle state features
-    Params.setDefault(module, 'framing', '0')
-    Params.setDefault(module, 'eye_gaze', '0')
-    Params.setDefault(module, 'blur', '0')
-    Params.setDefault(module, 'portraitlight', '0')
-    Params.setDefault(module, 'creative', '0')
+    Params.setDefault(module, 'framing', '0', desc="framing feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'eye_gaze', '0', desc="eye gaze feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'blur', '0', desc="blur feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'portraitlight', '0', desc="portrait light feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'creative', '0', desc="creative feature ('0' for off, '1' for on).")
 
     #Radio button sub sections for features 
-    Params.setDefault(module, 'standardframing', '0')
-    Params.setDefault(module, 'cinematicframing', '0')
-    Params.setDefault(module, 'portraitblur', '0')
-    Params.setDefault(module, 'standardblur', '0')
-    Params.setDefault(module, 'standardeye', '0')
-    Params.setDefault(module, 'enhancedeye', '0')
-    Params.setDefault(module, 'illustrated', '0')
-    Params.setDefault(module, 'animated', '0')
-    Params.setDefault(module, 'watercolor', '0')
+    Params.setDefault(module, 'standardframing', '0', desc="standard framing sub-feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'cinematicframing', '0', desc="cinematic framing sub-feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'portraitblur', '0', desc="portrait blur sub-feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'standardblur', '0', desc="standard blur sub-feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'standardeye', '0', desc="standard eye sub-feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'enhancedeye', '0', desc="enhanced eye sub-feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'illustrated', '0', desc="illustrated sub-feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'animated', '0', desc="animated sub-feature ('0' for off, '1' for on).")
+    Params.setDefault(module, 'watercolor', '0', desc="watercolor sub-feature ('0' for off, '1' for on).")
 
     # Get parameters
     dut_architecture = Params.get('global', 'dut_architecture')

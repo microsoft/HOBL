@@ -19,9 +19,6 @@
 				<Keyword Value="Loader" />
 			</Keywords>
 		</SystemProvider>
-		<EventProvider Id="EventProvider_PerfTrack" Name="PerfTrack" NonPagedMemory="true" Level="4" />
-		<EventProvider Id="EventProvider_UTC" Name="UTC" NonPagedMemory="true" Level="4" />
-		<EventProvider Id="EP_Microsoft.Windows.Health.TestInProduction" Name="50109fbd-6d85-5815-731e-c907eca1607b" NonPagedMemory="true" Level="5" EventKey="true" />
 		<HardwareCounter Id="HardwareCounter_General_Mobile_+_CPI" Strict="false">
 			<Counters>
 				<Counter Value="TotalCycles" />
@@ -31,6 +28,9 @@
 				<Event Value="CSwitch" />
 			</Events>
 		</HardwareCounter>
+		<EventProvider Id="EventProvider_PerfTrack" Name="PerfTrack" NonPagedMemory="true" Level="4" />
+		<EventProvider Id="EventProvider_UTC" Name="UTC" NonPagedMemory="true" Level="4" />
+		<EventProvider Id="EP_Microsoft.Windows.Health.TestInProduction" Name="50109fbd-6d85-5815-731e-c907eca1607b" NonPagedMemory="true" Level="5" EventKey="true" />
 		<Profile Id="CustomMemHardFaults.Verbose.File" Name="CustomMemHardFaults" Description="Custom Mem/HardFaults with PerfTrack/UTC/TestInProduction" LoggingMode="File" DetailLevel="Verbose" Default="true">
 			<ProblemCategories>
 				<ProblemCategory Value="First Level Triage" />

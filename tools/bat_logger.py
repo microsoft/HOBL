@@ -25,12 +25,15 @@ class Tool(Scenario):
         # Keep a pointer to the scenario that this tools is being run with
         self.scenario = scenario
         self.conn_timeout = False
+        self.output_path = self.scenario.dut_data_path + f"\\{self.module}"
         # Copy the exe if it doesn't already exist
         if not self._check_remote_file_exists("RunBatLogger.ps1"):
             self._upload("utilities\\open_source\\RunBatLogger.ps1", self.dut_exec_path)
 
     def testBeginCallback(self):
-        output_file = self.scenario.dut_data_path + "\\batlog.csv"
+        #Make directory in dut_data_path of the tool name to put any outputs in that directory
+        self._remote_make_dir(self.output_path)
+        output_file = self.output_path + "\\batlog.csv"
         cmd = "-ExecutionPolicy Unrestricted " + os.path.join(self.dut_exec_path, "RunBatLogger.ps1 -o " + output_file)
         self._call(["powershell.exe", cmd], blocking=False)
         logging.info("Battery log collection started.")
@@ -42,7 +45,7 @@ class Tool(Scenario):
         # self._call(kill_cmd)
 
         if self.conn_timeout:
-            output_file = self.scenario.dut_data_path + "\\batlog.csv"
+            output_file = self.output_path + "\\batlog.csv"
             self._call(["cmd.exe", '/c del ' + output_file], expected_exit_code="")
 
     def testTimeoutCallback(self):
