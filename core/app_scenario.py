@@ -66,6 +66,9 @@ class Scenario(unittest.TestCase):
     toolCallBacks_failed = False
     toolCallBacks_backtrace = []
     tool_failure_reason = None
+    scenario_start_time = 0
+    scenario_prev_time = 0
+    scenario_accumulated_time = 0
 
     web_replay_version = "v1.5.0"
     MAX_SCREENS = 4  # Maximum number of screens to support
