@@ -10,13 +10,15 @@ import utilities.call_rpc as rpc
 
 class Tool(Scenario):
     '''
-    A template that can be used for creating new tools.
+    A tool that captures partial screen recordings for later performance analysis.
     '''
     module = __module__.split('.')[-1]
-    perf_path_name = "perf_screenshots"
+    perf_path_name = "perfcap_clips"
 
     def initCallback(self, scenario):
         # Initialization code
+        scenario.perf_trace = True
+
         if self.platform.lower() == "windows":
             if not self._check_remote_file_exists("ffmpeg.exe"):
                 self._upload("downloads\\ffmpeg_win64\\bin\\ffmpeg.exe", self.dut_exec_path)
@@ -25,7 +27,10 @@ class Tool(Scenario):
         self.scenario = scenario
 
         logging.info("Perf Screen Capture Tool - Clearing capture memory")
-        rpc.plugin_clear_captures(self.dut_ip, self.rpc_port, "InputInject")
+        try:
+            rpc.plugin_clear_captures(self.dut_ip, self.rpc_port, "InputInject")
+        except Exception as e:
+            logging.warning(f"Error clearing capture memory: {e}")
         return
 
     def testBeginCallback(self):
@@ -41,6 +46,8 @@ class Tool(Scenario):
     def dataReadyCallback(self):
         # You can do any post processing of data here.
         logging.info("Perf Screen Capture Tool - dataReadyCallback")
+        self._host_call("downloads\\python_embed\\python.exe utilities\\open_source\\perf_process.py " + self.scenario.result_dir, expected_exit_code="")
+        
         return
     
     def cleanup(self):

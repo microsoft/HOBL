@@ -230,67 +230,77 @@ namespace InputInject
             uint newFrameTimeout;   // Timeout for capturing a new frame
 
             DesktopDuplicationCapturer capturer = _desktopDuplications[screenIndex];
+            capturer.StartDuplication();
             Stopwatch stopwatch = Stopwatch.StartNew();
 
 #pragma warning disable CA1416
 
-            // Prime schedule so first iteration runs immediately
-            nextTick = Stopwatch.GetTimestamp();
-
-            while (stopwatch.ElapsedMilliseconds < time_ms && count < maxFrames && !_stopCapture)
+            try
             {
+                // Prime schedule so first iteration runs immediately
+                nextTick = Stopwatch.GetTimestamp();
 
-                // Capture attempt (may be a timeout / no new frame produced by DWM)
-                if (count == 0)
+                while (stopwatch.ElapsedMilliseconds < time_ms && count < maxFrames && !_stopCapture)
                 {
-                    newFrameTimeout = 16; // allow a longer timeout for the first frame to ensure we get an initial sample, as the desktop duplication API may not have a new frame ready immediately
-                }
-                else
-                {
-                    newFrameTimeout = 0; // after the first frame, we want to capture as close to the target framerate as possible, so no timeout (non-blocking)
-                }
 
-                if (capturer.TryCaptureBgra32((int)x, (int)y, (int)w, (int)h, scratchBits, timeoutMilliseconds: newFrameTimeout))
-                {
-                    // New frame captured, copy to main buffer
-                    Array.Copy(scratchBits, 0, VidBits, frameOffset, pixelsPerFrame);
-                    count++;
-                    frameOffset += pixelsPerFrame;
-                }
-                else
-                {
-                    // Repeat frame (no new frame available from DWM)
-                    if (count > 0)
+                    // Capture attempt (may be a timeout / no new frame produced by DWM)
+                    if (count == 0)
                     {
-                        duplicateFrameCount[count - 1]++;
-                    }
-                    else 
-                    {
-                        duplicateFrameCount[0]++; // If we haven't captured any frames yet, count duplicates in the first frame's duplicate count so that timing is preserved when we eventually do capture the first frame
-                    }
-                }
-
-
-                // Pace to framerate using a timestamp schedule (more stable than Sleep(remainingMs))
-                nextTick += tickStep;
-                while (true)
-                {
-                    now = Stopwatch.GetTimestamp();
-                    remainingTicks = nextTick - now;
-                    if (remainingTicks <= 0)
-                        break;
-
-                    // Sleep only when there's enough slack; otherwise spin briefly for accuracy.
-                    remainingMs = (int)(remainingTicks * 1000 / tickFreq);
-                    if (remainingMs > 1)
-                    {
-                        Thread.Sleep(remainingMs - 1);
+                        newFrameTimeout = 16; // allow a longer timeout for the first frame to ensure we get an initial sample, as the desktop duplication API may not have a new frame ready immediately
                     }
                     else
                     {
-                        Thread.SpinWait(50);
+                        newFrameTimeout = 0; // after the first frame, we want to capture as close to the target framerate as possible, so no timeout (non-blocking)
+                    }
+
+                    if (capturer.TryCaptureBgra32((int)x, (int)y, (int)w, (int)h, scratchBits, timeoutMilliseconds: newFrameTimeout))
+                    {
+                        // New frame captured, copy to main buffer
+                        Array.Copy(scratchBits, 0, VidBits, frameOffset, pixelsPerFrame);
+                        count++;
+                        frameOffset += pixelsPerFrame;
+                    }
+                    else
+                    {
+                        // Repeat frame (no new frame available from DWM)
+                        if (count > 0)
+                        {
+                            duplicateFrameCount[count - 1]++;
+                        }
+                        else
+                        {
+                            duplicateFrameCount[0]++; // If we haven't captured any frames yet, count duplicates in the first frame's duplicate count so that timing is preserved when we eventually do capture the first frame
+                        }
+                    }
+
+
+                    // Pace to framerate using a timestamp schedule (more stable than Sleep(remainingMs))
+                    nextTick += tickStep;
+                    while (true)
+                    {
+                        now = Stopwatch.GetTimestamp();
+                        remainingTicks = nextTick - now;
+                        if (remainingTicks <= 0)
+                            break;
+
+                        // Sleep only when there's enough slack; otherwise spin briefly for accuracy.
+                        remainingMs = (int)(remainingTicks * 1000 / tickFreq);
+                        if (remainingMs > 1)
+                        {
+                            Thread.Sleep(remainingMs - 1);
+                        }
+                        else
+                        {
+                            Thread.SpinWait(50);
+                        }
                     }
                 }
+            }
+            finally
+            {
+                // Release the duplication session immediately so DWM can resume
+                // power-efficient Direct Flip / MPO composition.
+                capturer.StopDuplication();
             }
 
             // Trim buffers to actual number of frames captured and record metadata, minimize memory footprint

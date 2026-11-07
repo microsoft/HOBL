@@ -96,17 +96,17 @@ class ActionModel(QtGui.QStandardItemModel):
         if action == None:
             return False
         # Actions, such that the next action should be indented under it
-        if action['type'] in ['Try', 'Except', 'Else', 'On Success', 'If', 'Else If', 'Loop', 'Setup', 'Run Test', 'Teardown', 'Switch', 'Case', 'Default Case']:
+        if action['type'] in ['Try', 'Except', 'Else', 'On Success', 'If', 'Else If', 'Loop', 'Setup', 'Run Test', 'Teardown', 'Switch', 'Case', 'Default Case', 'Insert Actions']:
             return True
         return False
     
     def isTypeParent(self, type):
         # Actions that we don't want indented under an Index Parent
-        if type in ['Except', 'On Success', 'Else', 'Else If', 'End Try', 'End If', 'End Loop', 'End Switch', 'Run Test', 'Teardown']:
+        if type in ['Except', 'On Success', 'Else', 'Else If', 'End Try', 'End If', 'End Loop', 'End Switch', 'End Insert', 'Run Test', 'Teardown']:
             return True
         return False
 
-    def appendAction(self, working_dir, type="", x="", y="", w="", h="", text="", command="", id="", description="", typing_delay="[typing_delay]", delay="0", file_name="", include_path="", params=[], direction="", val_options="", count="", primary=True):
+    def appendAction(self, working_dir, type="", x="", y="", w="", h="", text="", command="", id="", description="", relationship="", typing_delay="[typing_delay]", delay="0", file_name="", include_path="", params=[], direction="", val_options="", count="", target_id="",primary=True, trace_framerate="", trace_label="", trace_len="", trace_process=""):
         action = collections.OrderedDict()
         action[u'id'] = id
         action[u'type'] = type
@@ -132,6 +132,18 @@ class ActionModel(QtGui.QStandardItemModel):
             action[u'include_path'] = include_path
         if count != "":
             action[u'count'] = count
+        if relationship != "":
+            action[u'relationship'] = relationship
+        if target_id != "":
+            action[u'target_id'] = target_id
+        if trace_framerate != "":
+            action[u'trace_framerate'] = trace_framerate
+        if trace_label != "":
+            action[u'trace_label'] = trace_label
+        if trace_len != "":
+            action[u'trace_len'] = trace_len
+        if trace_process != "":
+            action[u'trace_process'] = trace_process
         if params != []:
             action[u'params'] = params
         if id == "":
@@ -262,6 +274,8 @@ class ActionModel(QtGui.QStandardItemModel):
             label += ": " + action['count']
         elif type in ["Delay", "Delay To"]:
             label += ": " + action['delay']
+        elif type in ["Insert Actions"]:
+            label += ": " + action['relationship'] + " " + action['target_id']
         elif type == "Include":
             label += ": " + os.path.basename(action['include_path'])
         elif type == "Comment":
@@ -279,7 +293,7 @@ class ActionModel(QtGui.QStandardItemModel):
         return f"{action['id']} {action['type']}-{action['description']}"
         
     def has_image(self, type):
-        if type == "Click" or type == "Capture" or type == "Move" or type == "Check" or type == "Check Until Found" or type == "Check Until Not Found":
+        if type == "Click" or type == "Capture" or type == "Register Perf Capture" or type == "Move" or type == "Check" or type == "Check Until Found" or type == "Check Until Not Found":
             return True
         return False
     
@@ -318,13 +332,17 @@ class ActionModel(QtGui.QStandardItemModel):
             test_index = self.index(row, 0, parent_index)
             test_action = self.data(test_index, Qt.ItemDataRole.UserRole)
             if test_action == None:
+                print(f"Action is None at row {row}, parent_index {parent_index}")
                 return None
             if test_action['id'] == action['id']:
+                return test_index
+            if 'old_id' in action and test_action['id'] == action['old_id']:
                 return test_index
             if self.hasChildren(test_index):
                 index = self.getIndexFromAction(test_index, action)
             if index != None:
                 break
+        print(f"Returning index {index} for action {action['id']} under parent_index {parent_index}")
         return index
 
     def open(self, dir, filename):
@@ -392,6 +410,7 @@ class ActionModel(QtGui.QStandardItemModel):
             action = (self.data(index, Qt.ItemDataRole.UserRole)).copy()
             if action == None:
                 return action_list
+            action.pop('old_id', None)
             if action['type'] == "Include":
                 try:
                     action['include_path'] = str(Path(action['include_path']).relative_to(Path.cwd().parent))
@@ -414,6 +433,7 @@ class ActionModel(QtGui.QStandardItemModel):
         self.user_only_includes = []
         save_actions = self.traverse_save(self.root.index(), working_dir)
         with open(filename, "w") as json_file:
+            
             json_str = json.dumps(save_actions, indent=4, separators=(',', ': '), sort_keys=True)
             json_file.write(json_str)
         return save_actions
@@ -522,6 +542,24 @@ class ActionDialog(QDialog):
         if 'left_term' in self.action:
             self.leftTermEdit = QLineEdit(self, text=self.action[u'left_term'])
             layout.addRow(QLabel("Left Term"), self.leftTermEdit)
+        if 'relationship' in self.action:
+            self.relationshipCombo = QComboBox()
+            self.relationshipCombo.addItems(['before', 'during (Delay actions only)', 'after'])
+            relationship = self.action[u'relationship']
+            for index in range(self.relationshipCombo.count()):
+                if self.relationshipCombo.itemText(index).startswith(relationship):
+                    self.relationshipCombo.setCurrentIndex(index)
+                    break
+            layout.addRow(QLabel("Relationship"), self.relationshipCombo)
+        if 'trace_process' in self.action:
+            self.traceProcessCombo = QComboBox()
+            self.traceProcessCombo.addItems(['settle', 'pixel_change', 'template'])
+            trace_process = self.action[u'trace_process']
+            for index in range(self.traceProcessCombo.count()):
+                if self.traceProcessCombo.itemText(index).startswith(trace_process):
+                    self.traceProcessCombo.setCurrentIndex(index)
+                    break
+            layout.addRow(QLabel("Trace Process"), self.traceProcessCombo)
         if 'eval_method' in self.action:
             self.evalMethodCombo = QComboBox()
             self.evalMethodCombo.addItems(['==', '!=', '<', '<=', '>', '>=', 'in', 'not in'])
@@ -594,12 +632,27 @@ class ActionDialog(QDialog):
                 h_layout = QHBoxLayout()
                 for file_name in file_names:
                     image_path = os.path.join(working_dir, file_name)
-                    self.thumbnail = self.makeThumbnail(image_path)
-                    h_layout.addWidget(self.thumbnail)
+                    try:
+                        self.thumbnail = self.makeThumbnail(image_path)
+                        h_layout.addWidget(self.thumbnail)
+                    except Exception as e:
+                        pass
                 layout.addRow(QLabel("Thumbnail"), h_layout)
         if 'capture_id' in self.action:
             self.captureEdit = QLineEdit(self, text=self.action[u'capture_id'])
             layout.addRow(QLabel("Capture ID"), self.captureEdit)
+        if 'target_id' in self.action:
+            self.targetEdit = QLineEdit(self, text=self.action[u'target_id'])
+            layout.addRow(QLabel("Target ID"), self.targetEdit)
+        if 'trace_framerate' in self.action:
+            self.traceFramerateEdit = QLineEdit(self, text=self.action[u'trace_framerate'])
+            layout.addRow(QLabel("Trace Framerate"), self.traceFramerateEdit)
+        if 'trace_label' in self.action:
+            self.traceLabelEdit = QLineEdit(self, text=self.action[u'trace_label'])
+            layout.addRow(QLabel("Trace Label"), self.traceLabelEdit)
+        if 'trace_len' in self.action:
+            self.traceMsEdit = QLineEdit(self, text=self.action[u'trace_len'])
+            layout.addRow(QLabel("Trace Length (s)"), self.traceMsEdit)
         if 'exception_on' in self.action:
             self.exceptionCombo = QComboBox()
             self.exceptionCombo.addItems(['No match', 'Match', 'Never'])
@@ -697,6 +750,7 @@ class ActionDialog(QDialog):
         tab.main_win.ui.cancelButton.show()
 
     def save(self):
+        self.action[u'old_id'] = self.action[u'id']
         self.action[u'id'] = self.idEdit.text()
         if 'delay' in self.action:
             self.action[u'delay'] = self.delayEdit.text()
@@ -725,6 +779,18 @@ class ActionDialog(QDialog):
             self.action[u'left_term'] = self.leftTermEdit.text()
         if 'eval_method' in self.action:
             self.action[u'eval_method'] = self.evalMethodCombo.currentText()
+        if 'relationship' in self.action:
+            self.action[u'relationship'] = self.relationshipCombo.currentText()
+            if "during" in self.action[u'relationship']:
+                self.action[u'relationship'] = "during"
+        if 'trace_process' in self.action:
+            self.action[u'trace_process'] = self.traceProcessCombo.currentText()
+        if 'trace_framerate' in self.action:
+            self.action[u'trace_framerate'] = self.traceFramerateEdit.text()
+        if 'trace_label' in self.action:
+            self.action[u'trace_label'] = self.traceLabelEdit.text()
+        if 'trace_len' in self.action:
+            self.action[u'trace_len'] = self.traceMsEdit.text()
         if 'right_term' in self.action:
             self.action[u'right_term'] = self.rightTermEdit.text()
         if 'val_options' in self.action:
@@ -756,6 +822,8 @@ class ActionDialog(QDialog):
             self.action[u'file_name'] = [j.strip() for j in self.fileNameEdit.text().split(",")]
         if 'capture_id' in self.action:
             self.action[u'capture_id'] = self.captureEdit.text()
+        if 'target_id' in self.action:
+            self.action[u'target_id'] = self.targetEdit.text()
         if 'exception_on' in self.action:
             self.action[u'exception_on'] = self.exceptionCombo.currentText()
         if 'direction' in self.action:

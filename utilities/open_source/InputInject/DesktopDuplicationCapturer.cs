@@ -13,7 +13,8 @@ internal sealed class DesktopDuplicationCapturer : IDisposable
 {
     private readonly ID3D11Device _device;
     private readonly ID3D11DeviceContext _context;
-    private readonly IDXGIOutputDuplication _duplication;
+    private readonly uint _outputIndex;
+    private IDXGIOutputDuplication? _duplication;
 
     private ID3D11Texture2D? _stagingTexture;
     private int _stagingWidth;
@@ -33,24 +34,54 @@ internal sealed class DesktopDuplicationCapturer : IDisposable
 
         _device = device ?? throw new InvalidOperationException("Failed to create D3D11 device.");
         _context = context ?? throw new InvalidOperationException("Failed to create D3D11 device context.");
+        _outputIndex = outputIndex;
+    }
+
+    /// <summary>
+    /// Creates the duplication session. Call before a capture burst.
+    /// While a duplication session is active, DWM cannot use Direct Flip / MPO
+    /// optimizations, which increases GPU power draw even when no frames are acquired.
+    /// </summary>
+    public void StartDuplication()
+    {
+        if (_duplication is not null)
+            return;
 
         using var dxgiDevice = _device.QueryInterfaceOrNull<IDXGIDevice>()
             ?? throw new InvalidOperationException("Failed to query IDXGIDevice from D3D11 device.");
 
         using var adapter = dxgiDevice.GetAdapter();
 
-        adapter.EnumOutputs(outputIndex, out IDXGIOutput output).CheckError();
+        adapter.EnumOutputs(_outputIndex, out IDXGIOutput output).CheckError();
         using (output)
         {
             using var output1 = output.QueryInterfaceOrNull<IDXGIOutput1>()
                 ?? throw new InvalidOperationException("Failed to query IDXGIOutput1.");
 
-            // _duplication = output1.DuplicateOutput(_device);
+            _duplication = output1.DuplicateOutput(_device);
         }
+    }
+
+    /// <summary>
+    /// Releases the duplication session and staging texture, allowing DWM to
+    /// resume power-efficient Direct Flip / MPO composition.
+    /// </summary>
+    public void StopDuplication()
+    {
+        _stagingTexture?.Dispose();
+        _stagingTexture = null;
+        _stagingWidth = 0;
+        _stagingHeight = 0;
+
+        _duplication?.Dispose();
+        _duplication = null;
     }
 
     public bool TryCaptureBgra32(int x, int y, int width, int height, Span<int> destination, uint timeoutMilliseconds = 16)
     {
+        if (_duplication is null)
+            throw new InvalidOperationException("Duplication session is not active. Call StartDuplication() first.");
+
         if (width <= 0)
             throw new ArgumentOutOfRangeException(nameof(width));
 
@@ -155,7 +186,7 @@ internal sealed class DesktopDuplicationCapturer : IDisposable
     public void Dispose()
     {
         _stagingTexture?.Dispose();
-        _duplication.Dispose();
+        _duplication?.Dispose();
         _context.Dispose();
         _device.Dispose();
     }
