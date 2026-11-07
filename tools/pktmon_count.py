@@ -32,7 +32,9 @@ class Tool(Scenario):
         self._call(["cmd.exe", "/C pktmon start --capture --counters-only"])
     
     def testEndCallback(self):
-        self._call(["cmd.exe", "/C pktmon stop > c:\\hobl_data\\pktmon.txt"])
+        output_dir = f"c:\\hobl_data\\{self.module}"
+        self._call(["cmd.exe", f"/C if not exist \"{output_dir}\" mkdir \"{output_dir}\""])
+        self._call(["cmd.exe", f"/C pktmon stop > {output_dir}\\pktmon.txt"])
 
     def dataReadyCallback(self):
         return

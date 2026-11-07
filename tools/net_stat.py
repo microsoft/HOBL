@@ -39,7 +39,9 @@ class Tool(Scenario):
         else:
             data_cleanup = {data['Name'] : (data['SentBytes'], data['ReceivedBytes'])}
 
-        csv_name = os.path.join(self.scenario.result_dir, "net_stats.csv")
+        # Create dir for where results will be stored
+        os.makedirs(os.path.join(self.scenario.result_dir, f"{self.module}"), exist_ok=True)
+        csv_name = os.path.join(self.scenario.result_dir, f"{self.module}", "net_stats.csv")
         print("Writing CSV file: " + csv_name)
         with open(csv_name, 'w') as csvfile:
             csv_writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
@@ -68,6 +70,12 @@ class Tool(Scenario):
 
                 csv_writer.writerow(row_sent)
                 csv_writer.writerow(row_recv)
+
+        # Create a list of files that need to be processed for roll_up metrics
+        # take the csv_name and just remove the result_dir part to get a relative path for roll-up
+        roll_up_file = os.path.relpath(csv_name, self.scenario.result_dir)
+        files_to_process = [roll_up_file]
+        self.scenario._register_roll_up_files(files_to_process)
            
 
     def dataReadyCallback(self):

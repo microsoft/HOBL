@@ -96,9 +96,10 @@ class Tool(Scenario):
         if not os.path.isfile(etl_trace):
             logging.warning("Perf Stress Tool - ETL file not found, skipping: " + etl_trace)
             return
-        raw_output = self.scenario.result_dir + "\\" + self.scenario.testname + "_PerfMetrics_raw.csv"
-        perf_output = self.scenario.result_dir + "\\" + self.scenario.testname + "_PerfMetrics.csv"
+        raw_output = self.scenario.result_dir + f"\\{self.module}\\" + self.scenario.testname + "_PerfMetrics_raw.csv"
+        perf_output = self.scenario.result_dir + f"\\{self.module}\\" + self.scenario.testname + "_PerfMetrics.csv"
         manifest_file = "utilities\\proprietary\\ParseUtc\\StressUtcPerftrack.xml"
+        os.makedirs(os.path.join(self.scenario.result_dir, self.module), exist_ok=True) # make results dir for tool outputs
 
         logging.info("Perf Stress Tool - Running PerfParser on " + etl_trace)
 

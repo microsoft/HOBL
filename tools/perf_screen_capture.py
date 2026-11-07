@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-# Template for creating a tool wrapper
+
 
 import os
 import logging
@@ -10,7 +10,7 @@ import utilities.call_rpc as rpc
 
 class Tool(Scenario):
     '''
-    A tool that captures partial screen recordings for later performance analysis.
+    Performance screen capture tool for collecting and saving screenshots during performance tests.
     '''
     module = __module__.split('.')[-1]
     perf_path_name = "perfcap_clips"

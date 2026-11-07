@@ -19,17 +19,6 @@ class Tool(Scenario):
 
     Only parameters that are explicitly provided are processed — empty parameters
     are ignored, so the tool can be called for any subset of operations.
-
-    Parameters:
-      als_adaptive_brightness       0/1 — adaptive brightness (ALS) on/off (Windows only)
-      hdr                           0/1 — HDR on/off (Windows only)
-      hdr_auto                      0/1 — Auto HDR on/off (Windows only)
-      refresh_rate                  60/120/dynamic — display refresh rate (Windows only)
-      content_adaptive_brightness   Off/Always/On battery only — CABC mode (Windows only)
-      adaptive_color                0/1 — adaptive color management on/off (Windows only)
-      brightness                    brightness value (e.g. 65, 65%, 150nits)
-      nits_map                      nits-to-slider mapping (e.g. "100nits:50% 150nits:65%")
-      display_restore               1 — restore all saved initial values after test
     '''
     module = __module__.split('.')[-1]
 
