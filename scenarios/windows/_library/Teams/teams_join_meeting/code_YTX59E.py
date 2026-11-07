@@ -24,6 +24,7 @@ def run(scenario):
     scenario.meeting_url = Params.get("teams", "meeting_url")
     # Don't retrieve meeting_time from Params, as it is modified within the scenario object in the create meeting code.
 
+    time.sleep(5) # wait for bots to finish loading
     if scenario.bots_send_video == "1":
         logging.info("Checking if main bot is sending video.")
         for attempt in range(1, 11):
@@ -240,27 +241,29 @@ def add_bot(scenario):
 
 
 def check_bot(scenario):
-    screenshot = scenario._capture_screen(None, 0, 0, 1, 1)
-    scenario.edge_detect = True
-    scenario.edge_blur = True
-    scenario.dialation = True
+    y_offset = 0.1
+    screenshot = scenario._capture_screen(None, 0, y_offset, 1, 1 - y_offset)
+    original_edge_blur_kernel = scenario.edge_blur_kernel
+    scenario.edge_blur_kernel = 3
     point, confidence, fail_level = scenario._get_point_by_template("..\\_library\\Teams\\teams_join_meeting\\main_bot.png", screenshot, 0.7, cv.TM_SQDIFF_NORMED, [1.0], offsets=(1.1, -0.1), edge_detect_thresholds=[100, 200])
+    # point, confidence, fail_level = scenario._get_point_by_template("..\\_library\\Teams\\teams_join_meeting\\main_bot.png", screenshot, 0.7, cv.TM_SQDIFF_NORMED, [1.0], offsets=(0.5, 0.5), edge_detect_thresholds=[100, 200])
     logging.info(f"Point: {point}, Confidence: {confidence:.2f}, fail_level: {fail_level:.2f}")
     x = (point[0]) * scenario.dut_coord_scaler
     y = (point[1]) * scenario.dut_coord_scaler
     screen_width, screen_height = scenario._get_screen_size(scenario.current_screen)
+    y_offset_px = y_offset * screen_height
     x = x / screen_width
-    y = y / screen_height
-    img = scenario._capture_screen(None, x, y-0.05, 0.05, 0.05)
+    y = (y + y_offset_px) / screen_height
+    w = 50 / screen_width
+    h = 50 / screen_height
+    img = scenario._capture_screen(None, x, y-h, w, h)
     scenario._save_screen("main_bot.png", img)
     # determine average pixel value of img
     avg_pixel_value = img.mean()
     logging.info(f"Average pixel value of captured image: {avg_pixel_value}")
 
     # Restore values to default
-    scenario.edge_detect = True
-    scenario.edge_blur = True
-    scenario.dialation = True
+    scenario.edge_blur_kernel = original_edge_blur_kernel
 
     if avg_pixel_value < 50 or avg_pixel_value > 200:  # Threshold for determining if the bot is visible
         logging.warning("Bot video not detected on screen.")

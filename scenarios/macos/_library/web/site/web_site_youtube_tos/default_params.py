@@ -10,6 +10,8 @@ def run():
     Params.setDefault('web_site_youtube_tos', 'new_tab', '0', desc='', valOptions=['0', '1'])
     Params.setDefault('web_site_youtube_tos', 'load_only', '0', desc='', valOptions=['0', '1'])
     Params.setDefault('web_site_youtube_tos', 'enable_pause', '1', desc='', valOptions=['0', '1'])
+    Params.setDefault('web_site_youtube_tos', 'full_screen', '0', desc='', valOptions=['0', '1'])
+    Params.setDefault('web_site_youtube_tos', 'duration', '120', desc='Video playback duration', valOptions=[])
     return
 
 def run_user_only():
