@@ -35,6 +35,18 @@
     {
         "children": [],
         "delay": "0.0",
+        "description": "Load each web site on a new tab",
+        "enabled": true,
+        "id": "1XN8W8Y",
+        "multiple": false,
+        "name": "[web:new_tab_each_site]",
+        "type": "Set User Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
         "description": "",
         "enabled": true,
         "id": "13MN282",
@@ -124,7 +136,7 @@
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "[web:new_tab_each_site]"
                     },
                     {
                         "name": "[load_only]",
@@ -138,6 +150,16 @@
                     }
                 ],
                 "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "1XN9CMH",
+                "name": "[web:tabs]",
+                "type": "Increment",
+                "value": "[web:new_tab_each_site]"
             }
         ],
         "description": "",
@@ -234,7 +256,7 @@
                     {
                         "name": "new_tab",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "[web:new_tab_each_site]"
                     },
                     {
                         "name": "[load_only]",
@@ -243,6 +265,16 @@
                     }
                 ],
                 "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "1XN9EN3",
+                "name": "[web:tabs]",
+                "type": "Increment",
+                "value": "[web:new_tab_each_site]"
             }
         ],
         "description": "",
@@ -335,7 +367,7 @@
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "[web:new_tab_each_site]"
                     },
                     {
                         "name": "[load_only]",
@@ -344,6 +376,16 @@
                     }
                 ],
                 "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "1XN9F28",
+                "name": "[web:tabs]",
+                "type": "Increment",
+                "value": "[web:new_tab_each_site]"
             }
         ],
         "description": "",
@@ -441,7 +483,7 @@
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "[web:new_tab_each_site]"
                     },
                     {
                         "name": "[load_only]",
@@ -455,6 +497,16 @@
                     }
                 ],
                 "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "1XN9FAP",
+                "name": "[web:tabs]",
+                "type": "Increment",
+                "value": "[web:new_tab_each_site]"
             }
         ],
         "description": "",
@@ -547,7 +599,7 @@
                     {
                         "name": "[new_tab]",
                         "val_options": "0, 1",
-                        "value": "0"
+                        "value": "[web:new_tab_each_site]"
                     },
                     {
                         "name": "[load_only]",
@@ -556,6 +608,16 @@
                     }
                 ],
                 "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "1XN9FP5",
+                "name": "[web:tabs]",
+                "type": "Increment",
+                "value": "[web:new_tab_each_site]"
             }
         ],
         "description": "",

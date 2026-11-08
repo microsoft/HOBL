@@ -27,4 +27,5 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\web\\web_clear_cache')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_new_tab')
     Params.setUserDefault('web', 'web_workload', 'amazonbsg amazonvacuum googleimagesapollo googleimageslondon googlesearchbelgium googlesearchsuperbowl instagram reddit theverge wikipedia youtubenasa youtubetos', desc='Specific websites to run.', valOptions=['amazonbsg', 'amazonvacuum', 'googleimagesapollo', 'googleimageslondon', 'googlesearchbelgium', 'googlesearchsuperbowl', 'instagram', 'reddit', 'theverge', 'wikipedia', 'youtubenasa', 'youtubetos'], multiple=True)
+    Params.setUserDefault('web', 'new_tab_each_site', '0', desc='Load each web site on a new tab', valOptions=['0', '1'])
     return

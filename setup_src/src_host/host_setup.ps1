@@ -158,13 +158,14 @@ if ($framework) {
     }
 
     # Download dut_setup
-    "-- Downloading DUT setup" | log
+    "-- Downloading DUT setup: dut_setup_$dut_setup_version.exe" | log
     $dut_setupUrl = "https://github.com/microsoft/HOBL/releases/download/dut_setup/dut_setup_$dut_setup_version.exe"
     $dut_setupZip = "$PSScriptRoot\..\..\downloads\setup\dut_setup_$dut_setup_version.exe"
     if (-not (Test-Path $dut_setupZip)) {
         Invoke-WebRequest -Uri $dut_setupUrl -OutFile $dut_setupZip 2>&1 | log
         checkCmd($?)
     }
+    "-- Downloading DUT setup: dut_setup_$dut_setup_version.sh" | log
     $dut_setupUrl = "https://github.com/microsoft/HOBL/releases/download/dut_setup/dut_setup_$dut_setup_version.sh"
     $dut_setupZip = "$PSScriptRoot\..\..\downloads\setup\dut_setup_$dut_setup_version.sh"
     if (-not (Test-Path $dut_setupZip)) {

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "dut_setup"
-#define MyAppVersion "2.5"
+#define MyAppVersion "2.6"
 #define MyAppPublisher "Microsoft"
 
 [Setup]
