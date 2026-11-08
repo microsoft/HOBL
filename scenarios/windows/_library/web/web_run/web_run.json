@@ -86,7 +86,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V7AJ",
+                "id": "REDDIT",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_reddit",
                 "params": [
                     {
@@ -130,7 +130,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V815",
+                "id": "INSTAGRAM",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_instagram",
                 "params": [
                     {
@@ -201,7 +201,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "WEB_RUN@AMAZON_BSG",
+                "id": "AMAZON_BSG",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_amazon_bsg",
                 "params": [
                     {
@@ -250,7 +250,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V90X",
+                "id": "AMAZON_VACUUM",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_amazon_vacuum",
                 "params": [
                     {
@@ -307,7 +307,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V9F0",
+                "id": "GOOGLE_IMAGES_APOLLO",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_images_apollo",
                 "params": [
                     {
@@ -361,7 +361,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1V9J1",
+                "id": "GOOGLE_IMAGES_LONDON",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_images_london",
                 "params": [
                     {
@@ -418,7 +418,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1ERCYCK",
+                "id": "YOUTUBE_TOS",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_youtube_tos",
                 "params": [
                     {
@@ -477,7 +477,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VA6C",
+                "id": "WIKIPEDIA",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_wikipedia",
                 "params": [
                     {
@@ -539,7 +539,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VATC",
+                "id": "YOUTUBE_NASA",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_youtube_nasa",
                 "params": [
                     {
@@ -593,7 +593,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VAWC",
+                "id": "GOOGLE_SEARCH_BELGIUM",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_search_belgium",
                 "params": [
                     {
@@ -659,7 +659,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VCC1",
+                "id": "THE_VERGE",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_the_verge",
                 "params": [
                     {
@@ -721,7 +721,7 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "W1VCPR",
+                "id": "GOOGLE_SEARCH_SUPER_BOWL",
                 "include_path": "scenarios\\windows\\_library\\web\\site\\web_site_google_search_super_bowl",
                 "params": [
                     {
