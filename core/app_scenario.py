@@ -3219,6 +3219,9 @@ class Scenario(unittest.TestCase):
                     new_action["component"] = base_folder
                     flat_json.append(new_action)
 
+                if append_after:
+                    flat_json.extend(self._flatten_json(self.action_id_dict[action["id"]]["actions"], directory_offset, component=component))
+
                 # Don't add the include action to the flat json
                 continue
 
