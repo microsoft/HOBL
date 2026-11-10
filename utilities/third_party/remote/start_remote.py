@@ -92,7 +92,7 @@ def main():
         args = "-topmostWindow"
 
     if platform.lower() == "linux":
-        call(['/home/shared/hobl_bin/remote/remote'])
+        call(["bash", '-c "/home/shared/hobl_bin/remote/remote -session wayland"'])
     elif platform.lower() == "macos":
         call(['/Users/Shared/hobl_bin/remote/remote.app/Contents/MacOS/remote'])
     else:
