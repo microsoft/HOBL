@@ -50,7 +50,7 @@
         "name": "[teams:maintain_bots]",
         "type": "Set User Default",
         "val_options": "0,1",
-        "value": "0"
+        "value": "1"
     },
     {
         "children": [
@@ -88,7 +88,7 @@
                         "description": "Periodically check for bots in call and add as needed.",
                         "enabled": true,
                         "file_name": [
-                            "code_12YEERJ.py"
+                            "../../windows/teams/code_12YEERJ.py"
                         ],
                         "id": "12YEERJ",
                         "type": "Code"

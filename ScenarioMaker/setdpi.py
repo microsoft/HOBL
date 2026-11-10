@@ -6,8 +6,8 @@
 import os
 from PIL import Image
 
-ratio = 2.5
-infile = "C:\\hobl_26\\scenarios\\windows\\_library\\productivity\\prod_excel_run\\image_1RWKWRX.png"
+ratio = 1.5
+infile = "C:\\hobl_26\\scenarios\\macos\\_library\\Teams\\teams_join_meeting\\main_bot.png"
 
 # load image from infile path
 image = Image.open(infile)

@@ -1,0 +1,201 @@
+[
+    {
+        "author": "hokyukang",
+        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "children": [],
+        "create_date": "2026-10-20",
+        "description": "Idle at the desktop with web and productivity apps open but minimized (idle_apps without foreground app switches)",
+        "enabled": true,
+        "id": "V4K4CK",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Idle time in seconds with all apps minimized. Default is 900 seconds.",
+        "enabled": true,
+        "id": "1WRLK9U",
+        "name": "[duration]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "900"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "W2HLN3",
+        "name": "[web_replay_run]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "V4K656",
+                "include_path": "..\\_library\\productivity\\prod_setup",
+                "params": [
+                    {
+                        "name": "[office_theme]",
+                        "val_options": "Colorful, Dark Gray, Black, White, System",
+                        "value": "System"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "XP7FPC",
+                "include_path": "..\\_library\\productivity\\prod_open",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "V4K5RP",
+                "include_path": "..\\_library\\web\\web_setup",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "5",
+                "description": "",
+                "enabled": true,
+                "id": "X8FC8K",
+                "type": "Delay"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "W2HMA8",
+                "include_path": "..\\_library\\web\\web_run",
+                "params": [
+                    {
+                        "name": "[load_only]",
+                        "val_options": "0,1",
+                        "value": "1"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"(New-Object -ComObject Shell.Application).MinimizeAll()\"",
+                "delay": "5",
+                "description": "Minimize all windows (show desktop) so apps stay in the background",
+                "enabled": true,
+                "id": "1WRLK9V",
+                "type": "Command"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "V4K5E8",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "Apps stay minimized; no foreground app switches",
+                "enabled": true,
+                "id": "1WRLK9X",
+                "type": "Comment"
+            },
+            {
+                "children": [],
+                "delay": "[duration]",
+                "description": "Idle at desktop",
+                "enabled": true,
+                "id": "1WRLKA0",
+                "type": "Delay"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "V4K5EX",
+        "type": "Run Test"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "12XF3C3",
+                "include_path": "..\\_library\\web\\web_switchto",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "V4K6PC",
+                "include_path": "..\\_library\\web\\web_close_tabs",
+                "params": [
+                    {
+                        "name": "[num_tabs_to_close]",
+                        "val_options": "",
+                        "value": "1"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "V4K6TH",
+                "include_path": "..\\_library\\web\\web_close_browser",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "V4K6VU",
+                "include_path": "..\\_library\\web\\web_kill",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "V4K70M",
+                "include_path": "..\\_library\\productivity\\prod_close",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "V4K74H",
+                "include_path": "..\\_library\\productivity\\prod_kill",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "V4K5FJ",
+        "type": "Teardown"
+    }
+]

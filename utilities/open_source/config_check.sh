@@ -8,7 +8,6 @@ PreRun=false
 PostRun=false
 LogFile="Config"
 OverrideString=""
-BattCapacity=53 # Wh
 
 # Parse command line arguments
 for arg in "$@"; do
@@ -130,6 +129,8 @@ if [ "$PreRun" = true ]; then
     # Add audio volume
     audio_volume=$(osascript -e "output volume of (get volume settings)")
     add_to_table "Run Start Audio Volume (%)" "$audio_volume"
+    start_batt_voltage=$(ioreg -r -c AppleSmartBattery -a | plutil -extract 0.Voltage raw -)
+    add_to_table "Run Start Battery Voltage (mV)" "$start_batt_voltage"
 # if PostRun is true, run the post-run checks
 elif [ "$PostRun" = true ]; then
     # Read in PreRun csv file to get the Run Start Time
@@ -143,6 +144,12 @@ elif [ "$PostRun" = true ]; then
         echo " ERROR - Run Start Time not found in pre-run file."
         exit 1
     fi
+    # Read the Run Start Time from the pre-run file
+    start_batt_voltage=$(awk -F, '/Run Start Battery Voltage/ {print $2}' "$pre_run_file")
+    if [ -z "$start_batt_voltage" ]; then
+        echo " ERROR - Run Start Battery Voltage not found in pre-run file."
+        exit 1
+    fi
     echo "Running post-run checks..."
     run_stop_time=$(date +'%Y-%m-%d %H:%M:%S')
     add_to_table "Run Stop Time" "$run_stop_time"
@@ -150,6 +157,7 @@ elif [ "$PostRun" = true ]; then
     # battery_level=$(pmset -g batt | grep -o '[0-9]\+%' | head -n 1 | tr -d '%')
     raw_current_capacity_level=$(ioreg -r -c AppleSmartBattery -a | plutil -extract 0.AppleRawCurrentCapacity raw -)
     raw_max_capacity_level=$(ioreg -r -c AppleSmartBattery -a | plutil -extract 0.AppleRawMaxCapacity raw -)
+    add_to_table "Raw Battery Capacity (mAh)" "$raw_max_capacity_level"
     battery_level=$(printf "%.2f" $(echo "$raw_current_capacity_level / $raw_max_capacity_level * 100" | bc -l))
     add_to_table "Run Stop Battery State (%)" "$battery_level"
     battery_status=$(pmset -g batt | grep -o 'discharging\|charging\|charged' | head -n 1)
@@ -162,6 +170,11 @@ elif [ "$PostRun" = true ]; then
     # Add audio volume
     audio_volume=$(osascript -e "output volume of (get volume settings)")
     add_to_table "Run Stop Audio Volume (%)" "$audio_volume"
+    stop_batt_voltage=$(ioreg -r -c AppleSmartBattery -a | plutil -extract 0.Voltage raw -)
+    add_to_table "Run Stop Battery Voltage (mV)" "$stop_batt_voltage"
+    # Calculate average voltage over the run
+    avg_batt_voltage=$(printf "%.2f" $(echo "($start_batt_voltage + $stop_batt_voltage) / 2" | bc -l))
+    add_to_table "Average Battery Voltage (mV)" "$avg_batt_voltage"
     # Calculate duration in seconds
     stime=$(strftime -r "%Y-%m-%d %H:%M:%S" "$run_start_time")
     etime=$(strftime -r "%Y-%m-%d %H:%M:%S" "$run_stop_time")
@@ -179,18 +192,23 @@ elif [ "$PostRun" = true ]; then
 
     # Calculate battery drain percentage
     start_battery_level=$(awk -F, '/Run Start Battery State/ {print $2}' "$pre_run_file")
-    # start_battery_level=90 # For testing purposes, set a fixed start battery level
     # echo "Start Battery Level from pre-run: $start_battery_level"
     battery_drain_percentage=$((start_battery_level - battery_level))
     if [ $battery_drain_percentage -lt 0 ]; then
         battery_drain_percentage=0
     fi
-    add_to_table "Battery Drain (%)" "$battery_drain_percentage"
+    add_to_table "Battery Drain (%)" $(printf "%0.2f" $(echo "$battery_drain_percentage" | bc -l))
+    # Calculate current battery capacity (FCC)
+    # Using the measured voltage gives widely varying results depending on what part of the battery curve is being measured,
+    # So using a constant 12V for a power metric independent of battery level.
+    # batt_capacity_wh=$(printf "%0.2f" $(echo "$avg_batt_voltage * $raw_max_capacity_level / 1000000.0" | bc -l))
+    batt_capacity_wh=$(printf "%0.2f" $(echo "12000 * $raw_max_capacity_level / 1000000.0" | bc -l))
+    add_to_table "Current Battery Capacity (Wh)" "$batt_capacity_wh"
     # Calculate battery drain rate
     battery_drain_fraction=$(printf "%0.2f" $(echo "$battery_drain_percentage / 100.0" | bc -l))
     echo "Battery drain fraction: $battery_drain_fraction"
     # Calculate battery drain in Wh
-    battery_drain_wh=$(printf "%0.2f" $(echo "$BattCapacity * $battery_drain_fraction" | bc -l))
+    battery_drain_wh=$(printf "%0.2f" $(echo "$batt_capacity_wh * $battery_drain_fraction" | bc -l))
     add_to_table "Battery Drain (Wh)" "$battery_drain_wh"
     # Calculate battery drain in mWh
     battery_drain_mwh=$(printf "%0.2f" $(echo "$battery_drain_wh * 1000.0" | bc -l))
