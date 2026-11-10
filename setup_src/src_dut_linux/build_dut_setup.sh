@@ -11,6 +11,10 @@ fi
 cp ../SimpleRemote/Output/SimpleRemoteServer_linux-arm64.zip assets/
 cp ../SimpleRemote/Output/SimpleRemoteServer_linux-x64.zip assets/
 
+# Remote
+cp ../remote/linux_arm64/remote assets/remote_linux-arm64
+cp ../remote/linux_x64/remote assets/remote_linux-x64
+
 # Copy desktop images to assets folder
 cp -r ../DesktopImages assets/
 

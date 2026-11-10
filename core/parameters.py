@@ -634,11 +634,14 @@ def find_val(name):
             val = val.split(' ')[-1]
     elif name == "PLATFORM":
         dut_ip = Params.get('global', 'dut_ip')
-        result = rpc.call_rpc(dut_ip, 8000, "RunWithResultAndExitCode", ["uname"], log = False)
+        result = rpc.call_rpc(dut_ip, 8000, "RunWithResult", ["uname"], log = False)
         if result == "TIMEOUT":
             return val
         if "result" in json.loads(result):
-            val = "MacOS"
+            if "linux" in json.loads(result)["result"].lower():
+                val = "Linux"
+            else:
+                val = "MacOS"
         else:
             val = "Windows"
     else:
