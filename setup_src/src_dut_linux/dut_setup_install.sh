@@ -29,14 +29,14 @@ check_status() {
 # Create shared user folder if it does not exist
 if [ ! -d /home/shared ]; then
     sudo mkdir /home/shared
-    sudo chmod 777 /home/shared
 fi
+sudo chmod 777 /home/shared
 
 # Create assets folder if it does not exist
 if [ ! -d $BIN_DIR ]; then
     mkdir -p $BIN_DIR
-    chmod 777 $BIN_DIR
 fi
+chmod 777 $BIN_DIR
 
 # Install SimpleRemote
 echo "Installing $ARCH SimpleRemoteConsole..."
@@ -56,17 +56,19 @@ echo "Y" | sudo apt install brightnessctl
 # Install remote
 echo "Installing remote..."
 mkdir -p $BIN_DIR/remote
-cp ./remote_linux-$ARCH $BIN_DIR/remote
+cp ./remote_linux-$ARCH $BIN_DIR/remote/remote
 chmod -R 755 $BIN_DIR/remote/remote
 
 # Stop any curent instance of SimpleRemote
 echo "Stopping any current instance of SimpleRemote..."
-killall SimpleRemoteConsole 2>&1 >/dev/null
+sudo killall -9 SimpleRemoteConsole 2>&1 >/dev/null
 sleep 1s
 
 # Setup SimpleRemote service
 SERVICE_NAME="SimpleRemote"
 SCRIPT_PATH="/home/shared/hobl_bin/SimpleRemote/launch_simple_remote.sh"
+# Create systemd user directory if it does not exist
+mkdir -p ~/.config/systemd/user
 # Write the service file
 # tee /etc/systemd/system/${SERVICE_NAME}.service > /dev/null <<EOF
 tee ~/.config/systemd/user/${SERVICE_NAME}.service > /dev/null <<EOF
@@ -80,7 +82,7 @@ ExecStart=${SCRIPT_PATH}
 RemainAfterExit=true
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 EOF
 chmod +x "${SCRIPT_PATH}"
 
@@ -92,6 +94,16 @@ sudo loginctl enable-linger $USER
 
 # Show status
 systemctl --user status "${SERVICE_NAME}.service" --no-pager
+
+# Install ifconfig
+echo "Installing ifconfig..."
+sudo apt install net-tools
+check_status "ifconfig installation"
+
+# Install curl
+echo "Installing curl..."
+sudo apt install curl
+check_status "curl installation"
 
 # Install desktop images
 echo "Installing desktop images..."
