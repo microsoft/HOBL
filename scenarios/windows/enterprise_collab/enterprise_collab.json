@@ -118,6 +118,18 @@
         "value": "0"
     },
     {
+        "children": [],
+        "delay": "0.0",
+        "description": "Set to 1 to collect MS Teams logs of the meeting after exiting the meeting.",
+        "enabled": true,
+        "id": "1XKNWHV",
+        "multiple": false,
+        "name": "[teams:collect_MSTeams_Logs]",
+        "type": "Set User Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
         "children": [
             {
                 "children": [
@@ -241,6 +253,26 @@
                         "name": "[teams:number_of_bots]",
                         "type": "Set",
                         "value": "4"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Bots-server backstop: meeting ends after 10 min even if the explicit hang-up fails",
+                        "enabled": true,
+                        "id": "1XKNWHW",
+                        "name": "[teams:meeting_time]",
+                        "type": "Set",
+                        "value": "10"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Set to 1 by ec_web_run after the hang-up",
+                        "enabled": true,
+                        "id": "1XKNWHX",
+                        "name": "[teams_call_ended]",
+                        "type": "Set",
+                        "value": "0"
                     },
                     {
                         "children": [],
@@ -398,10 +430,10 @@
             {
                 "children": [],
                 "delay": "0",
-                "description": "",
+                "description": "Web tabs 1-12; ends the Teams call after tab 2",
                 "enabled": true,
                 "id": "19K57MP",
-                "include_path": "scenarios\\windows\\_library\\web\\web_run_12",
+                "include_path": "scenarios\\windows\\enterprise_collab\\lib\\ec_web_run",
                 "params": [
                     {
                         "name": "[load_only]",
@@ -1027,13 +1059,58 @@
             {
                 "children": [
                     {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1XKNWJ1",
+                                "include_path": "scenarios\\windows\\_library\\Teams\\teams_leave_meeting",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "Safety net: run ended before the mid-run hang-up",
+                        "enabled": true,
+                        "eval_method": "!=",
+                        "id": "1XKNWJ0",
+                        "left_term": "[teams_call_ended]",
+                        "right_term": "1",
+                        "type": "If"
+                    },
+                    {
                         "children": [],
-                        "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "19K8C22",
-                        "include_path": "scenarios\\windows\\_library\\Teams\\teams_teardown",
-                        "type": "Include"
+                        "id": "1XKNWJ2",
+                        "type": "End If"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1XKNWJ4",
+                                "include_path": "scenarios\\windows\\_library\\Teams\\teams_collect_logs",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "",
+                        "enabled": true,
+                        "eval_method": "==",
+                        "id": "1XKNWJ3",
+                        "left_term": "[teams:collect_MSTeams_Logs]",
+                        "right_term": "1",
+                        "type": "If"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "1XKNWJ5",
+                        "type": "End If"
                     }
                 ],
                 "description": "",
