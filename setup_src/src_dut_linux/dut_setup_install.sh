@@ -80,7 +80,7 @@ ExecStart=${SCRIPT_PATH}
 RemainAfterExit=true
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 EOF
 chmod +x "${SCRIPT_PATH}"
 
