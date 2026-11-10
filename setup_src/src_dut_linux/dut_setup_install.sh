@@ -49,10 +49,15 @@ rm $BIN_DIR/SimpleRemoteServer_linux-$ARCH.zip
 echo "Copying launch script..."
 cp ./launch_simple_remote.sh $BIN_DIR/SimpleRemote
 
-
 # Install brightness utility
 echo "Installing brightness utility..."
 echo "Y" | sudo apt install brightnessctl
+
+# Install remote
+echo "Installing remote..."
+mkdir -p $BIN_DIR/remote
+cp ./remote_linux-$ARCH $BIN_DIR/remote
+chmod -R 755 $BIN_DIR/remote/remote
 
 # Stop any curent instance of SimpleRemote
 echo "Stopping any current instance of SimpleRemote..."
@@ -97,8 +102,15 @@ chmod 666 $BIN_DIR/DesktopImages/*
 gsettings set org.gnome.desktop.background picture-uri "file:///home/shared/hobl_bin/DesktopImages/ColorChecker3000x2000.png"
 gsettings set org.gnome.desktop.background picture-uri-dark "file:///home/shared/hobl_bin/DesktopImages/ColorChecker3000x2000.png"
 
+# Prevent screen from turning off and disable lock screen delay
+gsettings set org.gnome.desktop.session idle-delay 0
+gsettings set org.gnome.desktop.screensaver lock-enabled false
 
 # Install ffmpeg
 echo "Installing ffmpeg"
 sudo apt install ffmpeg
 check_status "ffmpeg installation"
+
+echo "Installing remote dependencies"
+sudo apt install libxcb-xtest0 libxcb-keysyms1
+check_status "remote dependencies installation"
