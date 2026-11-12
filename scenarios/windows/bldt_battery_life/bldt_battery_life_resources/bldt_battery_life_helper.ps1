@@ -2,7 +2,7 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 # Windows helper for the Python scenario: install, locate, run, or collect BLDT.
-# Despite the "prep" filename, this script also runs the assessment.
+# Prepares BLDT and runs the assessment.
 # param declares inputs; $ names a variable, and ValidateSet limits allowed values.
 param(
     # Python selects one operation each time it invokes this script.

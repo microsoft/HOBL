@@ -31,7 +31,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     """
 
     module = __module__.split('.')[-1]
-    prep_version = '3'
+    prep_version = '5'
 
     Params.setDefault(module, 'collection_duration', '600', desc='Intel Software Hygiene SoCWatch collection duration in seconds (10-3600).')
     Params.setDefault(module, 'windows_performance_recorder_duration', '600', desc='Intel Software Hygiene Windows Performance Recorder duration in seconds (10-3600).')
@@ -163,9 +163,9 @@ class BldtSwHygiene(core.app_scenario.Scenario):
 
         local_script = os.path.join(
             os.path.dirname(__file__),
-            'bldt_sw_hygiene_resources\\bldt_sw_hygiene_prep.ps1',
+            'bldt_sw_hygiene_resources\\bldt_sw_hygiene_helper.ps1',
         )
-        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_helper.ps1'
         require_ai_argument = ' -RequireAi' if require_ai else ''
 
         self._upload(local_script, self.dut_exec_path, check_modified=False)
@@ -181,7 +181,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     def _discover_bldt(self, require_ai=False):
         """Return a suitable installed BLDT executable path."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_helper.ps1'
         require_ai_argument = ' -RequireAi' if require_ai else ''
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
@@ -262,7 +262,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     def _run_hygiene(self):
         """Run Intel's Software Hygiene workload."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action RunHygiene '
@@ -281,7 +281,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     def _run_ai_analysis(self):
         """Run AI analysis and return its native process result."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action RunAi '
@@ -294,7 +294,7 @@ class BldtSwHygiene(core.app_scenario.Scenario):
     def _copy_reports(self, started_utc, report_kind):
         """Copy current native reports into the DUT result directory."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sw_hygiene_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action CopyReports '

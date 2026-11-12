@@ -30,7 +30,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
 
     is_prep = True
     module = __module__.split('.')[-1]
-    prep_version = '2'
+    prep_version = '4'
     execution_timeout = 900
 
     def setUp(self):
@@ -104,9 +104,9 @@ class BldtSysconfig(core.app_scenario.Scenario):
 
         local_script = os.path.join(
             os.path.dirname(__file__),
-            'bldt_sysconfig_resources\\bldt_sysconfig_prep.ps1',
+            'bldt_sysconfig_resources\\bldt_sysconfig_helper.ps1',
         )
-        remote_script = f'{self.dut_exec_path}\\bldt_sysconfig_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sysconfig_helper.ps1'
 
         self._upload(local_script, self.dut_exec_path, check_modified=False)
 
@@ -122,7 +122,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
     def _discover_bldt(self):
         """Return the installed BLDT executable path."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_sysconfig_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sysconfig_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Discover '
@@ -137,7 +137,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
     def _run_sysconfig_checks(self):
         """Run SysConfigChecks and return its start time and exit code."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_sysconfig_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sysconfig_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Run '
@@ -152,7 +152,7 @@ class BldtSysconfig(core.app_scenario.Scenario):
     def _copy_reports(self, started_utc):
         """Copy current native System Config Checker reports into the DUT result directory."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_sysconfig_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_sysconfig_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action CopyReports '

@@ -31,7 +31,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
     """
 
     module = __module__.split('.')[-1]
-    prep_version = '2'
+    prep_version = '4'
     minimum_sleep_duration_minutes = 20
     startup_allowance_seconds = 300
 
@@ -196,9 +196,9 @@ class BldtModernStandby(core.app_scenario.Scenario):
 
         local_script = os.path.join(
             os.path.dirname(__file__),
-            'bldt_modern_standby_resources\\bldt_modern_standby_prep.ps1',
+            'bldt_modern_standby_resources\\bldt_modern_standby_helper.ps1',
         )
-        remote_script = f'{self.dut_exec_path}\\bldt_modern_standby_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_modern_standby_helper.ps1'
 
         self._upload(local_script, self.dut_exec_path, check_modified=False)
 
@@ -212,7 +212,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
     def _discover_bldt(self):
         """Return the installed BLDT executable path."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_modern_standby_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_modern_standby_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Discover '
@@ -226,7 +226,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
     def _run_modern_standby(self):
         """Run Intel's Modern Standby workload and return its result."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_modern_standby_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_modern_standby_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Run '
@@ -243,7 +243,7 @@ class BldtModernStandby(core.app_scenario.Scenario):
     def _copy_reports(self, started_utc):
         """Copy current native Modern Standby reports into the DUT result directory."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_modern_standby_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_modern_standby_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action CopyReports '

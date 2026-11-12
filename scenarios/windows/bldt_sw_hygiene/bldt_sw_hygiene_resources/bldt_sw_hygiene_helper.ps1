@@ -2,7 +2,7 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 # Windows helper for Software Hygiene and its optional follow-up AI analysis.
-# Despite the "prep" filename, it installs, locates, runs, and collects BLDT.
+# Installs, locates, runs, and collects BLDT.
 # param declares inputs; $ names a variable, and ValidateSet limits allowed values.
 param(
     [Parameter(Mandatory = $true)]
@@ -231,14 +231,12 @@ function Invoke-SoftwareHygiene {
     # Intel options use independent SoC Watch and Windows Performance Recorder durations,
     # with no minimum-charge gate or collection delay. PowerSource describes the
     # detected state; it does not switch the charger.
-    $windowsPerformanceRecorderDurationMilliseconds =
-        $WindowsPerformanceRecorderDurationSeconds * 1000
     $parameters = (
         "min_battery_charge:0;" +
         "socwatch_duration:$CollectionDurationSeconds;" +
         "socwatch_delay:0;" +
         "socwatch_pwrsrc:$PowerSource;" +
-        "wpr_duration_power:$windowsPerformanceRecorderDurationMilliseconds;" +
+        "wpr_duration_power:$WindowsPerformanceRecorderDurationSeconds;" +
         "socwatch_cfg:false;groupByProcessName:false;" +
         "showHiddenProcesses:false;allow_lost_events:0"
     )
