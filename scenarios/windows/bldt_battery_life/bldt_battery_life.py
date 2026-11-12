@@ -31,7 +31,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
     """
 
     module = __module__.split('.')[-1]
-    prep_version = '1'
+    prep_version = '3'
 
     Params.setDefault(module, 'collection_duration', '600', desc='Intel Battery Life SoCWatch collection duration in seconds (10-3600).')
     Params.setDefault(module, 'energy_report_duration', '600', desc='Intel Energy Report collection duration in seconds (10-3600).')
@@ -122,9 +122,9 @@ class BldtBatteryLife(core.app_scenario.Scenario):
 
         local_script = os.path.join(
             os.path.dirname(__file__),
-            'bldt_battery_life_resources\\bldt_battery_life_prep.ps1',
+            'bldt_battery_life_resources\\bldt_battery_life_helper.ps1',
         )
-        remote_script = f'{self.dut_exec_path}\\bldt_battery_life_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_battery_life_helper.ps1'
 
         self._upload(local_script, self.dut_exec_path, check_modified=False)
 
@@ -138,7 +138,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
     def _discover_bldt(self):
         """Return the installed BLDT executable path."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_battery_life_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_battery_life_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Discover '
@@ -152,7 +152,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
     def _run_battery_life(self):
         """Run Intel's Battery Life workload and return its result."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_battery_life_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_battery_life_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action Run '
@@ -170,7 +170,7 @@ class BldtBatteryLife(core.app_scenario.Scenario):
     def _copy_reports(self, started_utc):
         """Copy current native Battery Life reports into the DUT result directory."""
 
-        remote_script = f'{self.dut_exec_path}\\bldt_battery_life_prep.ps1'
+        remote_script = f'{self.dut_exec_path}\\bldt_battery_life_helper.ps1'
         arguments = (
             f'-NoProfile -NonInteractive -ExecutionPolicy Bypass '
             f'-File "{remote_script}" -Action CopyReports '
