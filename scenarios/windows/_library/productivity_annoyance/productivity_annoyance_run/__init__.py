@@ -1,0 +1,1 @@
+"""Stock productivity run adapter for annoyance hooks."""
