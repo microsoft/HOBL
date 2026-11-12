@@ -1,0 +1,7 @@
+# Explicit, separate CPU-only fallback requirements. Installed only into a
+# distinct venv (.venv-cpu) when use_gpu=false is explicitly requested --
+# never blended into the GPU venv's site-packages.
+--index-url https://packagefeedproxy.microsoft.io/pypi/simple
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.0
+transformers==5.18.0

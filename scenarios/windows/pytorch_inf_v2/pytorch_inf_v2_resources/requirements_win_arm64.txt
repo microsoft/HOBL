@@ -1,0 +1,16 @@
+# Microsoft-managed devices block direct PyPI access (CISO Central Feed Services policy);
+# resolve base packages through the approved Microsoft feed proxy.
+--index-url https://packagefeedproxy.microsoft.io/pypi/simple
+# N1X (Windows Arm64) ships an NVIDIA GPU, so GPU-first still applies here.
+# Stock PyTorch does not publish CUDA wheels for win_arm64; NVIDIA publishes
+# an out-of-tree CUDA build via a dedicated index instead
+# (https://pypi.nvidia.com/nvtorch_oot/torch/, see config.py
+# TORCH_ARM64_INDEX_URL). This is NOT a standard PyPI/pytorch.org mirror, so
+# torch is intentionally NOT listed in this file: pytorch_inf_v2_prep.ps1
+# downloads that wheel explicitly, verifies its SHA256 against config.py's
+# TORCH_ARM64_SHA256_CP314 (mirroring the signed-installer verification
+# pattern used elsewhere in HOBL, e.g. the llvm scenario), and installs it
+# before installing the rest of this file.
+transformers==5.18.0
+triton-windows==3.8.0.post29
+torchao==0.18.0
