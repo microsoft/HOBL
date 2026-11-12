@@ -132,7 +132,7 @@ class Tool(Scenario):
             # self.result_path = Params.get('global', 'result_dir')
             self.result_path = Params.getCalculated("study_result_dir")
         cwd2 = os.path.abspath(os.getcwd())
-        cmd = cwd2 + "\\hobl.cmd -e utilities.gen_study_report_json " + self.result_path + " -dashboard_url " + self.dashboard_url + " -current_run " + current_scenario
+        cmd = cwd2 + "\\hobl.cmd -e utilities.open_source.gen_study_report_json " + self.result_path + " -dashboard_url " + self.dashboard_url + " -current_run " + current_scenario
         
         # copy goals, adders, and weights template to the result path under study_report_params folder. Create text file with command for reference.
         study_report_params_dir = os.path.join(self.result_path, "study_report_params")

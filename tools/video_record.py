@@ -123,6 +123,9 @@ class Tool(core.app_scenario.Scenario):
         self.scenario = scenario
         self.conn_timeout = False
         self.stop_file = self.scenario.result_dir + "\\command_wrapper_stop.txt"
+        self.dut_output_path = os.path.join(self.scenario.result_dir, self.module)
+        os.makedirs(self.dut_output_path, exist_ok=True)
+
 
     def testBeginCallback(self):
         if self.already_started:
@@ -156,7 +159,7 @@ class Tool(core.app_scenario.Scenario):
 
             # ffmpeg setup
             self.scenario.ffmpeg_launched = True
-            self.out = subprocess.Popen(['downloads\\ffmpeg_win64\\bin\\ffmpeg.exe', '-loglevel', 'quiet', '-y', '-f', 'image2pipe', '-vcodec', 'mjpeg', '-r', self.fps, '-i', '-', '-vcodec', 'h264', '-crf', self.quality, '-r', self.fps, self.scenario.result_dir + '\\video_recording_' + self.scenario.testname + '.mp4'], stdin=subprocess.PIPE)
+            self.out = subprocess.Popen(['downloads\\ffmpeg_win64\\bin\\ffmpeg.exe', '-loglevel', 'quiet', '-y', '-f', 'image2pipe', '-vcodec', 'mjpeg', '-r', self.fps, '-i', '-', '-vcodec', 'h264', '-crf', self.quality, '-r', self.fps, self.dut_output_path + '\\video_recording_' + self.scenario.testname + '.mp4'], stdin=subprocess.PIPE)
 
             self.thread = VideoRecordThread(self.scenario, self.cap, self.out, self.cap.get(cv2.CAP_PROP_FPS), self.rotation, self.show)
 
@@ -184,7 +187,7 @@ class Tool(core.app_scenario.Scenario):
             if "rtsp" not in self.rtsp_url:
                 self.fail("Invalid rtsp_url parameter.  Should be of the form, 'rtsp://[ip]:[port]/[path]'")
             self.scenario.ffmpeg_launched = True
-            output_file = self.scenario.result_dir + '\\video_recording_' + self.scenario.testname + '.mp4'
+            output_file = self.dut_output_path + '\\video_recording_' + self.scenario.testname + '.mp4'
             cmd = "downloads\\ffmpeg_win64\\bin\\ffmpeg.exe"
             args = "-y -i " + self.rtsp_url + " -acodec copy -vcodec h264 -loglevel quiet -force_key_frames source_no_drop " + output_file
             stop_key = "q"

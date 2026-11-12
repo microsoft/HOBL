@@ -8,15 +8,15 @@ from builtins import *
 from core.parameters import Params
 from core.app_scenario import Scenario
 import logging
-import sys
-import os
-import decimal
 import time
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 class Tool(Scenario):
+    '''
+    Setups up the Live Translation feature on the DUT.
 
+    '''
     module = __module__.split('.')[-1]
 
     def initCallback(self, scenario):

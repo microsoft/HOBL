@@ -42,24 +42,24 @@ def main():
 
     # List of csv files we don't want to rollup.
     exception_list = [
-        "*_metrics.csv",
-        "*_full_processes.csv",
-        "*_PerfResult.csv",
-        "batlog.csv",
-        "log.csv",
-        "maxim_trace_*.csv",
-        "*_pm.csv",
-        # "*_power_light.csv",
-        "*_session_summary.csv",
-        "phase_time.csv",
-        "scenario_events.csv",
-        "*_power_heavy.csv",
-        "*_DAQ.csv",
-        "srumutil.csv",
-        "*rails.csv",
-        "combined_trace_data.csv",
-        "*fan_log.csv",
-        "*temp_log.csv"
+        # "*_metrics.csv",
+        # "*_full_processes.csv",
+        # "*_PerfResult.csv",
+        # "batlog.csv",
+        # "log.csv",
+        # "maxim_trace_*.csv",
+        # "*_pm.csv",
+        # # "*_power_light.csv",
+        # "*_session_summary.csv",
+        # "phase_time.csv",
+        # "scenario_events.csv",
+        # "*_power_heavy.csv",
+        # "*_DAQ.csv",
+        # "srumutil.csv",
+        "*rails.csv"
+        # "combined_trace_data.csv",
+        # "*fan_log.csv",
+        # "*temp_log.csv"
     ]
 
     def is_exception(file):
@@ -112,11 +112,41 @@ def main():
         metrics = collections.OrderedDict()
         # metrics = []
 
+        # Only process files explicitly listed by tools for this directory.
+        input_files = []
+        roll_up_file = os.path.join(root, "roll_up_files.txt")
+        if os.path.isfile(roll_up_file):
+            seen_files = set()
+            try:
+                with open(roll_up_file) as manifest:
+                    for line in manifest:
+                        path = line.strip()
+                        if not path:
+                            continue
+                        if not path.lower().endswith(".csv"):
+                            continue
+                        if not os.path.isabs(path):
+                            path = os.path.join(root, path)
+                        normalized_path = os.path.normcase(os.path.abspath(path))
+                        if normalized_path in seen_files:
+                            continue
+                        seen_files.add(normalized_path)
+                        if not os.path.isfile(path):
+                            print("File listed in roll_up_files.txt not found: " + path)
+                            continue
+                        input_files.append(path)
+            except OSError as error:
+                print("Could not read: " + roll_up_file + ": " + str(error))
+
+        # Use filename order within each pattern, without adding unlisted files.
+        input_files.sort(key=lambda path: os.path.normcase(os.path.basename(path)))
+
         # Loop through .csv files we want to roll up
         for arg_file in args.files:
             match = False
             # Loop through files in run folder and read .csv files that match arg list
-            for file in files:
+            for inputfile in input_files:
+                file = os.path.basename(inputfile)
                 # print("File: " + file)
                 if glob.fnmatch.fnmatch(file, arg_file):
                     if is_exception(file):
@@ -128,8 +158,7 @@ def main():
                         break
                     match = True
                     found_one = True
-                    print (u"Processing: " + root + os.sep + file)
-                    inputfile = root + os.sep + file
+                    print (u"Processing: " + inputfile)
                     with open(inputfile) as csvfile:
                         try:
                             reader = csv.reader(csvfile, delimiter=',', quotechar='"')

@@ -16,6 +16,9 @@ import csv
 class Tool(Scenario):
     '''
     Deprecated.
+    
+    Media perf tool for post processing of Media ETL traces using Media eXperience Analyzer
+    ETL trace should have been collected using MediaEngine.wprp profile
     '''
     module = __module__.split('.')[-1]
     # Set default parameters

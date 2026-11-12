@@ -14,7 +14,7 @@ import os
 
 class Tool(Scenario):
     '''
-    Run Intel's SOCWatch tool.
+    Run Intel's SOCWatch tool and parses results.
     '''
     module = __module__.split('.')[-1]
     # Set default parameters
@@ -79,7 +79,7 @@ class Tool(Scenario):
             logging.info("Parsing socwatch data")
             # host call of script_path
             infile = self.scenario.result_dir + "\\socwatch\\" + self.scenario._module + ".csv"
-            outfile = self.scenario.result_dir + "\\" + self.scenario.testname + "_socwatch.csv"
+            outfile = self.scenario.result_dir + "\\socwatch\\" + self.scenario.testname + "_socwatch.csv"
             self._host_call("python.exe utilities\\open_source\\parse_socwatch.py" + " -i " + infile + " -o " + outfile)
 
     def testTimeoutCallback(self):

@@ -322,6 +322,9 @@ def format_log():
 
 def open_log(log=None):
     global root
+    # Each attempt opens a new log and must start with fresh error state.
+    StreamHandlerWrapper.error_list.clear()
+    StreamHandlerWrapper.is_error_seen = False
     root = logging.getLogger()
     if log:
         logging.basicConfig(filename=log, filemode='w', level=logging.DEBUG, force=True)
