@@ -44,6 +44,28 @@
     },
     {
         "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1EVLW76",
+        "name": "[full_screen]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Video playback duration",
+        "enabled": true,
+        "id": "1ER8XHY",
+        "name": "[duration]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "120"
+    },
+    {
+        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
@@ -185,9 +207,63 @@
                 "type": "Code"
             },
             {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "f to go full screen",
+                        "enabled": true,
+                        "id": "1EVMAPL",
+                        "text": "f",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1EVMA00",
+                "left_term": "[full_screen]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1EVMCH5",
+                        "type": "Delay"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "id": "1EVMC8C",
+                "type": "Else"
+            },
+            {
                 "children": [],
-                "delay": "79",
-                "description": "Watch video for 79s",
+                "description": "",
+                "enabled": true,
+                "id": "1EVMA01",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "overhead from expected duration",
+                "enabled": true,
+                "id": "1EVP47A",
+                "name": "[duration]",
+                "type": "Decrement",
+                "value": "44"
+            },
+            {
+                "children": [],
+                "delay": "[duration]",
+                "description": "Watch video",
                 "enabled": true,
                 "id": "UCL4U1",
                 "type": "Delay"
@@ -203,6 +279,58 @@
                         "text": "k",
                         "type": "Type",
                         "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "1",
+                                "description": "Delay",
+                                "enabled": true,
+                                "id": "1EVMTTH",
+                                "type": "Delay"
+                            },
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "f to exit full screen",
+                                "enabled": true,
+                                "id": "1EVMP3V",
+                                "text": "f",
+                                "type": "Type",
+                                "typing_delay": "[typing_delay]"
+                            }
+                        ],
+                        "description": "",
+                        "enabled": true,
+                        "eval_method": "==",
+                        "id": "1EVMNLL",
+                        "left_term": "[full_screen]",
+                        "right_term": "1",
+                        "type": "If"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "1",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1EVMPNA",
+                                "type": "Delay"
+                            }
+                        ],
+                        "description": "",
+                        "enabled": true,
+                        "id": "1EVMNXJ",
+                        "type": "Else"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "1EVMNLM",
+                        "type": "End If"
                     }
                 ],
                 "description": "",

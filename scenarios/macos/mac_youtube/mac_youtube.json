@@ -1,0 +1,261 @@
+[
+    {
+        "author": "jewilder",
+        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "children": [],
+        "create_date": "2025-02-15",
+        "description": "YouTube",
+        "enabled": true,
+        "id": "U14J6M",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Total scenario duration",
+        "enabled": true,
+        "id": "W5LE1V",
+        "name": "[duration]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "600"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "YouTube video playback duration before looping (max 480s)",
+        "enabled": true,
+        "id": "W2HK7K",
+        "name": "[loop_duration]",
+        "type": "Set Default",
+        "val_options": "",
+        "value": "300"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Full Screen mode",
+        "enabled": true,
+        "id": "1EVN5KY",
+        "name": "[full_screen]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1ER9T9N",
+        "name": "[web_replay_run]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "UC6NK7",
+                "include_path": "scenarios\\macos\\_library\\web\\web_setup",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "W5KVUU",
+                "include_path": "scenarios\\macos\\_library\\web\\web_clear_cache",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "Calculate number of loops",
+                "enabled": true,
+                "file_name": [
+                    "code_1ER8MJJ.py"
+                ],
+                "id": "1ER8MJJ",
+                "type": "Code"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "U14L2R",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1ER914M",
+                "include_path": "scenarios\\macos\\_library\\web\\site\\web_site_youtube_tos",
+                "params": [
+                    {
+                        "name": "[new_tab]",
+                        "val_options": "0, 1",
+                        "value": "0"
+                    },
+                    {
+                        "name": "[load_only]",
+                        "val_options": "0,1",
+                        "value": "0"
+                    },
+                    {
+                        "name": "[enable_pause]",
+                        "val_options": "0,1",
+                        "value": "0"
+                    },
+                    {
+                        "name": "[full_screen]",
+                        "val_options": "0,1",
+                        "value": "[full_screen]"
+                    },
+                    {
+                        "name": "[duration]",
+                        "val_options": "",
+                        "value": "[loop_duration]"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "1ER92CE",
+                "name": "[loops]",
+                "type": "Decrement",
+                "value": "1"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Restart",
+                        "enabled": true,
+                        "id": "1ER93WH",
+                        "text": "0",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    },
+                    {
+                        "children": [],
+                        "delay": "[loop_duration]",
+                        "description": "Watch video",
+                        "enabled": true,
+                        "id": "18J6JRF",
+                        "type": "Delay"
+                    }
+                ],
+                "count": "[loops]",
+                "delay": "0.0",
+                "description": "",
+                "enabled": true,
+                "id": "W2HJXL",
+                "type": "Loop"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "W2HJXN",
+                "type": "End Loop"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "Pause",
+                "enabled": true,
+                "id": "1ER9KT6",
+                "text": "k",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1ERA079",
+                "include_path": "scenarios\\windows\\_library\\web\\web_check",
+                "params": [
+                    {
+                        "name": "[youtube_duration]",
+                        "val_options": "",
+                        "value": "[loop_duration]"
+                    }
+                ],
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "U14N1V",
+        "type": "Run Test"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "1",
+                        "description": "f to exit Full Screen",
+                        "enabled": true,
+                        "id": "1EVNF6M",
+                        "text": "f",
+                        "type": "Type",
+                        "typing_delay": "[typing_delay]"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1EVNEWW",
+                "left_term": "[full_screen]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1EVNEWX",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "UEY3W9",
+                "include_path": "scenarios\\macos\\_library\\web\\web_close_browser",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "V4JFP1",
+                "include_path": "scenarios\\macos\\_library\\web\\web_kill",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "UEY3NM",
+        "type": "Teardown"
+    }
+]

@@ -5,6 +5,7 @@
 # Start remote
 ##
 
+from urllib.parse import quote
 from core.parameters import Params
 import argparse
 
@@ -57,15 +58,21 @@ def main():
     if share_path != '' and target == "dut":
         # Only map drives on DUTs. Aux hosts are expected to have their drives already configured.
         # Disconnect any existing mapping to drive Z: before creating a new one
-        if platform.lower() == "macos":
+        if platform.lower() == "macos" or platform.lower() == "linux":
             if "\\" in share_username:
                 computer_name, share_username = share_username.split("\\", 1)
                 computer_name = f"{computer_name};"
             else:
                 computer_name = ""
 
-            volume_path = "/Users/Shared/mnt/z"
             share_path  = share_path.lstrip("\\").replace("\\", "/")
+
+        if platform.lower() == "linux":
+            call(["gio", f"mount --unmount-scheme=smb"], "RunWithResultAndExitCode")
+            call(["bash", f"-c \"printf '%s\n' '{share_password}' | gio mount 'smb://{computer_name}{share_username}@{share_path}'\""])
+        elif platform.lower() == "macos":
+            share_password = quote(share_password, safe="")
+            volume_path    = "/Users/Shared/mnt/z"
 
             call(["mkdir", f"-p {volume_path}"])
             call(["diskutil", f"unmount {volume_path}"])
@@ -74,7 +81,7 @@ def main():
             call(["cmd.exe", f"/C net use /del z:"])
             call(["cmd.exe", f"/C net use z: {share_path} {share_password} /user:{share_username}"])
 
-    if platform.lower() == "macos":
+    if platform.lower() == 'macos' or platform.lower() == 'linux':
         call(["killall", "remote"], "RunWithResultAndExitCode")
     else:
         call(["cmd.exe", "/C taskkill /F /T /IM remote.exe"], "RunWithResultAndExitCode")
@@ -84,7 +91,9 @@ def main():
     if platform.lower() == "w365":
         args = "-topmostWindow"
 
-    if platform.lower() == "macos":
+    if platform.lower() == "linux":
+        call(["bash", '-c "/home/shared/hobl_bin/remote/remote -session wayland"'])
+    elif platform.lower() == "macos":
         call(['/Users/Shared/hobl_bin/remote/remote.app/Contents/MacOS/remote'])
     else:
         call(['C:\\hobl_bin\\remote\\remote.exe', args])

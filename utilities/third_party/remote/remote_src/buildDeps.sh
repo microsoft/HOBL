@@ -19,12 +19,17 @@ while getopts "a:" opt; do
     esac
 done
 
-if [ "$ARCH" != "x64" ] && [ "$ARCH" != "ARM64" ]; then
+if [ "$ARCH" != "x64" ] && [ "$ARCH" != "ARM64" ] && [ "$ARCH" != "macos" ]; then
     echo "Error: Unsupported architecture: $ARCH"
     usage
 fi
 
 echo "Building for architecture: $ARCH"
+
+if [ "$ARCH" == "macos" ]; then
+    brew install libpng jpeg-turbo
+    exit
+fi
 
 DEPS_DIR="deps"
 mkdir -p "$DEPS_DIR"
@@ -68,7 +73,12 @@ configure_and_build() {
     mkdir "$BUILD_DIR"
     pushd "$BUILD_DIR" > /dev/null || exit 1
 
-    cmake .. -A "$ARCH" -DCMAKE_BUILD_TYPE=Release "${cmake_args[@]}"
+    if [ "$ARCH" == "ARM64" ]; then
+        cmake .. -A "$ARCH" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../../toolchain_arm64.cmake "${cmake_args[@]}"
+    else
+        cmake .. -A "$ARCH" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../../toolchain_x64.cmake "${cmake_args[@]}"
+    fi
+
     cmake --build . --config Release
 
     popd > /dev/null
@@ -78,7 +88,7 @@ configure_and_build() {
 configure_and_build "zlib"
 
 if [ "$ARCH" == "ARM64" ]; then
-    configure_and_build "libjpeg" -DCMAKE_TOOLCHAIN_FILE=../../libjpeg_toolchain.cmake -DWITH_CRT_DLL=ON
+    configure_and_build "libjpeg" -DWITH_CRT_DLL=ON
 else
     configure_and_build "libjpeg" -DCMAKE_ASM_NASM_COMPILER="/c/Program Files/NASM/nasm.exe" -DWITH_CRT_DLL=ON
 fi

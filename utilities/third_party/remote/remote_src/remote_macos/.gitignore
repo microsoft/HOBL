@@ -1,0 +1,6 @@
+/compile_commands.json
+/build
+/build_macos
+*~
+/.cache
+/.DS_Store

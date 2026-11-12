@@ -2,7 +2,7 @@
 
 usage() {
     echo "Usage: $0 -a <arch> [-c]"
-    echo "  -a: Target architecture. Supported values: x64, ARM64 (default: x64)"
+    echo "  -a: Target architecture. Supported values: x64, ARM64, macos (default: x64)"
     echo "  -c: Clean build directory before starting"
     exit 1
 }
@@ -24,7 +24,7 @@ while getopts "a:c" opt; do
     esac
 done
 
-if [ "$ARCH" != "x64" ] && [ "$ARCH" != "ARM64" ]; then
+if [ "$ARCH" != "x64" ] && [ "$ARCH" != "ARM64" ] && [ "$ARCH" != "macos" ]; then
     echo "Error: Unsupported architecture: $ARCH"
     usage
 fi
@@ -40,6 +40,29 @@ fi
 
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR" || { echo "Failed to change directory to $BUILD_DIR"; exit 1; }
+
+if [ "$ARCH" == "macos" ]; then
+    JPEG_INCLUDE_DIR="/opt/homebrew/opt/jpeg-turbo/include"
+
+    if [ $CLEAN_BUILD -eq 1 ]; then
+        INSTALL_DIR="../install_macos"
+
+        echo "Cleaning install directory..."
+        rm -rf "$INSTALL_DIR"
+
+        cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DJPEG_INCLUDE_DIR="$JPEG_INCLUDE_DIR" 
+    fi
+
+    cmake --build . --config Release
+    cmake --install . --config Release
+
+    cd ..
+    exit
+fi
 
 ZLIB_INCLUDE_DIR="../deps/zlib"
 ZLIB_LIBRARY="../deps/zlib/build_${ARCH}/Release/zlibstatic"
