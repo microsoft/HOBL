@@ -103,6 +103,13 @@ class ScenarioTests(unittest.TestCase):
         self.assertNotIn("measurement-stop", test.events)
         self.assertEqual(test.events[-1], "copy")
 
+    def test_linux_platform_rejected_before_remote_setup(self):
+        test = self.instance(platform="Linux")
+        with self.assertRaisesRegex(ValueError, "Unsupported Rust workload platform: Linux"):
+            test.setUp()
+        self.assertEqual(test.events, [])
+        test.doCleanups()
+
     def test_distinct_workloads_and_mac_names_are_preserved(self):
         first = self.instance()
         first.setUp()
@@ -122,7 +129,7 @@ class ScenarioTests(unittest.TestCase):
         resources = types.ModuleType("scenarios.rust_build_resources")
         resources.scenario = self.module
         with patch.dict(sys.modules, {"scenarios.rust_build_resources": resources}):
-            for platform, prefix in (("windows", ""), ("macos", "mac_"), ("linux", "lnx_")):
+            for platform, prefix in (("windows", ""), ("macos", "mac_")):
                 for workload in ("rust_analyzer_build", "nushell_build"):
                     name = prefix + workload
                     with self.subTest(scenario=name):

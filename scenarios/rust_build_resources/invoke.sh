@@ -14,9 +14,13 @@ sample=${8:-1}
 python_exe=${9:-}
 repository=${10:-}
 case "$scenario" in
-    rust_analyzer_build|nushell_build|mac_rust_analyzer_build|mac_nushell_build|lnx_rust_analyzer_build|lnx_nushell_build) ;;
+    rust_analyzer_build|nushell_build|mac_rust_analyzer_build|mac_nushell_build) ;;
     *) printf ' ERROR - Invalid scenario name.\n' >&2; exit 1 ;;
 esac
+if [ "$(uname -s)" != Darwin ]; then
+    printf ' ERROR - This launcher requires macOS; use invoke.ps1 on Windows.\n' >&2
+    exit 1
+fi
 venv="$script_dir/.venvs/$scenario"
 if [ "$phase" = prep ] && [ ! -x "$venv/bin/python" ]; then
     if [ -z "$python_exe" ]; then

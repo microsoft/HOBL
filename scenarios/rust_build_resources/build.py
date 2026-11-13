@@ -57,7 +57,6 @@ def host_triple():
     suffix = {
         "Windows": "pc-windows-msvc",
         "Darwin": "apple-darwin",
-        "Linux": "unknown-linux-gnu",
     }.get(platform.system())
     if suffix is None:
         raise RuntimeError(f"Unsupported operating system: {platform.system()}")
@@ -99,7 +98,7 @@ def native_environment():
             print(f"{tool}: {found}", flush=True)
     else:
         if not shutil.which("cc"):
-            raise RuntimeError("A native C compiler is required (Xcode Command Line Tools or GCC/Clang).")
+            raise RuntimeError("A native C compiler is required (Xcode Command Line Tools).")
     return env
 
 
@@ -172,7 +171,7 @@ def stop_owned_process(process):
 
 def execute_build(command, source, env, root, prefix, timeout):
     usage_before = None
-    if os.name != "nt":
+    if sys.platform == "darwin":
         import resource
         usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
     with prefix.with_suffix(".stdout.jsonl").open("w", encoding="utf-8") as stdout, \
@@ -203,7 +202,7 @@ def execute_build(command, source, env, root, prefix, timeout):
             build_sys=usage.ru_stime - usage_before.ru_stime,
         )
         result["build_cputime"] = result["build_user"] + result["build_sys"]
-        result["max_child_rss_bytes"] = usage.ru_maxrss * (1 if sys.platform == "darwin" else 1024)
+        result["max_child_rss_bytes"] = usage.ru_maxrss
     return result
 
 
@@ -237,13 +236,13 @@ def inventory():
     elif sys.platform == "darwin":
         command = ["sysctl", "machdep.cpu.brand_string", "hw.memsize", "hw.ncpu"]
     else:
-        command = ["lscpu"]
-        result["meminfo"] = Path("/proc/meminfo").read_text()
+        raise RuntimeError(f"Unsupported operating system: {platform.system()}")
     result["hardware"] = capture(command)
     return result
 
 
 def load_context(args):
+    host_triple()
     config_path = Path(__file__).with_name(f"{args.workload}.json")
     config = json.loads(config_path.read_text(encoding="utf-8"))
     toolchain = args.toolchain or config["toolchain"]
@@ -398,7 +397,7 @@ def main():
     parser.add_argument("--timeout", type=int, default=2400)
     parser.add_argument("--sample", type=int, default=1)
     args = parser.parse_args()
-    if not re.fullmatch(r"(?:mac_|lnx_)?(?:rust_analyzer_build|nushell_build)", args.scenario):
+    if not re.fullmatch(r"(?:mac_)?(?:rust_analyzer_build|nushell_build)", args.scenario):
         parser.error("scenario must be one of the registered HOBL scenario names")
     if not 0 <= args.jobs <= 4096 or not 1 <= args.timeout <= 2400 or args.sample < 1:
         parser.error("invalid jobs, timeout or sample")

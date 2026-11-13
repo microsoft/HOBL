@@ -5,7 +5,9 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +17,36 @@ SPEC.loader.exec_module(build)
 
 
 class BuildTests(unittest.TestCase):
+    def test_linux_prep_rejected_before_creating_resources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            args = SimpleNamespace(
+                workload="nushell_build", toolchain=None,
+                work_root=str(root / "work"), data_dir=str(root / "data"),
+            )
+            with patch.object(build.platform, "system", return_value="Linux"), \
+                    patch.object(build, "native_environment") as native:
+                with self.assertRaisesRegex(RuntimeError, "Unsupported operating system: Linux"):
+                    build.prepare(args)
+                native.assert_not_called()
+            self.assertEqual(list(root.iterdir()), [])
+
+    def test_cli_rejects_linux_scenario_names(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for workload in build.WORKLOADS:
+                with self.subTest(workload=workload):
+                    result = subprocess.run(
+                        [sys.executable, "-B", str(ROOT / "build.py"), "prep",
+                         "--workload", workload, "--scenario", "lnx_" + workload,
+                         "--work-root", str(Path(directory) / "work"),
+                         "--data-dir", str(Path(directory) / "data")],
+                        capture_output=True, text=True, timeout=30,
+                    )
+                    self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                    self.assertIn("scenario must be one of the registered HOBL scenario names",
+                                  result.stderr)
+            self.assertEqual(list(Path(directory).iterdir()), [])
+
     @unittest.skipUnless(os.name == "nt", "Windows command-line quoting")
     def test_cmd_batch_path_with_spaces(self):
         with tempfile.TemporaryDirectory(prefix="hobl command ") as directory:

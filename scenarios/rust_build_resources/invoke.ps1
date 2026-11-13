@@ -15,7 +15,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 try {
-    if ($Scenario -notmatch '^(mac_|lnx_)?(rust_analyzer_build|nushell_build)$') {
+    if ($Scenario -notmatch '^(mac_)?(rust_analyzer_build|nushell_build)$') {
         throw 'Invalid scenario name.'
     }
     $scriptDrive = Split-Path -Qualifier $PSScriptRoot

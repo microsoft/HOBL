@@ -24,6 +24,8 @@ class RustBuildScenario(core.app_scenario.Scenario):
     resources = "rust_build_resources"
 
     def command(self, phase, sample=1):
+        if self.platform.lower() not in ("windows", "macos"):
+            raise ValueError(f"Unsupported Rust workload platform: {self.platform}")
         windows = self.platform.lower() == "windows"
         join = ntpath.join if windows else posixpath.join
         resources = join(self.dut_exec_path, self.resources)

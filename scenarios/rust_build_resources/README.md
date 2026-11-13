@@ -6,7 +6,6 @@ These are two independent workloads, not a combined Rust benchmark:
 |---|---|---|
 | Windows | `rust_analyzer_build` | `nushell_build` |
 | macOS | `mac_rust_analyzer_build` | `mac_nushell_build` |
-| Linux | `lnx_rust_analyzer_build` | `lnx_nushell_build` |
 
 Each has its own persistent checkout, Rust installation, Cargo source cache,
 target directory, Python environment, and result identity. Shared scripts only
@@ -43,16 +42,15 @@ Each is a separate HOBL invocation and result; a failed invocation stops the pla
 To extend an externally maintained developer-heavy plan instead, append
 `rust_analyzer_build` and `nushell_build` on Windows, or
 `mac_rust_analyzer_build` and `mac_nushell_build` on macOS, with the same HOBL
-profile and instrumentation as the existing workloads. Linux Rust scenarios
-remain individually selectable; the combined plan is Windows/macOS-only because
-the other developer scenarios do not all have Linux variants.
+profile and instrumentation as the existing workloads. Both Rust scenarios and
+the combined plan support Windows and macOS only.
 
 ## Preparation and parameters
 
 HOBL must have Git, rustup, and a native development toolchain installed:
-Visual Studio C++ tools and Windows SDK on Windows, Xcode Command Line Tools on
-macOS, or GCC/Clang and system development headers on Linux. Missing tools fail
-with an actionable error. Python uses HOBL's pyenv installation, conditionally
+Visual Studio C++ tools and Windows SDK on Windows, or Xcode Command Line Tools on
+macOS. Missing tools fail with an actionable error. Python uses HOBL's pyenv
+installation, conditionally
 installing the pinned Python version without replacing an existing shared
 installation. Each scenario creates its own dependency-free venv.
 
@@ -86,7 +84,7 @@ child environment, while checked-in project settings remain intact.
 
 Results include canonical HOBL key/value CSV, per-sample JSON, Cargo stdout and
 stderr, Cargo timing HTML, source/tool hashes, runner inventory, and binary smoke
-checks. Unix child CPU and peak RSS are also recorded; these are not available
+checks. macOS child CPU and peak RSS are also recorded; these are not available
 from the Windows stdlib path. Cargo unit durations overlap and include codegen
 and linking: do not sum them as elapsed time or label them pure compiler phases.
 
