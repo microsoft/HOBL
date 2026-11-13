@@ -3,7 +3,8 @@
 
 param(
     [string]$logFile = "",
-    [string]$startTime = (Get-Date).ToString("o")
+    [string]$startTime = (Get-Date).ToString("o"),
+    [string]$Workers = "0"
 )
 # Require PowerShell > 7
 $required = [version]"7.0"
@@ -314,7 +315,7 @@ $venvPython = "$scriptDrive\hobl_bin\fast_api_resources\.venv\Scripts\python.exe
 if (-not (Test-Path $venvPython)) {
     " ERROR - fast_api venv missing at $venvPython" | log
     " ERROR - Prep state is corrupt. Re-prep required:" | log
-    " ERROR -   delete C:\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
+    " ERROR -   delete $scriptDrive\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
     Exit 1
 }
 "Using venv python: $venvPython" | log
@@ -324,7 +325,7 @@ if (-not (Test-Path $venvPython)) {
 if ($LASTEXITCODE -ne 0) {
     " ERROR - venv has missing/broken Python packages (build, coverage, pytest expected)." | log
     " ERROR - Possible causes: Defender quarantine, disk cleanup, or external tampering." | log
-    " ERROR - Re-prep required: delete C:\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
+    " ERROR - Re-prep required: delete $scriptDrive\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
     Exit 1
 }
 
@@ -365,11 +366,9 @@ $env:PYTHONIOENCODING = "utf-8"
 Write-RunPhaseMarker "phase.run_test.start"
 $testLog = "$LOG_DIR\fast_api_test.log"
 "Test output: $testLog" | log
-# Invoke coverage via the venv's python so it resolves to the venv-installed
-# coverage package (installed via requirements-tests.txt). A bare `coverage`
-# would go through PATH lookup and either fail or hit a different Python.
+# Both platforms use pytest-cov and the same release test directories.
 $testTime = (Measure-Command {
-    & $venvPython -m coverage run -m pytest tests *> $testLog
+    & $venvPython -m pytest -n $Workers --dist loadgroup --cov --cov-context=test --cov-report=term tests "scripts\tests" *> $testLog
 }).TotalSeconds
 $testExitCode = $LASTEXITCODE
 Write-RunPhaseMarker "phase.run_test.end"
@@ -379,7 +378,7 @@ $testTime = [math]::Round($testTime, 2)
 if ($testExitCode -eq 0) {
     "FastAPI tests completed successfully!" | log
 } else {
-    "Tests failed with exit code: $testExitCode" | log
+    " ERROR - Tests failed with exit code: $testExitCode" | log
 }
 "Tests completed in ${testTime}s" | log
 

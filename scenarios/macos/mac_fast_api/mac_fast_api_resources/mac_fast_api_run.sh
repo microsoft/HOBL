@@ -2,6 +2,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+WORKERS="${1:-0}"
 LOG_DIR="/Users/Shared/hobl_data"
 METRICS_FILE="$LOG_DIR/mac_fast_api_results.csv"
 LOG_FILE="$LOG_DIR/mac_fast_api_run.log"
@@ -112,6 +113,7 @@ BIN_DIR="/Users/Shared/hobl_bin/fastapi"
 log "-- Setting Python version"
 pyenv global 3.12.10
 check_status "Setting Python global version"
+export PYENV_VERSION="3.12.10"
 
 # Verify Python version
 PYTHON_VERSION=$(python --version 2>&1 | awk '{print $2}')
@@ -121,6 +123,16 @@ if [ "$PYTHON_VERSION" != "3.12.10" ]; then
     exit 1
 fi
 log "✓ Python version confirmed: $PYTHON_VERSION"
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+check_status "Locating scenario resources"
+VENV_PYTHON="$SCRIPT_DIR/.venv/bin/python"
+if [ ! -x "$VENV_PYTHON" ]; then
+    log " ERROR - FastAPI scenario environment is missing at $SCRIPT_DIR. Re-prep required."
+    exit 1
+fi
+export VIRTUAL_ENV="$SCRIPT_DIR/.venv"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
 
 log "-- Changing directory to: $BIN_DIR"
 
@@ -138,23 +150,16 @@ cd $BIN_DIR || {
 }
 log "✓ Current directory: $(pwd)"
 
-# Verify test script exists
-if [ ! -f "scripts/test.sh" ]; then
-    log " ERROR - Test script not found: scripts/test.sh"
-    exit 1
-fi
-log "✓ Test script found"
-
-# Verify build module is available
-python -c "import build" 2>/dev/null
+# Verify build and test modules are available
+"$VENV_PYTHON" -c "import build, coverage, pytest, fastapi.cli; from fastapi.testclient import TestClient; from coverage.tracer import CTracer"
 if [ $? -ne 0 ]; then
-    log " ERROR - Python build module is not installed"
+    log " ERROR - Required Python build or test modules are not installed"
     log "Please run mac_fast_api_prep.sh first"
     exit 1
 fi
-log "✓ Build module is available"
+log "✓ Build and test modules are available"
 
-# Route PEP 517 build isolation (and any pip invoked by scripts/test.sh) through the
+# Route PEP 517 build isolation (and any pip invoked by the tests) through the
 # approved Microsoft PyPI feed proxy. `python -m build` spins up its own isolated
 # environment and pip-installs the build backend (pdm-backend) on every run; that
 # isolated pip honors PIP_INDEX_URL. Without this it targets public PyPI, which is
@@ -169,7 +174,7 @@ log "-- fast_api build started"
 # Without redirection, stdout goes only to the RPC buffer and is lost on timeout.
 BUILD_LOG="$LOG_DIR/mac_fast_api_build.log"
 log "-- Build output: $BUILD_LOG"
-/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_build_time.log" python -m build > "$BUILD_LOG" 2>&1
+/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_build_time.log" "$VENV_PYTHON" -m build > "$BUILD_LOG" 2>&1
 check_status "Building Fast API"
 
 # Parse build phase timing
@@ -181,7 +186,8 @@ log "-- fast_api tests started"
 
 TEST_LOG="$LOG_DIR/mac_fast_api_test.log"
 log "-- Test output: $TEST_LOG"
-/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_test_time.log" bash scripts/test.sh > "$TEST_LOG" 2>&1
+export PYTHONPATH="./docs_src"
+/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_test_time.log" "$VENV_PYTHON" -m pytest -n "$WORKERS" --dist loadgroup --cov --cov-context=test --cov-report=term tests scripts/tests > "$TEST_LOG" 2>&1
 check_status "Running Fast API tests"
 
 # Parse test phase timing

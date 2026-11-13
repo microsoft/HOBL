@@ -90,8 +90,8 @@ else
     cd $BIN_DIR/fastapi
 fi
 
-log "-- Checkout version 0.119.1"
-TARGET_VERSION="0.119.1"
+log "-- Checkout version 0.162.5"
+TARGET_VERSION="0.162.5"
 
 # Ensure tags are available for checkout on existing repos
 git fetch --tags --force 2>/dev/null || true
@@ -170,12 +170,13 @@ source ~/.zprofile
 check_command "pyenv" || exit 1
 
 log "-- Installing Python 3.12.10"
-pyenv install 3.12.10 -f
+pyenv install -s 3.12.10
 check_status "Python 3.12.10 installation"
 
 log "-- Setting Python version"
 pyenv global 3.12.10
 check_status "Setting Python global version"
+export PYENV_VERSION="3.12.10"
 
 # Verify Python version
 PYTHON_VERSION=$(python --version 2>&1 | awk '{print $2}')
@@ -186,30 +187,46 @@ if [ "$PYTHON_VERSION" != "3.12.10" ]; then
 fi
 log "✓ Python version confirmed: $PYTHON_VERSION"
 
+PYENV_PYTHON="$(pyenv which python)"
+check_status "Resolving Python 3.12.10"
+check_command "$PYENV_PYTHON" || exit 1
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+check_status "Locating scenario resources"
+VENV_DIR="$SCRIPT_DIR/.venv"
+[ ! -L "$VENV_DIR" ]
+check_status "Checking scenario venv is not a symbolic link"
+"$PYENV_PYTHON" -m venv --clear "$VENV_DIR"
+check_status "Creating the scenario venv"
+VENV_PYTHON="$VENV_DIR/bin/python"
+VENV_PIP="$VENV_DIR/bin/pip"
+
 log "-- Installing dependencies for FastAPI"
 cd $BIN_DIR/fastapi || {
     log " ERROR - Failed to change to fastapi directory"
     exit 1
 }
 
-# Check if requirements.txt exists
-if [ ! -f "requirements.txt" ]; then
-    log " ERROR - requirements.txt not found"
-    exit 1
-fi
-log "✓ requirements.txt found"
-
 # Microsoft-managed devices block direct access to public PyPI (CISO Central Feed
 # Services policy). Install through the approved Microsoft package feed proxy instead.
 # Same pinned versions are served, so there is no functional or performance change.
 PYPI_INDEX_URL="https://packagefeedproxy.microsoft.io/pypi/simple"
 log "-- Using approved PyPI feed proxy: $PYPI_INDEX_URL"
+"$VENV_PIP" install --index-url "$PYPI_INDEX_URL" "uv==0.12.23" build
+check_status "Installing preparation and build tools"
 
-pip install --index-url "$PYPI_INDEX_URL" -r requirements.txt
-check_status "FastAPI requirements installation"
-
-pip install --index-url "$PYPI_INDEX_URL" build
-check_status "Build package installation"
+UV="$VENV_DIR/bin/uv"
+if [ ! -x "$UV" ] || [ ! -f "uv.lock" ]; then
+    log " ERROR - uv or the release uv.lock is missing"
+    exit 1
+fi
+DEPENDENCY_FILE="$SCRIPT_DIR/fast_api_dependencies.txt"
+"$UV" export --frozen --offline --no-python-downloads --python "$VENV_PYTHON" --no-dev --group tests --extra all --no-emit-project --format requirements.txt --output-file "$DEPENDENCY_FILE" --quiet
+check_status "Exporting the release test dependencies"
+"$VENV_PIP" install --index-url "$PYPI_INDEX_URL" --require-hashes -r "$DEPENDENCY_FILE"
+check_status "Installing the locked test dependencies"
+"$VENV_PIP" install --index-url "$PYPI_INDEX_URL" --no-deps --editable .
+check_status "Registering the fixed FastAPI source"
 
 # Final verification
 log ""
@@ -222,7 +239,7 @@ check_command "python" || exit 1
 check_command "pip" || exit 1
 
 # Verify FastAPI can be imported
-python -c "import fastapi" 2>/dev/null
+"$VENV_PYTHON" -c "import fastapi"
 if [ $? -eq 0 ]; then
     log "✓ FastAPI module can be imported"
 else
