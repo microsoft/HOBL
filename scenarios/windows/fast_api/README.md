@@ -40,3 +40,6 @@ python -m pytest -n 0 --cov --cov-context=test tests scripts\tests
 - The PEP 517 build spins up its own isolated environment. On a proxied corporate network,
   set `$env:PIP_INDEX_URL` to your approved PyPI mirror so build isolation can fetch deps.
 - HOBL default: 5 loops (each loop = build + test). Works on x64 and ARM64.
+- Set `fast_api:workers=auto` or a non-negative integer to select pytest workers;
+  the default `0` keeps tests serial. On macOS, use `mac_fast_api:workers`.
+  Example: `hobl.cmd -s fast_api fast_api:loops=1 fast_api:workers=auto`.

@@ -2,6 +2,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+WORKERS="${1:-0}"
 LOG_DIR="/Users/Shared/hobl_data"
 METRICS_FILE="$LOG_DIR/mac_fast_api_results.csv"
 LOG_FILE="$LOG_DIR/mac_fast_api_run.log"
@@ -186,7 +187,7 @@ log "-- fast_api tests started"
 TEST_LOG="$LOG_DIR/mac_fast_api_test.log"
 log "-- Test output: $TEST_LOG"
 export PYTHONPATH="./docs_src"
-/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_test_time.log" "$VENV_PYTHON" -m pytest -n 0 --cov --cov-context=test --cov-report=term tests scripts/tests > "$TEST_LOG" 2>&1
+/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_test_time.log" "$VENV_PYTHON" -m pytest -n "$WORKERS" --dist loadgroup --cov --cov-context=test --cov-report=term tests scripts/tests > "$TEST_LOG" 2>&1
 check_status "Running Fast API tests"
 
 # Parse test phase timing

@@ -3,7 +3,8 @@
 
 param(
     [string]$logFile = "",
-    [string]$startTime = (Get-Date).ToString("o")
+    [string]$startTime = (Get-Date).ToString("o"),
+    [string]$Workers = "0"
 )
 # Require PowerShell > 7
 $required = [version]"7.0"
@@ -365,9 +366,9 @@ $env:PYTHONIOENCODING = "utf-8"
 Write-RunPhaseMarker "phase.run_test.start"
 $testLog = "$LOG_DIR\fast_api_test.log"
 "Test output: $testLog" | log
-# Both platforms use serial pytest-cov and the same release test directories.
+# Both platforms use pytest-cov and the same release test directories.
 $testTime = (Measure-Command {
-    & $venvPython -m pytest -n 0 --cov --cov-context=test --cov-report=term tests "scripts\tests" *> $testLog
+    & $venvPython -m pytest -n $Workers --dist loadgroup --cov --cov-context=test --cov-report=term tests "scripts\tests" *> $testLog
 }).TotalSeconds
 $testExitCode = $LASTEXITCODE
 Write-RunPhaseMarker "phase.run_test.end"
