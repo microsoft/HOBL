@@ -1,3 +1,4 @@
+import importlib
 import importlib.util
 from pathlib import Path
 import sys
@@ -133,13 +134,15 @@ class ScenarioTests(unittest.TestCase):
                 for workload in ("rust_analyzer_build", "nushell_build"):
                     name = prefix + workload
                     with self.subTest(scenario=name):
-                        path = ROOT.parent / platform / (name + ".py")
-                        spec = importlib.util.spec_from_file_location(f"scenarios.{platform}.{name}", path)
-                        registration = importlib.util.module_from_spec(spec)
-                        spec.loader.exec_module(registration)
-                        suite = unittest.defaultTestLoader.loadTestsFromModule(registration)
+                        module_name = f"scenarios.{platform}.{name}"
+                        registration = importlib.import_module(module_name)
+                        suite = unittest.defaultTestLoader.loadTestsFromName(module_name)
                         self.assertEqual(suite.countTestCases(), 1)
                         test = next(iter(next(iter(suite))))
+                        if platform == "macos":
+                            implementation = importlib.import_module(f"{module_name}.{name}")
+                            self.assertIs(getattr(registration, type(test).__name__),
+                                          getattr(implementation, type(test).__name__))
                         self.assertEqual(test.module, name)
                         self.assertEqual(test.workload, workload)
                         self.assertEqual(Parameters.get(name, "toolchain"), "1.100.0")

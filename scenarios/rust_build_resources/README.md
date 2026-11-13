@@ -11,6 +11,12 @@ Each has its own persistent checkout, Rust installation, Cargo source cache,
 target directory, Python environment, and result identity. Shared scripts only
 implement preparation, execution, validation, and cleanup.
 
+The macOS registrations follow the per-scenario package layout:
+`scenarios/macos/mac_rust_analyzer_build/` and
+`scenarios/macos/mac_nushell_build/` each contain `__init__.py` and the
+same-named scenario module. Build helpers remain shared in
+`scenarios/rust_build_resources/`; scenario names and resource paths are unchanged.
+
 The JSON recipes pin upstream source revisions and Rust 1.100.0. Nushell builds
 the complete `nu` binary with default features, not the plugin workspace or the
 optional `full` feature. rust-analyzer builds its server binary, not its editor

@@ -247,7 +247,7 @@ When the user refers to "developer scenarios", they mean the following 13 scenar
 | PyTorch Inference | `scenarios/MacOS/mac_pytorch_inf/` | `scenarios/windows/pytorch_inf/` |
 | Spring Pet Clinic | `scenarios/MacOS/mac_spring_petclinic/` | `scenarios/windows/spring_petclinic/` |
 | VS Code | `scenarios/MacOS/mac_vscode/` | `scenarios/windows/vscode/` |
-| rust-analyzer Build | `scenarios/macos/mac_rust_analyzer_build.py` | `scenarios/windows/rust_analyzer_build.py` |
-| Nushell Build | `scenarios/macos/mac_nushell_build.py` | `scenarios/windows/nushell_build.py` |
+| rust-analyzer Build | `scenarios/macos/mac_rust_analyzer_build/` | `scenarios/windows/rust_analyzer_build.py` |
+| Nushell Build | `scenarios/macos/mac_nushell_build/` | `scenarios/windows/nushell_build.py` |
 
 When asked to make a change across "all developer scenarios", apply it to all 13 (both platforms unless a specific platform is specified). `testplans/hobl_dev_heavy.ps1` runs this set with platform selection; preserve rust-analyzer and Nushell as distinct workloads.
