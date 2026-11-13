@@ -25,6 +25,6 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\web\\web_check')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_close_tabs')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_kill')
-    import_run_user_only('scenarios\\windows\\_library\\web\\web_run_minwin')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_setup')
+    import_run_user_only('scenarios\\windows\\cm_base\\lib\\cm_run')
     return

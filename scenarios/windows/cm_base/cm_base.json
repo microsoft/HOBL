@@ -253,8 +253,8 @@
                 "delay": "0",
                 "description": "",
                 "enabled": true,
-                "id": "1NA525H",
-                "include_path": "scenarios\\windows\\_library\\web\\web_run_minwin",
+                "id": "1XX8YUN",
+                "include_path": "scenarios\\windows\\cm_base\\lib\\cm_run",
                 "params": [
                     {
                         "name": "[load_only]",
