@@ -26,12 +26,13 @@ cd fastapi
 # 3. Isolated venv + build/test tooling
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install build coverage pytest
-python -m pip install -r requirements-tests.txt
+python -m pip install uv build
+python -m uv sync --no-dev --group tests --extra all --inexact --python .\.venv\Scripts\python.exe
 
 # 4. Timed workload
 python -m build                        # PEP 517 build -> dist/
-python -m coverage run -m pytest tests
+$env:PYTHONPATH = ".\docs_src"
+python -m pytest -n 0 --cov --cov-context=test tests scripts\tests
 ```
 
 ## Notes

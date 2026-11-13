@@ -465,7 +465,7 @@ checkGitClone $lastexitcode "$scriptDrive\fastapi"
 
 "-- Checkout" | log
 checkSetLocation "$scriptDrive\fastapi"
-$targetVersion = "0.119.1"
+$targetVersion = "0.162.5"
 
 # Ensure tags are available for checkout when repo already exists
 git fetch --tags --force 2>$null | Out-Null
@@ -794,6 +794,8 @@ if ($installedVersions -notcontains $pythonVersion) {
 "Setting Python $pythonVersion as global version..." | log
 pyenv global $pythonVersion
 check($lastexitcode)
+# Override the release's .python-version (3.11) for this process.
+$env:PYENV_VERSION = $pythonVersion
 
 # Comprehensive Python detection and verification
 function Find-AllPython {
@@ -901,12 +903,22 @@ if (-not (Test-Path $venvPython)) {
 $pypiIndexUrl = "https://packagefeedproxy.microsoft.io/pypi/simple"
 "Using approved PyPI feed proxy: $pypiIndexUrl" | log
 
-"Installing requirements.txt into venv..." | log
-& $venvPip install --index-url $pypiIndexUrl -r requirements.txt "click==8.2.1"
+"Installing preparation and build tools from the approved feed..." | log
+& $venvPip install --index-url $pypiIndexUrl "uv==0.12.23" build
 check($lastexitcode)
 
-"Installing build tool into venv..." | log
-& $venvPip install --index-url $pypiIndexUrl build
+$uvExe = Join-Path $venvDir "Scripts\uv.exe"
+if (-not (Test-Path -LiteralPath $uvExe) -or -not (Test-Path -LiteralPath "uv.lock")) {
+    " ERROR - uv or the release uv.lock is missing." | log
+    Exit 1
+}
+$dependencyFile = Join-Path $PSScriptRoot "fast_api_dependencies.txt"
+"Exporting test dependencies from the release's unchanged uv.lock..." | log
+& $uvExe export --frozen --offline --no-python-downloads --python $venvPython --no-dev --group tests --extra all --no-emit-project --format requirements.txt --output-file $dependencyFile --quiet
+check($lastexitcode)
+& $venvPip install --index-url $pypiIndexUrl --require-hashes -r $dependencyFile
+check($lastexitcode)
+& $venvPip install --index-url $pypiIndexUrl --no-deps --editable .
 check($lastexitcode)
 
 "-- FastAPI prep completed ($logSuffix version)" | log
