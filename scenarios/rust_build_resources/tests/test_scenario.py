@@ -118,6 +118,25 @@ class ScenarioTests(unittest.TestCase):
         first.tearDown()
         second.tearDown()
 
+    def test_registered_modules_discover_one_independent_workload_each(self):
+        resources = types.ModuleType("scenarios.rust_build_resources")
+        resources.scenario = self.module
+        with patch.dict(sys.modules, {"scenarios.rust_build_resources": resources}):
+            for platform, prefix in (("windows", ""), ("macos", "mac_"), ("linux", "lnx_")):
+                for workload in ("rust_analyzer_build", "nushell_build"):
+                    name = prefix + workload
+                    with self.subTest(scenario=name):
+                        path = ROOT.parent / platform / (name + ".py")
+                        spec = importlib.util.spec_from_file_location(f"scenarios.{platform}.{name}", path)
+                        registration = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(registration)
+                        suite = unittest.defaultTestLoader.loadTestsFromModule(registration)
+                        self.assertEqual(suite.countTestCases(), 1)
+                        test = next(iter(next(iter(suite))))
+                        self.assertEqual(test.module, name)
+                        self.assertEqual(test.workload, workload)
+                        self.assertEqual(Parameters.get(name, "toolchain"), "1.100.0")
+
     def test_kill_suppresses_framework_process_name_fallback(self):
         test = self.instance()
         test.fail_phase = "-Phase kill "

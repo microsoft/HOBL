@@ -19,6 +19,34 @@ extension. Release profiles, default features, and repository Cargo settings are
 preserved. In particular, rust-analyzer selects `rust-lld` on Windows x64 only;
 other Windows configurations retain the standard MSVC linker.
 
+These are clean application release builds, not replicas of upstream CI or
+release packaging. In particular, rust-analyzer's distribution-specific PGO,
+allocator features, and release-profile overrides are not enabled.
+
+## Developer-heavy test plan
+
+From the Windows HOBL host, run the shared developer-heavy plan against a
+dedicated Windows or macOS DUT:
+
+```powershell
+.\testplans\hobl_dev_heavy.ps1 -Profile D:\profiles\windows-dut.ini
+.\testplans\hobl_dev_heavy.ps1 -Profile D:\profiles\mac-dut.ini -Platform MacOS
+```
+
+Use the existing DUT profile for the selected platform, including its
+instrumentation, iterations, result directory, and connection settings. The plan
+does not override those settings or change charger state. It runs FastAPI,
+Foundry Local, LLVM, MLPerf, .NET Aspire, Node.js, Ollama, OpenCV, PyTorch
+Inference, Spring Pet Clinic, VS Code, rust-analyzer, and Nushell sequentially.
+Each is a separate HOBL invocation and result; a failed invocation stops the plan.
+
+To extend an externally maintained developer-heavy plan instead, append
+`rust_analyzer_build` and `nushell_build` on Windows, or
+`mac_rust_analyzer_build` and `mac_nushell_build` on macOS, with the same HOBL
+profile and instrumentation as the existing workloads. Linux Rust scenarios
+remain individually selectable; the combined plan is Windows/macOS-only because
+the other developer scenarios do not all have Linux variants.
+
 ## Preparation and parameters
 
 HOBL must have Git, rustup, and a native development toolchain installed:
