@@ -355,15 +355,6 @@
     {
         "children": [],
         "delay": "0",
-        "description": "Optional PowerPoint image/video insertion and PDF export",
-        "enabled": true,
-        "file_name": ["code_POWERPOINT_MEDIA_PDF.py"],
-        "id": "POWERPOINTMEDIA",
-        "type": "Code"
-    },
-    {
-        "children": [],
-        "delay": "0",
         "description": "",
         "enabled": true,
         "id": "V2N1PJ",

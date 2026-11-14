@@ -3,6 +3,7 @@
 
 from core.parameters import Params
 from utilities.open_source.modules import import_run_user_only
+from .office_ui import defaults
 
 def run():
     Params.setCalculated('scenario_section', __package__.split('.')[-1])
@@ -20,6 +21,7 @@ def run():
     return
 
 def run_user_only():
+    defaults()
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_setup')
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_teardown')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable')

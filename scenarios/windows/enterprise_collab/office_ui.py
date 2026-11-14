@@ -14,7 +14,7 @@ from core.parameters import Params
 
 def defaults():
     Params.setDefault(
-        "global", "office_extended_actions", "0",
+        "enterprise_collab", "office_extended_actions", "0",
         desc="Enable PDF exports, PowerPoint media insertion, and Excel sort/pivot UI actions.",
         valOptions=["0", "1"],
     )
@@ -22,10 +22,18 @@ def defaults():
 
 def enabled():
     defaults()
-    value = Params.get("global", "office_extended_actions")
+    value = Params.get("enterprise_collab", "office_extended_actions")
     if value not in ("0", "1"):
         raise ValueError("office_extended_actions must be 0 or 1")
     return value == "1"
+
+
+def validate_configuration():
+    if enabled() and Params.get("enterprise_collab", "simple_office_launch") != "1":
+        raise ValueError(
+            "Set enterprise_collab:simple_office_launch=1 when enabling "
+            "enterprise_collab:office_extended_actions"
+        )
 
 
 def _docs():
@@ -51,7 +59,7 @@ def _quote(value):
 
 
 def _inspect(scenario, kind, path, before=None):
-    validator = ntpath.join(scenario.dut_exec_path, "office_output.ps1")
+    validator = ntpath.join(scenario.dut_exec_path, "enterprise_collab_resources", "office_output.ps1")
     script = (
         "$ErrorActionPreference = 'Stop'; & " + _quote(validator)
         + " -Kind " + _quote(kind) + " -Path " + _quote(path)
@@ -66,7 +74,12 @@ def prepare(scenario):
     if not enabled():
         return
     folder = Path(__file__).parent
-    scenario._upload(str(folder / "office_output.ps1"), scenario.dut_exec_path, check_modified=False)
+    target = ntpath.join(scenario.dut_exec_path, "enterprise_collab_resources")
+    _powershell(scenario, (
+        "$ErrorActionPreference = 'Stop'; "
+        "New-Item -ItemType Directory -Path " + _quote(target) + " -Force | Out-Null"
+    ))
+    scenario._upload(str(folder / "resources" / "office_output.ps1"), target, check_modified=False)
     video = scenario.resolve(r"scenarios\windows\teams\ppt.mp4")
     docs = _docs()
     _powershell(scenario, (

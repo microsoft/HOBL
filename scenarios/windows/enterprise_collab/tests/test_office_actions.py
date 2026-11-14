@@ -34,6 +34,7 @@ class OfficeActionsTests(unittest.TestCase):
         self.module = load_helper()
         self.values = {
             "office_extended_actions": "1", "platform": "Windows",
+            "simple_office_launch": "1",
             "userprofile": r"D:\Users\Lab User", "typing_delay": "50",
             "onedrive_path": r"E:\Synced documents",
         }
@@ -52,6 +53,21 @@ class OfficeActionsTests(unittest.TestCase):
             self.module.prepare(self.scenario)
         self.scenario._upload.assert_not_called()
 
+    def test_global_gate_does_not_enable_enterprise_actions(self):
+        self.module.Params.get.side_effect = lambda section, key: (
+            "0" if section == "enterprise_collab" and key == "office_extended_actions"
+            else self.values[key]
+        )
+        self.module.prepare(self.scenario)
+        self.assertEqual(self.scenario.mock_calls, [])
+
+    def test_enabled_actions_require_the_office_lifecycle(self):
+        self.values["simple_office_launch"] = "0"
+        with self.assertRaisesRegex(ValueError, "simple_office_launch=1"):
+            self.module.validate_configuration()
+        self.values["office_extended_actions"] = "0"
+        self.module.validate_configuration()
+
     def test_w365_uses_configured_onedrive_root(self):
         self.values["platform"] = "W365"
         self.assertEqual(self.module._docs(), r"E:\Synced documents\abl_docs")
@@ -62,7 +78,7 @@ class OfficeActionsTests(unittest.TestCase):
         self.module._inspect(self.scenario, "Pdf", r"E:\report's output.pdf")
         command = self.scenario._call.call_args.args[0]
         decoded = base64.b64decode(command[1].split()[-1]).decode("utf-16-le")
-        self.assertIn(r"D:\lab''s tools\office_output.ps1", decoded)
+        self.assertIn(r"D:\lab''s tools\enterprise_collab_resources\office_output.ps1", decoded)
         self.assertIn(r"E:\report''s output.pdf", decoded)
         self.assertFalse(self.scenario._call.call_args.kwargs["system"])
 
@@ -98,7 +114,7 @@ class OfficeActionsTests(unittest.TestCase):
                 self.module.run_word(self.scenario)
         self.scenario._record_phase_time.assert_not_called()
 
-    def test_edited_action_files_have_no_duplicate_keys_and_code_precedes_phase_end(self):
+    def test_enterprise_actions_are_gated_between_office_open_and_close(self):
         def strict_pairs(pairs):
             result = {}
             for key, value in pairs:
@@ -107,16 +123,24 @@ class OfficeActionsTests(unittest.TestCase):
                 result[key] = value
             return result
 
-        for folder, code in (
-            ("prod_word_run", "code_WORD_PDF.py"),
-            ("prod_excel_run", "code_EXCEL_SORT_PIVOT.py"),
-            ("prod_powerpoint_run", "code_POWERPOINT_MEDIA_PDF.py"),
-        ):
-            actions = json.loads((ROOT / folder / (folder + ".json")).read_text(), object_pairs_hook=strict_pairs)
-            self.assertEqual(actions[-2]["file_name"], [code])
-            self.assertIn("recording_phase_end", actions[-1]["include_path"])
-            self.assertTrue((ROOT / folder / code).is_file())
-        json.loads((ROOT / "prod_setup" / "prod_setup.json").read_text(), object_pairs_hook=strict_pairs)
+        actions = json.loads((ROOT / "enterprise_collab.json").read_text(), object_pairs_hook=strict_pairs)
+        setup = next(action for action in actions if action["type"] == "Setup")
+        setup_office = next(action for action in setup["children"] if action["id"] == "19MUF2P")
+        self.assertTrue(setup_office["children"][0]["include_path"].endswith("prod_setup"))
+        self.assertEqual(setup_office["children"][1]["file_name"], ["code_OFFICE_PREPARE.py"])
+        run = next(action for action in actions if action["type"] == "Run Test")
+        office = next(action for action in run["children"] if action["id"] == "19MUFJ9")
+        self.assertTrue(office["children"][0]["include_path"].endswith("prod_open"))
+        self.assertTrue(office["children"][3]["include_path"].endswith("prod_close"))
+        gate = office["children"][1]
+        self.assertEqual(gate["left_term"], "[enterprise_collab:office_extended_actions]")
+        self.assertEqual(gate["right_term"], "1")
+        codes = [child["file_name"][0] for child in gate["children"] if child["type"] == "Code"]
+        self.assertEqual(codes, ["code_WORD_PDF.py", "code_EXCEL_SORT_PIVOT.py", "code_POWERPOINT_MEDIA_PDF.py"])
+        for code in codes + ["code_OFFICE_PREPARE.py"]:
+            self.assertTrue((ROOT / code).is_file())
+        for index, app in enumerate(("word", "excel", "powerpoint")):
+            self.assertTrue(gate["children"][index * 2]["include_path"].endswith("prod_" + app + "_switchto"))
 
 
 class OutputValidationTests(unittest.TestCase):
@@ -127,7 +151,7 @@ class OutputValidationTests(unittest.TestCase):
 
     def validate(self, kind, before=None):
         command = ["powershell.exe", "-NoProfile", "-NonInteractive", "-File",
-                   str(ROOT / "office_output.ps1"), "-Kind", kind, "-Path", str(self.path)]
+                   str(ROOT / "resources" / "office_output.ps1"), "-Kind", kind, "-Path", str(self.path)]
         if before is not None:
             command.extend(["-Before", json.dumps(before)])
         return subprocess.run(command, capture_output=True, text=True)
@@ -187,7 +211,7 @@ class OutputValidationTests(unittest.TestCase):
         self.assertIn("Office output not found", result.stderr)
 
     def test_real_budget_snapshot_has_twelve_rows_and_existing_pivot(self):
-        self.path = ROOT / "prod_setup" / "abl_docs" / "FamilyBudget.xlsx"
+        self.path = ROOT.parent / "_library" / "productivity" / "prod_setup" / "abl_docs" / "FamilyBudget.xlsx"
         result = self.validate("Workbook")
         self.assertEqual(result.returncode, 0, result.stderr)
         snapshot = json.loads(result.stdout)
