@@ -4268,7 +4268,7 @@ class Scenario(unittest.TestCase):
             logging.debug(f"Checking YouTube playback log entry '{title}'. Comparing expected duration {youtube_duration}s with actual duration {dur:.2f}s")
 
             if not youtube_duration - 15 <= dur <= youtube_duration + 15:
-                err_str = f"Unexpected YouTube {title} playback duration {dur}"
+                err_str = f"Unexpected YouTube {title} playback duration {dur:.0f}"
                 logging.error(err_str)
                 self.fail(err_str)
 
