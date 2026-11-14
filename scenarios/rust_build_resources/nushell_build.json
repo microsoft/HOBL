@@ -1,0 +1,8 @@
+{
+  "name": "nushell_build",
+  "repository": "https://github.com/nushell/nushell.git",
+  "revision": "7bff3d1d04d65529ee87f4b076448d7e9f538d09",
+  "toolchain": "1.100.0",
+  "package": "nu",
+  "binary": "nu"
+}
