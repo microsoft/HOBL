@@ -7,6 +7,7 @@ import logging
 import os
 import time
 from . import default_params
+from . import office_ui
 
 # Description:
 #   Automatically generated standard scenario.
@@ -27,6 +28,7 @@ class EnterpriseCollab(core.app_scenario.Scenario):
     actions = None
 
     def setUp(self):
+        office_ui.validate_configuration()
         # Load actions JSON.
         actions_json = os.path.join(os.path.dirname(__file__), "enterprise_collab.json")
         self.actions = self.load_action_json(actions_json)

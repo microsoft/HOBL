@@ -17,6 +17,44 @@ The Cinebench benchmark.
 
 Collect various system logs.
 
+## enterprise_collab
+
+### Optional Office actions
+
+Enable both `enterprise_collab:simple_office_launch=1` and
+`enterprise_collab:office_extended_actions=1` to export Word and PowerPoint to
+PDF, insert an image and video in PowerPoint, and sort Excel data before
+creating a populated PivotTable. `office_extended_actions` defaults to `0`,
+preserving existing behavior and power baselines. Enabling it without the
+Office lifecycle fails at setup with an actionable configuration error.
+
+The actions belong only to `enterprise_collab` and run between its existing
+Office open/close actions. Shared productivity and MinCP workloads are unchanged.
+Keyboard interaction follows the consumer multitasker picture-insertion
+reference at
+<https://github.com/a5hut05h/HOBL_MINCP/tree/consumer_multitasker_v1.0>.
+No Office COM automation is used.
+
+Excel uses the existing `FamilyBudget.xlsx` sample, sorting
+`Additional Data!B2:C14` by Category ascending and creating Category rows with
+Sum of Cost values. This is sample budget data, not telemetry ingestion or
+telemetry-derived action frequencies. PowerPoint uses the existing
+`Manarola2.png` image and Teams `ppt.mp4` video.
+
+Requires English desktop Office, the existing Office/OneDrive prep, and
+WinAppDriver. Setup validates the assets and copies the video and output
+validator without modifying shared toolchains or changing prep versions.
+PDFs have unique names in the DUT results directory. The workbook and
+presentation remain in `abl_docs`; Office setup restores them on subsequent runs.
+Output checks reject incomplete PDFs, unsorted or damaged category/cost pairs,
+unpopulated new pivots, and missing image/video insertions.
+
+Additional `prod` phases are `export_word_pdf`, `sort_excel`,
+`create_excel_pivot`, `insert_powerpoint_media`, and `export_powerpoint_pdf`.
+They include UI waits and output validation. No macOS behavior or shared timing
+metric changes. Validate the Office KeyTips and accessible control names on a
+dedicated DUT and run two consecutive iterations before leaving draft status.
+
 ## copilot
 
 Nonfunctional.  Needs to be updated for new architecture.
