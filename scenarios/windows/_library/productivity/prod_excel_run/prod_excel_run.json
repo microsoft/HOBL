@@ -233,6 +233,15 @@
     {
         "children": [],
         "delay": "0",
+        "description": "Optional Excel sorting and populated PivotTable",
+        "enabled": true,
+        "file_name": ["code_EXCEL_SORT_PIVOT.py"],
+        "id": "EXCELPIVOT",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
         "id": "V2N019",

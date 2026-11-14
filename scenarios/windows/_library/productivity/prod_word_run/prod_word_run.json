@@ -299,6 +299,15 @@
     {
         "children": [],
         "delay": "0",
+        "description": "Optional Word PDF export",
+        "enabled": true,
+        "file_name": ["code_WORD_PDF.py"],
+        "id": "WORDPDF",
+        "type": "Code"
+    },
+    {
+        "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
         "id": "V2N2PW",
