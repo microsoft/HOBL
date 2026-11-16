@@ -1111,8 +1111,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7VE2F",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run_r1",
+        "id": "1Y2PHT5",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\word_add_paragraph_and_save",
         "params": [
             {
                 "name": "[short_typing]",
@@ -1144,8 +1144,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7VE76",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run_r1",
+        "id": "1Y2PFT9",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_export_to_pdf",
         "type": "Include"
     },
     {
@@ -1463,8 +1463,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7VPAL",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run_r2",
+        "id": "1Y2PK8W",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\word_find_and_replace",
         "type": "Include"
     },
     {
@@ -1489,8 +1489,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7VPH8",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run_r2",
+        "id": "1Y2PL8N",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_format_table_and_vlookup",
         "type": "Include"
     },
     {
@@ -1767,8 +1767,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7W2X8",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run_r3",
+        "id": "1Y2PM7R",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\word_undo_redo",
         "type": "Include"
     },
     {
@@ -1793,8 +1793,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7W31F",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run_r3",
+        "id": "1Y2PN2R",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_sort_table",
         "type": "Include"
     },
     {
@@ -1802,8 +1802,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7W33R",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run_r4",
+        "id": "1Y2PP6P",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_insert_pivot",
         "type": "Include"
     },
     {

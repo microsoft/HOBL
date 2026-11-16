@@ -7,7 +7,7 @@ from utilities.open_source.modules import import_run_user_only
 def run():
     Params.setCalculated('scenario_section', __package__.split('.')[-1])
     run_user_only()
-    Params.setDefault('prod_word_run_r1', 'short_typing', '0', desc='', valOptions=['0', '1'])
+    Params.setDefault('word_add_paragraph_and_save', 'short_typing', '0', desc='', valOptions=['0', '1'])
     return
 
 def run_user_only():
