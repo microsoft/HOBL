@@ -10,7 +10,7 @@ from . import default_params
 # Description:
 #   Automatically generated standard scenario.
 
-class ProdExcelRunR1(core.app_scenario.Scenario):
+class ExcelInsertPivot(core.app_scenario.Scenario):
     # Set default parameters:
     default_params.run()
 
@@ -18,7 +18,7 @@ class ProdExcelRunR1(core.app_scenario.Scenario):
 
     def setUp(self):
         # Load actions JSON.
-        actions_json = os.path.join(os.path.dirname(__file__), "prod_excel_run_r1.json")
+        actions_json = os.path.join(os.path.dirname(__file__), "excel_insert_pivot.json")
         self.actions = self.load_action_json(actions_json)
 
         # Execute Setup actions, if they exist
