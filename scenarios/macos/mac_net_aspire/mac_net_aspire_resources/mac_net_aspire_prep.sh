@@ -78,12 +78,28 @@ fi
 # ConfigurationSchema regeneration build. Rosetta lets the x86_64 protoc run
 # under emulation; protoc is a build-time codegen tool only and is not part of
 # the timed workload, so this does not affect benchmark results.
-log "-- Installing Rosetta 2"
-if /usr/bin/pgrep -q oahd; then
-    log "✓ Rosetta 2 already installed"
+log "-- Checking Rosetta 2"
+# oahd starts on demand, so its absence does not mean Rosetta is missing.
+if [ "$(uname -m)" != "arm64" ]; then
+    log "-- Rosetta 2 is not required on this architecture"
+elif arch -x86_64 /usr/bin/true >/dev/null 2>&1; then
+    log "✓ Rosetta 2 already available"
 else
-    sudo -A softwareupdate --install-rosetta --agree-to-license
-    check_status "Rosetta 2 installation"
+    log "-- Installing Rosetta 2"
+    if ROSETTA_INSTALL_OUTPUT=$(sudo -A /usr/sbin/softwareupdate --install-rosetta --agree-to-license 2>&1); then
+        ROSETTA_INSTALL_RC=0
+    else
+        ROSETTA_INSTALL_RC=$?
+    fi
+    log "$ROSETTA_INSTALL_OUTPUT"
+
+    if arch -x86_64 /usr/bin/true >/dev/null 2>&1; then
+        log "✓ Rosetta 2 verified (softwareupdate rc=$ROSETTA_INSTALL_RC)"
+    else
+        log " ERROR - Rosetta 2 is unavailable after installation (softwareupdate rc=$ROSETTA_INSTALL_RC)."
+        log " ERROR - Check the softwareupdate output above in $LOG_FILE, resolve the installation failure, and re-run prep."
+        exit 1
+    fi
 fi
 
 cd $BIN_DIR || {
