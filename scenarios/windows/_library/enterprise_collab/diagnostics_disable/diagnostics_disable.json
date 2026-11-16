@@ -32,27 +32,44 @@
         "description": "Account Section",
         "enabled": true,
         "file_name": [
-            "image_1ALL9MN.png"
+            "image_1NA0KEK.png"
         ],
-        "h": "0.144",
-        "id": "19X3TY0",
+        "h": "0.323",
+        "id": "1NA0KEK",
         "recapture": false,
         "type": "Capture",
-        "w": "0.073",
-        "x": "0.017",
-        "y": "0.779"
+        "w": "0.329",
+        "x": "0.001",
+        "y": "0.626"
     },
     {
-        "capture_id": "19X3TY0",
+        "capture_id": "1NA0KEK",
+        "children": [],
+        "delay": "1",
+        "description": "Wait for PowerPoint start screen (Account)",
+        "enabled": true,
+        "file_name": [
+            "image_1NA0KXT.png"
+        ],
+        "h": "0.323",
+        "id": "1XH35CH",
+        "timeout": "60",
+        "type": "Check Until Found",
+        "w": "0.329",
+        "x": "0.001",
+        "y": "0.626"
+    },
+    {
+        "capture_id": "1NA0KEK",
         "children": [],
         "delay": "2",
         "description": "",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1ALLJR1.png"
+            "image_1NA0KXT.png"
         ],
-        "id": "1ALLJR1",
+        "id": "1NA0KXT",
         "match_threshold": "",
         "primary": true,
         "scale": "",
@@ -77,17 +94,50 @@
         "y": "0.090"
     },
     {
-        "capture_id": "1CE9365",
+        "children": [],
+        "delay": "0.5",
+        "description": "",
+        "enabled": true,
+        "file_name": [
+            "image_1NA0LRM.png"
+        ],
+        "h": "0.398",
+        "id": "1NA0LRM",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.334",
+        "x": "0.001",
+        "y": "0.043"
+    },
+    {
+        "capture_id": "1NA0LRM",
+        "children": [],
+        "delay": "1",
+        "description": "Wait for Manage Settings",
+        "enabled": true,
+        "file_name": [
+            "image_1NA0NW0.png"
+        ],
+        "h": "0.398",
+        "id": "1XH35CJ",
+        "timeout": "30",
+        "type": "Check Until Found",
+        "w": "0.334",
+        "x": "0.001",
+        "y": "0.043"
+    },
+    {
+        "capture_id": "1NA0LRM",
         "children": [],
         "delay": "2",
         "description": "Manage Settings Button",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_19WRX02.png"
+            "image_1NA0NW0.png"
         ],
-        "id": "19WRX02",
-        "match_threshold": "0.5",
+        "id": "1NA0NW0",
+        "match_threshold": "",
         "primary": true,
         "scale": "",
         "type": "Click",
@@ -106,6 +156,23 @@
         "id": "1CE941M",
         "recapture": false,
         "type": "Capture",
+        "w": "0.845",
+        "x": "0.106",
+        "y": "0.060"
+    },
+    {
+        "capture_id": "1CE941M",
+        "children": [],
+        "delay": "1",
+        "description": "Wait for Privacy Settings dialog",
+        "enabled": true,
+        "file_name": [
+            "image_19WT4AP.png"
+        ],
+        "h": "0.879",
+        "id": "1XH35CK",
+        "timeout": "30",
+        "type": "Check Until Found",
         "w": "0.845",
         "x": "0.106",
         "y": "0.060"
@@ -197,11 +264,54 @@
     },
     {
         "children": [],
-        "delay": "0",
-        "description": "",
+        "delay": "0.5",
+        "description": "PowerPoint Close Button",
         "enabled": true,
-        "id": "19LU89C",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_close",
-        "type": "Include"
+        "file_name": [
+            "image_1XH3CK7.png"
+        ],
+        "h": "0.042",
+        "id": "1XH3CK7",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.032",
+        "x": "0.968",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "1XH3CK7",
+        "children": [],
+        "delay": "1",
+        "description": "Wait for PowerPoint Close Button",
+        "edge_thresholds": "30,100",
+        "enabled": true,
+        "file_name": [
+            "image_1XH3CK9.png"
+        ],
+        "h": "0.042",
+        "id": "1XH3CK8",
+        "timeout": "30",
+        "type": "Check Until Found",
+        "w": "0.032",
+        "x": "0.968",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "1XH3CK7",
+        "children": [],
+        "delay": "1",
+        "description": "PowerPoint Close Button",
+        "edge_thresholds": "30,100",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1XH3CK9.png"
+        ],
+        "id": "1XH3CK9",
+        "match_threshold": "",
+        "primary": true,
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     }
 ]

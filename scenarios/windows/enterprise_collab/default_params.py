@@ -20,8 +20,9 @@ def run():
     return
 
 def run_user_only():
+    import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_collect_logs')
+    import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_leave_meeting')
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_setup')
-    import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_teardown')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\timers_setup')
@@ -38,7 +39,8 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\web\\web_check')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_close_tabs')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_kill')
-    import_run_user_only('scenarios\\windows\\_library\\web\\web_run_12')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_setup')
     import_run_user_only('scenarios\\windows\\_library\\web\\web_switchto')
+    import_run_user_only('scenarios\\windows\\enterprise_collab\\lib\\ec_web_run')
+    Params.setUserDefault('teams', 'collect_MSTeams_Logs', '1', desc='Set to 1 to collect MS Teams logs of the meeting after exiting the meeting.', valOptions=['0', '1'])
     return
