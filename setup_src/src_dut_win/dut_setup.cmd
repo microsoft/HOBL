@@ -138,7 +138,7 @@ Powercfg -setactive scheme_current
 
 rem  Set screen brightness
 rem AC Brightness Level
-rem powercfg -SETACVALUEINDEX scheme_balanced SUB_VIDEO VIDEONORMALLEVEL 100
+rem powercfg -SETACVALUEINDEX scheme_balanced SUB_VIDEO VIDEONORMALLEVEL 65
 rem DC Brightness Level
 rem powercfg -SETDCVALUEINDEX scheme_balanced SUB_VIDEO VIDEONORMALLEVEL 65
 rem Select Correct Profile
@@ -155,13 +155,6 @@ rem regkey to set remote User Account Control (UAC)
 rem Prevent pen First Run Experience notification
 reg add HKCU\Software\Microsoft\Windows\CurrentVersion\PenWorkspace /v PenDetachFREComplete /t REG_DWORD /d 1 /f > null 2>&1
 
-rem Reg key to location services.  This is needed to be able to access Wi-Fi settings.
-reg add HKLM\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location /v Value /t REG_SZ /d Allow /f
-reg add HKCU\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location /v Value /t REG_SZ /d Allow /f
-reg add HKCU\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\NonPackaged /v Value /t REG_SZ /d Allow /f
-reg add HKCU\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location /v Value /t REG_SZ /d Allow /f
-reg add HKCU\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\NonPackaged /v Value /t REG_SZ /d Allow /f
-
 rem Reg key to enable develoger mode
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock /v AllowDevelopmentWithoutDevLicense /t REG_DWORD /d 1 /f
 rem timeout /t 2
@@ -173,6 +166,13 @@ reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\Sy
 
 rem if simpleremote is running, kill it
 taskkill /IM SimpleRemoteConsole.exe /f > null 2>&1
+
+rem Reg key to location services.  This is needed to be able to access Wi-Fi settings.
+reg add HKLM\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location /v Value /t REG_SZ /d Allow /f
+reg add HKCU\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location /v Value /t REG_SZ /d Allow /f
+reg add HKCU\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\NonPackaged /v Value /t REG_SZ /d Allow /f
+reg add HKCU\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location /v Value /t REG_SZ /d Allow /f
+reg add HKCU\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\NonPackaged /v Value /t REG_SZ /d Allow /f
 
 rem Attempt UI automation to enable location services
 echo Attempting UI automation for location services...
@@ -372,7 +372,7 @@ taskkill /IM systemsettings.exe /f
 
 
 rem Bypass feature to keep system from sleeping when using webdriver
-setx WEBDRIVER_USE_DEFAULT_APP_PROCESS_BEHAVIOR 1
+rem setx WEBDRIVER_USE_DEFAULT_APP_PROCESS_BEHAVIOR 1
 
 rem We only run the setup.exe from script (dut_setup or os_install scenario).  The dut_setup.exe expands simple remote directly to c:\hobl_bin on the DUT
 rem so this installer doesn't need to be executed when called from dut_setup.exe.
@@ -412,14 +412,14 @@ if "!dut_architecture!" EQU "arm64" (
 
 pwsh.exe -ExecutionPolicy Bypass -NoProfile %usb_drive%\%dut_setup_folder%\simple_remote_setup.ps1 -cmd_string !this_string! 
 netsh advfirewall firewall delete rule name="SimpleRemoteConsole TCP"
-netsh.exe advfirewall firewall add rule name="SimpleRemoteConsole TCP" program=!this_srs! dir=in action=allow enable=yes localport=any protocol=TCP profile=public,private,domain
+netsh advfirewall firewall add rule name="SimpleRemoteConsole TCP" program=!this_srs! dir=in action=allow enable=yes localport=any protocol=TCP profile=public,private,domain
 netsh advfirewall firewall delete rule name="SimpleRemoteConsole UDP"
-netsh.exe advfirewall firewall add rule name="SimpleRemoteConsole UDP" program=!this_srs! dir=in action=allow enable=yes localport=any protocol=UDP profile=public,private,domain
+netsh advfirewall firewall add rule name="SimpleRemoteConsole UDP" program=!this_srs! dir=in action=allow enable=yes localport=any protocol=UDP profile=public,private,domain
 
 netsh advfirewall firewall delete rule name="Allow 4723,17556,5901,8020"
-netsh.exe advfirewall firewall add rule name="Allow 4723,17556,5901,8020" dir=in action=allow enable=yes localport=4723,17556,5901,8020 protocol=TCP profile=public,private,domain
+netsh advfirewall firewall add rule name="Allow 4723,17556,5901,8020" dir=in action=allow enable=yes localport=4723,17556,5901,8020 protocol=TCP profile=public,private,domain
 netsh advfirewall firewall delete rule name="Allow ICMPv4"
-netsh.exe advfirewall firewall add rule name="Allow ICMPv4" dir=in action=allow enable=yes protocol=icmpv4:8,any profile=public,private,domain
+netsh advfirewall firewall add rule name="Allow ICMPv4" dir=in action=allow enable=yes protocol=icmpv4:8,any profile=public,private,domain
 
 if "%test_signing%" EQU "1" (
     Bcdedit.exe -set TESTSIGNING ON 

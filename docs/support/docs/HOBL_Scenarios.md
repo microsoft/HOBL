@@ -1,5 +1,99 @@
 # Scenarios
 
+## bldt_battery_life
+
+Run Intel's Battery Life assessment through HOBL.
+
+Intel workload: Battery Life records system activity and checks Windows for
+power-efficiency problems, then produces native HTML, JSON and ZIP reports.
+
+HOBL lifecycle:
+1. Before: validate the collection durations and detect the DUT power source;
+   install or discover BLDT, then enter HOBL's normal measured lifecycle.
+2. Run: invoke batteryLife with no charge threshold or collection delay and use
+   independent durations for SoCWatch and Energy Report collection.
+3. After: stage current native reports, shared HTML assets and execution logs;
+   HOBL teardown stops measurement and retrieves the DUT data.
+
+This scenario does not control the charger or require a minimum charge level.
+Success requires a zero BLDT exit code and at least one current native report,
+not that every Intel diagnostic finding passes.
+
+
+<u>Parameters:</u>
+
+`collection_duration` - Intel Battery Life SoCWatch collection duration in seconds (10-3600). **Default:** `600` 
+
+`energy_report_duration` - Intel Energy Report collection duration in seconds (10-3600). **Default:** `600` 
+
+## bldt_modern_standby
+
+Run Intel's Modern Standby assessment through HOBL.
+
+Intel workload: mosTest places the DUT into Modern Standby, gathers standby
+diagnostics and produces native reports including Windows Sleep Study.
+
+HOBL lifecycle:
+1. Before: validate the requested sleep duration, detect the DUT power source,
+   install or discover BLDT, and verify that an external host can wake the DUT.
+2. Run: start mosTest and leave the DUT undisturbed while the HOBL host sends one
+   wake pulse after the requested sleep duration plus Intel startup allowance.
+3. After: verify one complete standby interval, stage Intel's current reports and
+   shared assets, then let HOBL stop measurement and retrieve the DUT data.
+
+This scenario does not control the charger or require a minimum charge level.
+
+
+<u>Parameters:</u>
+
+`sleep_duration_minutes` - Required uninterrupted Modern Standby duration in minutes. **Default:** `20` 
+
+`sleep_study_days` - Number of days included in the native Windows Sleep Study report. **Default:** `1` 
+
+## bldt_sw_hygiene
+
+Run Intel's Software Hygiene assessment with optional native AI analysis.
+
+Intel workload: Software Hygiene records software and system activity that can
+affect battery life, then produces native HTML, JSON and ZIP reports.
+
+HOBL lifecycle:
+1. Before: validate the durations and detect the DUT power source. Prepare the
+   standard BLDT edition, or the AI edition only when AI analysis is requested.
+2. Run: invoke SWHygiene with no charge threshold or collection delay and use
+   independent durations for SoCWatch and Windows Performance Recorder. When
+   requested, run AIAnalysis on the generated JSON and collect its native reports.
+3. After: stop HOBL measurement and retrieve the staged reports and logs.
+
+This scenario does not control the charger or require a minimum charge level.
+
+
+<u>Parameters:</u>
+
+`collection_duration` - Intel Software Hygiene SoCWatch collection duration in seconds (10-3600). **Default:** `600` 
+
+`windows_performance_recorder_duration` - Intel Software Hygiene Windows Performance Recorder duration in seconds (10-3600). **Default:** `600` 
+
+`run_ai_analysis` - Run Intel AI analysis after the Software Hygiene collection (0 or 1). **Default:** `0`  **Options:** `0, 1`
+
+## bldt_sysconfig
+
+Intel's Battery Life Diagnostic Tool - System Config Checker.
+
+Intel workload: System Config examines configuration relevant to power efficiency
+and produces diagnostic findings in native HTML, JSON and ZIP reports.
+
+HOBL lifecycle:
+1. Before: refresh the DUT prep script, close existing BLDT sessions, and discover
+   either BLDT edition; install or repair only when needed.
+2. Run: invoke the discovered executable with the selected AC/DC assessment mode.
+   This scenario does not control the charger or use DAQ measurement.
+3. After: require fresh matching reports and stage them with shared HTML assets
+   and logs for host collection.
+
+No AI analysis or AI models are required.
+Success means complete execution and reports, not passing every Intel check.
+
 ## cinebench
 
 The Cinebench benchmark.
@@ -711,6 +805,17 @@ Teams is launched and then minimized to run in the background for the duration o
 
 `minimize_teams_only` -  **Default:** `0` 
 
+## upload
+
+Uploads a file or folder to the DUT
+
+
+<u>Parameters:</u>
+
+`source_path` - Source path (file or folder) **Default:** `` 
+
+`target_path` - Target folder (defaults to hobl_bin) **Default:** `` 
+
 ## youtube
 
 Plays a YouTube video in a web browser in Default View mode.
@@ -780,7 +885,7 @@ Local user is sharing desktop.
 
 <u>Parameters:</u>
 
-`meeting_time` - Set the time in minutes that the meeting can last up to. Default is 120min. **Default:** `120` 
+`meeting_time` - Set the time in minutes that the meeting can last up to. Default is 120min. **Default:** `0` 
 
 `access_key` - The access key for the Teams Bots Server. Contact HOBL Support to inquire for a key. **Default:** `-1` 
 
@@ -816,5 +921,25 @@ Local user is sharing desktop.
 
 `collect_MSTeams_Logs` - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. **Default:** `1`  **Options:** `0, 1`
 
-`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `0`  **Options:** `0, 1`
+`maintain_bots` - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. **Default:** `1`  **Options:** `0, 1`
+
+## mac_youtube
+
+Plays a YouTube video in a web browser in Default View mode.
+
+Steps:
+
+1. Navigate to Tears of Steel YouTube video URL: [youtu.be/41hv2tW5Lc4](https://youtu.be/41hv2tW5Lc4)
+2. Change video quality to 1080p.
+3. Let video play for specified duration and loops.
+4. Close web browser.
+
+
+<u>Parameters:</u>
+
+`duration` - Total scenario duration **Default:** `600` 
+
+`loop_duration` - YouTube video playback duration before looping (max 480s) **Default:** `300` 
+
+`full_screen` - Full Screen mode **Default:** `0`  **Options:** `0, 1`
 
