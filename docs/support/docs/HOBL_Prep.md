@@ -563,6 +563,40 @@ cmd.exe /C reg add "HKLM\\Software\\WOW6432Node\\Microsoft\\EdgeUpdateDev" /v Au
 cmd.exe /C reg add "HKLM\\Software\\WOW6432Node\\Microsoft\\EdgeUpdateDev" /v IsEnrolledToDomain /t REG_DWORD /d 1 /f
 ```
 
+## web_prep
+### Reset profile to default settings
+Differences in Home page and New Tab page layouts can have a significant impact, so to ensure consistency across users we revert to default settings.
+
+### Set cache clearing for "All time" and clear
+Because the web test loads the exact same web content over and over, it would get unrealistically high cache hit rates if we didn't clear the cache.  Instead, we achieve representative browser caching activity by going to the same sites multiple times with different content within the test.
+
+## office_install
+Office_install is part of the prep plans and installs the specified version of Microsoft 365.  Office makes frequent UI changes, so a given version of HOBL only supports a specific version of Office.  Office_install makes the following changes to the system:
+
+### Disable the activation nag so that the free trial can be used
+Note that this prevents the ability to manually activate.  If activation is needed, then run this office_install again with the "activate" parameter set to 1, which will revert this registry setting.
+```
+reg add HKLM\\SOFTWARE\\Microsoft\\Office\\16.0\\Common\\Licensing /v DisableActivationUI /t REG_DWORD /f /d 00000001
+reg add HKLM\\SOFTWARE\\Wow6432Node\\Microsoft\\Office\\16.0\\Common\\Licensing /v DisableActivationUI /t REG_DWORD /f /d 00000001
+```
+
+### Disable OneNote inking mode
+This is to get consistency between devices with pens and those without.
+```
+reg add HKCU\\SOFTWARE\\Microsoft\\Office\\16.0\\OneNote\\Options /v FullPageModeOnPenUndock /t REG_DWORD /f /d 00000000
+```
+
+### Force Fluent UI update
+This is to ensure consistent UI layout among users.
+```
+reg add HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\ExperimentEcs\\Overrides /v Microsoft.Office.UXPlatform.FluentSVRefresh /t REG_SZ /d true /f
+```
+
+### Use System Theme
+By default, make the office theme coincide with the system theme (light vs dark).  The office theme can be overriden in productivity_prep.
+```
+reg add "HKCU\\SOFTWARE\\Microsoft\\Office\\16.0\\Common" /v "UI Theme" /t REG_DWORD /d 6 /f
+```
 
 ## onedrive_prep
 ### Reset File Explorer navigation pane to default size, to facilitate UI automation
@@ -595,7 +629,6 @@ Uncheck "memories"
 Uncheck "removed from the cloud"
 ```
 
-
 ## productivity_prep
 Productivity_prep is part of the prep plans and prepares the Office apps, documents, and Outlook inbox for test.  Productivity_prep makes the following changes to the system:
 ### Pins Office icons to the task bar
@@ -626,30 +659,5 @@ reg add HKCU\Software\Microsoft\office\16.0\PowerPoint\options /v EnableSuggesti
 ## store_prep
 Store_prep is part of the prep plans and installs the latest app updates.  Afterwards, store_prep disables automatic app updates in the Settings menu to prevent updates from happening during test.
 
-## office_install
-Office_install is part of the prep plans and installs the specified version of Microsoft 365.  Office makes frequent UI changes, so a given version of HOBL only supports a specific version of Office.  Office_install makes the following changes to the system:
-
-### Disable the activation nag so that the free trial can be used
-Note that this prevents the ability to manually activate.  If activation is needed, then run this office_install again with the "activate" parameter set to 1, which will revert this registry setting.
-```
-reg add HKLM\\SOFTWARE\\Microsoft\\Office\\16.0\\Common\\Licensing /v DisableActivationUI /t REG_DWORD /f /d 00000001
-reg add HKLM\\SOFTWARE\\Wow6432Node\\Microsoft\\Office\\16.0\\Common\\Licensing /v DisableActivationUI /t REG_DWORD /f /d 00000001
-```
-
-### Disable OneNote inking mode
-This is to get consistency between devices with pens and those without.
-```
-reg add HKCU\\SOFTWARE\\Microsoft\\Office\\16.0\\OneNote\\Options /v FullPageModeOnPenUndock /t REG_DWORD /f /d 00000000
-```
-
-### Force Fluent UI update
-This is to ensure consistent UI layout among users.
-```
-reg add HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\ExperimentEcs\\Overrides /v Microsoft.Office.UXPlatform.FluentSVRefresh /t REG_SZ /d true /f
-```
-
-### Use System Theme
-By default, make the office theme coincide with the system theme (light vs dark).  The office theme can be overriden in productivity_prep.
-```
-reg add "HKCU\\SOFTWARE\\Microsoft\\Office\\16.0\\Common" /v "UI Theme" /t REG_DWORD /d 6 /f
-```
+## adaptive_color_disable
+"Adapative Color" is disabled in display settings because it can introduce variability due to the ambient light conditions that happen to be present during testing.
