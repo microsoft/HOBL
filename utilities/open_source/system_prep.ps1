@@ -9,7 +9,7 @@ param(
 
 Push-Location -Path (Split-Path $MyInvocation.MyCommand.Path -Parent)
 
-# Disable Surface telemetry service
+# Disable Surface telemetry service on pre-production devices, if it exists.
 sc.exe delete SurfaceDiagData
 
 # Disable sleep
@@ -81,7 +81,7 @@ $Style = 'Stretch'
 
 #  Set screen brightness
     # AC Brightness Level
-powercfg -SETACVALUEINDEX scheme_balanced SUB_VIDEO aded5e82-b909-4619-9949-f5d71dac0bcb 100
+powercfg -SETACVALUEINDEX scheme_balanced SUB_VIDEO aded5e82-b909-4619-9949-f5d71dac0bcb 65
     # DC Brightness Level
 powercfg -SETDCVALUEINDEX scheme_balanced SUB_VIDEO aded5e82-b909-4619-9949-f5d71dac0bcb 65
     # Select Correct Profile
