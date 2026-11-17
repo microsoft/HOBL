@@ -184,6 +184,7 @@
                 "children": [],
                 "delay": "2",
                 "description": "Uncheck Send Diagnostics",
+                "edge_thresholds": "30,100",
                 "enabled": true,
                 "exception_on": "No match",
                 "file_name": [
@@ -283,7 +284,7 @@
         "children": [],
         "delay": "1",
         "description": "Wait for PowerPoint Close Button",
-        "edge_thresholds": "30,100",
+        "edge_thresholds": "150,300",
         "enabled": true,
         "file_name": [
             "image_1XH3CK9.png"
@@ -301,7 +302,7 @@
         "children": [],
         "delay": "1",
         "description": "PowerPoint Close Button",
-        "edge_thresholds": "30,100",
+        "edge_thresholds": "150,300",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [

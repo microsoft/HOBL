@@ -94,21 +94,105 @@
         "y": "0.041"
     },
     {
-        "capture_id": "1NA08AX",
-        "children": [],
-        "delay": "1",
-        "description": "Wait for Manage Settings",
-        "enabled": true,
-        "file_name": [
-            "image_1NA0AUH.png"
+        "children": [
+            {
+                "capture_id": "1NA08AX",
+                "children": [],
+                "delay": "1",
+                "description": "Wait for Manage Settings",
+                "enabled": true,
+                "file_name": [
+                    "image_1NA0AUH.png"
+                ],
+                "h": "0.534",
+                "id": "1XH35CE",
+                "match_threshold": "0.85",
+                "timeout": "15",
+                "type": "Check Until Found",
+                "w": "0.320",
+                "x": "0.004",
+                "y": "0.041"
+            }
         ],
-        "h": "0.534",
-        "id": "1XH35CE",
-        "timeout": "30",
-        "type": "Check Until Found",
-        "w": "0.320",
-        "x": "0.004",
-        "y": "0.041"
+        "description": "Account click may only activate PowerPoint when another window is on top",
+        "enabled": true,
+        "id": "1XKNX01",
+        "type": "Try"
+    },
+    {
+        "children": [
+            {
+                "capture_id": "1NA076E",
+                "children": [],
+                "delay": "1",
+                "description": "Wait for Account (retry)",
+                "enabled": true,
+                "file_name": [
+                    "image_1NA07MV.png"
+                ],
+                "h": "0.312",
+                "id": "1XKNX02",
+                "timeout": "30",
+                "type": "Check Until Found",
+                "w": "0.351",
+                "x": "0.000",
+                "y": "0.643"
+            },
+            {
+                "capture_id": "1NA076E",
+                "children": [],
+                "delay": "2",
+                "description": "Account (retry)",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_1NA07MV.png"
+                ],
+                "id": "1XKNX03",
+                "match_threshold": "",
+                "primary": true,
+                "scale": "",
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            },
+            {
+                "capture_id": "1NA08AX",
+                "children": [],
+                "delay": "1",
+                "description": "Wait for Manage Settings (retry)",
+                "enabled": true,
+                "file_name": [
+                    "image_1NA0AUH.png"
+                ],
+                "h": "0.534",
+                "id": "1XKNX04",
+                "match_threshold": "0.85",
+                "timeout": "30",
+                "type": "Check Until Found",
+                "w": "0.320",
+                "x": "0.004",
+                "y": "0.041"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "1XKNX05",
+        "type": "Except"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1XKNX06",
+        "type": "On Success"
+    },
+    {
+        "children": [],
+        "description": "",
+        "enabled": true,
+        "id": "1XKNX07",
+        "type": "End Try"
     },
     {
         "capture_id": "1NA08AX",
@@ -267,7 +351,7 @@
         "children": [],
         "delay": "1",
         "description": "Wait for PowerPoint Close Button",
-        "edge_thresholds": "30,100",
+        "edge_thresholds": "150,300",
         "enabled": true,
         "file_name": [
             "image_1XH3CK6.png"
@@ -285,7 +369,7 @@
         "children": [],
         "delay": "1",
         "description": "PowerPoint Close Button",
-        "edge_thresholds": "30,100",
+        "edge_thresholds": "150,300",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
