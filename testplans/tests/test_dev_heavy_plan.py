@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = [
     "fast_api", "foundrylocal", "llvm", "mlperf", "net_aspire", "nodejs",
     "ollama", "opencv_build", "pytorch_inf", "spring_petclinic", "vscode",

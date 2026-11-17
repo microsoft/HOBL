@@ -2,12 +2,20 @@ import importlib
 import importlib.util
 from pathlib import Path
 import sys
+import shutil
+import subprocess
+import tempfile
 import types
 import unittest
 from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
+NAME = "mac_rust_analyzer_build"
+WORKLOAD = "rust_analyzer_build"
+PLATFORM = "MacOS"
+CLASS_NAME = "MacRustAnalyzerBuild"
+LAUNCHER = "invoke.sh"
 
 
 class Parameters:
@@ -60,17 +68,14 @@ class ScenarioTests(unittest.TestCase):
         self.modules = patch.dict(sys.modules, {"core": core, "core.app_scenario": app, "core.parameters": params})
         self.modules.start()
         self.addCleanup(self.modules.stop)
-        spec = importlib.util.spec_from_file_location("rust_scenario", ROOT / "scenario.py")
+        Parameters.values = {("global", "platform"): PLATFORM}
+        spec = importlib.util.spec_from_file_location(NAME, ROOT.parent / f"{NAME}.py")
         self.module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.module)
-        Parameters.values = {("global", "platform"): "Windows"}
 
-    def instance(self, workload="nushell_build", module=None, platform="Windows"):
-        name = module or workload
-        self.module.defaults(name)
+    def instance(self, platform=PLATFORM):
         Parameters.values[("global", "platform")] = platform
-        cls = type("Workload", (self.module.RustBuildScenario,), {"module": name, "workload": workload})
-        test = cls()
+        test = getattr(self.module, CLASS_NAME)()
         test.dut_exec_path = r"R:\custom tools\hobl_bin" if platform == "Windows" else "/tmp/custom tools/hobl_bin"
         test.dut_data_path = r"R:\custom data\hobl_data" if platform == "Windows" else "/tmp/custom data/hobl_data"
         test.result_dir = "results"
@@ -90,13 +95,16 @@ class ScenarioTests(unittest.TestCase):
         self.assertIn("measurement-stop", test.events)
         self.assertEqual(test.events[-1], "copy")
         uploads = [event[1] for event in test.events if isinstance(event, tuple) and event[0] == "upload"]
-        self.assertEqual(uploads, ["build.py", "invoke.ps1", "invoke.sh", "nushell_build.json"])
-        command = next(event for event in test.events if isinstance(event, list) and "-Phase run " in event[1])
-        self.assertIn(r'R:\custom tools\hobl_bin\nushell_build-work', command[1])
+        self.assertEqual(uploads, ["build.py", LAUNCHER, WORKLOAD + ".json"])
+        command = test.command("run")
+        self.assertIn(NAME + "-work", command[1])
+        self.assertIn(NAME + "_resources", command[1])
+        self.assertTrue(all(event[2].endswith(NAME + "_resources")
+                            for event in test.events if isinstance(event, tuple) and event[0] == "upload"))
 
     def test_prep_failure_does_not_start_measurement(self):
         test = self.instance()
-        test.fail_phase = "-Phase prep "
+        test.fail_phase = "prep "
         with self.assertRaisesRegex(RuntimeError, "original phase failure"):
             test.setUp()
         test.doCleanups()
@@ -111,55 +119,47 @@ class ScenarioTests(unittest.TestCase):
         self.assertEqual(test.events, [])
         test.doCleanups()
 
-    def test_distinct_workloads_and_mac_names_are_preserved(self):
-        first = self.instance()
-        first.setUp()
-        second = self.instance("rust_analyzer_build", "mac_rust_analyzer_build", "MacOS")
-        second.setUp()
-        windows = first.command("run")
-        mac = second.command("run")
-        self.assertIn("-Workload nushell_build", windows[1])
-        self.assertIn("-Scenario nushell_build", windows[1])
-        self.assertEqual(mac[0], "sh")
-        self.assertIn("run rust_analyzer_build mac_rust_analyzer_build", mac[1])
-        self.assertIn("mac_rust_analyzer_build-work", mac[1])
-        first.tearDown()
-        second.tearDown()
+    def test_package_discovers_one_workload_without_shared_resources(self):
+        spec = importlib.util.spec_from_file_location(
+            NAME, ROOT.parent / "__init__.py",
+            submodule_search_locations=[str(ROOT.parent)],
+        )
+        registration = importlib.util.module_from_spec(spec)
+        with patch.dict(sys.modules, {NAME: registration}):
+            spec.loader.exec_module(registration)
+            suite = unittest.defaultTestLoader.loadTestsFromModule(registration)
+            self.assertEqual(suite.countTestCases(), 1)
+            test = next(iter(next(iter(suite))))
+            self.assertEqual(test.module, NAME)
+            self.assertEqual(test.workload, WORKLOAD)
+            self.assertEqual(test.resources, NAME + "_resources")
 
-    def test_registered_modules_discover_one_independent_workload_each(self):
-        resources = types.ModuleType("scenarios.rust_build_resources")
-        resources.scenario = self.module
-        with patch.dict(sys.modules, {"scenarios.rust_build_resources": resources}):
-            for platform, prefix in (("windows", ""), ("macos", "mac_")):
-                for workload in ("rust_analyzer_build", "nushell_build"):
-                    name = prefix + workload
-                    with self.subTest(scenario=name):
-                        module_name = f"scenarios.{platform}.{name}"
-                        registration = importlib.import_module(module_name)
-                        suite = unittest.defaultTestLoader.loadTestsFromName(module_name)
-                        self.assertEqual(suite.countTestCases(), 1)
-                        test = next(iter(next(iter(suite))))
-                        if platform == "macos":
-                            implementation = importlib.import_module(f"{module_name}.{name}")
-                            self.assertIs(getattr(registration, type(test).__name__),
-                                          getattr(implementation, type(test).__name__))
-                        self.assertEqual(test.module, name)
-                        self.assertEqual(test.workload, workload)
-                        self.assertEqual(Parameters.get(name, "toolchain"), "1.100.0")
+    def test_scenario_runs_with_only_its_own_package_present(self):
+        with tempfile.TemporaryDirectory(prefix="hobl isolated scenario ") as directory:
+            package = Path(directory) / NAME
+            shutil.copytree(ROOT.parent, package, ignore=shutil.ignore_patterns("__pycache__"))
+            runner = package / ROOT.name / "tests" / "test_scenario.py"
+            result = subprocess.run(
+                [sys.executable, "-I", "-B", str(runner),
+                 "ScenarioTests.test_package_discovers_one_workload_without_shared_resources",
+                 "ScenarioTests.test_prep_precedes_measurement_and_teardown_is_idempotent"],
+                cwd=directory, capture_output=True, text=True, timeout=30,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_kill_suppresses_framework_process_name_fallback(self):
         test = self.instance()
-        test.fail_phase = "-Phase kill "
+        test.fail_phase = "kill "
         with self.assertLogs(level="ERROR"):
             self.assertEqual(test.kill(), 0)
 
     def test_run_failure_is_not_replaced_by_cleanup_failure(self):
         test = self.instance()
         test.setUp()
-        test.fail_phase = "-Phase run "
+        test.fail_phase = "run "
         with self.assertRaisesRegex(RuntimeError, "original phase failure"):
             test.runTest()
-        test.fail_phase = "-Phase teardown "
+        test.fail_phase = "teardown "
         with self.assertLogs(level="ERROR"):
             test.tearDown()
         self.assertIn("measurement-stop", test.events)
@@ -169,7 +169,7 @@ class ScenarioTests(unittest.TestCase):
         test = self.instance()
         test.setUp()
         test.runTest()
-        test.fail_phase = "-Phase teardown "
+        test.fail_phase = "teardown "
         with self.assertLogs(level="ERROR"), self.assertRaisesRegex(RuntimeError, "original phase failure"):
             test.tearDown()
         self.assertEqual(test.events[-1], "copy")

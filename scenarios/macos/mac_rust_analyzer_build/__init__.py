@@ -1,1 +1,1 @@
-from .mac_rust_analyzer_build import *
+from .mac_rust_analyzer_build import MacRustAnalyzerBuild

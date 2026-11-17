@@ -2,6 +2,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -17,6 +18,40 @@ SPEC.loader.exec_module(build)
 
 
 class BuildTests(unittest.TestCase):
+    def test_foreign_workload_is_rejected_before_prep(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [sys.executable, "-B", str(ROOT / "build.py"), "prep",
+                 "--workload", "other_workload", "--scenario", ROOT.parent.name,
+                 "--work-root", str(Path(directory) / "work"),
+                 "--data-dir", str(Path(directory) / "data")],
+                capture_output=True, text=True, timeout=30,
+            )
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn("invalid choice", result.stderr)
+            self.assertEqual(list(Path(directory).iterdir()), [])
+
+    @unittest.skipUnless(os.name == "nt" and shutil.which("pwsh"), "Windows launcher with PowerShell")
+    def test_private_launcher_resolves_its_own_engine_and_recipe(self):
+        with tempfile.TemporaryDirectory(prefix="hobl isolated launcher ") as directory:
+            root = Path(directory)
+            resources = root / ROOT.name
+            resources.mkdir()
+            workload = build.WORKLOADS[0]
+            for name in ("build.py", "invoke.ps1", workload + ".json"):
+                shutil.copyfile(ROOT / name, resources / name)
+            result = subprocess.run(
+                ["pwsh", "-NoProfile", "-NonInteractive", "-File", str(resources / "invoke.ps1"),
+                 "-Phase", "prep", "-Workload", workload, "-Scenario", ROOT.parent.name,
+                 "-PythonExe", sys.executable, "-Toolchain", "invalid",
+                 "-WorkRoot", str(root / "work"), "-DataDir", str(root / "data")],
+                capture_output=True, text=True, timeout=60,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("toolchain must be an exact stable release", result.stdout + result.stderr)
+            self.assertTrue((resources / ".venvs" / ROOT.parent.name / "Scripts" / "python.exe").is_file())
+            self.assertFalse((root / "work").exists())
+
     def test_linux_prep_rejected_before_creating_resources(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -81,7 +116,7 @@ class BuildTests(unittest.TestCase):
                 build.remove_target(root, "nushell_build")
             build.write_json(root / ".hobl-rust-workload.json", {"workload": "nushell_build"})
             with self.assertRaises(RuntimeError):
-                build.remove_target(root, "rust_analyzer_build")
+                build.remove_target(root, "unrelated_workload")
             build.remove_target(root, "nushell_build")
             build.remove_target(root, "nushell_build")
             self.assertTrue((root / "source").is_dir())

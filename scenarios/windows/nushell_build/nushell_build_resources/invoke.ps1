@@ -3,7 +3,7 @@
 #Requires -Version 7.2
 param(
     [Parameter(Mandatory)][ValidateSet('prep', 'run', 'teardown', 'kill')][string]$Phase,
-    [Parameter(Mandatory)][ValidateSet('rust_analyzer_build', 'nushell_build')][string]$Workload,
+    [Parameter(Mandatory)][ValidateSet('nushell_build')][string]$Workload,
     [Parameter(Mandatory)][string]$Scenario,
     [string]$WorkRoot = '',
     [string]$DataDir = '',
@@ -15,7 +15,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 try {
-    if ($Scenario -notmatch '^(mac_)?(rust_analyzer_build|nushell_build)$') {
+    if ($Scenario -cne 'nushell_build') {
         throw 'Invalid scenario name.'
     }
     $scriptDrive = Split-Path -Qualifier $PSScriptRoot

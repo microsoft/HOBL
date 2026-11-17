@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root.
 
-"""Clean, offline Cargo release builds, shared by two independent HOBL workloads."""
+"""Clean, offline Cargo release builds for mac_nushell_build."""
 
 import argparse
 import contextlib
@@ -21,7 +21,7 @@ import tomllib
 import uuid
 
 
-WORKLOADS = ("rust_analyzer_build", "nushell_build")
+WORKLOADS = ("nushell_build",)
 
 
 def digest(path):
@@ -397,7 +397,7 @@ def main():
     parser.add_argument("--timeout", type=int, default=2400)
     parser.add_argument("--sample", type=int, default=1)
     args = parser.parse_args()
-    if not re.fullmatch(r"(?:mac_)?(?:rust_analyzer_build|nushell_build)", args.scenario):
+    if args.scenario != "mac_nushell_build":
         parser.error("scenario must be one of the registered HOBL scenario names")
     if not 0 <= args.jobs <= 4096 or not 1 <= args.timeout <= 2400 or args.sample < 1:
         parser.error("invalid jobs, timeout or sample")
