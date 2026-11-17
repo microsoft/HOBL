@@ -93,21 +93,6 @@
             <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x00000836" />
           </Stop>
         </Region>
-        <Region Guid="{5ceca737-a752-5994-1e8a-e5f6f78bd44a}" Name="SaveStart_SaveEnd" FriendlyName="Save">
-          <Match>
-            <Event TID="true" PID="true">
-              <Payload FieldName="dwModuleId" TargetFieldName="dwModuleId" />
-            </Event>
-          </Match>
-          <Start>
-            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
-            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fb" />
-          </Start>
-          <Stop>
-            <Event Provider="{8736922d-e8b2-47eb-8564-23e77e728cf3}" Id="6" />
-            <PayloadIdentifier FieldName="dwCodeMarker" FieldValue="0x000001fc" />
-          </Stop>
-        </Region>
         <Region Guid="{05fec1bc-459e-4ef0-9ced-63a32409ed45}" Name="OpenStart_OpenEnd" FriendlyName="Open">
           <Match>
             <Event TID="true" PID="true">
