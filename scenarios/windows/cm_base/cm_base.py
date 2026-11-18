@@ -54,16 +54,51 @@ class CmBase(core.app_scenario.Scenario):
 
 
     def tearDown(self):
-        # Call base class tearDown() to stop measurment, copy back data from DUT, and call tool callbacks
-        core.app_scenario.Scenario.tearDown(self)
-
-        # Execute Teardown actions, if they exist
-        teardown_action = self._find_next_type("Teardown", json=self.actions)
-        if teardown_action is not None:
-            self.run_actions(teardown_action["children"])
+        try:
+            # Stop measurement before closing applications.
+            core.app_scenario.Scenario.tearDown(self)
+            teardown_action = self._find_next_type("Teardown", json=self.actions)
+            if teardown_action is not None:
+                self.run_actions(teardown_action["children"])
+        finally:
+            self.kill()
 
 
     def kill(self):
+        """Clean up after any stopping point, including failed setup or teardown."""
+        cleanup_steps = [
+            ("dismiss Start menu and overlays", lambda: self._send_text("\ue00c\ue00c")),
+            # Close folder windows without terminating the Explorer desktop shell.
+            ("close File Explorer windows", lambda: self._call([
+                "powershell.exe",
+                '-NoProfile -Command "$ErrorActionPreference = \'Stop\'; '
+                '$shell = New-Object -ComObject Shell.Application; '
+                '@($shell.Windows()) | ForEach-Object { '
+                'if ([System.IO.Path]::GetFileName($_.FullName) -ieq \'explorer.exe\') '
+                '{ $_.Quit() } }"'
+            ])),
+            ("close Task Manager", lambda: self._kill("Taskmgr.exe")),
+            ("close Snipping Tool", lambda: self._kill("SnippingTool.exe")),
+            ("close workload applications", self._kill_applications),
+            ("restore perf configuration", self._perf_teardown),
+        ]
+        for description, cleanup in cleanup_steps:
+            try:
+                cleanup()
+            except Exception:
+                logging.exception("cm_base cleanup failed: %s", description)
+
+
+    def _perf_teardown(self):
+        if Params.get(self.module, "perf_run") == "1":
+            path = os.path.join(
+                os.path.dirname(__file__), "..", "_library", "enterprise_collab",
+                "perf_teardown", "perf_teardown.json"
+            )
+            self.run_actions(self.load_action_json(path))
+
+
+    def _kill_applications(self):
         # In case of scenario failure or termination, kill any applications left open here:
 
         #Kill teams related processes
@@ -112,7 +147,10 @@ class CmBase(core.app_scenario.Scenario):
             pass
 
         time.sleep(3)
-        self._web_replay_kill()
+        try:
+            self._web_replay_kill()
+        except Exception:
+            logging.exception("cm_base cleanup failed: stop web replay")
 
         time.sleep(3)
         #Kill Timers
