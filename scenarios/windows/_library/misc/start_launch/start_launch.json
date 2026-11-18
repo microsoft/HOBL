@@ -1,10 +1,10 @@
 [
     {
         "author": "dasashutosh",
-        "capture_device": "",
+        "capture_device": "HP Omnibook X 14inch",
         "children": [],
         "create_date": "2026-05-06",
-        "description": "",
+        "description": "Start Menu Launch",
         "enabled": true,
         "id": "1L9NLAK",
         "type": "Information"
