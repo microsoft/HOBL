@@ -1,10 +1,10 @@
 [
     {
         "author": "dasashutosh",
-        "capture_device": "",
+        "capture_device": "HP-Chirahu-16inch",
         "children": [],
-        "create_date": "2025-12-02",
-        "description": "Consumer Multitasker v0.9",
+        "create_date": "2026-10-02",
+        "description": "Consumer Multitasker v1.0",
         "enabled": true,
         "id": "19K3NWN",
         "type": "Information"
