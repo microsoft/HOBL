@@ -20,12 +20,19 @@
     },
     {
         "children": [],
-        "delay": "0",
-        "description": "",
+        "delay": "0.5",
+        "description": "Start Button Region",
         "enabled": true,
-        "id": "1L9NLEY",
-        "include_path": "scenarios\\windows\\_library\\misc\\capture_taskbar",
-        "type": "Include"
+        "file_name": [
+            "image_1Y60UEL.png"
+        ],
+        "h": "0.132",
+        "id": "1Y60UEL",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.162",
+        "x": "0.000",
+        "y": "0.868"
     },
     {
         "children": [],
@@ -44,7 +51,7 @@
         "type": "Include"
     },
     {
-        "capture_id": "TYH95X",
+        "capture_id": "1Y60UEL",
         "children": [],
         "delay": "2",
         "description": "Start Button",
