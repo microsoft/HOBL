@@ -12,6 +12,7 @@ import logging
 import core.app_scenario
 from core.parameters import Params
 import os
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 import time
@@ -38,7 +39,8 @@ class ProductivityPrep(core.app_scenario.Scenario):
     word_untrusted_doc = "Test-Scrolling-3d.docx"
     ppt_doc = "sample.pptx"
 
-    outlook_driver = None
+    # outlook_driver = None
+    outlook_new_driver = None
     onenote_driver = None
     word_driver = None
     excel_driver = None
@@ -119,10 +121,10 @@ class ProductivityPrep(core.app_scenario.Scenario):
         self._call(["cmd.exe", f'/C reg add "{key}" /v "AutoSaveToggleOnPPT" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "AutoSaveToggleOnWord" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "CloudSettingsSyncTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "FocusedInboxTeachingCallout_2" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "HubBarTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "MessageExtensionsTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "Olk_SearchBoxTitleBar_SLR_Sequence" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "FocusedInboxTeachingCallout_2" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "HubBarTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "MessageExtensionsTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "Olk_SearchBoxTitleBar_SLR_Sequence" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "OneNoteFullPageViewButtonCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "OneNoteInkCalloutId" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "OneNoteModernLayoutVerticalCollapsedStateSequence" /t REG_DWORD /d 2 /f > null 2>&1'])
@@ -130,11 +132,11 @@ class ProductivityPrep(core.app_scenario.Scenario):
         self._call(["cmd.exe", f'/C reg add "{key}" /v "PPT_InsertCameo_Callout" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "PPT_RecordVideoPresentation_Callout" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "RibbonOverflowTeachingCalloutID" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "RoamingSigTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "SLRToggleReplaceTeachingCalloutID" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "TryNewOutlookToggle" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "UseTighterSpacingTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
-        self._call(["cmd.exe", f'/C reg add "{key}" /v "UseToDoAppTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "RoamingSigTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "SLRToggleReplaceTeachingCalloutID" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "TryNewOutlookToggle" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "UseTighterSpacingTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
+        # self._call(["cmd.exe", f'/C reg add "{key}" /v "UseToDoAppTeachingCallout" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "VersionHistoryRenameCalloutExcel" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "VersionHistoryRenameCalloutPPT" /t REG_DWORD /d 2 /f > null 2>&1'])
         self._call(["cmd.exe", f'/C reg add "{key}" /v "VersionHistoryRenameCalloutWord" /t REG_DWORD /d 2 /f > null 2>&1'])
@@ -231,63 +233,77 @@ class ProductivityPrep(core.app_scenario.Scenario):
         ActionChains(self.desktop).send_keys(Keys.ESCAPE).perform()
         time.sleep(2)
 
-        # Unpin the new Outlook, if it exists
+        # Unpin Outlook (classic), if it exists
         try:
-            logging.info("Checking for 'Outlook (new)'.")
-            icon = self._get_app_tray(self.desktop).find_element_by_name("Outlook (new)")
+            logging.info("Checking for 'Outlook (classic)'.")
+            icon = self._get_app_tray(self.desktop).find_element_by_name("Outlook (classic)")
         except Exception as e1:
             try:
-                logging.info("Name not found, checking for Outlook by AutomationId")
-                icon = self._get_app_tray(self.desktop).find_element_by_accessibility_id("Appid: Microsoft.OutlookForWindows_8wekyb3d8bbwe!Microsoft.OutlookforWindows")
+                logging.info("Name not found, checking for Outlook (classic) by AutomationId")
+                icon = self._get_app_tray(self.desktop).find_element_by_accessibility_id("Appid: Microsoft.Office.OUTLOOK.EXE.15")
             except Exception as e2:
-                logging.info("Neither Outlook (New) not AutomationId variant found")
+                logging.info("Neither Outlook (classic) name nor AutomationId variant found")
                 icon = None
         if icon:
             try:
                 time.sleep(3)
                 ActionChains(self.desktop).move_to_element(icon).context_click().perform()
                 time.sleep(3)
-                logging.info("Unpinning Outlook.")
+                logging.info("Unpinning Outlook (classic).")
                 self.desktop.find_element_by_name("Unpin from taskbar").click()
                 time.sleep(1)
             except Exception as e3:
-                logging.warning("Failed to unpin Outlook: %s", str(e3))
+                logging.warning("Failed to unpin Outlook (classic): %s", str(e3))
+        ActionChains(self.desktop).send_keys(Keys.ESCAPE).perform()
         pass
         # New method, avoiding use of unreliable Start menu
         # Check for pinned apps
-        for app in ["Outlook (classic)", "Word", "OneNote", "PowerPoint", "Excel"]:
+        for app in ["Outlook (new)", "Word", "OneNote", "PowerPoint", "Excel"]:
+            if app == "Outlook (new)":
+                app_id = "Microsoft.OutlookForWindows_8wekyb3d8bbwe!Microsoft.OutlookforWindows"
+                app_cmd = f'explorer.exe "shell:AppsFolder\\{app_id}"'
+            else:
+                app_cmd = app.upper()
+                if app == "Word":
+                    app_cmd = "WINWORD"
+                elif app == "PowerPoint":
+                    app_cmd = "POWERPNT"
+                app_cmd += ".EXE"
+                app_id = "Microsoft.Office." + app_cmd + ".15"
             try:
-                app_elem = self._get_app_tray(self.desktop).find_element_by_name(app)
-                logging.info(app + " already pinned.")
+                if app == "Outlook (new)":
+                    app_elem = self._get_app_tray(self.desktop).find_element_by_accessibility_id("Appid: " + app_id)
+                else:
+                    app_elem = self._get_app_tray(self.desktop).find_element_by_name(app)
             except:
                 try:
-                    app_cmd = app.upper()
-                    if app == "Word":
-                        app_cmd = "WINWORD"
-                    elif app == "PowerPoint":
-                        app_cmd = "POWERPNT"
-                    elif app == "Outlook (classic)":
-                        app_cmd = "OUTLOOK"
-                    app_cmd = app_cmd + ".EXE" 
                     try:
-                        app_elem = self.desktop.find_element_by_accessibility_id("Appid: Microsoft.Office." + app_cmd + ".15")
+                        app_elem = self.desktop.find_element_by_accessibility_id("Appid: " + app_id)
                     except:
-                        app_elem = self.desktop.find_element_by_accessibility_id("Microsoft.Office." + app_cmd + ".15")
+                        app_elem = self.desktop.find_element_by_accessibility_id(app_id)
                 except:
                     app_elem = None
             if app_elem:
+                if app == "Outlook (new)":
+                    ActionChains(self.desktop).move_to_element(app_elem).context_click().perform()
+                    time.sleep(3)
+                    try:
+                        self.desktop.find_element_by_name("Unpin from taskbar")
+                    except:
+                        self.desktop.find_element_by_name("Pin to taskbar").click()
+                    ActionChains(self.desktop).send_keys(Keys.ESCAPE).perform()
                 logging.info(app + " already pinned.")
                 continue
 
-            self._call(["cmd.exe", "/C start " + app_cmd], blocking=False)
+            self._call(["cmd.exe", '/C start "" ' + app_cmd], blocking=False)
             time.sleep(10)
             if app == "OneNote":
                 time.sleep(10)
 
             try:
-                icon = self.desktop.find_element_by_accessibility_id("Appid: Microsoft.Office." + app_cmd + ".15")
+                icon = self.desktop.find_element_by_accessibility_id("Appid: " + app_id)
             except:
-                icon = self.desktop.find_element_by_accessibility_id("Microsoft.Office." + app_cmd + ".15")
+                icon = self.desktop.find_element_by_accessibility_id(app_id)
 
             ActionChains(self.desktop).move_to_element(icon).context_click().perform()
             time.sleep(3)
@@ -335,362 +351,737 @@ class ProductivityPrep(core.app_scenario.Scenario):
                 # self.desktop.find_element_by_name("Pin to taskbar").click()
 
         # Kill all the apps because the popups are too hard to deal with when all apps are open
-        self._kill("Outlook.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe")
-
+        # self._kill("Outlook.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe")
+        self._kill("olk.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe")
 
         ##############################
-        # Outlook
+        # Outlook (new)
         ##############################
 
-        self.launchOrSwitchApp(self.desktop, "Outlook")
-        logging.info("Waiting 20s for Outlook to fully open.")
-        time.sleep(20)
-        self.desktop = self._launchApp(desired_caps)
-        # self.desktop.implicitly_wait(5)
-        max_loops = 30
-        for x in range(max_loops):
-            open_windows = 0
+        self.launchOrSwitchApp(self.desktop, "Outlook (new)")
+        logging.info("Waiting for the Outlook (new) main window.")
 
+        def outlook_window_handle(_):
+            result = self._call([
+                "powershell.exe",
+                '-NoProfile -NonInteractive -Command "$processes = @(Get-Process -Name olk '
+                '-ErrorAction SilentlyContinue); foreach ($process in $processes) { '
+                '$handle = $process.MainWindowHandle.ToInt64(); '
+                'if ($handle -ne 0) { $handle } }; exit 0"'
+            ], timeout=15, log_output=False)
+            handles = {int(line.strip()) for line in result.splitlines()
+                       if line.strip().isdigit() and int(line.strip()) != 0}
+            if len(handles) > 1:
+                raise RuntimeError("Multiple Outlook (new) main windows found. Close extra windows and rerun prep.")
+            return next(iter(handles), None)
+
+        try:
+            handle = WebDriverWait(self.desktop, 120, poll_frequency=2).until(outlook_window_handle)
+        except TimeoutException as exc:
+            raise RuntimeError(
+                "Outlook (new) launch timed out: no olk.exe main window handle was found. "
+                "Verify Outlook (new) opens under the DUT account used by HOBL and inspect "
+                "outlook_new_launch.xml in the run results.") from exc
+        finally:
             try:
-                logging.info("Checking reopen item prompt")
-                self.desktop.find_element_by_name('No').click()
-                time.sleep(3)
-            except:
-                pass
+                self._page_source(self.desktop, name="outlook_new_launch")
+            except Exception:
+                logging.warning("Could not save the Outlook (new) launch XML.")
 
-            try:
-                logging.info("Checking for Theme popup")
-                self.desktop.find_element_by_xpath('//*[contains(@Name, "Choose a theme")]')
-                self.desktop.find_element_by_name('OK').click()
-                logging.info("Clicked OK on Theme popup.")
-                time.sleep(3)
-            except:
-                pass
-
-            try:
-                logging.info("Checking for Got it")
-                self.desktop.find_element_by_name('Got it').click()
-                time.sleep(3)
-            except:
-                pass
-
-            try:
-                logging.info("Checking for 'Microsoft respects your privacy'")
-                win = self.desktop.find_element_by_name('Microsoft respects your privacy')
-                win.find_element_by_name("Next").click()
-                time.sleep(3)
-            except:
-                pass
-
-            # Check for copilot popup
-            try:
-                logging.info("Checking for Copilot popup")
-                self.desktop.find_element_by_xpath('//*[contains(@Name, "Copilot included")]')
-                try:
-                    self.desktop.find_element_by_name('Got it').click()
-                    logging.info("Clicked 'Got it' on Copilot popup.")
-                    time.sleep(3)
-                except:
-                    self.desktop.find_element_by_name('Close').click()
-                    logging.info("Clicked 'Close' on Copilot popup.")
-                    time.sleep(3)
-            except:
-                pass
-
-            try:
-                logging.info("Checking for privacy pop up")
-                self.desktop.find_element_by_name('Getting better together')
-            except:
-                pass
-            else:
-                # Click "Don't send optional data"
-                # self.desktop.find_element_by_name("Don't send").click()
-                self.desktop.find_element_by_xpath('//Button[contains(@Name, "t send")]').click()
-                time.sleep(2)
-
-            try:
-                logging.info("Checking for 'Powering your experiences'")
-                self.desktop.find_element_by_name('Powering your experiences')
-            except:
-                pass
-            else:
-                self.desktop.find_element_by_name("Done").click()
-                time.sleep(2)
-
-
-            try:
-                logging.info("Checking for Privacy option")
-                win = self.desktop.find_element_by_name('Your privacy option')
-                win.find_element_by_name("Close").click()
-                time.sleep(3)
-            except:
-                pass
-
-            try:
-                logging.info("Checking for Privacy matters")
-                win = self.desktop.find_element_by_name('Your privacy matters')
-                win.find_element_by_name("Close").click()
-                time.sleep(3)
-            except:
-                pass
-
-            try:
-                logging.info("Checking for Privacy Settings Applied")
-                win = self.desktop.find_element_by_name('Privacy Settings Applied')
-                win.find_element_by_name("OK").click()
-            except:
-                pass
-
-            try:
-                logging.info("Checking for safe mode pop up")
-                self.desktop.find_element_by_xpath('//*[contains(@Name, "safe mode")]')
-            except:
-                pass
-            else:
-                logging.info("Safe mode window is present")
-                open_windows += 1
-                self.desktop.find_element_by_name("No").click()
-                time.sleep(3)
-
-            try:
-                logging.info("Checking for 'Don't personalize' button")
-                self.desktop.find_element_by_name("Don't personalize").click()
-                time.sleep(3)
-            except:
-                pass
-
-            try:
-                logging.info("Checking for 'cutting edge' pop up")
-                cutting_edge = self.desktop.find_element_by_name("You're on the cutting edge")
-            except:
-                pass
-            else:
-                logging.info("'Cutting edge' window is present")
-                open_windows += 1
-                cutting_edge.find_element_by_name("Close").click()
-                time.sleep(3)
-
-            try:
-                logging.info("Checking for 'Get started' pop up")
-                get_started = self.desktop.find_element_by_name("Get started")
-            except:
-                pass
-            else:
-                logging.info("'Get started' window is present")
-                open_windows += 1
-                get_started.find_element_by_name("Get started").click()
-                time.sleep(3)
-
-            if self.fast_mode != '0':
-                break
-
-            try:
-                logging.info("Checking if we need to setup the account")
-                self.desktop.find_element_by_name("Outlook")
-                self.desktop.find_element_by_name("Advanced options collapsed")
-                self.desktop.find_element_by_name("Connect")
-            except:
-                pass
-            else:
-                logging.info("Account setup window is present")
-                open_windows += 1
-                ActionChains(self.desktop).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(self.email_account).perform()
-                # ActionChains(self.desktop).send_keys(Keys.TAB).send_keys(Keys.TAB).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(self.email_account).perform()
-                self.desktop.find_element_by_name("Connect").click()
-                time.sleep(10)
-                ActionChains(self.desktop).send_keys(self.password).send_keys(Keys.ENTER).perform()
-                time.sleep(5)
-                ActionChains(self.desktop).send_keys(Keys.ENTER).perform()
-                time.sleep(10)
-            
-            try:
-                logging.info("Checking problem with account")
-                self.desktop.find_element_by_name("Retry").click()
-                logging.info("Problem with account is present")
-                time.sleep(10)
-            except:
-                pass
-
-            try:
-                # If Retry, probably need to enter email again
-                logging.info("Checking Sign in")
-                self.desktop.find_element_by_name("Sign in")
-            except:
-                pass
-            else:
-                logging.info("Sign in window is present")
-                open_windows += 1
-                ActionChains(self.desktop).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(self.email_account).perform()
-                # ActionChains(self.desktop).send_keys(Keys.TAB).send_keys(Keys.TAB).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(self.email_account).perform()
-                self.desktop.find_element_by_name("Next").click()
-                time.sleep(7)
-                ActionChains(self.desktop).send_keys(self.password).send_keys(Keys.ENTER).perform()
-                time.sleep(5)
-                ActionChains(self.desktop).send_keys(Keys.ENTER).perform()
-                time.sleep(10)
-
-            try:
-                logging.info("Checking for Windows Security")
-                self.desktop.find_element_by_name('Windows Security')
-            except:
-                pass
-            else:
-                logging.info("Security window is present")
-                open_windows += 1
-                password_field = self.desktop.find_element_by_name("Password")
-                password_field.click()
-                password_field.send_keys(self.email_password)
-                time.sleep(1)
-                self.desktop.find_element_by_name("Remember my credentials").click()
-                time.sleep(1)
-                self.desktop.find_element_by_name("OK").click()
-                time.sleep(1)
-
-            try:
-                logging.info("Checking for Enter Password")
-                self.desktop.find_element_by_name('Enter Password')
-            except:
-                pass
-            else:
-                logging.info("Password window is present")
-                open_windows += 1
-                password_field = self.desktop.find_element_by_name("Password")
-                password_field.click()
-                password_field.send_keys(self.email_password)
-                time.sleep(1)
-                self.desktop.find_element_by_name("Remember my credentials").click()
-                time.sleep(1)
-                self.desktop.find_element_by_name("OK").click()
-                time.sleep(1)
-
-            try:
-                logging.info("Checking for Advanced Setup")
-                WebDriverWait(self.desktop, 20).until(EC.presence_of_element_located((By.NAME,'Advanced setup')))
-            except:
-                pass
-            else:
-                logging.info("Advanced setup is present")
-                open_windows += 1
-                self.desktop.find_element_by_name("Microsoft 365").click()
-                time.sleep(5)
-
-            try:
-                logging.info("Checking for Account is added window")
-                # Uncheck setup outlook mobile
-                phone_elem = WebDriverWait(self.desktop, 20).until(EC.presence_of_element_located((By.NAME,"Set up Outlook Mobile on my phone, too")))
-                if phone_elem.is_selected():
-                    phone_elem.click()
-                    time.sleep(1)
-                else:
-                    logging.info("Set up Outlook Mobile is already unchecked")
-            except:
-                pass
-            else:
-                logging.info("Account is added window is present")
-                open_windows += 1
-                self.desktop.find_element_by_name("Done").click()
-                time.sleep(20) # Wait for outlook to fully launch
-
-            # Check for copilot popup
-            try:
-                logging.info("Checking for Copilot popup")
-                self.desktop.find_element_by_xpath('//*[contains(@Name, "Copilot included")]')
-                try:
-                    self.desktop.find_element_by_name('Got it').click()
-                    logging.info("Clicked 'Got it' on Copilot popup.")
-                    time.sleep(3)
-                except:
-                    self.desktop.find_element_by_name('Close').click()
-                    logging.info("Clicked 'Close' on Copilot popup.")
-                    time.sleep(3)
-            except:
-                pass
-            
-            # Check for Theme popup
-            try:
-                logging.info("Checking for Theme popup")
-                self.desktop.find_element_by_xpath('//*[contains(@Name, "Choose a theme")]')
-                self.desktop.find_element_by_name('OK').click()
-                logging.info("Clicked OK on Theme popup.")
-                time.sleep(3)
-            except:
-                pass
-            else:
-                open_windows += 1
-
-            if open_windows == 0:
-                break
-
-        # fail the test if it gets to the end of the last iteration without meeting the conditions to break out
-        if x >= max_loops-1:
-            logging.error(f"Unable to dismiss all popups in {max_loops} iterations.  Check video or failedscreen.png for something that needs to be manually dismissed.")
-            self.fail()
+        win_handle = format(handle, "x")
+        logging.info("Attaching to Outlook (new) window: %s", win_handle)
+        self.outlook_new_driver = self._launchApp(
+            {"appTopLevelWindow": win_handle}, track_driver=False)
+        self.outlook_new_driver.switch_to_window(win_handle)
+        self.outlook_new_driver.maximize_window()
+        self._page_source(self.outlook_new_driver, name="outlook_new_window")
+        logging.info("Outlook (new) window attached and maximized.")
 
         if self.fast_mode == '0':
-            win = WebDriverWait(self.desktop, 120).until(EC.presence_of_element_located((By.CLASS_NAME,'rctrl_renwnd32')))
-            self.outlook_driver = self.getDriverFromWin(win)
+            logging.info("Checking Outlook (new) account setup.")
+            driver = self.outlook_new_driver
+            reopen_prompt = (
+                By.XPATH, "//Window[@Name='Outlook closed while you had items open']"
+                "//Button[@Name='No']"
+            )
+            try:
+                WebDriverWait(driver, 5).until(
+                    EC.element_to_be_clickable(reopen_prompt)).click()
+                logging.info("Declined reopening Outlook (new) items from the last session.")
+            except TimeoutException:
+                logging.info("Outlook (new) reopen-items prompt is not visible; skipping.")
+            onboarding_pages = {
+                "Microsoft respects your privacy": "outlook_new_privacy_next",
+                "Getting better together": "outlook_new_diagnostics_next",
+                "Powering your experiences": "outlook_new_experiences_next",
+                "Welcome to the new Outlook": "outlook_new_onboarding_next",
+            }
+            welcome_tour_heading = (
+                "//Group[Group/Text[@Name='Welcome to the new Outlook'] "
+                "and Button[@Name='Not interested']]"
+                "/Group/Text[@Name='Welcome to the new Outlook'] | "
+                "//Group[Text[@Name='Welcome to the new Outlook'] and Image[@Name='Open']]"
+                "/Text[@Name='Welcome to the new Outlook']"
+            )
+            onboarding_controls = (
+                "//Window/Group/Text[@Name='Microsoft respects your privacy' or "
+                "@Name='Getting better together' or @Name='Powering your experiences'] | "
+                + welcome_tour_heading
+            )
+            outlook_ready_controls = (
+                "//*[@AutomationId='topSearchInput'] | " + onboarding_controls
+            )
+            account_controls = (
+                outlook_ready_controls + " | //*[@AutomationId='suggestedAccountsComboBox']"
+            )
+            try:
+                account_control = WebDriverWait(driver, 30).until(
+                    lambda app: next(
+                        (element for element in app.find_elements_by_xpath(account_controls)
+                         if element.is_displayed() and element.is_enabled()), None))
+            except TimeoutException as exc:
+                self._page_source(driver, name="outlook_new_signin_next")
+                raise RuntimeError(
+                    "Outlook (new) account screen was not recognized. Inspect "
+                    "outlook_new_signin_next.xml in the run results.") from exc
+
+            if account_control.get_attribute("AutomationId") == "topSearchInput":
+                logging.info("Outlook (new) mailbox is already open; skipping account entry.")
+            elif account_control.get_attribute("AutomationId") != "suggestedAccountsComboBox":
+                logging.info("Outlook (new) is showing a known onboarding prompt; resuming onboarding.")
+            else:
+                if not self.email_account:
+                    raise RuntimeError("Outlook (new) account setup requires email_account.")
+                logging.info("Entering the configured Outlook (new) account.")
+                account_control.click()
+                account_control.send_keys(Keys.CONTROL + "a")
+                account_control.send_keys(self.email_account)
+                try:
+                    WebDriverWait(driver, 15).until(
+                        EC.element_to_be_clickable((By.NAME, "Continue"))).click()
+                    signin_controls = (
+                        outlook_ready_controls + " | "
+                        "//Window[@Name='Microsoft account']"
+                        "//List[@AutomationId='credentialList']/ListItem"
+                        "/Button[@Name='Use my password'] | "
+                        "//Window[@Name='Microsoft account']"
+                        "//*[@AutomationId='idA_PWD_SwitchToPassword' or @IsPassword='True']"
+                    )
+                    signin_control = WebDriverWait(self.desktop, 30).until(
+                        lambda desktop: next(
+                            (element for element in desktop.find_elements_by_xpath(signin_controls)
+                             if element.is_displayed() and element.is_enabled()), None))
+                    if (signin_control.get_attribute("AutomationId") != "topSearchInput"
+                            and signin_control.get_attribute("Name") not in onboarding_pages):
+                        if signin_control.get_attribute("Name") == "Use my password":
+                            logging.info("Selecting password sign-in in the Microsoft account window.")
+                            signin_control.click()
+                        try:
+                            password_control = WebDriverWait(self.desktop, 15).until(
+                                lambda desktop: next(
+                                    (element for element in desktop.find_elements_by_xpath(
+                                        "//Window[@Name='Microsoft account']"
+                                        "//*[@IsPassword='True' or "
+                                        "@AutomationId='idA_PWD_SwitchToPassword']")
+                                     if element.is_displayed() and element.is_enabled()), None))
+                            if password_control.get_attribute("AutomationId") == "idA_PWD_SwitchToPassword":
+                                logging.info("Selecting Use your password instead.")
+                                password_control.click()
+                            password_field = WebDriverWait(self.desktop, 15).until(
+                                EC.visibility_of_element_located((
+                                    By.XPATH, "//Window[@Name='Microsoft account']"
+                                    "//Edit[@AutomationId='i0118' and @IsPassword='True']")))
+                        finally:
+                            self._page_source(driver, name="outlook_new_signin_next")
+                            self._page_source(self.desktop, name="outlook_new_signin_desktop")
+                        if not self.email_password:
+                            raise RuntimeError(
+                                "Outlook (new) password sign-in requires email_password "
+                                "in the productivity_prep configuration.")
+                        logging.info("Entering the configured Outlook (new) password.")
+                        password_field.click()
+                        password_field.send_keys(Keys.CONTROL + "a")
+                        password_field.send_keys(self.email_password)
+                        WebDriverWait(self.desktop, 15).until(
+                            EC.element_to_be_clickable((
+                                By.XPATH, "//Window[@Name='Microsoft account']"
+                                "//Button[@AutomationId='idSIButton9' and @Name='Sign in']"))
+                        ).click()
+                        logging.info("Submitted Outlook (new) password sign-in once.")
+                    account_use_controls = (
+                        outlook_ready_controls + " | "
+                        "//Window[@Name='Microsoft account']"
+                        "[.//Text[@AutomationId='pageTitle' and "
+                        "@Name='Use this account everywhere on your device']]"
+                        "//Button[@AutomationId='idSIButton9' and @Name='Next']"
+                    )
+                    account_use_control = WebDriverWait(self.desktop, 60).until(
+                        lambda desktop: next(
+                            (element for element in desktop.find_elements_by_xpath(account_use_controls)
+                             if element.is_displayed() and element.is_enabled()), None))
+                    if account_use_control.get_attribute("AutomationId") == "idSIButton9":
+                        logging.info("Selecting Next to use the Outlook (new) account everywhere on the device.")
+                        account_use_control.click()
+                    WebDriverWait(driver, 60).until(
+                        lambda app: next(
+                            (element for element in app.find_elements_by_xpath(outlook_ready_controls)
+                             if element.is_displayed() and element.is_enabled()), None))
+                except TimeoutException as exc:
+                    self._page_source(driver, name="outlook_new_signin_next")
+                    self._page_source(self.desktop, name="outlook_new_signin_desktop")
+                    raise RuntimeError(
+                        "Outlook (new) account entry did not reach the mailbox. "
+                        "Inspect outlook_new_signin_next.xml and outlook_new_signin_desktop.xml. "
+                        "Check the configured credentials. Any additional account-use "
+                        "or authentication prompt requires the captured screen controls; "
+                        "complete MFA/security verification manually. "
+                        "Password submission is not retried automatically.") from exc
+                logging.info("Outlook (new) reached the mailbox or onboarding after account entry.")
+
+            self._page_source(driver, name="outlook_new_onboarding")
+            self._page_source(self.desktop, name="outlook_new_onboarding_desktop")
+            logging.info("Checking Outlook (new) onboarding in up to 30 passes.")
+            popup_name = "waiting for onboarding"
+            capture_name = "outlook_new_onboarding_next"
+            try:
+                for popup_pass in range(30):
+                    try:
+                        # Handle modal privacy pages before a welcome checklist behind them.
+                        popup = WebDriverWait(driver, 10).until(
+                            lambda app: next(
+                                (element for element in sorted(
+                                    app.find_elements_by_xpath(onboarding_controls),
+                                    key=lambda element: element.get_attribute("Name")
+                                    == "Welcome to the new Outlook")
+                                 if element.is_displayed() and element.is_enabled()), None))
+                    except TimeoutException:
+                        WebDriverWait(driver, 15).until(
+                            EC.visibility_of_element_located((
+                                By.XPATH, "//*[@AutomationId='topSearchInput']")))
+                        logging.info("Outlook (new) onboarding is clear; mailbox is visible.")
+                        break
+
+                    popup_name = popup.get_attribute("Name")
+                    capture_name = onboarding_pages[popup_name]
+                    logging.info("Outlook (new) onboarding pass %s: %s", popup_pass + 1, popup_name)
+                    popup_heading = (
+                        By.XPATH, welcome_tour_heading if popup_name == "Welcome to the new Outlook"
+                        else f"//Text[@Name='{popup_name}']"
+                    )
+                    popup_dialog = f"//Window[Group/Text[@Name='{popup_name}']]/Group"
+                    if popup_name == "Getting better together":
+                        diagnostic_decline = (
+                            By.XPATH, popup_dialog
+                            + '/Group/RadioButton[@Name="No, don\'t send optional data"]'
+                        )
+                        decline_option = WebDriverWait(driver, 15).until(
+                            EC.element_to_be_clickable(diagnostic_decline))
+                        if not decline_option.is_selected():
+                            decline_option.click()
+                        WebDriverWait(driver, 15).until(
+                            lambda app: app.find_element_by_xpath(
+                                diagnostic_decline[1]).is_selected())
+                        WebDriverWait(driver, 15).until(
+                            EC.element_to_be_clickable((
+                                By.XPATH, popup_dialog + "/Button[@Name='Accept']"))).click()
+                    elif popup_name == "Welcome to the new Outlook":
+                        welcome_control = WebDriverWait(driver, 10).until(
+                            EC.element_to_be_clickable((
+                                By.XPATH,
+                                "//Group[Text[@Name='Welcome to the new Outlook'] "
+                                "and Image[@Name='Open']] | "
+                                "//Group[Group/Text[@Name='Welcome to the new Outlook']]"
+                                "/Button[@Name='Not interested']")))
+                        if welcome_control.get_attribute("Name") != "Not interested":
+                            logging.info("Opening the Outlook (new) collapsed welcome checklist.")
+                            welcome_control.click()
+                        WebDriverWait(driver, 10).until(
+                            EC.element_to_be_clickable((
+                                By.XPATH,
+                                "//Group[Group/Text[@Name='Welcome to the new Outlook']]"
+                                "/Button[@Name='Not interested']"))).click()
+                    else:
+                        button_name = "Next" if popup_name == "Microsoft respects your privacy" else "Continue"
+                        WebDriverWait(driver, 15).until(
+                            EC.element_to_be_clickable((
+                                By.XPATH, popup_dialog + f"/Button[@Name='{button_name}']"))).click()
+                    WebDriverWait(driver, 15).until(
+                        EC.invisibility_of_element_located(popup_heading))
+                    self._page_source(driver, name=capture_name)
+                    self._page_source(self.desktop, name=capture_name + "_desktop")
+                else:
+                    raise RuntimeError("Outlook (new) onboarding exceeded 30 popup-handling passes.")
+            except (TimeoutException, RuntimeError) as exc:
+                self._page_source(driver, name=capture_name)
+                self._page_source(self.desktop, name=capture_name + "_desktop")
+                self._page_source(driver, name="outlook_new_onboarding_next")
+                self._page_source(self.desktop, name="outlook_new_onboarding_next_desktop")
+                raise RuntimeError(
+                    f"Outlook (new) onboarding did not finish while handling {popup_name}. "
+                    "Inspect outlook_new_onboarding_next.xml and "
+                    "outlook_new_onboarding_next_desktop.xml in the run results.") from exc
+            self._page_source(driver, name="outlook_new_onboarding_next")
+            self._page_source(self.desktop, name="outlook_new_onboarding_next_desktop")
+
+            logging.info("Configuring the Outlook (new) simplified ribbon.")
+            ribbon_new = (
+                By.XPATH,
+                "//Group[@Name='Ribbon']//Pane[@AutomationId='1-tabpanel']"
+                "//Group[@AutomationId='588']/Button[@Name='New' or @Name='New mail']"
+            )
+            simplified_new = (
+                By.XPATH,
+                "//Group[@Name='Ribbon']//Pane[@AutomationId='1-tabpanel']"
+                "//Group[@AutomationId='588']/Button[@Name='New mail']"
+            )
+            try:
+                home_tab = WebDriverWait(driver, 15).until(
+                    EC.element_to_be_clickable((
+                        By.XPATH, "//Group[@Name='Ribbon']//TabItem[@Name='Home']")))
+                if home_tab.get_attribute("IsSelected") != "True":
+                    home_tab.click()
+                new_button = WebDriverWait(driver, 15).until(
+                    EC.visibility_of_element_located(ribbon_new))
+                if new_button.get_attribute("Name") == "New":
+                    WebDriverWait(driver, 15).until(
+                        EC.element_to_be_clickable((
+                            By.XPATH,
+                            "//Group[@Name='Ribbon']//Button[@AutomationId='RibbonModeToggle']"))
+                    ).click()
+                    WebDriverWait(driver, 15).until(
+                        EC.visibility_of_element_located(simplified_new))
+                    logging.info("Switched Outlook (new) to the simplified ribbon.")
+                else:
+                    logging.info("Outlook (new) simplified ribbon is already selected.")
+                WebDriverWait(driver, 15).until(
+                    EC.element_to_be_clickable((
+                        By.XPATH, "//*[@AutomationId='topSearchInput']"))).click()
+                WebDriverWait(driver, 15).until(
+                    EC.visibility_of_element_located(simplified_new))
+            except TimeoutException as exc:
+                self._page_source(driver, name="outlook_new_ribbon")
+                self._page_source(self.desktop, name="outlook_new_ribbon_desktop")
+                raise RuntimeError(
+                    "Outlook (new) could not verify an expanded simplified Home ribbon. "
+                    "Inspect outlook_new_ribbon.xml and outlook_new_ribbon_desktop.xml "
+                    "in the run results. A collapsed or unsupported ribbon state "
+                    "may require additional handling.") from exc
+            self._page_source(driver, name="outlook_new_ribbon")
+            self._page_source(self.desktop, name="outlook_new_ribbon_desktop")
+            logging.info("Outlook (new) simplified Home ribbon is visible outside the ribbon.")
+
+            logging.info("Preparing an Outlook (new) compose window.")
+            compose_root = (By.XPATH, "//Group[@AutomationId='_owa_projection_root']")
+            compose_stage = "checking for an existing compose pop-out"
+            try:
+                WebDriverWait(self.desktop, 15).until(
+                    lambda desktop: not desktop.find_elements_by_xpath(compose_root[1]))
+                compose_stage = "opening a blank message"
+                WebDriverWait(driver, 15).until(
+                    EC.element_to_be_clickable(simplified_new)).click()
+                WebDriverWait(driver, 15).until(
+                    EC.visibility_of_element_located((
+                        By.XPATH,
+                        "//Group[@AutomationId='ReadingPaneContainerId']/Edit[@Name='Subject']")))
+                self._page_source(driver, name="outlook_new_compose")
+                self._page_source(self.desktop, name="outlook_new_compose_desktop")
+                compose_stage = "popping out the blank message"
+                WebDriverWait(driver, 15).until(
+                    EC.element_to_be_clickable((
+                        By.XPATH,
+                        "//Group[@AutomationId='ReadingPaneContainerId']"
+                        "/Button[@AutomationId='popoutCompose']"))).click()
+                compose_stage = "maximizing the compose window"
+                compose_maximize = WebDriverWait(self.desktop, 30).until(
+                    EC.element_to_be_clickable((
+                        By.XPATH, "//Group[@AutomationId='_owa_projection_root']"
+                        "/Button[@AutomationId='windowIconMaximize']")))
+                if compose_maximize.get_attribute("Name") == "Maximize":
+                    compose_maximize.click()
+                WebDriverWait(self.desktop, 15).until(
+                    EC.visibility_of_element_located((
+                        By.XPATH, "//Group[@AutomationId='_owa_projection_root']"
+                        "/Button[@AutomationId='windowIconMaximize' and @Name='Restore Down']")))
+                self._page_source(driver, name="outlook_new_compose_popout")
+                self._page_source(self.desktop, name="outlook_new_compose_popout_desktop")
+                compose_stage = "closing the blank compose window"
+                WebDriverWait(self.desktop, 15).until(
+                    EC.element_to_be_clickable((
+                        By.XPATH, "//Group[@AutomationId='_owa_projection_root']"
+                        "/Button[@AutomationId='windowIconClose']"))).click()
+                WebDriverWait(self.desktop, 15).until(
+                    lambda desktop: not desktop.find_elements_by_xpath(compose_root[1]))
+                WebDriverWait(driver, 15).until(
+                    EC.visibility_of_element_located((
+                        By.XPATH, "//*[@AutomationId='topSearchInput']")))
+                WebDriverWait(driver, 15).until(
+                    EC.invisibility_of_element_located((
+                        By.XPATH, "//Button[@AutomationId='discardCompose']")))
+            except TimeoutException as exc:
+                self._page_source(driver, name="outlook_new_compose_close")
+                self._page_source(self.desktop, name="outlook_new_compose_close_desktop")
+                raise RuntimeError(
+                    f"Outlook (new) compose preparation timed out while {compose_stage}. "
+                    "Inspect outlook_new_compose_close.xml and "
+                    "outlook_new_compose_close_desktop.xml. "
+                    "An additional save/discard prompt may require handling.") from exc
+            self._page_source(driver, name="outlook_new_compose_close")
+            self._page_source(self.desktop, name="outlook_new_compose_close_desktop")
+            logging.info("Outlook (new) blank compose window maximized and closed; mailbox is visible.")
+
+        ##############################
+        # Outlook (classic) setup is disabled while switching to Outlook (new).
+        ##############################
+
+        # self.launchOrSwitchApp(self.desktop, "Outlook")
+        # logging.info("Waiting 20s for Outlook to fully open.")
+        # time.sleep(20)
+        # self.desktop = self._launchApp(desired_caps)
+        # self.desktop.implicitly_wait(5)
+        # max_loops = 30
+        # for x in range(max_loops):
+            # open_windows = 0
+
+            # try:
+                # logging.info("Checking reopen item prompt")
+                # self.desktop.find_element_by_name('No').click()
+                # time.sleep(3)
+            # except:
+                # pass
+
+            # try:
+                # logging.info("Checking for Theme popup")
+                # self.desktop.find_element_by_xpath('//*[contains(@Name, "Choose a theme")]')
+                # self.desktop.find_element_by_name('OK').click()
+                # logging.info("Clicked OK on Theme popup.")
+                # time.sleep(3)
+            # except:
+                # pass
+
+            # try:
+                # logging.info("Checking for Got it")
+                # self.desktop.find_element_by_name('Got it').click()
+                # time.sleep(3)
+            # except:
+                # pass
+
+            # try:
+                # logging.info("Checking for 'Microsoft respects your privacy'")
+                # win = self.desktop.find_element_by_name('Microsoft respects your privacy')
+                # win.find_element_by_name("Next").click()
+                # time.sleep(3)
+            # except:
+                # pass
+
+            # Check for copilot popup
+            # try:
+                # logging.info("Checking for Copilot popup")
+                # self.desktop.find_element_by_xpath('//*[contains(@Name, "Copilot included")]')
+                # try:
+                    # self.desktop.find_element_by_name('Got it').click()
+                    # logging.info("Clicked 'Got it' on Copilot popup.")
+                    # time.sleep(3)
+                # except:
+                    # self.desktop.find_element_by_name('Close').click()
+                    # logging.info("Clicked 'Close' on Copilot popup.")
+                    # time.sleep(3)
+            # except:
+                # pass
+
+            # try:
+                # logging.info("Checking for privacy pop up")
+                # self.desktop.find_element_by_name('Getting better together')
+            # except:
+                # pass
+            # else:
+                # Click "Don't send optional data"
+                # self.desktop.find_element_by_name("Don't send").click()
+                # self.desktop.find_element_by_xpath('//Button[contains(@Name, "t send")]').click()
+                # time.sleep(2)
+
+            # try:
+                # logging.info("Checking for 'Powering your experiences'")
+                # self.desktop.find_element_by_name('Powering your experiences')
+            # except:
+                # pass
+            # else:
+                # self.desktop.find_element_by_name("Done").click()
+                # time.sleep(2)
+
+
+            # try:
+                # logging.info("Checking for Privacy option")
+                # win = self.desktop.find_element_by_name('Your privacy option')
+                # win.find_element_by_name("Close").click()
+                # time.sleep(3)
+            # except:
+                # pass
+
+            # try:
+                # logging.info("Checking for Privacy matters")
+                # win = self.desktop.find_element_by_name('Your privacy matters')
+                # win.find_element_by_name("Close").click()
+                # time.sleep(3)
+            # except:
+                # pass
+
+            # try:
+                # logging.info("Checking for Privacy Settings Applied")
+                # win = self.desktop.find_element_by_name('Privacy Settings Applied')
+                # win.find_element_by_name("OK").click()
+            # except:
+                # pass
+
+            # try:
+                # logging.info("Checking for safe mode pop up")
+                # self.desktop.find_element_by_xpath('//*[contains(@Name, "safe mode")]')
+            # except:
+                # pass
+            # else:
+                # logging.info("Safe mode window is present")
+                # open_windows += 1
+                # self.desktop.find_element_by_name("No").click()
+                # time.sleep(3)
+
+            # try:
+                # logging.info("Checking for 'Don't personalize' button")
+                # self.desktop.find_element_by_name("Don't personalize").click()
+                # time.sleep(3)
+            # except:
+                # pass
+
+            # try:
+                # logging.info("Checking for 'cutting edge' pop up")
+                # cutting_edge = self.desktop.find_element_by_name("You're on the cutting edge")
+            # except:
+                # pass
+            # else:
+                # logging.info("'Cutting edge' window is present")
+                # open_windows += 1
+                # cutting_edge.find_element_by_name("Close").click()
+                # time.sleep(3)
+
+            # try:
+                # logging.info("Checking for 'Get started' pop up")
+                # get_started = self.desktop.find_element_by_name("Get started")
+            # except:
+                # pass
+            # else:
+                # logging.info("'Get started' window is present")
+                # open_windows += 1
+                # get_started.find_element_by_name("Get started").click()
+                # time.sleep(3)
+
+            # if self.fast_mode != '0':
+                # break
+
+            # try:
+                # logging.info("Checking if we need to setup the account")
+                # self.desktop.find_element_by_name("Outlook")
+                # self.desktop.find_element_by_name("Advanced options collapsed")
+                # self.desktop.find_element_by_name("Connect")
+            # except:
+                # pass
+            # else:
+                # logging.info("Account setup window is present")
+                # open_windows += 1
+                # ActionChains(self.desktop).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(self.email_account).perform()
+                # ActionChains(self.desktop).send_keys(Keys.TAB).send_keys(Keys.TAB).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(self.email_account).perform()
+                # self.desktop.find_element_by_name("Connect").click()
+                # time.sleep(10)
+                # ActionChains(self.desktop).send_keys(self.password).send_keys(Keys.ENTER).perform()
+                # time.sleep(5)
+                # ActionChains(self.desktop).send_keys(Keys.ENTER).perform()
+                # time.sleep(10)
+            
+            # try:
+                # logging.info("Checking problem with account")
+                # self.desktop.find_element_by_name("Retry").click()
+                # logging.info("Problem with account is present")
+                # time.sleep(10)
+            # except:
+                # pass
+
+            # try:
+                # If Retry, probably need to enter email again
+                # logging.info("Checking Sign in")
+                # self.desktop.find_element_by_name("Sign in")
+            # except:
+                # pass
+            # else:
+                # logging.info("Sign in window is present")
+                # open_windows += 1
+                # ActionChains(self.desktop).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(self.email_account).perform()
+                # ActionChains(self.desktop).send_keys(Keys.TAB).send_keys(Keys.TAB).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(self.email_account).perform()
+                # self.desktop.find_element_by_name("Next").click()
+                # time.sleep(7)
+                # ActionChains(self.desktop).send_keys(self.password).send_keys(Keys.ENTER).perform()
+                # time.sleep(5)
+                # ActionChains(self.desktop).send_keys(Keys.ENTER).perform()
+                # time.sleep(10)
+
+            # try:
+                # logging.info("Checking for Windows Security")
+                # self.desktop.find_element_by_name('Windows Security')
+            # except:
+                # pass
+            # else:
+                # logging.info("Security window is present")
+                # open_windows += 1
+                # password_field = self.desktop.find_element_by_name("Password")
+                # password_field.click()
+                # password_field.send_keys(self.email_password)
+                # time.sleep(1)
+                # self.desktop.find_element_by_name("Remember my credentials").click()
+                # time.sleep(1)
+                # self.desktop.find_element_by_name("OK").click()
+                # time.sleep(1)
+
+            # try:
+                # logging.info("Checking for Enter Password")
+                # self.desktop.find_element_by_name('Enter Password')
+            # except:
+                # pass
+            # else:
+                # logging.info("Password window is present")
+                # open_windows += 1
+                # password_field = self.desktop.find_element_by_name("Password")
+                # password_field.click()
+                # password_field.send_keys(self.email_password)
+                # time.sleep(1)
+                # self.desktop.find_element_by_name("Remember my credentials").click()
+                # time.sleep(1)
+                # self.desktop.find_element_by_name("OK").click()
+                # time.sleep(1)
+
+            # try:
+                # logging.info("Checking for Advanced Setup")
+                # WebDriverWait(self.desktop, 20).until(EC.presence_of_element_located((By.NAME,'Advanced setup')))
+            # except:
+                # pass
+            # else:
+                # logging.info("Advanced setup is present")
+                # open_windows += 1
+                # self.desktop.find_element_by_name("Microsoft 365").click()
+                # time.sleep(5)
+
+            # try:
+                # logging.info("Checking for Account is added window")
+                # Uncheck setup outlook mobile
+                # phone_elem = WebDriverWait(self.desktop, 20).until(EC.presence_of_element_located((By.NAME,"Set up Outlook Mobile on my phone, too")))
+                # if phone_elem.is_selected():
+                    # phone_elem.click()
+                    # time.sleep(1)
+                # else:
+                    # logging.info("Set up Outlook Mobile is already unchecked")
+            # except:
+                # pass
+            # else:
+                # logging.info("Account is added window is present")
+                # open_windows += 1
+                # self.desktop.find_element_by_name("Done").click()
+                # time.sleep(20) # Wait for outlook to fully launch
+
+            # Check for copilot popup
+            # try:
+                # logging.info("Checking for Copilot popup")
+                # self.desktop.find_element_by_xpath('//*[contains(@Name, "Copilot included")]')
+                # try:
+                    # self.desktop.find_element_by_name('Got it').click()
+                    # logging.info("Clicked 'Got it' on Copilot popup.")
+                    # time.sleep(3)
+                # except:
+                    # self.desktop.find_element_by_name('Close').click()
+                    # logging.info("Clicked 'Close' on Copilot popup.")
+                    # time.sleep(3)
+            # except:
+                # pass
+            
+            # Check for Theme popup
+            # try:
+                # logging.info("Checking for Theme popup")
+                # self.desktop.find_element_by_xpath('//*[contains(@Name, "Choose a theme")]')
+                # self.desktop.find_element_by_name('OK').click()
+                # logging.info("Clicked OK on Theme popup.")
+                # time.sleep(3)
+            # except:
+                # pass
+            # else:
+                # open_windows += 1
+
+            # if open_windows == 0:
+                # break
+
+        # fail the test if it gets to the end of the last iteration without meeting the conditions to break out
+        # if x >= max_loops-1:
+            # logging.error(f"Unable to dismiss all popups in {max_loops} iterations.  Check video or failedscreen.png for something that needs to be manually dismissed.")
+            # self.fail()
+
+        # if self.fast_mode == '0':
+            # win = WebDriverWait(self.desktop, 120).until(EC.presence_of_element_located((By.CLASS_NAME,'rctrl_renwnd32')))
+            # self.outlook_driver = self.getDriverFromWin(win)
             # self.outlook_driver.maximize_window()
             # Restore window first to handle the case we accidentally went into Zen mode
-            ActionChains(self.desktop).key_down(Keys.ALT).send_keys(" r").key_up(Keys.ALT).perform()
-            time.sleep(1)
+            # ActionChains(self.desktop).key_down(Keys.ALT).send_keys(" r").key_up(Keys.ALT).perform()
+            # time.sleep(1)
             # Maximize window
-            ActionChains(self.desktop).key_down(Keys.ALT).send_keys(" x").key_up(Keys.ALT).perform()
-            time.sleep(2)
+            # ActionChains(self.desktop).key_down(Keys.ALT).send_keys(" x").key_up(Keys.ALT).perform()
+            # time.sleep(2)
 
-            try:
+            # try:
                 # Dismiss metered connection warning
-                warning = self.outlook_driver.find_element_by_name("Connect Anyway")
-                warning.click()
-                time.sleep(1)
-            except:
-                pass
+                # warning = self.outlook_driver.find_element_by_name("Connect Anyway")
+                # warning.click()
+                # time.sleep(1)
+            # except:
+                # pass
 
-            try:
-                self.outlook_driver.find_element_by_name("Got it").click()
-            except:
-                pass
+            # try:
+                # self.outlook_driver.find_element_by_name("Got it").click()
+            # except:
+                # pass
 
-            try:
+            # try:
                 # Pin ribbon
-                ribbon = self.outlook_driver.find_element_by_name("Ribbon")
-                try:
-                    ribbon.find_element_by_name("Archive...")
+                # ribbon = self.outlook_driver.find_element_by_name("Ribbon")
+                # try:
+                    # ribbon.find_element_by_name("Archive...")
                     # If successful, then ribbon already pinned.
-                except:
+                # except:
                     # Do ctrl-F1 to pin ribbon
-                    ActionChains(self.outlook_driver).key_down(Keys.CONTROL).send_keys(Keys.F1).key_up(Keys.CONTROL).perform()
-                    time.sleep(2)
+                    # ActionChains(self.outlook_driver).key_down(Keys.CONTROL).send_keys(Keys.F1).key_up(Keys.CONTROL).perform()
+                    # time.sleep(2)
 
-            except Exception as e :
-                self._page_source(self.outlook_driver)
-                raise e
+            # except Exception as e :
+                # self._page_source(self.outlook_driver)
+                # raise e
 
             # Set ribbon to Simplified
-            ActionChains(self.outlook_driver).key_down(Keys.ALT).perform()
-            time.sleep(0.5)
-            ActionChains(self.outlook_driver).key_up(Keys.ALT).perform()
-            time.sleep(0.5)
-            ActionChains(self.outlook_driver).send_keys("z").perform()
-            time.sleep(0.5)
-            ActionChains(self.outlook_driver).send_keys("r").perform()
-            time.sleep(0.5)
-            ActionChains(self.outlook_driver).send_keys("i").perform()
-            time.sleep(3)
+            # ActionChains(self.outlook_driver).key_down(Keys.ALT).perform()
+            # time.sleep(0.5)
+            # ActionChains(self.outlook_driver).key_up(Keys.ALT).perform()
+            # time.sleep(0.5)
+            # ActionChains(self.outlook_driver).send_keys("z").perform()
+            # time.sleep(0.5)
+            # ActionChains(self.outlook_driver).send_keys("r").perform()
+            # time.sleep(0.5)
+            # ActionChains(self.outlook_driver).send_keys("i").perform()
+            # time.sleep(3)
 
-            ribbon = self.outlook_driver.find_element_by_name("Ribbon")
-            ribbon.find_element_by_name("New Email").click()
-            time.sleep(3)
+            # ribbon = self.outlook_driver.find_element_by_name("Ribbon")
+            # ribbon.find_element_by_name("New Email").click()
+            # time.sleep(3)
 
             # Maximize new email window
-            ActionChains(self.desktop).key_down(Keys.ALT).send_keys(" x").key_up(Keys.ALT).perform()
-            time.sleep(2)
+            # ActionChains(self.desktop).key_down(Keys.ALT).send_keys(" x").key_up(Keys.ALT).perform()
+            # time.sleep(2)
 
             # Discard instead of send
-            reply_win = self.desktop.find_element_by_name('Untitled - Message (HTML) ')
-            reply_win.find_element_by_name("Ribbon").find_element_by_name("Close").click()
-            time.sleep(1)
-            reply_win.find_element_by_name("No").click()
-            time.sleep(3)
+            # reply_win = self.desktop.find_element_by_name('Untitled - Message (HTML) ')
+            # reply_win.find_element_by_name("Ribbon").find_element_by_name("Close").click()
+            # time.sleep(1)
+            # reply_win.find_element_by_name("No").click()
+            # time.sleep(3)
         ##############################
         # OneNote
         ##############################
@@ -1234,7 +1625,15 @@ class ProductivityPrep(core.app_scenario.Scenario):
             time.sleep(2)
 
 
-        self.launchOrSwitchApp(self.desktop, "Outlook")
+        logging.info("Returning to the Outlook (new) main window.")
+        self.outlook_new_driver.switch_to_window(self.outlook_new_driver.current_window_handle)
+        self.outlook_new_driver.maximize_window()
+        WebDriverWait(self.outlook_new_driver, 15).until(
+            EC.visibility_of_element_located((
+                By.XPATH, "//Group[@AutomationId='app']/Button[@AutomationId='windowIconClose']")))
+        self._page_source(self.outlook_new_driver, name="outlook_new_return")
+
+        # self.launchOrSwitchApp(self.desktop, "Outlook")
         # time.sleep(10)
 
         # # Switch back to inbox.  This helps update the status, which sometimes gets stuck.
@@ -1314,24 +1713,46 @@ class ProductivityPrep(core.app_scenario.Scenario):
             logging.error("Unable to close OneNote.")
             pass
 
+        # try:
+            # if self.outlook_driver:
+                # time.sleep(2)
+                # self.outlook_driver.implicitly_wait(5)
+                # self.launchOrSwitchApp(self.desktop, "Outlook")
+                # try:
+                    # self.outlook_driver.find_element_by_name("Got it").click()
+                # except:
+                    # pass
+                # try:
+                    # self._page_source(self.desktop)
+                # except:
+                    # pass
+                # self.outlook_driver.find_element_by_name("Ribbon").find_element_by_name("Close").click()
+                # time.sleep(2)
+        # except:
+            # logging.error("Unable to close Outlook.")
+            # pass
+
         try:
-            if self.outlook_driver:
-                time.sleep(2)
-                self.outlook_driver.implicitly_wait(5)
-                self.launchOrSwitchApp(self.desktop, "Outlook")
-                try:
-                    self.outlook_driver.find_element_by_name("Got it").click()
-                except:
-                    pass
-                try:
-                    self._page_source(self.desktop)
-                except:
-                    pass
-                self.outlook_driver.find_element_by_name("Ribbon").find_element_by_name("Close").click()
-                time.sleep(2)
-        except:
-            logging.error("Unable to close Outlook.")
-            pass
+            if self.outlook_new_driver:
+                logging.info("Closing the Outlook (new) main window gracefully.")
+                self.outlook_new_driver.switch_to_window(
+                    self.outlook_new_driver.current_window_handle)
+                WebDriverWait(self.outlook_new_driver, 15).until(
+                    EC.element_to_be_clickable((
+                        By.XPATH,
+                        "//Group[@AutomationId='app']/Button[@AutomationId='windowIconClose']"))
+                ).click()
+                WebDriverWait(self.desktop, 30).until(
+                    lambda desktop: not desktop.find_elements_by_xpath(
+                        "//Window[@ClassName='Outlook Host'][.//Group[@AutomationId='app']]"))
+                logging.info("Outlook (new) main window closed gracefully.")
+        except Exception:
+            self.success = False
+            logging.exception("Unable to close Outlook (new) gracefully; prep will not be marked complete.")
+            try:
+                self._page_source(self.desktop, name="outlook_new_teardown")
+            except Exception:
+                logging.warning("Could not save the Outlook (new) teardown XML.")
 
         core.app_scenario.Scenario.tearDown(self)
         self._call(["taskkill.exe", "/F /IM WinAppDriver.exe"])
@@ -1456,8 +1877,12 @@ class ProductivityPrep(core.app_scenario.Scenario):
             pass
 
     def launchOrSwitchApp(self, driver, app):
-        # app argument should be one of: Outlook, Word, Excel, PowerPoint, OneNote
+        # app argument should be one of: Outlook (new), Word, Excel, PowerPoint, OneNote
         logging.info("Launching " + app)
+        if app == "Outlook (new)":
+            app_id = "Microsoft.OutlookForWindows_8wekyb3d8bbwe!Microsoft.OutlookforWindows"
+            self._call(["cmd.exe", f'/C start "" explorer.exe "shell:AppsFolder\\{app_id}"'], blocking=False)
+            return
         self._get_start_button(driver).click()
         time.sleep(1.5)
 
@@ -1474,8 +1899,8 @@ class ProductivityPrep(core.app_scenario.Scenario):
                 app_cmd = "WINWORD"
             elif app == "PowerPoint":
                 app_cmd = "POWERPNT"
-            elif app == "Outlook":
-                app_cmd = "OUTLOOK"
+            # elif app == "Outlook":
+            #     app_cmd = "OUTLOOK"
             app_cmd += ".EXE"
             # Try both known accessibility ID formats
             try:
@@ -1512,14 +1937,14 @@ class ProductivityPrep(core.app_scenario.Scenario):
         desired_caps["app"] = "Root"
         desktop_driver = self._launchApp(desired_caps)
 
-        result = self._call(["tasklist.exe", '/fi "imagename eq outlook.exe"'])
-        if "No tasks are running" not in result:
-            try:
-                self.outlook_driver = self.getDriverFromWin(WebDriverWait(desktop_driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME,'rctrl_renwnd32'))))
-                self.outlook_driver.maximize_window()
-                self.outlook_driver.find_element_by_name("Close").click()
-            except:
-                pass
+        # result = self._call(["tasklist.exe", '/fi "imagename eq outlook.exe"'])
+        # if "No tasks are running" not in result:
+            # try:
+                # self.outlook_driver = self.getDriverFromWin(WebDriverWait(desktop_driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME,'rctrl_renwnd32'))))
+                # self.outlook_driver.maximize_window()
+                # self.outlook_driver.find_element_by_name("Close").click()
+            # except:
+                # pass
 
         result = self._call(["tasklist.exe", '/fi "imagename eq onenote.exe"'])
         if "No tasks are running" not in result:
@@ -1570,7 +1995,9 @@ class ProductivityPrep(core.app_scenario.Scenario):
                 pass
 
         try:
-            logging.debug("Killing Outlook.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe WinAppDriver.exe")
-            self._kill("Outlook.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe WinAppDriver.exe")
+            # logging.debug("Killing Outlook.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe WinAppDriver.exe")
+            # self._kill("Outlook.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe WinAppDriver.exe")
+            logging.debug("Killing olk.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe WinAppDriver.exe")
+            self._kill("olk.exe OneNote.exe Excel.exe Powerpnt.exe Winword.exe WinAppDriver.exe")
         except:
             pass
