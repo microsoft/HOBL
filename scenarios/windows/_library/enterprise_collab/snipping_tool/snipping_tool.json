@@ -54,22 +54,22 @@
     },
     {
         "children": [],
-        "delay": "0",
+        "delay": "0.5",
         "description": "Top Half",
         "enabled": true,
         "file_name": [
-            "image_1L9NXAM.png"
+            "image_1Y6XA1T.png"
         ],
-        "h": "0.489",
-        "id": "1L9NXAM",
+        "h": "0.142",
+        "id": "1Y6XA1T",
         "recapture": false,
         "type": "Capture",
-        "w": "0.998",
-        "x": "0.000",
-        "y": "0.003"
+        "w": "0.568",
+        "x": "0.211",
+        "y": "0.004"
     },
     {
-        "capture_id": "1L9NXAM",
+        "capture_id": "1Y6XA1T",
         "children": [],
         "delay": "3",
         "description": "Screen Select",
@@ -88,22 +88,22 @@
     },
     {
         "children": [],
-        "delay": "0",
+        "delay": "0.5",
         "description": "Top Half",
         "enabled": true,
         "file_name": [
-            "image_1L9P0VY.png"
+            "image_1Y6XCTV.png"
         ],
-        "h": "0.391",
-        "id": "1L9P0VY",
+        "h": "0.277",
+        "id": "1Y6XCTV",
         "recapture": false,
         "type": "Capture",
-        "w": "0.995",
-        "x": "0.000",
-        "y": "0.000"
+        "w": "0.531",
+        "x": "0.235",
+        "y": "0.002"
     },
     {
-        "capture_id": "1L9P0VY",
+        "capture_id": "1Y6XCTV",
         "children": [],
         "delay": "2",
         "description": "Capture Save to Clipboard",
