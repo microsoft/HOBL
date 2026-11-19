@@ -1,0 +1,1 @@
+from .powerpoint_insert_picture import *
