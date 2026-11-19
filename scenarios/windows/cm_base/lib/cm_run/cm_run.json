@@ -1063,7 +1063,7 @@
         "description": "",
         "enabled": true,
         "id": "1U8X8AR",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_cm",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_compose_email",
         "params": [
             {
                 "name": "[short_typing]",
@@ -1162,7 +1162,7 @@
         "description": "",
         "enabled": true,
         "id": "1U8X2CN",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run_r1",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\powerpoint_apply_animation",
         "type": "Include"
     },
     {
@@ -1507,7 +1507,7 @@
         "description": "",
         "enabled": true,
         "id": "1U8X2UH",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run_r2",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\powerpoint_add_image_and_save",
         "type": "Include"
     },
     {
@@ -1524,7 +1524,7 @@
         "description": "",
         "enabled": true,
         "id": "1U8X6CL",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_r1",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_files",
         "type": "Include"
     },
     {
@@ -1820,7 +1820,7 @@
         "description": "",
         "enabled": true,
         "id": "1U8X3LA",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run_r3",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\powerpoint_export_to_pdf",
         "type": "Include"
     },
     {
@@ -1837,7 +1837,7 @@
         "description": "",
         "enabled": true,
         "id": "1U8X6XM",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_run_r2",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_doc",
         "type": "Include"
     },
     {
