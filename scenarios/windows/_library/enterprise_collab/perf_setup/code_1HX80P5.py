@@ -7,18 +7,18 @@ from core.parameters import Params
 def run(scenario):
     logging.debug('Executing code block: code_1HX80P5.py')
     sideload_dir = "C:\\ProgramData\\Microsoft\\Diagnosis\\Sideload"
-    minwin_workloads = Params.get("cm_base", "minwin_workloads")
-    logging.info(f"enterprise_collab:minwin_workloads='{minwin_workloads}'")
+    perftrack_manifest = Params.get("perf_setup", "perftrack_manifest")
+    logging.info(f"perf_setup:perftrack_manifest='{perftrack_manifest}'")
 
-    if minwin_workloads and len(minwin_workloads.strip()) > 0:
-        logging.info("Setting enterprise_collab:simple_office_launch=0 because mincp_workloads has entries")
-        Params.setParam("cm_base", "simple_office_launch", "0")
-        logging.info("Sideloading ConsumerMultitaskerPTs.xml because mincp_workloads is set")
+    if perftrack_manifest == "ConsumerMutitasker":
+        logging.info("Sideloading ConsumerMultitaskerPTs.xml for ConsumerMutitasker")
         scenario._upload("utilities\\proprietary\\ParseUtc\\ConsumerMultitaskerPTs.xml", sideload_dir, check_modified=False)
         scenario._call(["cmd.exe", f'/C copy /Y "{sideload_dir}\\ConsumerMultitaskerPTs.xml" "{sideload_dir}\\UtcPerftrack.xml"'])
-    else:
-        logging.info("Sideloading UtcPerftrack.xml for enterprise _collab run")
+    elif perftrack_manifest == "EnterpriseCollaborator":
+        logging.info("Sideloading UtcPerftrack.xml for EnterpriseCollaborator")
         scenario._upload("utilities\\proprietary\\ParseUtc\\UtcPerftrack.xml", sideload_dir)
+    else:
+        raise ValueError(f"Unsupported perf_setup:perftrack_manifest: {perftrack_manifest!r}")
 
     scenario._upload("utilities\\proprietary\\ParseUtc\\DisableAllUploads.json", sideload_dir)
     scenario._call(["cmd.exe", '/C reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 3 /f > null 2>&1'])

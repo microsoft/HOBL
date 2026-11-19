@@ -7,6 +7,7 @@ from utilities.open_source.modules import import_run_user_only
 def run():
     Params.setCalculated('scenario_section', __package__.split('.')[-1])
     run_user_only()
+    Params.setDefault('perf_setup', 'perftrack_manifest', 'EnterpriseCollaborator', desc='Perftrack Manifest File Selecter', valOptions=['EnterpriseCollaborator', 'ConsumerMutitasker'])
     return
 
 def run_user_only():
