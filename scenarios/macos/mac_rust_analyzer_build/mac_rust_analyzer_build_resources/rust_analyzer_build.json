@@ -1,0 +1,8 @@
+{
+  "name": "rust_analyzer_build",
+  "repository": "https://github.com/rust-lang/rust-analyzer.git",
+  "revision": "114dcb8d6f50aca1ef14d67b831a7560362f8f69",
+  "toolchain": "1.100.0",
+  "package": "rust-analyzer",
+  "binary": "rust-analyzer"
+}

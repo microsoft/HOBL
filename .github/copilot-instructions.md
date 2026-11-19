@@ -232,7 +232,7 @@ macOS-only additional keys (from `/usr/bin/time -p`):
 - The prep/run/teardown lifecycle: prep installs dependencies (runs once), run builds/tests (runs many times), teardown cleans build outputs between runs (must not undo prep)
 
 ## Developer Scenarios
-When the user refers to "developer scenarios", they mean the following 11 scenarios. Each has both macOS and Windows variants with prep and run scripts. The folder structure is as follows:
+When the user refers to "developer scenarios", they mean the following 13 scenarios. Each has both macOS and Windows variants. Every scenario keeps its own platform-specific resource folder. Rust prep/run implementations are intentionally duplicated between scenarios so either workload can be removed independently. The folder structure is as follows:
 
 | Scenario | macOS folder | Windows folder |
 |---|---|---|
@@ -247,5 +247,7 @@ When the user refers to "developer scenarios", they mean the following 11 scenar
 | PyTorch Inference | `scenarios/MacOS/mac_pytorch_inf/` | `scenarios/windows/pytorch_inf/` |
 | Spring Pet Clinic | `scenarios/MacOS/mac_spring_petclinic/` | `scenarios/windows/spring_petclinic/` |
 | VS Code | `scenarios/MacOS/mac_vscode/` | `scenarios/windows/vscode/` |
+| rust-analyzer Build | `scenarios/macos/mac_rust_analyzer_build/` | `scenarios/windows/rust_analyzer_build/` |
+| Nushell Build | `scenarios/macos/mac_nushell_build/` | `scenarios/windows/nushell_build/` |
 
-When asked to make a change across "all developer scenarios", apply it to all 11 (both platforms unless a specific platform is specified).
+When asked to make a change across "all developer scenarios", apply it to all 13 (both platforms unless a specific platform is specified). `testplans/hobl_dev_heavy.ps1` runs this set with platform selection; preserve rust-analyzer and Nushell as distinct workloads.
