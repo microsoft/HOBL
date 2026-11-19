@@ -1,10 +1,10 @@
 [
     {
-        "author": "",
-        "capture_device": "",
+        "author": "dasashu",
+        "capture_device": "HP Omnibook X",
         "children": [],
         "create_date": "2026-08-18",
-        "description": "",
+        "description": "Excel Sort Table",
         "enabled": true,
         "id": "1TK60KL",
         "type": "Information"
@@ -34,8 +34,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1TK64KJ",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_top_ribbon",
+        "id": "1Y78R85",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_capture_top_ribbon",
         "type": "Include"
     },
     {
@@ -92,7 +92,7 @@
         "capture_id": "1TK68PR",
         "children": [],
         "delay": "2",
-        "description": "",
+        "description": "Sort",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
