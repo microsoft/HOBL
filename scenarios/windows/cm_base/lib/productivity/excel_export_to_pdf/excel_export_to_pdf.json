@@ -1,10 +1,10 @@
 [
     {
-        "author": "",
-        "capture_device": "",
+        "author": "dasashut",
+        "capture_device": "HP Omnibook X",
         "children": [],
         "create_date": "2026-08-18",
-        "description": "",
+        "description": "Export Excel sheet to PDF ",
         "enabled": true,
         "id": "1TK60KL",
         "type": "Information"
@@ -14,15 +14,15 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1TK6KXU",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon",
+        "id": "1Y78C84",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_capture_sheet_ribbon",
         "type": "Include"
     },
     {
-        "capture_id": "1TK5L73",
+        "capture_id": "1Y78C84",
         "children": [],
         "delay": "2",
-        "description": "",
+        "description": "Monthly Budget Report",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [

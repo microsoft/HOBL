@@ -14,8 +14,8 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1TK6KXU",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon",
+        "id": "1Y78JJY",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_capture_sheet_ribbon",
         "type": "Include"
     },
     {

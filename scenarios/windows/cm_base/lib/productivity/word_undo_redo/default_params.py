@@ -10,6 +10,5 @@ def run():
     return
 
 def run_user_only():
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_save_document')
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_word_run_r1')
+    import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\word_add_paragraph_and_save')
     return

@@ -1,10 +1,10 @@
 [
     {
-        "author": "",
-        "capture_device": "",
+        "author": "dasashu",
+        "capture_device": "HP Omnibook X",
         "children": [],
         "create_date": "2026-08-18",
-        "description": "",
+        "description": "Excel Format Table and Vlookup",
         "enabled": true,
         "id": "1TK60KL",
         "type": "Information"
@@ -14,12 +14,12 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1TK6KXU",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_capture_sheet_ribbon",
+        "id": "1Y78HN0",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_capture_top_ribbon",
         "type": "Include"
     },
     {
-        "capture_id": "1TK5L73",
+        "capture_id": "1TK64CP",
         "children": [],
         "delay": "2",
         "description": "Big Data Sheet",
