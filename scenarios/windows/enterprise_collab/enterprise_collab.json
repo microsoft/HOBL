@@ -306,6 +306,15 @@
                         "id": "19K4E5H",
                         "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
                         "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "Prepare enterprise Office export, media, and spreadsheet assets",
+                        "enabled": true,
+                        "file_name": ["code_OFFICE_PREPARE.py"],
+                        "id": "ECOFFICEPREP",
+                        "type": "Code"
                     }
                 ],
                 "description": "",
@@ -437,6 +446,78 @@
                         "id": "19K5834",
                         "include_path": "scenarios\\windows\\_library\\productivity\\prod_open",
                         "type": "Include"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "ECWORDSWITCH",
+                                "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_switchto",
+                                "type": "Include"
+                            },
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "Export Word to PDF",
+                                "enabled": true,
+                                "file_name": ["code_WORD_PDF.py"],
+                                "id": "ECWORDPDF",
+                                "type": "Code"
+                            },
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "ECEXCELSWITCH",
+                                "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+                                "type": "Include"
+                            },
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "Sort budget categories and create a populated PivotTable",
+                                "enabled": true,
+                                "file_name": ["code_EXCEL_SORT_PIVOT.py"],
+                                "id": "ECEXCELPIVOT",
+                                "type": "Code"
+                            },
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "ECPPTSWITCH",
+                                "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+                                "type": "Include"
+                            },
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "Insert an image and video, then export PowerPoint to PDF",
+                                "enabled": true,
+                                "file_name": ["code_POWERPOINT_MEDIA_PDF.py"],
+                                "id": "ECPPTMEDIA",
+                                "type": "Code"
+                            }
+                        ],
+                        "description": "Optional enterprise collaboration Office actions",
+                        "enabled": true,
+                        "eval_method": "==",
+                        "id": "ECOFFICEACTIONS",
+                        "left_term": "[enterprise_collab:office_extended_actions]",
+                        "right_term": "1",
+                        "type": "If"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "ECOFFICEEND",
+                        "type": "End If"
                     },
                     {
                         "children": [],
