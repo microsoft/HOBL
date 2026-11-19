@@ -158,8 +158,15 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1N9W8VE",
+                        "id": "1Y6V5RK",
                         "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_setup",
+                        "params": [
+                            {
+                                "name": "[perftrack_manifest]",
+                                "val_options": "EnterpriseCollaborator,ConsumerMutitasker",
+                                "value": "EnterpriseCollaborator"
+                            }
+                        ],
                         "type": "Include"
                     }
                 ],

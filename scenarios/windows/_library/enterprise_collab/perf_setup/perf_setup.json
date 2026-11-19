@@ -12,6 +12,17 @@
     {
         "children": [],
         "delay": "0.0",
+        "description": "Perftrack Manifest File Selecter",
+        "enabled": true,
+        "id": "1Y6URFV",
+        "name": "[perftrack_manifest]",
+        "type": "Set Default",
+        "val_options": "EnterpriseCollaborator,ConsumerMutitasker",
+        "value": "EnterpriseCollaborator"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
         "description": "upload perf files",
         "enabled": true,
         "file_name": [

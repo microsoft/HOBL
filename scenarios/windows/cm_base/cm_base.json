@@ -4,7 +4,7 @@
         "capture_device": "HP-Chirahu-16inch",
         "children": [],
         "create_date": "2026-10-02",
-        "description": "Consumer Multitasker v1.0",
+        "description": "Web, FileExplorer, Snipping Tool, Taskmanager, Teams and Productivity App revisitation scenario",
         "enabled": true,
         "id": "19K3NWN",
         "type": "Information"
@@ -81,8 +81,15 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
-                        "id": "1N9W8VE",
+                        "id": "1Y6UURK",
                         "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_setup",
+                        "params": [
+                            {
+                                "name": "[perftrack_manifest]",
+                                "val_options": "EnterpriseCollaborator,ConsumerMutitasker",
+                                "value": "ConsumerMutitasker"
+                            }
+                        ],
                         "type": "Include"
                     }
                 ],
