@@ -45,6 +45,19 @@ Existing prepared DUTs receive the updated run script when binary logging is
 enabled, without rerunning prep. For standalone use, pass `-binlog` to
 `net_aspire_resources\net_aspire_run.ps1`.
 
+The macOS `mac_net_aspire` scenario supports the same default-off setting:
+
+```ini
+[mac_net_aspire]
+binlog=1
+```
+
+For command-line overrides, append `mac_net_aspire:binlog=1` to the HOBL command.
+Each build writes `mac_net_aspire_build_<timestamp>_<pid>.binlog` to
+`/Users/Shared/hobl_data` for result collection. Standalone macOS runs accept
+`--binlog` on `mac_net_aspire_run.sh`. Prepared-DUT updates, build-only logging,
+and timing overhead work the same way as on Windows.
+
 ## Notes
 
 - On ARM64, HOBL points `DOTNET_INSTALL_DIR` at the system dotnet to avoid pulling an
