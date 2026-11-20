@@ -26,6 +26,25 @@ dotnet clean Aspire.slnx
 dotnet build Aspire.slnx --no-restore
 ```
 
+## Optional MSBuild binary logs
+
+Binary logging is disabled by default. To enable it, add this to the HOBL profile:
+
+```ini
+[net_aspire]
+binlog=1
+```
+
+Set `binlog=0` to disable it. When enabled, each build writes a separate
+`net_aspire_build_<timestamp>.binlog` to `<drive>\hobl_data`, which HOBL collects
+with the scenario results. Only the build is logged, not clean or restore.
+Binary logging adds overhead to the measured build time; keep this setting
+consistent when comparing results.
+
+Existing prepared DUTs receive the updated run script when binary logging is
+enabled, without rerunning prep. For standalone use, pass `-binlog` to
+`net_aspire_resources\net_aspire_run.ps1`.
+
 ## Notes
 
 - On ARM64, HOBL points `DOTNET_INSTALL_DIR` at the system dotnet to avoid pulling an
