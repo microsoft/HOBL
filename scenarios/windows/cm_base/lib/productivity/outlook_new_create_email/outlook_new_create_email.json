@@ -1,0 +1,56 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-28",
+        "description": "Open a new email compose form in New Outlook",
+        "enabled": true,
+        "id": "PONCEI00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Goto Home",
+        "enabled": true,
+        "id": "1VFK1RT",
+        "text": "\ue00ah\ue00a",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.5",
+        "description": "New Email",
+        "enabled": true,
+        "file_name": [
+            "image_1V0LYVH.png"
+        ],
+        "h": "0.248",
+        "id": "1V0LYVH",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.182",
+        "x": "0.001",
+        "y": "0.002"
+    },
+    {
+        "capture_id": "1V0LYVH",
+        "children": [],
+        "delay": "2",
+        "description": "New Email",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1VE4L8M.png"
+        ],
+        "id": "1VE4L8M",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    }
+]

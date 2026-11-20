@@ -128,12 +128,4 @@ class EnterpriseCollab(core.app_scenario.Scenario):
         except:
             pass
 
-        # Kill Powershell
-        try:
-            # self._kill("powershell.exe")
-            logging.info("Logging here because Powershell kill is commented out")
-            pass
-        except:
-            pass
-
         return
