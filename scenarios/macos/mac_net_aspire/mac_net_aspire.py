@@ -20,12 +20,14 @@ class MacNetAspire(core.app_scenario.Scenario):
 
     # Set default parameters
     Params.setDefault(module, 'loops', '4')
+    Params.setDefault(module, 'binlog', '0', desc="Collect an MSBuild binary log for each build (adds overhead).", valOptions=['0', '1'])
 
 
     def setUp(self):
         # Get parameters
         self.platform = Params.get('global', 'platform')
         self.loops = Params.get(self.module, 'loops')
+        self.binlog = Params.get(self.module, 'binlog') == '1'
 
         self.target = f"{self.dut_exec_path}/{self.resources}"
 
@@ -48,6 +50,8 @@ class MacNetAspire(core.app_scenario.Scenario):
             finally:
                 self._copy_data_from_remote(self.result_dir)
             self.createPrepStatusControlFile(self.prep_version)
+        elif self.binlog:
+            self._upload(f"scenarios\\MacOS\\{self.module}\\{self.resources}\\{self.module}_run.sh", self.target, check_modified=False)
 
 
         try:
@@ -60,9 +64,10 @@ class MacNetAspire(core.app_scenario.Scenario):
 
 
     def runTest(self):
+        binlog_arg = " --binlog" if self.binlog else ""
         for i in range(int(self.loops)):
             logging.info(f"Running loop {i + 1}")
-            self._call(["zsh", f"{self.target}/{self.module}_run.sh"])
+            self._call(["zsh", f"{self.target}/{self.module}_run.sh{binlog_arg}"])
 
             # TODO: Do we need to call teardown script between each loop to clear cache?
 

@@ -3,7 +3,8 @@
 
 param(
     [string]$logFile = "",
-    [string]$startTime = (Get-Date).ToString("o")
+    [string]$startTime = (Get-Date).ToString("o"),
+    [switch]$binlog
 )
 
 # Require PowerShell > 7
@@ -171,12 +172,19 @@ check($lastexitcode)
 # ============================================================================
 # Build phase (timed)
 # ============================================================================
+$buildArgs = @("build", "Aspire.slnx", "--no-restore")
+if ($binlog) {
+    $binlogFile = Join-Path "$scriptDrive\hobl_data" "net_aspire_build_$(Get-Date -Format 'yyyyMMdd_HHmmss_fffffff').binlog"
+    $buildArgs += "-bl:$binlogFile"
+    "-- Binary logging enabled (adds build overhead): $binlogFile" | log
+}
+
 "-- net_aspire build started" | log
 Write-RunPhaseMarker "phase.run_prep.end"
 Write-RunPhaseMarker "phase.run_build.start"
 
 $buildDuration = Measure-Command {
-    dotnet build Aspire.slnx --no-restore > "$logDir\net_aspire_build.log" 2>&1
+    dotnet @buildArgs > "$logDir\net_aspire_build.log" 2>&1
 }
 check($lastexitcode)
 

@@ -20,12 +20,14 @@ class NetAspire(core.app_scenario.Scenario):
 
     # Set default parameters
     Params.setDefault(module, 'loops', '4')
+    Params.setDefault(module, 'binlog', '0', desc="Collect an MSBuild binary log for each build (adds overhead).", valOptions=['0', '1'])
 
 
     def setUp(self):
         # Get parameters
         self.platform = Params.get('global', 'platform')
         self.loops = Params.get(self.module, 'loops')
+        self.binlog = Params.get(self.module, 'binlog') == '1'
 
         self.target = f"{self.dut_exec_path}\\{self.resources}"
 
@@ -44,6 +46,8 @@ class NetAspire(core.app_scenario.Scenario):
             finally:
                 self._copy_data_from_remote(self.result_dir)
             self.createPrepStatusControlFile(self.prep_version)
+        elif self.binlog:
+            self._upload(f"scenarios\\windows\\{self.module}\\{self.resources}\\{self.module}_run.ps1", self.target, check_modified=False)
 
         # Call base class setUp() to dump config, call tool callbacks, and start measurment
         core.app_scenario.Scenario.setUp(self)
@@ -51,9 +55,10 @@ class NetAspire(core.app_scenario.Scenario):
 
     def runTest(self):
         start_time = datetime.now().astimezone().isoformat()
+        binlog_arg = " -binlog" if self.binlog else ""
         for i in range(int(self.loops)):
             logging.info(f"Running loop {i + 1}")
-            self._call(["pwsh", f"{self.target}\\{self.module}_run.ps1 -startTime {start_time}"])
+            self._call(["pwsh", f"{self.target}\\{self.module}_run.ps1 -startTime {start_time}{binlog_arg}"])
 
 
     def tearDown(self):

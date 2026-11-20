@@ -6,6 +6,13 @@ LOG_DIR="/Users/Shared/hobl_data"
 METRICS_FILE="$LOG_DIR/mac_net_aspire_results.csv"
 LOG_FILE="$LOG_DIR/mac_net_aspire_run.log"
 
+BINLOG_ENABLED=0
+for arg in "$@"; do
+    if [ "$arg" = "--binlog" ]; then
+        BINLOG_ENABLED=1
+    fi
+done
+
 # Create log directory if it doesn't exist
 if [ ! -d "$LOG_DIR" ]; then
     mkdir -p "$LOG_DIR"
@@ -148,13 +155,20 @@ log "-- net_aspire restore ended"
 # ============================================================================
 # Build phase (timed)
 # ============================================================================
+set -- --build
+if [ "$BINLOG_ENABLED" -eq 1 ]; then
+    BINLOG_FILE="$LOG_DIR/mac_net_aspire_build_$(date +%Y%m%d_%H%M%S)_$$.binlog"
+    set -- "$@" "/bl:$BINLOG_FILE"
+    log "-- Binary logging enabled (adds build overhead): $BINLOG_FILE"
+fi
+
 log "-- net_aspire build started"
 
 # Redirect output to a per-phase log so it is preserved in the results share.
 # Without redirection, stdout goes only to the RPC buffer and is lost on timeout.
 BUILD_LOG="$LOG_DIR/mac_net_aspire_build.log"
 log "-- Build output: $BUILD_LOG"
-/usr/bin/time -p -o "$LOG_DIR/mac_net_aspire_build_time.log" ./build.sh --build > "$BUILD_LOG" 2>&1
+/usr/bin/time -p -o "$LOG_DIR/mac_net_aspire_build_time.log" ./build.sh "$@" > "$BUILD_LOG" 2>&1
 check_status "Building .NET Aspire"
 
 # Parse build phase timing
