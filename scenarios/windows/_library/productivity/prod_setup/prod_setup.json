@@ -69,5 +69,14 @@
         "enabled": true,
         "id": "114NEY7",
         "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Prepare optional extended Office actions",
+        "enabled": true,
+        "file_name": ["code_OFFICE_PREPARE.py"],
+        "id": "OFFICEPREP",
+        "type": "Code"
     }
 ]
