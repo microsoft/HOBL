@@ -15,7 +15,7 @@ import time
 class MacFastApi(core.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
-    prep_version = "8"
+    prep_version = "9"
     resources = module + "_resources"
 
 
