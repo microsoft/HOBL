@@ -58,6 +58,43 @@ Each build writes `mac_net_aspire_build_<timestamp>_<pid>.binlog` to
 `--binlog` on `mac_net_aspire_run.sh`. Prepared-DUT updates, build-only logging,
 and timing overhead work the same way as on Windows.
 
+## Windows build experiments
+
+These independent options affect only the timed `dotnet build` command.
+Prep, clean, and restore are unchanged, and existing prepared DUTs receive the
+updated run script when either option is enabled without rerunning prep.
+
+| HOBL parameter | Default | Build effect |
+| --- | --- | --- |
+| `skip_playwright_browser_install` | `0` | Set to `1` to add `-p:InstallBrowsersForPlaywright=false`. |
+| `max_cpu_count` | `0` | Set to a positive integer to add `-m:<value>`. `0` omits the switch and keeps the original default; it does not mean single-threaded. |
+
+Append these overrides to your Windows `net_aspire` HOBL command:
+
+```powershell
+# Experiment A: only skip repeated Playwright browser preparation
+net_aspire:skip_playwright_browser_install=1 net_aspire:max_cpu_count=0
+
+# Experiment B: original workload, only change MSBuild parallelism
+net_aspire:skip_playwright_browser_install=0 net_aspire:max_cpu_count=12
+```
+
+The resulting build commands are, respectively:
+
+```powershell
+dotnet build Aspire.slnx --no-restore -p:InstallBrowsersForPlaywright=false
+dotnet build Aspire.slnx --no-restore -m:12
+```
+
+Both parameters can also be set under `[net_aspire]` in the profile. Explicitly
+resetting the other parameter as shown above keeps experiments A and B isolated,
+even if the profile contains an earlier override. Keep power mode, binlog
+settings, and other test settings identical when comparing results. These are
+experimental controls, not a guarantee of faster builds.
+
+Standalone runs accept `-skipPlaywrightBrowserInstall` and `-maxCpuCount 12`
+on `net_aspire_run.ps1`. The chosen build command is recorded in the run log.
+
 ## Notes
 
 - On ARM64, HOBL points `DOTNET_INSTALL_DIR` at the system dotnet to avoid pulling an

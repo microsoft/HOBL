@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"""Binlog configuration tests without RPC, SDK installs, or Aspire builds."""
+"""Build-option tests without RPC, SDK installs, or Aspire builds."""
 
 import importlib.util
 import json
@@ -21,7 +21,7 @@ MAC_SCENARIO_DIR = SCENARIO_DIR.parents[1] / 'macos' / 'mac_net_aspire'
 SHELL = shutil.which('zsh') or shutil.which('bash')
 
 
-class BinlogConfigurationTests(unittest.TestCase):
+class ScenarioConfigurationTestCase(unittest.TestCase):
     scenario_dir = SCENARIO_DIR
     scenario_class = 'NetAspire'
     platform = 'Windows'
@@ -52,6 +52,8 @@ class BinlogConfigurationTests(unittest.TestCase):
         for name in ('_upload', '_call', '_copy_data_from_remote', 'createPrepStatusControlFile'):
             setattr(self.scenario, name, Mock())
 
+
+class BinlogConfigurationTests(ScenarioConfigurationTestCase):
     def test_default_preserves_existing_run_command_and_prep(self):
         self.scenario.setUp()
         self.scenario._call.reset_mock()
@@ -94,6 +96,36 @@ class MacBinlogConfigurationTests(BinlogConfigurationTests):
     binlog_switch = '--binlog'
 
 
+class WindowsBuildExperimentConfigurationTests(ScenarioConfigurationTestCase):
+    def test_experiments_refresh_the_script_and_forward_independent_options(self):
+        for skip, max_cpu_count, binlog in (('1', '0', '0'), ('0', '12', '0'), ('1', '12', '1')):
+            with self.subTest(skip=skip, max_cpu_count=max_cpu_count, binlog=binlog):
+                self.setUp()
+                self.values.update(skip_playwright_browser_install=skip, max_cpu_count=max_cpu_count, binlog=binlog)
+                self.scenario.setUp()
+                self.scenario._upload.assert_called_once_with(
+                    r'scenarios\windows\net_aspire\net_aspire_resources\net_aspire_run.ps1',
+                    self.scenario.target, check_modified=False)
+                self.scenario.createPrepStatusControlFile.assert_not_called()
+                self.scenario._call.reset_mock()
+                self.scenario.runTest()
+                self.assertEqual(self.scenario._call.call_count, 2)
+                for call in self.scenario._call.call_args_list:
+                    command = call.args[0][1]
+                    self.assertEqual('-skipPlaywrightBrowserInstall' in command, skip == '1')
+                    self.assertEqual('-maxCpuCount 12' in command, max_cpu_count == '12')
+                    self.assertEqual('-binlog' in command, binlog == '1')
+
+    def test_invalid_parallelism_fails_before_upload_or_prep(self):
+        for value in ('-1', '12.5', 'twelve', '2147483648'):
+            with self.subTest(value=value):
+                self.values['max_cpu_count'] = value
+                with self.assertRaisesRegex(ValueError, 'max_cpu_count'):
+                    self.scenario.setUp()
+                self.scenario._upload.assert_not_called()
+                self.scenario._call.assert_not_called()
+
+
 @unittest.skipUnless(os.name == 'nt' and shutil.which('pwsh'), 'Requires Windows PowerShell 7')
 class BinlogScriptTests(unittest.TestCase):
     def setUp(self):
@@ -105,7 +137,8 @@ class BinlogScriptTests(unittest.TestCase):
         (self.root / 'aspire' / 'Aspire.slnx').touch()
         self.wrapper = self.root / 'invoke-test.ps1'
         self.wrapper.write_text(r'''
-param([string]$RunScript, [string]$TestRoot, [switch]$Binlog, [int]$BuildExitCode)
+param([string]$RunScript, [string]$TestRoot, [switch]$Binlog, [int]$BuildExitCode,
+      [switch]$SkipPlaywrightBrowserInstall, [int]$MaxCpuCount = 0)
 $ErrorActionPreference = 'Stop'
 function Split-Path {
     param([string]$Path, [switch]$Qualifier, [switch]$Parent)
@@ -125,16 +158,20 @@ function dotnet {
         $global:LASTEXITCODE = $BuildExitCode
     }
 }
-& $RunScript -binlog:$Binlog
+& $RunScript -binlog:$Binlog -skipPlaywrightBrowserInstall:$SkipPlaywrightBrowserInstall -maxCpuCount $MaxCpuCount
 exit $LASTEXITCODE
 ''', encoding='utf-8')
 
-    def run_script(self, enabled=False, build_exit_code=0):
+    def run_script(self, enabled=False, build_exit_code=0, skip_playwright=False, max_cpu_count=0):
         command = [shutil.which('pwsh'), '-NoProfile', '-NonInteractive', '-File', str(self.wrapper),
                    '-RunScript', str(SCENARIO_DIR / 'net_aspire_resources' / 'net_aspire_run.ps1'),
                    '-TestRoot', str(self.root), '-BuildExitCode', str(build_exit_code)]
         if enabled:
             command.append('-Binlog')
+        if skip_playwright:
+            command.append('-SkipPlaywrightBrowserInstall')
+        if max_cpu_count:
+            command.extend(['-MaxCpuCount', str(max_cpu_count)])
         return subprocess.run(command, capture_output=True, text=True, timeout=60)
 
     def dotnet_calls(self):
@@ -172,6 +209,36 @@ exit $LASTEXITCODE
         result = self.run_script(enabled=True, build_exit_code=37)
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertFalse((self.root / 'hobl_data' / 'net_aspire_results.csv').exists())
+
+    def test_experiments_change_only_the_requested_build_argument(self):
+        for skip, max_cpu_count, expected in (
+                (True, 0, '-p:InstallBrowsersForPlaywright=false'),
+                (False, 12, '-m:12')):
+            with self.subTest(skip=skip, max_cpu_count=max_cpu_count):
+                result = self.run_script(skip_playwright=skip, max_cpu_count=max_cpu_count)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                build = self.dotnet_calls()[-1]
+                self.assertEqual(build, ['build', 'Aspire.slnx', '--no-restore', expected])
+        for call in self.dotnet_calls():
+            if call[0] in ('clean', 'restore'):
+                self.assertEqual(len(call), 2)
+
+    def test_experiment_options_can_be_combined_with_binary_logging(self):
+        result = self.run_script(enabled=True, skip_playwright=True, max_cpu_count=12)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        build = self.dotnet_calls()[-1]
+        self.assertEqual(build[:5], ['build', 'Aspire.slnx', '--no-restore',
+                                    '-p:InstallBrowsersForPlaywright=false', '-m:12'])
+        self.assertEqual(len(build), 6)
+        self.assertTrue(build[5].startswith('-bl:'))
+        self.assertTrue(Path(build[5][4:]).is_file())
+
+    def test_invalid_parallelism_is_rejected_before_running_dotnet(self):
+        for value in (-1, 'twelve', 2147483648):
+            with self.subTest(value=value):
+                result = self.run_script(max_cpu_count=value)
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertFalse((self.root / 'dotnet-calls.jsonl').exists())
 
 
 @unittest.skipUnless(SHELL, 'Requires zsh or bash')

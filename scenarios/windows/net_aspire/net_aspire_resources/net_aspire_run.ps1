@@ -4,7 +4,10 @@
 param(
     [string]$logFile = "",
     [string]$startTime = (Get-Date).ToString("o"),
-    [switch]$binlog
+    [switch]$binlog,
+    [switch]$skipPlaywrightBrowserInstall,
+    [ValidateRange(0, 2147483647)]
+    [int]$maxCpuCount = 0
 )
 
 # Require PowerShell > 7
@@ -173,12 +176,19 @@ check($lastexitcode)
 # Build phase (timed)
 # ============================================================================
 $buildArgs = @("build", "Aspire.slnx", "--no-restore")
+if ($skipPlaywrightBrowserInstall) {
+    $buildArgs += "-p:InstallBrowsersForPlaywright=false"
+}
+if ($maxCpuCount -gt 0) {
+    $buildArgs += "-m:$maxCpuCount"
+}
 if ($binlog) {
     $binlogFile = Join-Path "$scriptDrive\hobl_data" "net_aspire_build_$(Get-Date -Format 'yyyyMMdd_HHmmss_fffffff').binlog"
     $buildArgs += "-bl:$binlogFile"
     "-- Binary logging enabled (adds build overhead): $binlogFile" | log
 }
 
+"-- Build command: dotnet $($buildArgs -join ' ')" | log
 "-- net_aspire build started" | log
 Write-RunPhaseMarker "phase.run_prep.end"
 Write-RunPhaseMarker "phase.run_build.start"
