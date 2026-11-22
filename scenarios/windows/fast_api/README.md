@@ -26,20 +26,21 @@ cd fastapi
 # 3. Isolated venv + build/test tooling
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install uv build
+python -m pip install uv==0.12.23
 python -m uv sync --no-dev --group tests --extra all --inexact --python .\.venv\Scripts\python.exe
 
 # 4. Timed workload
-python -m build                        # PEP 517 build -> dist/
+uv build --python .\.venv\Scripts\python.exe    # PEP 517 build -> dist/
 $env:PYTHONPATH = ".\docs_src"
-python -m pytest -n 0 --cov --cov-context=test tests scripts\tests
+python -m pytest -n auto --dist loadgroup --cov --cov-context=test tests scripts\tests
 ```
 
 ## Notes
 
 - The PEP 517 build spins up its own isolated environment. On a proxied corporate network,
-  set `$env:PIP_INDEX_URL` to your approved PyPI mirror so build isolation can fetch deps.
+  set `$env:UV_DEFAULT_INDEX` (uv) and `$env:PIP_INDEX_URL` (pip) to your approved PyPI mirror.
 - HOBL default: 5 loops (each loop = build + test). Works on x64 and ARM64.
 - Set `fast_api:workers=auto` or a non-negative integer to select pytest workers;
   the default `0` keeps tests serial. On macOS, use `mac_fast_api:workers`.
   Example: `hobl.cmd -s fast_api fast_api:loops=1 fast_api:workers=auto`.
+- For serial runs, use `pytest -n 0 --dist no` with the same coverage options and test paths.

@@ -903,8 +903,8 @@ if (-not (Test-Path $venvPython)) {
 $pypiIndexUrl = "https://packagefeedproxy.microsoft.io/pypi/simple"
 "Using approved PyPI feed proxy: $pypiIndexUrl" | log
 
-"Installing preparation and build tools from the approved feed..." | log
-& $venvPip install --index-url $pypiIndexUrl "uv==0.12.23" build
+"Installing uv from the approved feed..." | log
+& $venvPip install --index-url $pypiIndexUrl "uv==0.12.23"
 check($lastexitcode)
 
 $uvExe = Join-Path $venvDir "Scripts\uv.exe"
