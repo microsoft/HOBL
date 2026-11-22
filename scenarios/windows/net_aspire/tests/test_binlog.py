@@ -97,14 +97,18 @@ class MacBinlogConfigurationTests(BinlogConfigurationTests):
 
 
 class WindowsBuildExperimentConfigurationTests(ScenarioConfigurationTestCase):
+    skip_browser_switch = '-skipPlaywrightBrowserInstall'
+    max_cpu_switch = '-maxCpuCount'
+
     def test_experiments_refresh_the_script_and_forward_independent_options(self):
         for skip, max_cpu_count, binlog in (('1', '0', '0'), ('0', '12', '0'), ('1', '12', '1')):
             with self.subTest(skip=skip, max_cpu_count=max_cpu_count, binlog=binlog):
                 self.setUp()
                 self.values.update(skip_playwright_browser_install=skip, max_cpu_count=max_cpu_count, binlog=binlog)
                 self.scenario.setUp()
+                extension = 'ps1' if self.platform == 'Windows' else 'sh'
                 self.scenario._upload.assert_called_once_with(
-                    r'scenarios\windows\net_aspire\net_aspire_resources\net_aspire_run.ps1',
+                    f'scenarios\\{self.resource_platform}\\{self.scenario.module}\\{self.scenario.resources}\\{self.scenario.module}_run.{extension}',
                     self.scenario.target, check_modified=False)
                 self.scenario.createPrepStatusControlFile.assert_not_called()
                 self.scenario._call.reset_mock()
@@ -112,9 +116,9 @@ class WindowsBuildExperimentConfigurationTests(ScenarioConfigurationTestCase):
                 self.assertEqual(self.scenario._call.call_count, 2)
                 for call in self.scenario._call.call_args_list:
                     command = call.args[0][1]
-                    self.assertEqual('-skipPlaywrightBrowserInstall' in command, skip == '1')
-                    self.assertEqual('-maxCpuCount 12' in command, max_cpu_count == '12')
-                    self.assertEqual('-binlog' in command, binlog == '1')
+                    self.assertEqual(self.skip_browser_switch in command, skip == '1')
+                    self.assertEqual(f'{self.max_cpu_switch} 12' in command, max_cpu_count == '12')
+                    self.assertEqual(self.binlog_switch in command, binlog == '1')
 
     def test_invalid_parallelism_fails_before_upload_or_prep(self):
         for value in ('-1', '12.5', 'twelve', '2147483648'):
@@ -124,6 +128,17 @@ class WindowsBuildExperimentConfigurationTests(ScenarioConfigurationTestCase):
                     self.scenario.setUp()
                 self.scenario._upload.assert_not_called()
                 self.scenario._call.assert_not_called()
+
+
+class MacBuildExperimentConfigurationTests(WindowsBuildExperimentConfigurationTests):
+    scenario_dir = MAC_SCENARIO_DIR
+    scenario_class = 'MacNetAspire'
+    platform = 'MacOS'
+    resource_platform = 'MacOS'
+    dut_exec_path = '/Users/Shared/hobl_bin'
+    binlog_switch = '--binlog'
+    skip_browser_switch = '--skip-playwright-browser-install'
+    max_cpu_switch = '--max-cpu-count'
 
 
 @unittest.skipUnless(os.name == 'nt' and shutil.which('pwsh'), 'Requires Windows PowerShell 7')
@@ -292,10 +307,15 @@ fi
                                 capture_output=True, text=True, timeout=30, check=True)
         return result.stdout.strip()
 
-    def run_script(self, enabled=False, build_exit_code=0):
+    def run_script(self, enabled=False, build_exit_code=0, skip_playwright=False, max_cpu_count=0, extra_args=()):
         command = [SHELL, self.shell_path(self.runner)]
         if enabled:
             command.append('--binlog')
+        if skip_playwright:
+            command.append('--skip-playwright-browser-install')
+        if max_cpu_count:
+            command.extend(['--max-cpu-count', str(max_cpu_count)])
+        command.extend(extra_args)
         env = dict(os.environ, TEST_ROOT=self.test_root, BUILD_EXIT_CODE=str(build_exit_code))
         return subprocess.run(command, env=env, capture_output=True, text=True, timeout=30)
 
@@ -336,6 +356,45 @@ fi
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertFalse((self.root / 'hobl_data' / 'mac_net_aspire_results.csv').exists())
         self.assertEqual(len(list((self.root / 'hobl_data').glob('*.binlog'))), 1)
+
+    def test_experiments_change_only_the_requested_build_argument(self):
+        for skip, max_cpu_count, expected in (
+                (True, 0, '-p:InstallBrowsersForPlaywright=false'),
+                (False, 12, '-m:12')):
+            with self.subTest(skip=skip, max_cpu_count=max_cpu_count):
+                result = self.run_script(skip_playwright=skip, max_cpu_count=max_cpu_count)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(self.build_calls()[-1], ['--build', expected])
+        for call in self.build_calls():
+            if call[0] in ('--clean', '--restore'):
+                self.assertEqual(len(call), 1)
+
+    def test_experiment_options_can_be_combined_with_binary_logging(self):
+        result = self.run_script(enabled=True, skip_playwright=True, max_cpu_count=12)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        build = self.build_calls()[-1]
+        self.assertEqual(build[:3], ['--build', '-p:InstallBrowsersForPlaywright=false', '-m:12'])
+        self.assertEqual(len(build), 4)
+        self.assertTrue(build[3].startswith('/bl:'))
+        path = self.root / 'hobl_data' / build[3].rsplit('/', 1)[-1]
+        self.assertTrue(path.is_file())
+
+    def test_invalid_or_missing_parallelism_is_rejected_before_build(self):
+        for args in (('--max-cpu-count', '-1'), ('--max-cpu-count', '12.5'),
+                     ('--max-cpu-count', 'twelve'), ('--max-cpu-count', '2147483648'),
+                     ('--max-cpu-count', '999999999999999999999'), ('--max-cpu-count',)):
+            with self.subTest(args=args):
+                result = self.run_script(extra_args=args)
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertFalse((self.root / 'build-calls').exists())
+
+    def test_zero_and_leading_zero_parallelism_values_are_normalized(self):
+        for value, expected in (('0', ['--build']), ('000000000000', ['--build']),
+                                ('000000000012', ['--build', '-m:12'])):
+            with self.subTest(value=value):
+                result = self.run_script(extra_args=('--max-cpu-count', value))
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(self.build_calls()[-1], expected)
 
 
 if __name__ == '__main__':

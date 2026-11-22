@@ -58,9 +58,9 @@ Each build writes `mac_net_aspire_build_<timestamp>_<pid>.binlog` to
 `--binlog` on `mac_net_aspire_run.sh`. Prepared-DUT updates, build-only logging,
 and timing overhead work the same way as on Windows.
 
-## Windows build experiments
+## Build experiments (Windows and macOS)
 
-These independent options affect only the timed `dotnet build` command.
+These independent options affect only the timed build command.
 Prep, clean, and restore are unchanged, and existing prepared DUTs receive the
 updated run script when either option is enabled without rerunning prep.
 
@@ -79,21 +79,36 @@ net_aspire:skip_playwright_browser_install=1 net_aspire:max_cpu_count=0
 net_aspire:skip_playwright_browser_install=0 net_aspire:max_cpu_count=12
 ```
 
-The resulting build commands are, respectively:
+The resulting Windows build commands are, respectively:
 
 ```powershell
 dotnet build Aspire.slnx --no-restore -p:InstallBrowsersForPlaywright=false
 dotnet build Aspire.slnx --no-restore -m:12
 ```
 
-Both parameters can also be set under `[net_aspire]` in the profile. Explicitly
-resetting the other parameter as shown above keeps experiments A and B isolated,
+macOS accepts the same HOBL parameters under `[mac_net_aspire]` or as overrides:
+
+```powershell
+# Experiment A
+mac_net_aspire:skip_playwright_browser_install=1 mac_net_aspire:max_cpu_count=0
+
+# Experiment B
+mac_net_aspire:skip_playwright_browser_install=0 mac_net_aspire:max_cpu_count=12
+```
+
+These append `-p:InstallBrowsersForPlaywright=false` or `-m:12`, respectively,
+to the timed `./build.sh --build` command on macOS.
+
+Both parameters can also be set under `[net_aspire]` or `[mac_net_aspire]` in the
+profile. Explicitly resetting the other parameter as shown above keeps experiments A and B isolated,
 even if the profile contains an earlier override. Keep power mode, binlog
 settings, and other test settings identical when comparing results. These are
 experimental controls, not a guarantee of faster builds.
 
 Standalone runs accept `-skipPlaywrightBrowserInstall` and `-maxCpuCount 12`
-on `net_aspire_run.ps1`. The chosen build command is recorded in the run log.
+on `net_aspire_run.ps1`, or `--skip-playwright-browser-install` and
+`--max-cpu-count 12` on `mac_net_aspire_run.sh`. The chosen build command is
+recorded in the run log on both platforms.
 
 ## Notes
 

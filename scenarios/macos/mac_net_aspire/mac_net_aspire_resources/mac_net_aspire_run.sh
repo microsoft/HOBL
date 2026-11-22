@@ -7,10 +7,41 @@ METRICS_FILE="$LOG_DIR/mac_net_aspire_results.csv"
 LOG_FILE="$LOG_DIR/mac_net_aspire_run.log"
 
 BINLOG_ENABLED=0
-for arg in "$@"; do
-    if [ "$arg" = "--binlog" ]; then
-        BINLOG_ENABLED=1
-    fi
+SKIP_PLAYWRIGHT_BROWSER_INSTALL=0
+MAX_CPU_COUNT=0
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --binlog)
+            BINLOG_ENABLED=1
+            ;;
+        --skip-playwright-browser-install)
+            SKIP_PLAYWRIGHT_BROWSER_INSTALL=1
+            ;;
+        --max-cpu-count)
+            if [ "$#" -lt 2 ]; then
+                echo " ERROR - --max-cpu-count requires a non-negative 32-bit integer." >&2
+                exit 1
+            fi
+            MAX_CPU_COUNT="$2"
+            case "$MAX_CPU_COUNT" in
+                ''|*[!0-9]*)
+                    echo " ERROR - --max-cpu-count must be a non-negative 32-bit integer." >&2
+                    exit 1
+                    ;;
+            esac
+            while [ "${MAX_CPU_COUNT#0}" != "$MAX_CPU_COUNT" ]; do
+                MAX_CPU_COUNT="${MAX_CPU_COUNT#0}"
+            done
+            MAX_CPU_COUNT="${MAX_CPU_COUNT:-0}"
+            # Bound the decimal length before numeric comparison to avoid shell overflow.
+            if [ "${#MAX_CPU_COUNT}" -gt 10 ] || [ "$MAX_CPU_COUNT" -gt 2147483647 ]; then
+                echo " ERROR - --max-cpu-count must be a non-negative 32-bit integer." >&2
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+    shift
 done
 
 # Create log directory if it doesn't exist
@@ -156,12 +187,19 @@ log "-- net_aspire restore ended"
 # Build phase (timed)
 # ============================================================================
 set -- --build
+if [ "$SKIP_PLAYWRIGHT_BROWSER_INSTALL" -eq 1 ]; then
+    set -- "$@" "-p:InstallBrowsersForPlaywright=false"
+fi
+if [ "$MAX_CPU_COUNT" -gt 0 ]; then
+    set -- "$@" "-m:$MAX_CPU_COUNT"
+fi
 if [ "$BINLOG_ENABLED" -eq 1 ]; then
     BINLOG_FILE="$LOG_DIR/mac_net_aspire_build_$(date +%Y%m%d_%H%M%S)_$$.binlog"
     set -- "$@" "/bl:$BINLOG_FILE"
     log "-- Binary logging enabled (adds build overhead): $BINLOG_FILE"
 fi
 
+log "-- Build command: ./build.sh $*"
 log "-- net_aspire build started"
 
 # Redirect output to a per-phase log so it is preserved in the results share.
