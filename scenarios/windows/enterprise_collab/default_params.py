@@ -20,6 +20,8 @@ def run():
     return
 
 def run_user_only():
+    import_run_user_only('..\\_library\\productivity\\prod_excel_run_r3', here=__file__)
+    import_run_user_only('..\\_library\\productivity\\prod_word_run_r1', here=__file__)
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_setup')
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_teardown')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable')

@@ -443,6 +443,31 @@
                         "delay": "0",
                         "description": "",
                         "enabled": true,
+                        "id": "1YCKEH0",
+                        "include_path": "..\\_library\\productivity\\prod_excel_run_r3",
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1YCKPA9",
+                        "include_path": "..\\_library\\productivity\\prod_word_run_r1",
+                        "params": [
+                            {
+                                "name": "[short_typing]",
+                                "val_options": "0,1",
+                                "value": "0"
+                            }
+                        ],
+                        "type": "Include"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
                         "id": "19K59V7",
                         "include_path": "scenarios\\windows\\_library\\productivity\\prod_close",
                         "type": "Include"
