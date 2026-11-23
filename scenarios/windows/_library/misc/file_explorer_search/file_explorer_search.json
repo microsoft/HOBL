@@ -32,22 +32,6 @@
     },
     {
         "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1TY5E8V",
-        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "file_explorer_search_start"
-            }
-        ],
-        "type": "Include"
-    },
-    {
-        "children": [],
         "delay": "5",
         "description": "File Name",
         "enabled": true,
@@ -55,22 +39,6 @@
         "text": "[file_name]\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1TY5EXW",
-        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "file_explorer_search_end"
-            }
-        ],
-        "type": "Include"
     },
     {
         "children": [],
