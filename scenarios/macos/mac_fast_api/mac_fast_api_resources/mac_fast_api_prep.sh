@@ -212,8 +212,8 @@ cd $BIN_DIR/fastapi || {
 # Same pinned versions are served, so there is no functional or performance change.
 PYPI_INDEX_URL="https://packagefeedproxy.microsoft.io/pypi/simple"
 log "-- Using approved PyPI feed proxy: $PYPI_INDEX_URL"
-"$VENV_PIP" install --index-url "$PYPI_INDEX_URL" "uv==0.12.23" build
-check_status "Installing preparation and build tools"
+"$VENV_PIP" install --index-url "$PYPI_INDEX_URL" "uv==0.12.23"
+check_status "Installing uv"
 
 UV="$VENV_DIR/bin/uv"
 if [ ! -x "$UV" ] || [ ! -f "uv.lock" ]; then

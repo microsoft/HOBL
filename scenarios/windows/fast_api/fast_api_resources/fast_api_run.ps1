@@ -320,23 +320,28 @@ if (-not (Test-Path $venvPython)) {
 }
 "Using venv python: $venvPython" | log
 
+$venvUv = Join-Path (Split-Path -Parent $venvPython) "uv.exe"
+if (-not (Test-Path -LiteralPath $venvUv -PathType Leaf)) {
+    " ERROR - uv missing at $venvUv. Re-run FastAPI prep." | log
+    Exit 1
+}
+"Using uv: $venvUv" | log
+
 "Validating venv has required packages..." | log
-& $venvPython -c "import build, coverage, pytest; print('build', build.__version__, '| coverage', coverage.__version__, '| pytest', pytest.__version__)" 2>&1 | log
+& $venvPython -c "import coverage, pytest; print('coverage', coverage.__version__, '| pytest', pytest.__version__)" 2>&1 | log
 if ($LASTEXITCODE -ne 0) {
-    " ERROR - venv has missing/broken Python packages (build, coverage, pytest expected)." | log
+    " ERROR - venv has missing/broken Python packages (coverage, pytest expected)." | log
     " ERROR - Possible causes: Defender quarantine, disk cleanup, or external tampering." | log
     " ERROR - Re-prep required: delete $scriptDrive\hobl_bin\prep_status\fast_api<version> on the DUT and re-run." | log
     Exit 1
 }
 
-# Route PEP 517 build isolation through the approved Microsoft PyPI feed proxy.
-# `python -m build` spins up its own isolated environment and pip-installs the build
-# backend (pdm-backend) on every run; that isolated pip honors PIP_INDEX_URL. Without
-# this it targets public PyPI, which is blocked/SSL-inspected on Microsoft-managed
-# devices (CISO Central Feed Services policy) and injects network variability into
-# build_time. Setting it here keeps the timed build off the non-approved feed.
+# uv does not read PIP_INDEX_URL; pass the approved index explicitly for build isolation.
 $env:PIP_INDEX_URL = "https://packagefeedproxy.microsoft.io/pypi/simple"
-"Set PIP_INDEX_URL for build isolation: $env:PIP_INDEX_URL" | log
+foreach ($name in 'UV_INDEX', 'UV_EXTRA_INDEX_URL', 'UV_INDEX_URL', 'UV_FIND_LINKS') {
+    [Environment]::SetEnvironmentVariable($name, $null, 'Process')
+}
+"Using package index: $env:PIP_INDEX_URL" | log
 
 "Building FastAPI..." | log
 Write-RunPhaseMarker "phase.run_prep.end"
@@ -347,7 +352,7 @@ Write-RunPhaseMarker "phase.run_build.start"
 $buildLog = "$LOG_DIR\fast_api_build.log"
 "Build output: $buildLog" | log
 $buildTime = (Measure-Command {
-    & $venvPython -m build *> $buildLog
+    & $venvUv build --python $venvPython --no-python-downloads --no-config --default-index $env:PIP_INDEX_URL --system-certs *> $buildLog
 }).TotalSeconds
 $buildExitCode = $LASTEXITCODE
 Write-RunPhaseMarker "phase.run_build.end"
@@ -366,9 +371,10 @@ $env:PYTHONIOENCODING = "utf-8"
 Write-RunPhaseMarker "phase.run_test.start"
 $testLog = "$LOG_DIR\fast_api_test.log"
 "Test output: $testLog" | log
-# Both platforms use pytest-cov and the same release test directories.
+# pytest-cov needs --dist no to record per-test contexts when there are no workers.
+$distribution = if ($Workers -match '^0+$') { "no" } else { "loadgroup" }
 $testTime = (Measure-Command {
-    & $venvPython -m pytest -n $Workers --dist loadgroup --cov --cov-context=test --cov-report=term tests "scripts\tests" *> $testLog
+    & $venvPython -m pytest -n $Workers --dist $distribution --cov --cov-context=test --cov-report=term tests "scripts\tests" *> $testLog
 }).TotalSeconds
 $testExitCode = $LASTEXITCODE
 Write-RunPhaseMarker "phase.run_test.end"

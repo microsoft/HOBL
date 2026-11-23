@@ -15,7 +15,7 @@ from datetime import datetime
 class FastApi(core.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
-    prep_version = "10"
+    prep_version = "11"
     resources = module + "_resources"
 
 
@@ -49,6 +49,10 @@ class FastApi(core.app_scenario.Scenario):
             finally:
                 self._copy_data_from_remote(self.result_dir)
             self.createPrepStatusControlFile(self.prep_version)
+        else:
+            # Refresh the runner without replacing the prepared .venv in the resources directory.
+            runner = os.path.join("scenarios", "windows", self.module, self.resources, f"{self.module}_run.ps1")
+            self._upload(runner, self.target, check_modified=False)
 
         # Call base class setUp() to dump config, call tool callbacks, and start measurment
         core.app_scenario.Scenario.setUp(self)

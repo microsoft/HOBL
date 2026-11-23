@@ -127,10 +127,12 @@ log "✓ Python version confirmed: $PYTHON_VERSION"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 check_status "Locating scenario resources"
 VENV_PYTHON="$SCRIPT_DIR/.venv/bin/python"
-if [ ! -x "$VENV_PYTHON" ]; then
-    log " ERROR - FastAPI scenario environment is missing at $SCRIPT_DIR. Re-prep required."
+UV="$SCRIPT_DIR/.venv/bin/uv"
+if [ ! -x "$VENV_PYTHON" ] || [ ! -x "$UV" ]; then
+    log " ERROR - FastAPI scenario python or uv is missing in $SCRIPT_DIR/.venv/bin. Re-prep required."
     exit 1
 fi
+log "-- Using uv: $UV"
 export VIRTUAL_ENV="$SCRIPT_DIR/.venv"
 export PATH="$VIRTUAL_ENV/bin:$PATH"
 
@@ -150,23 +152,19 @@ cd $BIN_DIR || {
 }
 log "✓ Current directory: $(pwd)"
 
-# Verify build and test modules are available
-"$VENV_PYTHON" -c "import build, coverage, pytest, fastapi.cli; from fastapi.testclient import TestClient; from coverage.tracer import CTracer"
+# Verify test modules are available
+"$VENV_PYTHON" -c "import coverage, pytest, fastapi.cli; from fastapi.testclient import TestClient; from coverage.tracer import CTracer"
 if [ $? -ne 0 ]; then
-    log " ERROR - Required Python build or test modules are not installed"
+    log " ERROR - Required Python test modules are not installed"
     log "Please run mac_fast_api_prep.sh first"
     exit 1
 fi
-log "✓ Build and test modules are available"
+log "✓ Test modules are available"
 
-# Route PEP 517 build isolation (and any pip invoked by the tests) through the
-# approved Microsoft PyPI feed proxy. `python -m build` spins up its own isolated
-# environment and pip-installs the build backend (pdm-backend) on every run; that
-# isolated pip honors PIP_INDEX_URL. Without this it targets public PyPI, which is
-# blocked/SSL-inspected on Microsoft-managed devices (CISO Central Feed Services
-# policy) and injects network variability into build time.
+# uv does not read PIP_INDEX_URL; pass the approved index explicitly for build isolation.
 export PIP_INDEX_URL="https://packagefeedproxy.microsoft.io/pypi/simple"
-log "-- Set PIP_INDEX_URL for build isolation: $PIP_INDEX_URL"
+unset UV_INDEX UV_EXTRA_INDEX_URL UV_INDEX_URL UV_FIND_LINKS
+log "-- Using package index: $PIP_INDEX_URL"
 
 log "-- fast_api build started"
 
@@ -174,7 +172,7 @@ log "-- fast_api build started"
 # Without redirection, stdout goes only to the RPC buffer and is lost on timeout.
 BUILD_LOG="$LOG_DIR/mac_fast_api_build.log"
 log "-- Build output: $BUILD_LOG"
-/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_build_time.log" "$VENV_PYTHON" -m build > "$BUILD_LOG" 2>&1
+/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_build_time.log" "$UV" build --python "$VENV_PYTHON" --no-python-downloads --no-config --default-index "$PIP_INDEX_URL" --system-certs > "$BUILD_LOG" 2>&1
 check_status "Building Fast API"
 
 # Parse build phase timing
@@ -187,7 +185,12 @@ log "-- fast_api tests started"
 TEST_LOG="$LOG_DIR/mac_fast_api_test.log"
 log "-- Test output: $TEST_LOG"
 export PYTHONPATH="./docs_src"
-/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_test_time.log" "$VENV_PYTHON" -m pytest -n "$WORKERS" --dist loadgroup --cov --cov-context=test --cov-report=term tests scripts/tests > "$TEST_LOG" 2>&1
+# pytest-cov needs --dist no to record per-test contexts when there are no workers.
+case "$WORKERS" in
+    *[!0]*) DISTRIBUTION="loadgroup" ;;
+    *) DISTRIBUTION="no" ;;
+esac
+/usr/bin/time -p -o "$LOG_DIR/mac_fast_api_test_time.log" "$VENV_PYTHON" -m pytest -n "$WORKERS" --dist "$DISTRIBUTION" --cov --cov-context=test --cov-report=term tests scripts/tests > "$TEST_LOG" 2>&1
 check_status "Running Fast API tests"
 
 # Parse test phase timing
@@ -213,6 +216,8 @@ log "========================================"
 # Write metrics CSV file (key,value format)
 cat > "$METRICS_FILE" << EOF
 scenario_runtime,$scenario_runtime
+build_time,$build_real
+test_time,$test_real
 build_real,$build_real
 build_user,$build_user
 build_sys,$build_sys
