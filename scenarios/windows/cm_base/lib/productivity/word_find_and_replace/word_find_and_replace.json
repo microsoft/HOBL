@@ -1,10 +1,10 @@
 [
     {
-        "author": "jewilder",
-        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "author": "dasashu",
+        "capture_device": "HP Omnibook X",
         "children": [],
         "create_date": "2025-03-01",
-        "description": "Edit Word doc",
+        "description": "Find And eplace in Word document",
         "enabled": true,
         "id": "UR27L8",
         "type": "Information"
