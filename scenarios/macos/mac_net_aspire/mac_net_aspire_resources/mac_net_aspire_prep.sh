@@ -7,6 +7,7 @@ BIN_DIR="/Users/Shared/hobl_bin"
 export SUDO_ASKPASS=$BIN_DIR/get_password.sh
 LOG_DIR="/Users/Shared/hobl_data"
 LOG_FILE="$LOG_DIR/mac_net_aspire_prep.log"
+DOTNET_SDK_VERSION="11.0.100"
 mkdir -p "$LOG_DIR"
 
 log() {
@@ -184,6 +185,22 @@ if [ "$PYTHON_VERSION" != "3.12.10" ]; then
     exit 1
 fi
 log "✓ Python version confirmed: $PYTHON_VERSION"
+
+log "-- Pinning Aspire to stable .NET SDK $DOTNET_SDK_VERSION"
+python - "$BIN_DIR/aspire/global.json" "$DOTNET_SDK_VERSION" <<'PYSDK'
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+config = json.loads(path.read_text(encoding="utf-8"))
+config["sdk"]["version"] = sys.argv[2]
+config["sdk"]["rollForward"] = "disable"
+config["sdk"]["allowPrerelease"] = False
+config["tools"]["dotnet"] = sys.argv[2]
+path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+PYSDK
+check_status "Configuring Aspire .NET SDK"
 
 # -------------------------------------------------------------------
 # Regenerate ConfigurationSchema.json files

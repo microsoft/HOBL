@@ -14,7 +14,7 @@ import time
 class MacNetAspire(core.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
-    prep_version = "11"
+    prep_version = "12"
     resources = module + "_resources"
 
 
