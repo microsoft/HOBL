@@ -289,6 +289,15 @@
             },
             {
                 "children": [],
+                "delay": "2",
+                "description": "",
+                "enabled": true,
+                "id": "1YEY6H5",
+                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+                "type": "Include"
+            },
+            {
+                "children": [],
                 "delay": "0",
                 "description": "",
                 "enabled": true,
