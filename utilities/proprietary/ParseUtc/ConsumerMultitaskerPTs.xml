@@ -1612,317 +1612,6 @@
         <final id="_cancel" />
       </scxml>
     </scenario>
-    <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaversion="2" scenarioid="{ed85c884-5dfb-456c-95b0-39f985894d92}" scenarioname="PT_9475__FE Xaml Home_ File Explorer Launch to XAML Home_ed85c8" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="_FE Xaml Home_ File Explorer Launch to XAML Home" measureversionguid="{00000000-0000-0000-0000-000000000000}">
-      <triggers>
-        <trigger triggername="MicrosoftWindowsFileExplorer.NavigateEnd">
-          <etwtrigger>
-            <provider>{8e12dcd2-fe15-5af4-2a6a-e707d9dc7de5}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="Microsoft-Windows-Shell-Launcher.AppLaunch">
-          <etwtrigger>
-            <provider>{3d6120a6-0986-51c4-213a-e2975903051d}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="MicrosoftWindowsFileExplorer.XamlFolderView_ReportFirstItemRendered">
-          <etwtrigger>
-            <provider>{8e12dcd2-fe15-5af4-2a6a-e707d9dc7de5}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="MicrosoftWindowsFileExplorer.ShellBrowserCreate">
-          <etwtrigger>
-            <provider>{8e12dcd2-fe15-5af4-2a6a-e707d9dc7de5}</provider>
-            <keywords>0x400000000000</keywords>
-            <level>5</level>
-          </etwtrigger>
-        </trigger>
-      </triggers>
-      <filters>
-        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
-            <valuename>IsTest</valuename>
-            <valuetype>REG_NONE</valuetype>
-            <value />
-            <operation>notexists</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
-          <registryfilter treatnotexistsassuccess="1">
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
-            <valuename>BuildLabEx</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>.*chk.*</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
-          <registryfilter treatnotexistsassuccess="1">
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
-            <valuename>SystemProductName</valuename>
-            <valuetype>REG_SZ</valuetype>
-            <value>Virtual Machine</value>
-            <operation>notregex</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
-          <registryfilter>
-            <hive>HKEY_LOCAL_MACHINE</hive>
-            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
-            <valuename />
-            <valuetype>REG_NONE</valuetype>
-            <value />
-            <operation>notexists</operation>
-          </registryfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7314_cve14615_cv">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>MicrosoftWindowsFileExplorer.NavigateEnd</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>_cv</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion strict="true">
-              <triggername>MicrosoftWindowsFileExplorer.XamlFolderView_ReportFirstItemRendered</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>_cv</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7312Locatione_13">
-          <singletriggerpropertyfilter>
-            <triggername>Microsoft-Windows-Shell-Launcher.AppLaunch</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>Location</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>3</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7312AppIde_1Microsoft_Windows_Explorer">
-          <singletriggerpropertyfilter>
-            <triggername>Microsoft-Windows-Shell-Launcher.AppLaunch</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>AppId</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>Microsoft.Windows.Explorer</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7313_opcodee_11">
-          <singletriggerpropertyfilter>
-            <triggername>MicrosoftWindowsFileExplorer.ShellBrowserCreate</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>_opcode</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>1</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7313_aide7313_aid">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>MicrosoftWindowsFileExplorer.ShellBrowserCreate</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>_aid</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion strict="true">
-              <triggername>MicrosoftWindowsFileExplorer.ShellBrowserCreate</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>_aid</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match14615namespaceCLSIDe_1F874310E_B6B7_47DC_BC84_B9E6B38F5903">
-          <singletriggerpropertyfilter>
-            <triggername>MicrosoftWindowsFileExplorer.XamlFolderView_ReportFirstItemRendered</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>namespaceCLSID</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>F874310E-B6B7-47DC-BC84-B9E6B38F5903</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7314_tide7313_tid">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>MicrosoftWindowsFileExplorer.NavigateEnd</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>_tid</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion strict="true">
-              <triggername>MicrosoftWindowsFileExplorer.ShellBrowserCreate</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>_tid</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7314HResulte_10">
-          <singletriggerpropertyfilter>
-            <triggername>MicrosoftWindowsFileExplorer.NavigateEnd</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>HResult</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>0</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7313_opcodee_12">
-          <singletriggerpropertyfilter>
-            <triggername>MicrosoftWindowsFileExplorer.ShellBrowserCreate</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>_opcode</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>2</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7314NavigationEvente_10">
-          <singletriggerpropertyfilter>
-            <triggername>MicrosoftWindowsFileExplorer.NavigateEnd</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>NavigationEvent</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>0</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match7313BrowseLocationRawPathe7314RawPath">
-          <dualtriggerpropertyfilter>
-            <triggercriterion strict="true">
-              <triggername>MicrosoftWindowsFileExplorer.ShellBrowserCreate</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>BrowseLocationRawPath</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion>
-              <triggername>MicrosoftWindowsFileExplorer.NavigateEnd</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>RawPath</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-      </filters>
-      <scxml version="1.0" datamodel="custom" initial="_start" xmlns="http://www.w3.org/2005/07/scxml">
-        <state id="1">
-          <transition event="MicrosoftWindowsFileExplorer.ShellBrowserCreate" target="2" name="T2" uploadtrigger="false">
-            <filter strict="false">match7313_opcodee_11</filter>
-            <filter strict="false">match7313_aide7313_aid</filter>
-          </transition>
-        </state>
-        <state id="_start">
-          <transition event="Microsoft-Windows-Shell-Launcher.AppLaunch" target="1" name="T1" uploadtrigger="false">
-            <filter strict="false">match7312Locatione_13</filter>
-            <filter strict="false">match7312AppIde_1Microsoft_Windows_Explorer</filter>
-          </transition>
-        </state>
-        <state id="2">
-          <transition event="MicrosoftWindowsFileExplorer.NavigateEnd" target="3" name="T3" uploadtrigger="false">
-            <filter strict="false">match7314_cve14615_cv</filter>
-            <filter>match7314NavigationEvente_10</filter>
-            <filter strict="false">match7314_tide7313_tid</filter>
-            <filter strict="false">match7314HResulte_10</filter>
-            <filter strict="false">match7313BrowseLocationRawPathe7314RawPath</filter>
-          </transition>
-        </state>
-        <state id="3">
-          <transition event="MicrosoftWindowsFileExplorer.ShellBrowserCreate" target="4" name="T4" uploadtrigger="false">
-            <filter>match7313_aide7313_aid</filter>
-            <filter>match7314_tide7313_tid</filter>
-            <filter strict="false">match7313_opcodee_12</filter>
-            <filter>match7313BrowseLocationRawPathe7314RawPath</filter>
-          </transition>
-        </state>
-        <state id="4">
-          <transition event="MicrosoftWindowsFileExplorer.XamlFolderView_ReportFirstItemRendered" target="_complete" name="T5" uploadtrigger="false">
-            <filter>match7314_cve14615_cv</filter>
-            <filter strict="false">match14615namespaceCLSIDe_1F874310E_B6B7_47DC_BC84_B9E6B38F5903</filter>
-          </transition>
-        </state>
-        <final id="_complete" />
-        <final id="_cancel" />
-      </scxml>
-    </scenario>
     <scenario schemaversion="2" scenarioid="{9bf26973-1446-4c85-b54d-f7bce1575ad7}" scenarioname="PT_9471_Edge MSN Tab Anylayout NewTab _Stable__9bf269" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge MSN Tab Anylayout NewTab _Stable_" ptdurationfield="Duration" measureversionguid="{00000000-0000-0000-0000-000000000000}">
       <triggers>
         <trigger triggername="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab">
@@ -1935,10 +1624,10 @@
       </triggers>
       <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
         <state id="_start">
-          <transition event="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab" target="_complete" name="T1"/>
+          <transition event="Microsoft.MSEdge.Microsoft.NewTabPage.TimeToVisuallyReady.MSN.AnyLayout.NewTab" target="_complete" name="T1" />
         </state>
-        <final id="_complete"/>
-        <final id="_cancel"/>
+        <final id="_complete" />
+        <final id="_cancel" />
       </scxml>
     </scenario>
     <scenario schemaversion="2" scenarioid="{77b6b8ee-097a-4c2a-96e6-fb83332f6487}" scenarioname="PT_9175_Taskbar app launch performance_77b6b8" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Taskbar app launch performance" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -1960,13 +1649,13 @@
       </triggers>
       <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
         <state id="1">
-          <transition event="Microsoft.Windows.Shell.Taskbar.TaskListButtonPrepared" target="_complete" name="T2" uploadtrigger="false"/>
+          <transition event="Microsoft.Windows.Shell.Taskbar.TaskListButtonPrepared" target="_complete" name="T2" uploadtrigger="false" />
         </state>
         <state id="_start">
-          <transition event="Microsoft.Windows.Shell.Launcher.AppLaunch" target="1" name="T1" uploadtrigger="false"/>
+          <transition event="Microsoft.Windows.Shell.Launcher.AppLaunch" target="1" name="T1" uploadtrigger="false" />
         </state>
-        <final id="_cancel"/>
-        <final id="_complete"/>
+        <final id="_cancel" />
+        <final id="_complete" />
       </scxml>
     </scenario>
     <scenario schemaversion="2" scenarioid="{a1b460d9-156d-46a8-a09d-59d18c032f92}" scenarioname="PT_10216_Edge Tab Switch_a1b460" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Edge Tab Switch" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -2073,7 +1762,7 @@
             <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
             <valuename>IsTest</valuename>
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -2101,9 +1790,9 @@
           <registryfilter>
             <hive>HKEY_LOCAL_MACHINE</hive>
             <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
-            <valuename/>
+            <valuename />
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -2144,8 +1833,8 @@
             <filter>match12990ProcessCreateProcesse8729_appid</filter>
           </transition>
         </state>
-        <final id="_complete"/>
-        <final id="_cancel"/>
+        <final id="_complete" />
+        <final id="_cancel" />
       </scxml>
     </scenario>
     <scenario schemaversion="2" scenarioid="{8c6a9509-1099-49e8-a6f0-f9c59fa66c82}" scenarioname="PT_9087_TaskManagerAppLaunch_8c6a95" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="TaskManagerAppLaunch" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -2172,7 +1861,7 @@
             <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
             <valuename>IsTest</valuename>
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -2200,9 +1889,9 @@
           <registryfilter>
             <hive>HKEY_LOCAL_MACHINE</hive>
             <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
-            <valuename/>
+            <valuename />
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -2243,8 +1932,8 @@
             <filter>match12990ProcessCreateProcesse8729_appid</filter>
           </transition>
         </state>
-        <final id="_complete"/>
-        <final id="_cancel"/>
+        <final id="_complete" />
+        <final id="_cancel" />
       </scxml>
     </scenario>
     <scenario schemaversion="2" scenarioid="{16bf7b51-3bc6-4173-8bb9-aaeafad04b4a}" scenarioname="PT_8784_Office_PPT_FileOpen v3_16bf7b" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_PPT_FileOpen v3" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -2278,7 +1967,7 @@
             <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
             <valuename>IsTest</valuename>
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -2306,9 +1995,9 @@
           <registryfilter>
             <hive>HKEY_LOCAL_MACHINE</hive>
             <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
-            <valuename/>
+            <valuename />
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -2378,8 +2067,8 @@
             <filter>match11060_pide11062_pid</filter>
           </transition>
         </state>
-        <final id="_complete"/>
-        <final id="_cancel"/>
+        <final id="_complete" />
+        <final id="_cancel" />
       </scxml>
     </scenario>
     <scenario schemaversion="2" scenarioid="{0e3fbfaa-4fb2-4360-b3d3-7d0c2f1ace21}" scenarioname="PT_8920_Office_Word_FileOpen_WCOS_VAIL_0e3fbf" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_Word_FileOpen_WCOS_VAIL" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -2498,8 +2187,8 @@
             <filter>match63ScenarioIde64ScenarioId</filter>
           </transition>
         </state>
-        <final id="_complete"/>
-        <final id="_cancel"/>
+        <final id="_complete" />
+        <final id="_cancel" />
       </scxml>
     </scenario>
     <scenario schemaversion="2" scenarioid="{a037e3c3-5dc5-4caf-88a1-b28a5bbf5ad9}" scenarioname="PT_8786_Office_XL_FileOpen v2_a037e3" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_XL_FileOpen v2" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -2533,7 +2222,7 @@
             <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
             <valuename>IsTest</valuename>
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -2561,9 +2250,9 @@
           <registryfilter>
             <hive>HKEY_LOCAL_MACHINE</hive>
             <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
-            <valuename/>
+            <valuename />
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -2633,366 +2322,8 @@
             <filter>match11066_pide11068_pid</filter>
           </transition>
         </state>
-        <final id="_complete"/>
-        <final id="_cancel"/>
-      </scxml>
-    </scenario>
-    <scenario schemaversion="2" scenarioid="{db679776-8c31-49e0-be9a-4e4447d9d9d8}" scenarioname="PT_505_Office_PPT_FileSave_db6797" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_PPT_FileSave" measureversionguid="{00000000-0000-0000-0000-000000000000}">
-      <triggers>
-        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0">
-          <etwtrigger>
-            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
-            <id>1501</id>
-            <version>0</version>
-            <keywords>0x1000000000000</keywords>
-            <level>4</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0">
-          <etwtrigger>
-            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
-            <id>1503</id>
-            <version>0</version>
-            <keywords>0x1000000000000</keywords>
-            <level>4</level>
-          </etwtrigger>
-        </trigger>
-      </triggers>
-      <filters>
-        <filter appliesto="trigger" filtername="match63ScenarioIde_1505">
-          <singletriggerpropertyfilter>
-            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>ScenarioId</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>505</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match64ScenarioIde_1505">
-          <singletriggerpropertyfilter>
-            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>ScenarioId</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>505</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match63MatchKeye64MatchKey">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>MatchKey</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>MatchKey</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match63ScenarioIde64ScenarioId">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>ScenarioId</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>ScenarioId</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-      </filters>
-      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
-        <state id="_start">
-          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0" target="1" name="T0">
-            <filter>match63ScenarioIde_1505</filter>
-            <filter strict="false">match63MatchKeye64MatchKey</filter>
-            <filter strict="false">match63ScenarioIde64ScenarioId</filter>
-          </transition>
-        </state>
-        <state id="1">
-          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0" target="_complete" name="T1">
-            <filter>match64ScenarioIde_1505</filter>
-            <filter>match63MatchKeye64MatchKey</filter>
-            <filter>match63ScenarioIde64ScenarioId</filter>
-          </transition>
-        </state>
-        <final id="_complete"/>
-      </scxml>
-    </scenario>
-    <scenario schemaversion="2" scenarioid="{748af3e9-d1d0-455b-9838-cfb7e735015a}" scenarioname="PT_504_Office_XL_FileSave_748af3" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="Office_XL_FileSave" measureversionguid="{00000000-0000-0000-0000-000000000000}">
-      <triggers>
-        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0">
-          <etwtrigger>
-            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
-            <id>1501</id>
-            <version>0</version>
-            <keywords>0x1000000000000</keywords>
-            <level>4</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0">
-          <etwtrigger>
-            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
-            <id>1503</id>
-            <version>0</version>
-            <keywords>0x1000000000000</keywords>
-            <level>4</level>
-          </etwtrigger>
-        </trigger>
-      </triggers>
-      <filters>
-        <filter appliesto="trigger" filtername="match63ScenarioIde_1504">
-          <singletriggerpropertyfilter>
-            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>ScenarioId</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>504</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match64ScenarioIde_1504">
-          <singletriggerpropertyfilter>
-            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>ScenarioId</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>504</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match63MatchKeye64MatchKey">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>MatchKey</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>MatchKey</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match63ScenarioIde64ScenarioId">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>ScenarioId</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>ScenarioId</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-      </filters>
-      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
-        <state id="_start">
-          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0" target="1" name="T0">
-            <filter>match63ScenarioIde_1504</filter>
-            <filter strict="false">match63MatchKeye64MatchKey</filter>
-            <filter strict="false">match63ScenarioIde64ScenarioId</filter>
-          </transition>
-        </state>
-        <state id="1">
-          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0" target="_complete" name="T1">
-            <filter>match64ScenarioIde_1504</filter>
-            <filter>match63MatchKeye64MatchKey</filter>
-            <filter>match63ScenarioIde64ScenarioId</filter>
-          </transition>
-        </state>
-        <final id="_complete"/>
-      </scxml>
-    </scenario>
-    <scenario schemaversion="2" scenarioid="{f98178a5-2b3d-488e-8041-3774cf218684}" scenarioname="PT_503_Office_Word_FileSave_f98178" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="oldest" maxinflightinstances="1" ptscenarioname="Office_Word_FileSave" measureversionguid="{00000000-0000-0000-0000-000000000000}">
-      <triggers>
-        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0">
-          <etwtrigger>
-            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
-            <id>1501</id>
-            <version>0</version>
-            <keywords>0x1000000000000</keywords>
-            <level>4</level>
-          </etwtrigger>
-        </trigger>
-        <trigger triggername="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0">
-          <etwtrigger>
-            <provider>{030f2f57-abd0-4427-bcf1-3a3587d7dc7d}</provider>
-            <id>1503</id>
-            <version>0</version>
-            <keywords>0x1000000000000</keywords>
-            <level>4</level>
-          </etwtrigger>
-        </trigger>
-      </triggers>
-      <filters>
-        <filter appliesto="trigger" filtername="match63ScenarioIde_1504">
-          <singletriggerpropertyfilter>
-            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>ScenarioId</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>504</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match64ScenarioIde_1504">
-          <singletriggerpropertyfilter>
-            <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-            <propertyselector>
-              <propertykey>
-                <name>ScenarioId</name>
-              </propertykey>
-            </propertyselector>
-            <mathoperation>add</mathoperation>
-            <constant>0</constant>
-            <operation>equal</operation>
-            <value>504</value>
-          </singletriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match63ScenarioIde64ScenarioId">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>ScenarioId</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>ScenarioId</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-        <filter appliesto="trigger" filtername="match63MatchKeye64MatchKey">
-          <dualtriggerpropertyfilter>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>MatchKey</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <triggercriterion>
-              <triggername>030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0</triggername>
-              <propertyselector>
-                <propertykey>
-                  <name>MatchKey</name>
-                </propertykey>
-              </propertyselector>
-              <mathoperation>add</mathoperation>
-              <constant>0</constant>
-            </triggercriterion>
-            <operation>equal</operation>
-          </dualtriggerpropertyfilter>
-        </filter>
-      </filters>
-      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
-        <state id="_start">
-          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1501_0" target="1" name="T0" uploadtrigger="false">
-            <filter>match63ScenarioIde_1504</filter>
-            <filter strict="false">match63MatchKeye64MatchKey</filter>
-            <filter strict="false">match63ScenarioIde64ScenarioId</filter>
-          </transition>
-        </state>
-        <state id="1">
-          <transition event="030F2F57-ABD0-4427-BCF1-3A3587D7DC7D.1503_0" target="_complete" name="T1" uploadtrigger="false">
-            <filter>match64ScenarioIde_1504</filter>
-            <filter>match63MatchKeye64MatchKey</filter>
-            <filter>match63ScenarioIde64ScenarioId</filter>
-          </transition>
-        </state>
-        <final id="_complete"/>
-        <final id="_cancel"/>
+        <final id="_complete" />
+        <final id="_cancel" />
       </scxml>
     </scenario>
     <scenario schemaversion="2" scenarioid="{604b6ab6-1266-4d42-8cf2-10f97fe55827}" scenarioname="PT_9169_KeyEventLatencyGreaterThan200ms_604b6a" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="KeyEventLatencyGreaterThan200ms" ptdurationfield="Latency" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -3021,7 +2352,7 @@
             <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
             <valuename>IsTest</valuename>
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -3049,19 +2380,19 @@
           <registryfilter>
             <hive>HKEY_LOCAL_MACHINE</hive>
             <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
-            <valuename/>
+            <valuename />
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
       </filters>
       <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
         <state id="_start">
-          <transition event="Win32kTraceLogging.KeyEventLatencyGreaterThan200ms" target="_complete" name="T0"/>
+          <transition event="Win32kTraceLogging.KeyEventLatencyGreaterThan200ms" target="_complete" name="T0" />
         </state>
-        <final id="_complete"/>
-        <final id="_cancel"/>
+        <final id="_complete" />
+        <final id="_cancel" />
       </scxml>
     </scenario>
     <scenario schemaversion="2" scenarioid="{bdbdb136-b616-4ec0-8cf9-fe52455c8258}" scenarioname="PT_9832_FileExplorer Last Keypress to First Search Result_bdbdb1" maxfailurereports="0" maxdurationms="60000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="FileExplorer Last Keypress to First Search Result Seen" ptdurationfield="durationMs" measureversionguid="{00000000-0000-0000-0000-000000000000}">
@@ -3081,7 +2412,7 @@
             <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
             <valuename>IsTest</valuename>
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -3109,9 +2440,9 @@
           <registryfilter>
             <hive>HKEY_LOCAL_MACHINE</hive>
             <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
-            <valuename/>
+            <valuename />
             <valuetype>REG_NONE</valuetype>
-            <value/>
+            <value />
             <operation>notexists</operation>
           </registryfilter>
         </filter>
@@ -3136,8 +2467,132 @@
             <filter>match14624completionKinde_11</filter>
           </transition>
         </state>
-        <final id="_cancel"/>
-        <final id="_complete"/>
+        <final id="_cancel" />
+        <final id="_complete" />
+      </scxml>
+    </scenario>
+    <scenario schemaversion="2" scenarioid="{bf21185f-7b07-4ec6-b3aa-6de54d0706e4}" scenarioname="PT_10148_File Explorer Launch to Home from Taskbar _All U_bf2118" maxfailurereports="0" maxdurationms="600000" mintimebetweencompletionescalationsms="0" mintimebetweenfailureescalations="0" matchbehavior="newest" maxinflightinstances="1" ptscenarioname="File Explorer Launch to Home from Taskbar _All Up_ _60s Cap_" measureversionguid="{00000000-0000-0000-0000-000000000000}">
+      <triggers>
+        <trigger triggername="Microsoft-Windows-Shell-Launcher.AppLaunch">
+          <etwtrigger>
+            <provider>{3d6120a6-0986-51c4-213a-e2975903051d}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="MicrosoftWindowsFileExplorer.FirstViewStartedToShow">
+          <etwtrigger>
+            <provider>{8e12dcd2-fe15-5af4-2a6a-e707d9dc7de5}</provider>
+            <keywords>0x400000000000</keywords>
+            <level>5</level>
+          </etwtrigger>
+        </trigger>
+        <trigger triggername="Wait60000_nc_StateModelEditorApi.Domain.Models.StateModel.StateMachineState_StateModelEditorApi.Domain.Models.StateModel.StateMa">
+          <timetrigger>
+            <durationms>60000</durationms>
+            <allowscoalescing>0</allowscoalescing>
+          </timetrigger>
+        </trigger>
+      </triggers>
+      <filters>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_3">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\SQMClient</keyname>
+            <valuename>IsTest</valuename>
+            <valuetype>REG_NONE</valuetype>
+            <value />
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_1">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\Microsoft\Windows NT\CurrentVersion</keyname>
+            <valuename>BuildLabEx</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>.*chk.*</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_14">
+          <registryfilter treatnotexistsassuccess="1">
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SYSTEM\CurrentControlSet\Control\SystemInformation</keyname>
+            <valuename>SystemProductName</valuename>
+            <valuetype>REG_SZ</valuetype>
+            <value>Virtual Machine</value>
+            <operation>notregex</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="scenario" filtername="PerfTrack_FCCID_17">
+          <registryfilter>
+            <hive>HKEY_LOCAL_MACHINE</hive>
+            <keyname>SOFTWARE\{1B32999B-05C4-4B52-8B48-F233639C774F}</keyname>
+            <valuename />
+            <valuetype>REG_NONE</valuetype>
+            <value />
+            <operation>notexists</operation>
+          </registryfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match7312AppIde_1Microsoft_Windows_Explorer">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft-Windows-Shell-Launcher.AppLaunch</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>AppId</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>Microsoft.Windows.Explorer</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match14688namespaceCLSIDe_1F874310E_B6B7_47DC_BC84_B9E6B38F5903">
+          <singletriggerpropertyfilter>
+            <triggername>MicrosoftWindowsFileExplorer.FirstViewStartedToShow</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>namespaceCLSID</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>F874310E-B6B7-47DC-BC84-B9E6B38F5903</value>
+          </singletriggerpropertyfilter>
+        </filter>
+        <filter appliesto="trigger" filtername="match7312Locatione_13">
+          <singletriggerpropertyfilter>
+            <triggername>Microsoft-Windows-Shell-Launcher.AppLaunch</triggername>
+            <propertyselector>
+              <propertykey>
+                <name>Location</name>
+              </propertykey>
+            </propertyselector>
+            <mathoperation>add</mathoperation>
+            <constant>0</constant>
+            <operation>equal</operation>
+            <value>3</value>
+          </singletriggerpropertyfilter>
+        </filter>
+      </filters>
+      <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="custom" initial="_start">
+        <state id="_start">
+          <transition event="Microsoft-Windows-Shell-Launcher.AppLaunch" target="1" name="T0" uploadtrigger="false">
+            <filter>match7312AppIde_1Microsoft_Windows_Explorer</filter>
+            <filter>match7312Locatione_13</filter>
+          </transition>
+        </state>
+        <state id="1">
+          <transition event="MicrosoftWindowsFileExplorer.FirstViewStartedToShow" target="_complete" name="T2" uploadtrigger="false">
+            <filter>match14688namespaceCLSIDe_1F874310E_B6B7_47DC_BC84_B9E6B38F5903</filter>
+          </transition>
+          <transition event="Wait60000_nc_StateModelEditorApi.Domain.Models.StateModel.StateMachineState_StateModelEditorApi.Domain.Models.StateModel.StateMa" target="_cancel" name="T3" uploadtrigger="false" />
+        </state>
+        <final id="_complete" />
+        <final id="_cancel" />
       </scxml>
     </scenario>
   </scenarios>
