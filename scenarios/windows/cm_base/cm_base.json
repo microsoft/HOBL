@@ -406,33 +406,6 @@
                 "type": "End If"
             },
             {
-                "children": [
-                    {
-                        "children": [],
-                        "delay": "0",
-                        "description": "",
-                        "enabled": true,
-                        "id": "1N9WCU8",
-                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_teardown",
-                        "type": "Include"
-                    }
-                ],
-                "description": "",
-                "enabled": true,
-                "eval_method": "==",
-                "id": "1EN19HM",
-                "left_term": "[perf_run]",
-                "right_term": "1",
-                "type": "If"
-            },
-            {
-                "children": [],
-                "description": "",
-                "enabled": true,
-                "id": "1EN19HN",
-                "type": "End If"
-            },
-            {
                 "children": [],
                 "delay": "0",
                 "description": "",

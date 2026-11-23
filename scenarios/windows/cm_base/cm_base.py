@@ -54,14 +54,11 @@ class CmBase(core.app_scenario.Scenario):
 
 
     def tearDown(self):
-        try:
-            # Stop measurement before closing applications.
-            core.app_scenario.Scenario.tearDown(self)
-            teardown_action = self._find_next_type("Teardown", json=self.actions)
-            if teardown_action is not None:
-                self.run_actions(teardown_action["children"])
-        finally:
-            self.kill()
+        # Stop measurement before closing applications.
+        core.app_scenario.Scenario.tearDown(self)
+        teardown_action = self._find_next_type("Teardown", json=self.actions)
+        if teardown_action is not None:
+            self.run_actions(teardown_action["children"])
 
 
     def kill(self):
