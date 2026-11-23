@@ -6,6 +6,7 @@
 from builtins import *
 from core.parameters import Params
 from core.app_scenario import Scenario
+import codecs
 import csv
 from decimal import Decimal, InvalidOperation
 import logging
@@ -76,7 +77,11 @@ class Tool(Scenario):
                     perf_file.seek(-1, os.SEEK_END)
                     if perf_file.read(1) not in (b"\n", b"\r"):
                         perf_file.write(b"\r\n")
-                perf_file.write(codemarker_file.read())
+                codemarker_data = codemarker_file.read()
+                # A BOM inside the merged CSV makes the first field's quotes literal.
+                if codemarker_data.startswith(codecs.BOM_UTF8):
+                    codemarker_data = codemarker_data[len(codecs.BOM_UTF8):]
+                perf_file.write(codemarker_data)
             os.remove(codemarker_output)
 
         self._processMetrics(perf_output)
