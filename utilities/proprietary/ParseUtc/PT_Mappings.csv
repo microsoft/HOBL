@@ -7,7 +7,7 @@ PT_ID,Display_Name,Drop_InputInject
 8805,Word_Boot,true
 8806,Excel_Boot,true
 8807,PowerPoint_Boot,true
-9971,Snipping_Launch,true
+9971,SnippingTool_Launch,true
 9197,Start_Launch,true
 2430,TopResultRender,false
 6352,InputProcessDelay,false

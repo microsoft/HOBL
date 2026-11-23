@@ -40,6 +40,22 @@
     },
     {
         "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YEVU4P",
+        "include_path": "scenarios\\windows\\_library\\misc\\etw_event_tag",
+        "params": [
+            {
+                "name": "[event_tag]",
+                "val_options": "",
+                "value": "WordParagraph"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
         "delay": "2",
         "description": "Cut",
         "enabled": true,
@@ -99,7 +115,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "WordReplace"
+                "value": "ReplaceText"
             }
         ],
         "type": "Include"

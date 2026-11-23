@@ -14,12 +14,12 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1Y78HN0",
-        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_capture_top_ribbon",
+        "id": "1YEVJJ2",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_capture_sheet_ribbon",
         "type": "Include"
     },
     {
-        "capture_id": "1TK64CP",
+        "capture_id": "1TK5L73",
         "children": [],
         "delay": "2",
         "description": "Big Data Sheet",
@@ -147,7 +147,7 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "ExcelFormatTable"
+                "value": "FormatTable"
             }
         ],
         "type": "Include"
@@ -202,16 +202,6 @@
     },
     {
         "children": [],
-        "delay": "2",
-        "description": "VLOOKUP",
-        "enabled": true,
-        "id": "1TVNTRK",
-        "text": "=VLOOKUP(51271,A2:E400001,5,FALSE)",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
@@ -221,10 +211,20 @@
             {
                 "name": "[event_tag]",
                 "val_options": "",
-                "value": "excel_vlookup"
+                "value": "Excel_Vlookup"
             }
         ],
         "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "VLOOKUP",
+        "enabled": true,
+        "id": "1TVNTRK",
+        "text": "=VLOOKUP(51271,A2:E400001,5,FALSE)",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
