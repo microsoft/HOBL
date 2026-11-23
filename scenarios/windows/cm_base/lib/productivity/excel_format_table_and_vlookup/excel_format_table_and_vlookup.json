@@ -235,21 +235,5 @@
         "text": "\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1TWN79H",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "ExcelR2"
-            }
-        ],
-        "type": "Include"
     }
 ]
