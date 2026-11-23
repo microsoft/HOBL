@@ -32,7 +32,6 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_open')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_run')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto')
-    import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_save_document')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_word_close')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_word_open')
     import_run_user_only('scenarios\\windows\\_library\\productivity\\prod_word_run')

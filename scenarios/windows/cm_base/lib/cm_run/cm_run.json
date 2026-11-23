@@ -2006,22 +2006,6 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T80LVH",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "ExcelClose"
-            }
-        ],
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
         "id": "1T809KH",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_close",
         "type": "Include"
@@ -2040,22 +2024,6 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1T80M1K",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "WordClose"
-            }
-        ],
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
         "id": "1T80A2R",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_close",
         "type": "Include"
@@ -2067,22 +2035,6 @@
         "enabled": true,
         "id": "1T80A7E",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1T80MAY",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_save_document",
-        "params": [
-            {
-                "name": "[event_tag]",
-                "val_options": "",
-                "value": "PPTClose"
-            }
-        ],
         "type": "Include"
     },
     {
