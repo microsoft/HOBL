@@ -42,6 +42,60 @@ dotnet clean Aspire.slnx
 dotnet build Aspire.slnx --no-restore
 ```
 
+## Optional build parameters (Windows and macOS)
+
+All options preserve the original workload by default and affect only the timed
+build, not prep, clean, or restore:
+
+| Parameter | Default | Effect |
+| --- | --- | --- |
+| `binlog` | `0` | Set to `1` to collect a separate MSBuild binary log for each build loop. |
+| `skip_playwright_browser_install` | `0` | Set to `1` to add `-p:InstallBrowsersForPlaywright=false`. Playwright packages and projects are still built. |
+| `max_cpu_count` | `0` | Set to a positive integer to add `-m:<value>`. `0` keeps the original default, not single-threaded execution. |
+
+Set the options in the corresponding profile section:
+
+```ini
+[net_aspire]
+binlog=0
+skip_playwright_browser_install=0
+max_cpu_count=0
+
+[mac_net_aspire]
+binlog=0
+skip_playwright_browser_install=0
+max_cpu_count=0
+```
+
+Alternatively, append the corresponding overrides to the HOBL command:
+
+```powershell
+# Windows experiment A: only skip repeated browser preparation
+net_aspire:skip_playwright_browser_install=1 net_aspire:max_cpu_count=0
+# Windows experiment B: original workload, only change parallelism
+net_aspire:skip_playwright_browser_install=0 net_aspire:max_cpu_count=12
+
+# macOS experiment A
+mac_net_aspire:skip_playwright_browser_install=1 mac_net_aspire:max_cpu_count=0
+# macOS experiment B
+mac_net_aspire:skip_playwright_browser_install=0 mac_net_aspire:max_cpu_count=12
+```
+
+Both controls can be combined with `net_aspire:binlog=1` on Windows or
+`mac_net_aspire:binlog=1` on macOS. Keep binlog, power mode, and other settings
+identical when comparing experiments; logging overhead is included in build time.
+
+Binary logs are collected with the scenario results:
+`net_aspire_build_<timestamp>.binlog` in `<drive>\hobl_data` on Windows and
+`mac_net_aspire_build_<timestamp>_<pid>.binlog` in `/Users/Shared/hobl_data` on macOS.
+For DUTs already prepared with this SDK version, enabling an option refreshes only
+the run script; toggling the options does not require another prep version bump.
+
+Standalone Windows runs accept `-binlog`, `-skipPlaywrightBrowserInstall`, and
+`-maxCpuCount 12` on `net_aspire_run.ps1`. macOS runs accept `--binlog`,
+`--skip-playwright-browser-install`, and `--max-cpu-count 12` on
+`mac_net_aspire_run.sh`. Selected build arguments are recorded in the run log.
+
 ## Notes
 
 - On ARM64, HOBL points `DOTNET_INSTALL_DIR` at the system dotnet to avoid pulling an
