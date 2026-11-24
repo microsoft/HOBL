@@ -10,19 +10,6 @@ from core.parameters import Params
 def run(scenario):
     logging.debug('Executing code block: code_V4J32J.py')
 
-    if Params.get("global", "local_execution") == "0":
-        userprofile = scenario._call(["cmd.exe", "/C echo %USERPROFILE%"]).strip()
-    else:
-        userprofile = os.environ["USERPROFILE"]
-
-    doc_dest = os.path.join(userprofile, "OneDrive")
-    abl_docs_path = os.path.join(doc_dest, "abl_docs")
-    scenario._call(
-        ["cmd.exe", f'/C if exist "{abl_docs_path}" rmdir /S /Q "{abl_docs_path}"'],
-        expected_exit_code="",
-        fail_on_exception=False,
-    )
-
     try:
         logging.debug("Killing olk.exe Excel.exe Powerpnt.exe Winword.exe OneNnote.exe")
         scenario._kill("olk.exe Excel.exe Powerpnt.exe Winword.exe OneNote.exe")
