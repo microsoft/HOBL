@@ -1,0 +1,12 @@
+# Microsoft-managed devices block direct PyPI access (CISO Central Feed Services policy);
+# resolve base packages through the approved Microsoft feed proxy. torch wheels still come
+# from download.pytorch.org (not covered by the block).
+--index-url https://packagefeedproxy.microsoft.io/pypi/simple
+# CUDA 13.4 wheel index (GPU-first; CPU is a separate, never-blended fallback -- see
+# requirements_win_cpu_fallback.txt)
+--extra-index-url https://download.pytorch.org/whl/cu134
+torch==2.14.0+cu134
+torchvision==0.29.0+cu134
+transformers==5.18.0
+triton-windows==3.8.0.post29
+torchao==0.18.0

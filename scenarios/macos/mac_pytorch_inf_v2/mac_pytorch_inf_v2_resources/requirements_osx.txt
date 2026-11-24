@@ -1,0 +1,10 @@
+# Microsoft-managed devices block direct PyPI access (CISO Central Feed Services policy);
+# resolve base packages through the approved Microsoft feed proxy.
+--index-url https://packagefeedproxy.microsoft.io/pypi/simple
+# PyTorch on macOS includes Metal (MPS) support by default; no separate CUDA index needed.
+torch==2.14.0
+transformers==5.19.0
+# MLX stack for the platform-optimized (Apple Silicon unified-memory) lane,
+# used for the quantized-tier INT4 path (see capability.py gate_quant_lane).
+mlx==0.32.3
+mlx-lm==0.32.0
