@@ -146,9 +146,19 @@ $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";
 # Re-prepend pyenv paths after PATH refresh
 $env:PATH = "$pyenvRoot\pyenv-win\bin;$pyenvRoot\pyenv-win\shims;$pythonDir;$env:PATH"
 
+# Select and validate the same private runtime used during prep. Do not install
+# or fall back to another scenario's Node version during a measured run.
+try {
+    . (Join-Path $PSScriptRoot "vscode_node.ps1")
+    Enable-VscodeNode
+} catch {
+    " ERROR - $($_.Exception.Message)" | log
+    Exit 1
+}
+
 # Verify required commands are findable on PATH after refresh.
 # Fail fast with a clear diagnostic instead of a chain of "term not recognized" errors.
-foreach ($cmd in @('pyenv', 'npm')) {
+foreach ($cmd in @('pyenv', 'node', 'npm')) {
     $resolved = Get-Command $cmd -ErrorAction SilentlyContinue
     if (-not $resolved) {
         " ERROR - Required command '$cmd' not found on PATH after refresh." | log

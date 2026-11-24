@@ -14,7 +14,7 @@ import time
 class MacVscode(scenarios.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
-    prep_version = "17"
+    prep_version = "18"
     resources = module + "_resources"
 
 

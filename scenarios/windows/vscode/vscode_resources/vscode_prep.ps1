@@ -182,28 +182,6 @@ git --version 2>&1 | log
 check($lastexitcode)
 
 # -------------------------------------------------------------------
-# Install Node.js 24.18.0
-# -------------------------------------------------------------------
-"-- Installing Node.js 24.18.0 ($logSuffix)" | log
-if ($isARM64) {
-    winget install --id OpenJS.NodeJS.LTS --version 24.18.0 --architecture arm64 --source winget --accept-source-agreements --accept-package-agreements --force
-} else {
-    winget install --id OpenJS.NodeJS.LTS --version 24.18.0 --architecture x64 --source winget --accept-source-agreements --accept-package-agreements --force
-}
-checkWinget($lastexitcode)
-$Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
-
-"-- Verifying Node.js installation" | log
-$installedNodeVersion = (node --version 2>&1).Trim()
-$installedNodeVersion | log
-check($lastexitcode)
-if ($installedNodeVersion -ne "v24.18.0") {
-    " ERROR - Node.js version is $installedNodeVersion, expected v24.18.0" | log
-    Exit 1
-}
-npm --version 2>&1 | log
-
-# -------------------------------------------------------------------
 # Install Python via pyenv-win
 # -------------------------------------------------------------------
 "-- Installing pyenv-win for Python version management" | log
@@ -402,6 +380,14 @@ check($lastexitcode)
 # -------------------------------------------------------------------
 # Install npm packages (so run iterations only measure compile)
 # -------------------------------------------------------------------
+try {
+    . (Join-Path $PSScriptRoot "vscode_node.ps1")
+    Enable-VscodeNode -Install
+} catch {
+    " ERROR - $($_.Exception.Message)" | log
+    Exit 1
+}
+
 "-- Installing npm packages (this may take several minutes)..." | log
 
 # Ensure pyenv Python is on PATH and set for Node.js native module builds
@@ -411,8 +397,22 @@ $env:PYTHONHOME = (Split-Path $pythonExe -Parent)
 "PYTHON=$env:PYTHON" | log
 "PYTHONHOME=$env:PYTHONHOME" | log
 
-npm install --loglevel=error
-check($lastexitcode)
+# VS Code 1.132.0 requires Node 24 in .nvmrc. This benchmark deliberately uses
+# Node 26.9.0; bypass only that version gate, not lifecycle scripts or errors.
+"Using Node.js 26.9.0 outside VS Code 1.132.0's upstream Node 24 requirement" | log
+$originalSkipNodeVersionCheck = $env:VSCODE_SKIP_NODE_VERSION_CHECK
+try {
+    $env:VSCODE_SKIP_NODE_VERSION_CHECK = "1"
+    npm install --loglevel=error
+    $npmInstallExitCode = $LASTEXITCODE
+} finally {
+    if ($null -eq $originalSkipNodeVersionCheck) {
+        Remove-Item Env:VSCODE_SKIP_NODE_VERSION_CHECK -ErrorAction SilentlyContinue
+    } else {
+        $env:VSCODE_SKIP_NODE_VERSION_CHECK = $originalSkipNodeVersionCheck
+    }
+}
+check($npmInstallExitCode)
 "npm install completed" | log
 
 "-- vscode prep completed ($logSuffix version)" | log
