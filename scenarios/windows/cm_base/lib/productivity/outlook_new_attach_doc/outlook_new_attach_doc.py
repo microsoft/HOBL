@@ -8,7 +8,7 @@ from . import default_params
 
 
 # Description:
-#   Composes an email and attaches a Word document in New Outlook.
+#   Composes an email, inserts a picture, and attaches a Word document in New Outlook.
 
 class OutlookNewAttachDoc(core.app_scenario.Scenario):
     # Set default parameters:

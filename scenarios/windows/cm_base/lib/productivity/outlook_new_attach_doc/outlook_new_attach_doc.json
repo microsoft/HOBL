@@ -4,7 +4,7 @@
         "capture_device": "",
         "children": [],
         "create_date": "2026-08-29",
-        "description": "Compose an email and attach a Word document in New Outlook",
+        "description": "Compose an email, insert a picture, and attach a Word document in New Outlook",
         "enabled": true,
         "id": "PONR3I00",
         "type": "Information"
@@ -12,7 +12,7 @@
     {
         "children": [],
         "delay": "0",
-        "description": "Begin recording the New Outlook compose and attachment phase",
+        "description": "Begin recording the New Outlook compose, picture insertion, and attachment phase",
         "enabled": true,
         "id": "PONR3I01",
         "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
@@ -87,6 +87,34 @@
     {
         "children": [],
         "delay": "0.0",
+        "description": "Insert the Manarola picture into the email body",
+        "enabled": true,
+        "id": "PONR3C03",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Open the picture file picker (Alt, then N, P, C)",
+        "enabled": true,
+        "id": "PONR3T05",
+        "text": "\ue00a\ue00anpc",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "6.5",
+        "description": "Insert Manarola2.png from OneDrive into the email body (Enter)",
+        "enabled": true,
+        "id": "PONR3T06",
+        "text": "[userprofile]\\OneDrive\\abl_docs\\Manarola2.png\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
         "description": "Attach the Word document to the open email draft",
         "enabled": true,
         "id": "PONR3C02",
@@ -125,7 +153,7 @@
     {
         "children": [],
         "delay": "0",
-        "description": "End recording the New Outlook compose and attachment phase",
+        "description": "End recording the New Outlook compose, picture insertion, and attachment phase",
         "enabled": true,
         "id": "PONR3I04",
         "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
