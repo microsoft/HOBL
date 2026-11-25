@@ -469,6 +469,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bldt_battery_life" class="md-nav__link">
+    bldt_battery_life
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bldt_modern_standby" class="md-nav__link">
+    bldt_modern_standby
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bldt_sw_hygiene" class="md-nav__link">
+    bldt_sw_hygiene
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bldt_sysconfig" class="md-nav__link">
+    bldt_sysconfig
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cinebench" class="md-nav__link">
     cinebench
   </a>
@@ -623,6 +651,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#upload" class="md-nav__link">
+    upload
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#youtube" class="md-nav__link">
     youtube
   </a>
@@ -653,6 +688,13 @@
         <li class="md-nav__item">
   <a href="#mac_teams2_10p_aud_dtop" class="md-nav__link">
     mac_teams2_10p_aud_dtop
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mac_youtube" class="md-nav__link">
+    mac_youtube
   </a>
   
 </li>
@@ -741,6 +783,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bldt_battery_life" class="md-nav__link">
+    bldt_battery_life
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bldt_modern_standby" class="md-nav__link">
+    bldt_modern_standby
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bldt_sw_hygiene" class="md-nav__link">
+    bldt_sw_hygiene
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bldt_sysconfig" class="md-nav__link">
+    bldt_sysconfig
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cinebench" class="md-nav__link">
     cinebench
   </a>
@@ -895,6 +965,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#upload" class="md-nav__link">
+    upload
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#youtube" class="md-nav__link">
     youtube
   </a>
@@ -929,6 +1006,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#mac_youtube" class="md-nav__link">
+    mac_youtube
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -945,6 +1029,67 @@
 
 
 <h1 id="scenarios">Scenarios</h1>
+<h2 id="bldt_battery_life">bldt_battery_life</h2>
+<p>Run Intel's Battery Life assessment through HOBL.</p>
+<p>Intel workload: Battery Life records system activity and checks Windows for
+power-efficiency problems, then produces native HTML, JSON and ZIP reports.</p>
+<p>HOBL lifecycle:
+1. Before: validate the collection durations and detect the DUT power source;
+   install or discover BLDT, then enter HOBL's normal measured lifecycle.
+2. Run: invoke batteryLife with no charge threshold or collection delay and use
+   independent durations for SoCWatch and Energy Report collection.
+3. After: stage current native reports, shared HTML assets and execution logs;
+   HOBL teardown stops measurement and retrieves the DUT data.</p>
+<p>This scenario does not control the charger or require a minimum charge level.
+Success requires a zero BLDT exit code and at least one current native report,
+not that every Intel diagnostic finding passes.</p>
+<p><u>Parameters:</u></p>
+<p><code>collection_duration</code> - Intel Battery Life SoCWatch collection duration in seconds (10-3600). <strong>Default:</strong> <code>600</code> </p>
+<p><code>energy_report_duration</code> - Intel Energy Report collection duration in seconds (10-3600). <strong>Default:</strong> <code>600</code> </p>
+<h2 id="bldt_modern_standby">bldt_modern_standby</h2>
+<p>Run Intel's Modern Standby assessment through HOBL.</p>
+<p>Intel workload: mosTest places the DUT into Modern Standby, gathers standby
+diagnostics and produces native reports including Windows Sleep Study.</p>
+<p>HOBL lifecycle:
+1. Before: validate the requested sleep duration, detect the DUT power source,
+   install or discover BLDT, and verify that an external host can wake the DUT.
+2. Run: start mosTest and leave the DUT undisturbed while the HOBL host sends one
+   wake pulse after the requested sleep duration plus Intel startup allowance.
+3. After: verify one complete standby interval, stage Intel's current reports and
+   shared assets, then let HOBL stop measurement and retrieve the DUT data.</p>
+<p>This scenario does not control the charger or require a minimum charge level.</p>
+<p><u>Parameters:</u></p>
+<p><code>sleep_duration_minutes</code> - Required uninterrupted Modern Standby duration in minutes. <strong>Default:</strong> <code>20</code> </p>
+<p><code>sleep_study_days</code> - Number of days included in the native Windows Sleep Study report. <strong>Default:</strong> <code>1</code> </p>
+<h2 id="bldt_sw_hygiene">bldt_sw_hygiene</h2>
+<p>Run Intel's Software Hygiene assessment with optional native AI analysis.</p>
+<p>Intel workload: Software Hygiene records software and system activity that can
+affect battery life, then produces native HTML, JSON and ZIP reports.</p>
+<p>HOBL lifecycle:
+1. Before: validate the durations and detect the DUT power source. Prepare the
+   standard BLDT edition, or the AI edition only when AI analysis is requested.
+2. Run: invoke SWHygiene with no charge threshold or collection delay and use
+   independent durations for SoCWatch and Windows Performance Recorder. When
+   requested, run AIAnalysis on the generated JSON and collect its native reports.
+3. After: stop HOBL measurement and retrieve the staged reports and logs.</p>
+<p>This scenario does not control the charger or require a minimum charge level.</p>
+<p><u>Parameters:</u></p>
+<p><code>collection_duration</code> - Intel Software Hygiene SoCWatch collection duration in seconds (10-3600). <strong>Default:</strong> <code>600</code> </p>
+<p><code>windows_performance_recorder_duration</code> - Intel Software Hygiene Windows Performance Recorder duration in seconds (10-3600). <strong>Default:</strong> <code>600</code> </p>
+<p><code>run_ai_analysis</code> - Run Intel AI analysis after the Software Hygiene collection (0 or 1). <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>0, 1</code></p>
+<h2 id="bldt_sysconfig">bldt_sysconfig</h2>
+<p>Intel's Battery Life Diagnostic Tool - System Config Checker.</p>
+<p>Intel workload: System Config examines configuration relevant to power efficiency
+and produces diagnostic findings in native HTML, JSON and ZIP reports.</p>
+<p>HOBL lifecycle:
+1. Before: refresh the DUT prep script, close existing BLDT sessions, and discover
+   either BLDT edition; install or repair only when needed.
+2. Run: invoke the discovered executable with the selected AC/DC assessment mode.
+   This scenario does not control the charger or use DAQ measurement.
+3. After: require fresh matching reports and stage them with shared HTML assets
+   and logs for host collection.</p>
+<p>No AI analysis or AI models are required.
+Success means complete execution and reports, not passing every Intel check.</p>
 <h2 id="cinebench">cinebench</h2>
 <p>The Cinebench benchmark.</p>
 <p><u>Parameters:</u></p>
@@ -1301,6 +1446,11 @@ Local user is sharing desktop.</p>
 <p><code>duration</code> -  <strong>Default:</strong> <code>300</code> </p>
 <p><code>minimize_all</code> -  <strong>Default:</strong> <code>1</code> </p>
 <p><code>minimize_teams_only</code> -  <strong>Default:</strong> <code>0</code> </p>
+<h2 id="upload">upload</h2>
+<p>Uploads a file or folder to the DUT</p>
+<p><u>Parameters:</u></p>
+<p><code>source_path</code> - Source path (file or folder) <strong>Default:</strong> `` </p>
+<p><code>target_path</code> - Target folder (defaults to hobl_bin) <strong>Default:</strong> `` </p>
 <h2 id="youtube">youtube</h2>
 <p>Plays a YouTube video in a web browser in Default View mode.</p>
 <p>Steps:</p>
@@ -1342,7 +1492,7 @@ Local user is sharing desktop.</p>
 Local camera is off and mic is on, other 9 participants are bots sending audio.
 Local user is sharing desktop.</p>
 <p><u>Parameters:</u></p>
-<p><code>meeting_time</code> - Set the time in minutes that the meeting can last up to. Default is 120min. <strong>Default:</strong> <code>120</code> </p>
+<p><code>meeting_time</code> - Set the time in minutes that the meeting can last up to. Default is 120min. <strong>Default:</strong> <code>0</code> </p>
 <p><code>access_key</code> - The access key for the Teams Bots Server. Contact HOBL Support to inquire for a key. <strong>Default:</strong> <code>-1</code> </p>
 <p><code>number_of_bots</code> - Sets the number of bots to have in the meeting. <strong>Default:</strong> <code>8</code>  <strong>Options:</strong> <code>1, 2, 4, 8, 9</code></p>
 <p><code>bots_send_video</code> - Set to 1 if bots should have their cameras on. Set to 0 for audio only calls. <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>0, 1</code></p>
@@ -1360,7 +1510,20 @@ Local user is sharing desktop.</p>
 <p><code>parser_location</code> - Sets the path to the parser to use to decode Teams logs. <strong>Default:</strong> <code>..\ScenarioAssets\Teamsdecode\bin\UnifiedLogging</code> </p>
 <p><code>collect_call_health</code> - Set to 1 to have the call health data collected. <strong>Default:</strong> <code>1</code>  <strong>Options:</strong> <code>0, 1</code></p>
 <p><code>collect_MSTeams_Logs</code> - Set to 1 to collect MS Teams logs of the meeting after exiting the meeting. <strong>Default:</strong> <code>1</code>  <strong>Options:</strong> <code>0, 1</code></p>
-<p><code>maintain_bots</code> - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>0, 1</code></p>
+<p><code>maintain_bots</code> - Set to 1 to have the test periodically check that all bots are present in the call and add bots if needed. <strong>Default:</strong> <code>1</code>  <strong>Options:</strong> <code>0, 1</code></p>
+<h2 id="mac_youtube">mac_youtube</h2>
+<p>Plays a YouTube video in a web browser in Default View mode.</p>
+<p>Steps:</p>
+<ol>
+<li>Navigate to Tears of Steel YouTube video URL: <a href="https://youtu.be/41hv2tW5Lc4">youtu.be/41hv2tW5Lc4</a></li>
+<li>Change video quality to 1080p.</li>
+<li>Let video play for specified duration and loops.</li>
+<li>Close web browser.</li>
+</ol>
+<p><u>Parameters:</u></p>
+<p><code>duration</code> - Total scenario duration <strong>Default:</strong> <code>600</code> </p>
+<p><code>loop_duration</code> - YouTube video playback duration before looping (max 480s) <strong>Default:</strong> <code>300</code> </p>
+<p><code>full_screen</code> - Full Screen mode <strong>Default:</strong> <code>0</code>  <strong>Options:</strong> <code>0, 1</code></p>
 
 
 

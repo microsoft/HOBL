@@ -7,6 +7,7 @@
 
 import logging
 import os
+import re
 import core.app_scenario
 from core.parameters import Params
 from datetime import datetime
@@ -14,18 +15,22 @@ from datetime import datetime
 class FastApi(core.app_scenario.Scenario):
 
     module = __module__.split('.')[-1]
-    prep_version = "9"
+    prep_version = "11"
     resources = module + "_resources"
 
 
     # Set default parameters
     Params.setDefault(module, 'loops', '5')
+    Params.setDefault(module, 'workers', '0')
 
 
     def setUp(self):
         # Get parameters
         self.platform = Params.get('global', 'platform')
         self.loops = Params.get(self.module, 'loops')
+        self.workers = Params.get(self.module, 'workers')
+        if not re.fullmatch(r'auto|[0-9]+', self.workers):
+            raise ValueError(f"{self.module}:workers must be 'auto' or a non-negative integer.")
 
         self.target = f"{self.dut_exec_path}\\{self.resources}"
 
@@ -44,6 +49,10 @@ class FastApi(core.app_scenario.Scenario):
             finally:
                 self._copy_data_from_remote(self.result_dir)
             self.createPrepStatusControlFile(self.prep_version)
+        else:
+            # Refresh the runner without replacing the prepared .venv in the resources directory.
+            runner = os.path.join("scenarios", "windows", self.module, self.resources, f"{self.module}_run.ps1")
+            self._upload(runner, self.target, check_modified=False)
 
         # Call base class setUp() to dump config, call tool callbacks, and start measurment
         core.app_scenario.Scenario.setUp(self)
@@ -53,7 +62,7 @@ class FastApi(core.app_scenario.Scenario):
         start_time = datetime.now().astimezone().isoformat()
         for i in range(int(self.loops)):
             logging.info(f"Running loop {i + 1}")
-            self._call(["pwsh", f"{self.target}\\{self.module}_run.ps1 -startTime {start_time}"], timeout = 3600)
+            self._call(["pwsh", f"{self.target}\\{self.module}_run.ps1 -startTime {start_time} -Workers {self.workers}"], timeout = 3600)
 
 
     def tearDown(self):

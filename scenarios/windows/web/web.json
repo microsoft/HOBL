@@ -88,7 +88,7 @@
                             {
                                 "name": "[youtube_duration]",
                                 "val_options": "",
-                                "value": "90"
+                                "value": "75"
                             }
                         ],
                         "type": "Include"

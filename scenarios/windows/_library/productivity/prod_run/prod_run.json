@@ -1,102 +1,129 @@
 [
     {
-        "id": "UTHAJ0",
-        "type": "Information",
-        "description": "Run productivity apps",
-        "enabled": true,
         "author": "jewilder",
         "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "children": [],
         "create_date": "2025-03-02",
-        "children": []
+        "description": "Run productivity apps",
+        "enabled": true,
+        "id": "UTHAJ0",
+        "type": "Information"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": false,
         "id": "UTHFFH",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_outlook_switchto",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
+        "type": "Include"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": false,
         "id": "UTHEC2",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_outlook_run",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_run",
+        "type": "Include"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YHUAP8",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YHUAYJ",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_manarola",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YHUUHP",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_review",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
         "id": "UTHFKR",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_excel_switchto",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_switchto",
+        "type": "Include"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
         "id": "UTHEHN",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_excel_run",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_excel_run",
+        "type": "Include"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
         "id": "UTHFP2",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_word_switchto",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_switchto",
+        "type": "Include"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
         "id": "UTHEN0",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_word_run",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_word_run",
+        "type": "Include"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
         "id": "UTHFUP",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_powerpoint_switchto",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_switchto",
+        "type": "Include"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
         "id": "UTHEUJ",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_powerpoint_run",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run",
+        "type": "Include"
     },
     {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
         "id": "UTHFY6",
-        "type": "Include",
-        "description": "",
-        "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_onenote_switchto",
-        "children": []
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_onenote_switchto",
+        "type": "Include"
     },
     {
-        "id": "UTHF1E",
-        "type": "Include",
+        "children": [],
+        "delay": "0",
         "description": "",
         "enabled": true,
-        "delay": "0",
-        "include_path": "..\\prod_onenote_run",
-        "children": []
+        "id": "UTHF1E",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_onenote_run",
+        "type": "Include"
     }
 ]
