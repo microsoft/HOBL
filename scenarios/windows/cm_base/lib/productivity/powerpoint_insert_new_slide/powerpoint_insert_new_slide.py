@@ -7,10 +7,17 @@ import core.app_scenario
 from . import default_params
 
 
-# Description:
-#   Inserts a new slide into an open PowerPoint deck.
-
 class PowerpointInsertNewSlide(core.app_scenario.Scenario):
+    '''
+    Inserts a new slide into an open PowerPoint presentation.
+
+    Uses the current presentation and the visible New Slide ribbon button.
+
+    Steps:
+
+    1. Locate the New Slide button using image matching.
+    2. Click the button to insert a slide after the current slide.
+    '''
     # Set default parameters:
     default_params.run()
 

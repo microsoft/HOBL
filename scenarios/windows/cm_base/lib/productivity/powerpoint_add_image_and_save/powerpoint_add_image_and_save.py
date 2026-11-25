@@ -7,10 +7,20 @@ import core.app_scenario
 from . import default_params
 
 
-# Description:
-#   Switches to an open PowerPoint deck, pastes clipboard content, inserts an image, and saves it.
-
 class PowerpointAddImageAndSave(core.app_scenario.Scenario):
+    '''
+    Pastes clipboard content, inserts a picture, and saves a PowerPoint presentation.
+
+    Uses an already open presentation. Clipboard content must be prepared before
+    running this library.
+
+    Steps:
+
+    1. Switch to the open PowerPoint presentation.
+    2. Insert a new slide and paste the clipboard content.
+    3. Insert another new slide and add the Manarola2.png picture from OneDrive.
+    4. Save the updated presentation.
+    '''
     # Set default parameters:
     default_params.run()
 

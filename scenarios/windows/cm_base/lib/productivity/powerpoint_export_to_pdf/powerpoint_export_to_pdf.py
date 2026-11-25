@@ -7,10 +7,20 @@ import core.app_scenario
 from . import default_params
 
 
-# Description:
-#   Switches to an open PowerPoint deck, pastes clipboard content, exports a PDF, and saves the deck.
-
 class PowerpointExportToPdf(core.app_scenario.Scenario):
+    '''
+    Pastes clipboard content onto a new slide and exports the presentation to PDF.
+
+    Uses an already open presentation. Clipboard content must be prepared before
+    running this library.
+
+    Steps:
+
+    1. Switch to the open PowerPoint presentation.
+    2. Insert a new slide and paste the clipboard content.
+    3. Open the Create PDF/XPS publishing dialog.
+    4. Publish sample.pdf in the user's OneDrive abl_docs folder.
+    '''
     # Set default parameters:
     default_params.run()
 

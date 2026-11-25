@@ -7,10 +7,18 @@ import core.app_scenario
 from . import default_params
 
 
-# Description:
-#   Inserts a specified picture into an open PowerPoint deck.
-
 class PowerpointInsertPicture(core.app_scenario.Scenario):
+    '''
+    Inserts a configured picture into the current PowerPoint slide.
+
+    Uses the image_path parameter to locate a picture relative to OneDrive.
+
+    Steps:
+
+    1. Open Insert, Pictures, and This Device.
+    2. Resolve the picture path using the platform-specific OneDrive location.
+    3. Select the file and insert it into the current slide.
+    '''
     # Set default parameters:
     default_params.run()
 

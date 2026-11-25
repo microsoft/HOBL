@@ -7,10 +7,20 @@ import core.app_scenario
 from . import default_params
 
 
-# Description:
-#   Switches to an open PowerPoint deck, applies a Fly In animation from the bottom, and saves it.
-
 class PowerpointApplyAnimation(core.app_scenario.Scenario):
+    '''
+    Applies a Fly In animation to a slide object and saves the PowerPoint presentation.
+
+    Uses an already open presentation and the current slide. Keyboard navigation
+    targets PowerPoint 2602 and depends on the active pane layout.
+
+    Steps:
+
+    1. Switch to the open PowerPoint presentation.
+    2. Press F6 five times, then Tab, to select a slide object.
+    3. Open the Animations gallery and select Fly In using keyboard navigation.
+    4. Save the updated presentation.
+    '''
     # Set default parameters:
     default_params.run()
 
