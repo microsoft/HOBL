@@ -105,10 +105,10 @@
     {
         "children": [],
         "delay": "6.5",
-        "description": "Insert Manarola2.png from OneDrive into the email body (Enter)",
+        "description": "Insert Manarola2.png from c:\\abl_docs into the email body (Enter)",
         "enabled": true,
         "id": "PONR3T06",
-        "text": "[userprofile]\\OneDrive\\abl_docs\\Manarola2.png\ue007",
+        "text": "c:\\abl_docs\\Manarola2.png\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
