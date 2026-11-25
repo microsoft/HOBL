@@ -5,10 +5,19 @@ import core.app_scenario
 import os
 from . import default_params
 
-# Description:
-#   Discards an open email draft in New Outlook.
-
 class OutlookNewDiscardEmail(core.app_scenario.Scenario):
+    '''
+    Discard an open email draft in New Outlook.
+
+    Requires an existing draft with focus in the compose window. The draft
+    is discarded without sending an email.
+
+    Steps:
+
+    1. Press Escape to open the discard confirmation dialog.
+    2. Locate the confirmation button using image matching.
+    3. Click the button to discard the draft.
+    '''
     # Set default parameters:
     default_params.run()
 

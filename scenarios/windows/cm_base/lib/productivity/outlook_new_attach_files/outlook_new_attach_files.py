@@ -7,10 +7,20 @@ import logging
 import os
 from . import default_params
 
-# Description:
-#   Automatically generated standard scenario.
-
 class OutlookNewAttachFiles(core.app_scenario.Scenario):
+    '''
+    Attach a presentation and workbook, then discard the draft in New Outlook.
+
+    Requires an existing email draft and the prepared files in the user's
+    OneDrive abl_docs folder. No email is sent.
+
+    Steps:
+
+    1. Switch to the New Outlook window.
+    2. Attach asample.pptx using the reusable attachment flow.
+    3. Attach FamilyBudget.xlsx using the same flow.
+    4. Discard the draft.
+    '''
     # Set default parameters:
     default_params.run()
 

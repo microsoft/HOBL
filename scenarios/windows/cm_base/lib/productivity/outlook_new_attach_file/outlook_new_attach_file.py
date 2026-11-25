@@ -7,10 +7,20 @@ import logging
 import os
 from . import default_params
 
-# Description:
-#   Automatically generated standard scenario.
-
 class OutlookNewAttachFile(core.app_scenario.Scenario):
+    '''
+    Attach a specified file to an open email draft in New Outlook.
+
+    Requires an existing draft. The file_source parameter selects OneDrive
+    or Local, and file_path is relative to the selected root under the user
+    profile. This helper leaves the draft open without sending or discarding it.
+
+    Steps:
+
+    1. Open the attachment file picker.
+    2. Resolve file_path under OneDrive or the local user profile.
+    3. Enter the file path and attach the file.
+    '''
     # Set default parameters:
     default_params.run()
 

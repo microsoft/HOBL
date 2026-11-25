@@ -5,10 +5,19 @@ import core.app_scenario
 import os
 from . import default_params
 
-# Description:
-#   Opens a new email compose form in New Outlook.
-
 class OutlookNewOpenCompose(core.app_scenario.Scenario):
+    '''
+    Open a new email compose form in New Outlook.
+
+    Requires New Outlook to be open and active. This helper opens the form
+    without entering a recipient, subject, or body.
+
+    Steps:
+
+    1. Select the Home tab.
+    2. Locate the New Email button using image matching.
+    3. Click the button to open a new compose form.
+    '''
     # Set default parameters:
     default_params.run()
 
