@@ -70,17 +70,17 @@
         "description": "Type the email subject",
         "enabled": true,
         "id": "PONR3T03",
-        "text": "Manarola\ue00dtrip!\n",
+        "text": "Manarola\ue00dtrip\ue00d-\ue00dimage\ue00dand\ue00ddocument\n",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
         "delay": "10",
-        "description": "Type the email body requesting review of the attached Word document",
+        "description": "Type the email body referencing the Manarola picture and attached Word document",
         "enabled": true,
         "id": "PONR3T04",
-        "text": "Please\ue00dreview\ue00dthe\ue00dattached\ue00dWord\ue00ddocument\ue00dfor\ue00dthe\ue00dManarola\ue00dtrip.\n",
+        "text": "Hi,\n\nPlease\ue00dreview\ue00dthe\ue00dattached\ue00dWord\ue00ddocument,\ue00dtest_long_doc.docx,\ue00dfor\ue00dthe\ue00dManarola\ue00dtrip.\ue00dI've\ue00dincluded\ue00da\ue00dpicture\ue00dof\ue00dManarola\ue00dbelow\ue00dfor\ue00dreference.\n\nLet\ue00dme\ue00dknow\ue00dif\ue00dyou\ue00dhave\ue00dany\ue00dquestions\ue00dor\ue00dsuggested\ue00dchanges.\n\nThanks!\n\n",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
