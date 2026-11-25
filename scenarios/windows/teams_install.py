@@ -275,7 +275,6 @@ class TeamsInstall(core.app_scenario.Scenario):
                 logging.info("Checking for which best role describes you popup")
                 teams_driver.find_element_by_name("None of these").click()
                 time.sleep(3)
-                self._page_source(teams_driver, "Best_Role_Check")
                 teams_driver.find_element_by_class_name("fui-Button r1f29ykk").click()
                 time.sleep(1)
                 ActionChains(desktop).send_keys(Keys.ENTER).perform()
