@@ -7,7 +7,7 @@ import logging
 import os
 from . import default_params
 
-class OutlookNewAttachFiles(core.app_scenario.Scenario):
+class OutlookNewAttachPptExcel(core.app_scenario.Scenario):
     '''
     Attach a presentation and workbook, then discard the draft in New Outlook.
 
@@ -28,7 +28,7 @@ class OutlookNewAttachFiles(core.app_scenario.Scenario):
 
     def setUp(self):
         # Load actions JSON.
-        actions_json = os.path.join(os.path.dirname(__file__), "outlook_new_attach_files.json")
+        actions_json = os.path.join(os.path.dirname(__file__), "outlook_new_attach_ppt_excel.json")
         self.actions = self.load_action_json(actions_json)
 
         # Execute Setup actions, if they exist

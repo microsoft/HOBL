@@ -57,7 +57,7 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\excel_insert_pivot')
     import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\excel_sort_table')
     import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_doc')
-    import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_files')
+    import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_ppt_excel')
     import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_compose_email')
     import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\powerpoint_add_image_and_save')
     import_run_user_only('scenarios\\windows\\cm_base\\lib\\productivity\\powerpoint_apply_animation')
