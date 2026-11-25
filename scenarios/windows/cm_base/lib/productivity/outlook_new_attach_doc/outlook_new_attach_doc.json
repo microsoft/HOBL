@@ -41,7 +41,7 @@
         "description": "Open a new email compose form in New Outlook",
         "enabled": true,
         "id": "PONR3I02",
-        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_create_email",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_open_compose",
         "type": "Include"
     },
     {

@@ -8,7 +8,7 @@ from . import default_params
 # Description:
 #   Opens a new email compose form in New Outlook.
 
-class OutlookNewCreateEmail(core.app_scenario.Scenario):
+class OutlookNewOpenCompose(core.app_scenario.Scenario):
     # Set default parameters:
     default_params.run()
 
@@ -16,7 +16,7 @@ class OutlookNewCreateEmail(core.app_scenario.Scenario):
 
     def setUp(self):
         # Load actions JSON.
-        actions_json = os.path.join(os.path.dirname(__file__), "outlook_new_create_email.json")
+        actions_json = os.path.join(os.path.dirname(__file__), "outlook_new_open_compose.json")
         self.actions = self.load_action_json(actions_json)
 
         # Execute Setup actions, if they exist
