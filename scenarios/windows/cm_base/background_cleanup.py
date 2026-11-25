@@ -15,13 +15,13 @@ DOWNLOAD_STATE_FILENAME = "download_process.json"
 LARGE_FILE_STATE_FILENAME = "large_file_process.json"
 
 
-def run_powershell(scenario, script):
+def run_powershell(scenario, script, timeout=30):
     encoded = base64.b64encode(script.encode("utf-16-le")).decode("ascii")
     return scenario._call(
         ["powershell.exe", f"-NoProfile -ExecutionPolicy Bypass -EncodedCommand {encoded}"],
         expected_exit_code="0",
         fail_on_exception=True,
-        timeout=30,
+        timeout=timeout,
     )
 
 

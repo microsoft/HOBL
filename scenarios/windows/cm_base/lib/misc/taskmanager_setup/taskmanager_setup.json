@@ -1,0 +1,23 @@
+[
+    {
+        "author": "dasashu",
+        "capture_device": "HP Omnibook X",
+        "children": [],
+        "create_date": "2026-11-25",
+        "description": "Pin taskmanager to left of the screen",
+        "enabled": true,
+        "id": "1YJ3NYM",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Resize taskmager to half the screen width and move to left",
+        "enabled": true,
+        "file_name": [
+            "code_1YJ3R0H.py"
+        ],
+        "id": "1YJ3R0H",
+        "type": "Code"
+    }
+]
