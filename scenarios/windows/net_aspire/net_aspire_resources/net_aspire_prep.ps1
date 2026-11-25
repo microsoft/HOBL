@@ -6,6 +6,7 @@ param(
 )
 
 $scriptDrive = Split-Path -Qualifier $PSScriptRoot
+$dotnetSdkVersion = "11.0.100"
 if (-not (Test-Path "$scriptDrive\hobl_data")) {
     Write-Host " ERROR - Required directory not found: $scriptDrive\hobl_data" -ForegroundColor Red
     Exit 1
@@ -111,6 +112,22 @@ function checkSetLocation {
     }
 }
 
+function setAspireSdkVersion {
+    param([string]$globalJsonPath, [string]$sdkVersion)
+
+    try {
+        $config = Get-Content -LiteralPath $globalJsonPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+        $config.sdk.version = $sdkVersion
+        $config.sdk.rollForward = "disable"
+        $config.sdk.allowPrerelease = $false
+        $config.tools.dotnet = $sdkVersion
+        $config | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $globalJsonPath -Encoding utf8 -ErrorAction Stop
+    } catch {
+        " ERROR - Failed to configure Aspire SDK in ${globalJsonPath}: $($_.Exception.Message)" | log
+        Exit 1
+    }
+}
+
 Set-Content -Path $logFile -encoding utf8 "-- net_aspire prep started ($logSuffix version)"
 
 # -------------------------------------------------------------------
@@ -128,8 +145,8 @@ try {
     "Could not remove msstore source (continuing): $($_.Exception.Message)" | log
 }
 
-"-- Installing .NET SDK 10.0 - 10.0.100-preview.5.25277.114 same version that's in restore.cmd" | log
-winget install --id Microsoft.DotNet.SDK.Preview --source winget --version 10.0.100-preview.5.25277.114 --accept-source-agreements --accept-package-agreements
+"-- Installing stable .NET SDK $dotnetSdkVersion" | log
+winget install --id Microsoft.DotNet.SDK.11 --source winget --version $dotnetSdkVersion --accept-source-agreements --accept-package-agreements
 checkWinget($lastexitcode)
 $Env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
@@ -189,6 +206,16 @@ checkGitClone $lastexitcode "$scriptDrive\aspire"
 checkSetLocation "$scriptDrive\aspire"
 git checkout v9.4.2
 check($lastexitcode)
+
+"-- Pinning Aspire to stable .NET SDK $dotnetSdkVersion" | log
+setAspireSdkVersion -globalJsonPath "$scriptDrive\aspire\global.json" -sdkVersion $dotnetSdkVersion
+$activeSdkVersion = dotnet --version
+check($lastexitcode)
+if ($activeSdkVersion.Trim() -ne $dotnetSdkVersion) {
+    " ERROR - Expected .NET SDK $dotnetSdkVersion, but Aspire selected $activeSdkVersion." | log
+    Exit 1
+}
+"-- Aspire SDK version: $activeSdkVersion" | log
 
 # -------------------------------------------------------------------
 # ARM64 workaround: remove incompatible .NET Core 2.0.9 runtime
