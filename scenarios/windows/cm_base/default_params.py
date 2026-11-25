@@ -8,10 +8,11 @@ def run():
     Params.setCalculated('scenario_section', __package__.split('.')[-1])
     run_user_only()
     Params.setDefault('cm_base', 'background_teams', '1', desc='', valOptions=['0', '1'])
-    Params.setDefault('cm_base', 'background_onedrive_copy', '1', desc='', valOptions=['0', '1'])
+    Params.setDefault('cm_base', 'powershell_download', '1', desc='', valOptions=['0', '1'])
     Params.setParam(None, 'web_replay_run', '1')
     Params.setParam(None, 'phase_reporting', '1')
     Params.setDefault('cm_base', 'perf_run', '0', desc='', valOptions=['0', '1'])
+    Params.setDefault('cm_base', 'large_file_operations', '1', desc='Create and zip large file for disk activity', valOptions=['0', '1'])
     Params.setParam('teams', 'collect_MSTeams_Logs', '0')
     return
 

@@ -4,23 +4,20 @@
 import os
 import logging
 
+from scenarios.windows.cm_base.code_19K5K7L import run as cleanup_download
+
+
 def run(scenario):
     logging.debug('Executing code block: code_1CYAE3L.py')
-    
+    cleanup_download(scenario)
     onedrivetestdir = os.path.join(scenario.userprofile, "OneDrive", "onedrivetest")
-    logging.info(f"Removing directory {onedrivetestdir}")
-    
-    scenario._remote_make_dir(onedrivetestdir,delete=True)
-    
-    target_path = "scenarios\\windows\\enterprise_collab\\resources\\large"
+    logging.info(f"Creating directory: {onedrivetestdir}")
+    scenario._call(
+        ["cmd.exe", f'/C if not exist "{onedrivetestdir}" mkdir "{onedrivetestdir}"'],
+        expected_exit_code="0",
+        fail_on_exception=True,
+    )
 
-    if not os.path.exists(target_path):
-        os.makedirs(target_path)
-
-    for i in range(3):
-        os.system("fsutil file createnew " + target_path + "\\temp_" + str(i) + ".bin 1610612736")
-
-    logging.info("Large files created for OneDrive copy operations")
     scenario._sleep_to_now()
     
     

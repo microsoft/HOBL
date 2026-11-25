@@ -6,6 +6,7 @@ from core.parameters import Params
 import logging
 import os
 from . import default_params
+from .background_cleanup import cleanup_background_processes
 import time
 
 # Description:
@@ -26,6 +27,7 @@ class CmBase(core.app_scenario.Scenario):
     actions = None
 
     def setUp(self):
+        self.addCleanup(self._cleanup_background_processes)
         # Load actions JSON.
         actions_json = os.path.join(os.path.dirname(__file__), "cm_base.json")
         self.actions = self.load_action_json(actions_json)
@@ -64,6 +66,7 @@ class CmBase(core.app_scenario.Scenario):
     def kill(self):
         """Clean up after any stopping point, including failed setup or teardown."""
         cleanup_steps = [
+            ("stop and clean up background processes", self._cleanup_background_processes),
             ("dismiss Start menu and overlays", lambda: self._send_text("\ue00c\ue00c")),
             # Close folder windows without terminating the Explorer desktop shell.
             ("close File Explorer windows", lambda: self._call([
@@ -84,6 +87,10 @@ class CmBase(core.app_scenario.Scenario):
                 cleanup()
             except Exception:
                 logging.exception("cm_base cleanup failed: %s", description)
+
+
+    def _cleanup_background_processes(self):
+        cleanup_background_processes(self)
 
 
     def _perf_teardown(self):
