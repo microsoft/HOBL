@@ -13,9 +13,18 @@
         "children": [],
         "delay": "0",
         "description": "",
-        "enabled": true,
+        "enabled": false,
         "id": "UTHJCA",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_open",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YJ789U",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_open",
         "type": "Include"
     },
     {

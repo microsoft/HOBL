@@ -1,5 +1,5 @@
 <Configuration>
-  <Add OfficeClientEdition="64" Channel="MonthlyEnterprise" Version="16.0.19725.20170" AllowCdnFallback="TRUE" ForceUpgrade="TRUE">
+  <Add OfficeClientEdition="64" Channel="MonthlyEnterprise" Version="16.0.20527.20194" AllowCdnFallback="TRUE" ForceUpgrade="TRUE">
     <Product ID="O365ProPlusRetail">
       <Language ID="en-us" />
       <ExcludeApp ID="Teams" />

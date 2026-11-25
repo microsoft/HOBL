@@ -23,7 +23,7 @@
         "description": "",
         "enabled": true,
         "id": "UH3H04",
-        "include_path": "..\\..\\misc\\capture_taskbar",
+        "include_path": "scenarios\\windows\\_library\\misc\\capture_taskbar",
         "type": "Include"
     },
     {

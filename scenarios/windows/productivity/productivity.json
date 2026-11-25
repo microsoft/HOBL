@@ -27,7 +27,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "UTHNNE",
-                "include_path": "..\\_library\\productivity\\prod_setup",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
                 "params": [
                     {
                         "name": "[office_theme]",
@@ -51,7 +51,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "UTHP5J",
-                "include_path": "..\\_library\\productivity\\prod_open",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_open",
                 "type": "Include"
             },
             {
@@ -60,7 +60,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "UTHP0W",
-                "include_path": "..\\_library\\productivity\\prod_run",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_run",
                 "type": "Include"
             },
             {
@@ -69,7 +69,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "UTHPC2",
-                "include_path": "..\\_library\\productivity\\prod_close",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_close",
                 "type": "Include"
             }
         ],
@@ -86,7 +86,7 @@
                 "description": "",
                 "enabled": true,
                 "id": "V4JF19",
-                "include_path": "..\\_library\\productivity\\prod_kill",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_kill",
                 "type": "Include"
             }
         ],

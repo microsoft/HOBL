@@ -64,7 +64,7 @@ class Productivity(core.app_scenario.Scenario):
 
         # Kill office apps
         try:
-            self._kill("Outlook.exe Excel.exe Powerpnt.exe Winword.exe OneNote.exe")
+            self._kill("olk.exe Excel.exe Powerpnt.exe Winword.exe OneNote.exe")
         except:
             pass
 

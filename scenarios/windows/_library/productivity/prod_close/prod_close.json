@@ -22,7 +22,7 @@
         "children": [],
         "delay": "0",
         "description": "",
-        "enabled": true,
+        "enabled": false,
         "id": "UTHME9",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_switchto",
         "type": "Include"
@@ -31,9 +31,27 @@
         "children": [],
         "delay": "0",
         "description": "",
-        "enabled": true,
+        "enabled": false,
         "id": "UTHLNT",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_close",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YJ7AX8",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YJ7C36",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_close",
         "type": "Include"
     },
     {
