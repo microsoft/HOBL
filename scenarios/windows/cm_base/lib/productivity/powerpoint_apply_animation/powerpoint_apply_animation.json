@@ -37,37 +37,13 @@
     },
     {
         "children": [],
-        "delay": "0.5",
-        "description": "Author name",
+        "delay": "2.5",
+        "description": "Select a slide object (F6 five times, then Tab)",
         "enabled": true,
-        "file_name": [
-            "image_1YJ5LFC.png"
-        ],
-        "h": "0.080",
-        "id": "1YJ5LFC",
-        "recapture": false,
-        "type": "Capture",
-        "w": "0.291",
-        "x": "0.562",
-        "y": "0.595"
-    },
-    {
-        "capture_id": "1YJ5LFC",
-        "children": [],
-        "delay": "2",
-        "description": "Author's first name",
-        "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_1YJ5M63.png"
-        ],
-        "id": "1YJ5M63",
-        "match_threshold": "",
-        "primary": true,
-        "scale": "",
-        "type": "Click",
-        "x": "0.531",
-        "y": "0.500"
+        "id": "PPR1T01",
+        "text": "\ue036\ue036\ue036\ue036\ue036\ue004",
+        "type": "Type",
+        "typing_delay": "400"
     },
     {
         "children": [],
