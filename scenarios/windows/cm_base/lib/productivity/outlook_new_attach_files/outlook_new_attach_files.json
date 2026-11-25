@@ -71,7 +71,7 @@
             {
                 "name": "[file_path]",
                 "val_options": "",
-                "value": "abl_docs\\FamilyBudget.xlsx"
+                "value": "abl_docs\\FamilyBudgetSmall.xlsx"
             }
         ],
         "type": "Include"
