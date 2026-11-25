@@ -104,12 +104,21 @@ class TeamsInstall(core.app_scenario.Scenario):
             if self.dut_architecture == "arm64":
                 self._call(["powershell.exe", "wget \\\"https://go.microsoft.com/fwlink/?linkid=2196207&clcid=0x409&culture=en-us&country=us\\\" -outfile " + installer_path])
             else:
-                self._call(["powershell.exe", "wget \\\"https://go.microsoft.com/fwlink/?linkid=2196106&clcid=0x409&culture=en-us&country=us\\\" -outfile " + installer_path])
-                
+                self._call(["powershell.exe", "wget \\\"https://go.microsoft.com/fwlink/?linkid=2196106&clcid=0x409&culture=en-us&country=us\\\" -outfile " + installer_path])            
+
             # Run the installer silently
             logging.info("Running the installer")
             # self._call(["powershell.exe", 'Add-AppProvisionedPackage -Online -PackagePath "' + installer_path + '" -SkipLicense'])
-            self._call(["powershell.exe", 'Add-AppxPackage -Path "' + installer_path + '"'])
+            # self._call(["powershell.exe", 'Add-AppxPackage -Path "' + installer_path + '"'])
+            install_response = self._call(
+                ["powershell.exe", 'Add-AppxPackage -Path "' + installer_path + '"'],
+                expected_exit_code="", fail_on_exception=False
+            )
+            # Check and ignore if newer version of teams is already installed on DUT. Dont let this be a failure reason. 
+            if "0x80073d06" in install_response.lower():
+                logging.info("A newer Teams version is already installed; continuing with the scenario.")
+            elif str(Params.getCalculated('last_call_exit_code')) != "0":
+                self.fail("Teams installation failed: " + install_response)
             logging.info("Wait for Teams Installer run")
             time.sleep(10)
 
@@ -261,6 +270,17 @@ class TeamsInstall(core.app_scenario.Scenario):
                 else:
                     self.fail("An MSA account was specified for Teams, but no password was provided.  Please note that when using the teams_msa_account parameter a valid password must be specified with the teams_msa_password paramter.")
 
+            # Check for primary use for teams & best role describes you popup
+            try:
+                logging.info("Checking for which best role describes you popup")
+                teams_driver.find_element_by_name("None of these").click()
+                time.sleep(3)
+                teams_driver.find_element_by_class_name("fui-Button r1f29ykk").click()
+                time.sleep(1)
+                ActionChains(desktop).send_keys(Keys.ENTER).perform()
+            except:
+                logging.info("Best role popup not found")
+
             # Check for Skype profile popup
             try:
                 logging.info("Checking for Skype profile popup")
@@ -311,23 +331,24 @@ class TeamsInstall(core.app_scenario.Scenario):
                 # self._call(["powershell.exe", "start ms-teams"], blocking=False)
                 # time.sleep(15)
 
-                try:
-                    logging.info("Checking for Use another account or sign up")
-                    desktop.find_element_by_xpath("//*[contains(@Name, 'another account')]").click()
-                    logging.info("Clicked Use another account or sign up.")
-                    time.sleep(5)
+                ## not needed anymore as the next time it checks for using another account handles signing in. 
+                # try:
+                #     logging.info("Checking for Use another account or sign up")
+                #     desktop.find_element_by_xpath("//*[contains(@Name, 'another account')]").click()
+                #     logging.info("Clicked Use another account or sign up.")
+                #     time.sleep(5)
 
-                    try:
-                        # Look for Use another account or sign up a seconed time since sometimes in other window
-                        logging.info("Checking for Use another account or sign up")
-                        desktop.find_element_by_xpath("//*[contains(@Name, 'another account')]").click()
-                        logging.info("Clicked Use another account or sign up.")
-                        time.sleep(5)
-                    except:
-                        logging.info("Did not see 'Use another account or sign up a second time.'")
+                #     try:
+                #         # Look for Use another account or sign up a seconed time since sometimes in other window
+                #         logging.info("Checking for Use another account or sign up")
+                #         desktop.find_element_by_xpath("//*[contains(@Name, 'another account')]").click()
+                #         logging.info("Clicked Use another account or sign up.")
+                #         time.sleep(5)
+                #     except:
+                #         logging.info("Did not see 'Use another account or sign up a second time.'")
 
-                except:
-                    logging.info("Did not see 'Use another account or sign up the first time.'")
+                # except:
+                #     logging.info("Did not see 'Use another account or sign up the first time.'")
 
                 # Get a new Teams window driver
                 logging.info("Creating Teams Driver")
@@ -335,9 +356,20 @@ class TeamsInstall(core.app_scenario.Scenario):
                 teams_driver = self.getDriverFromWin(win)
                 logging.info("Found Teams window")
                 time.sleep(5)
-
             except:
                 logging.info("Not already logged in.")
+
+            # Check for sign in button this is for 1st time login. Screen with just sign in or join a meeting button
+            try:
+                logging.info("Checking for sign in/join a meeting button screen.")
+                # find sign in button by button element
+                sign_in_button = desktop.find_element_by_xpath("//Button[contains(@Name, 'Sign in')]")
+                logging.info("Sign in button found")
+                time.sleep(1)
+                sign_in_button.click()
+                time.sleep(1)
+            except:
+                logging.info("Did not find 1st time sign in button")
 
             # tries to resolve "pick an account"
             try:
@@ -353,12 +385,10 @@ class TeamsInstall(core.app_scenario.Scenario):
             except:
                 logging.debug("Did not see 'Use another account or sign up.'")
 
-            # Look for Sign in field
+            # Look for sign in window
             try:
-                logging.info("Checking for sign in field...")
-                email_box = WebDriverWait(desktop, 30).until(EC.presence_of_element_located((By.XPATH, "//*[contains(@Name, 'mail, phone, or Skype') or contains(@Name, 'Sign in')]")))
-                time.sleep(1)
-                email_box.click()
+                logging.info("Checking for sign in window...")
+                email_box = WebDriverWait(desktop, 30).until(EC.presence_of_element_located((By.XPATH, "//*[contains(@Name, 'Email or phone')]")))
                 time.sleep(1)
                 email_box.click()
                 time.sleep(1)
