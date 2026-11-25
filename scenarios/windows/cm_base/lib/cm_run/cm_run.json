@@ -335,15 +335,6 @@
     },
     {
         "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1FXHYE6",
-        "include_path": "scenarios\\windows\\_library\\productivity\\prod_powerpoint_run",
-        "type": "Include"
-    },
-    {
-        "children": [],
         "delay": "3",
         "description": "",
         "enabled": true,
@@ -610,6 +601,39 @@
                 "description": "",
                 "enabled": true,
                 "id": "1X6T934",
+                "type": "Delay"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1YFT02X",
+                "include_path": "scenarios\\windows\\_library\\Teams\\teams_switch_to",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "10",
+                "description": "Wait for team to launch",
+                "enabled": true,
+                "id": "1YFVUTA",
+                "type": "Delay"
+            },
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "Maximize Teams Window",
+                "enabled": true,
+                "id": "1YFT0FW",
+                "type": "Window Maximize"
+            },
+            {
+                "children": [],
+                "delay": "3",
+                "description": "",
+                "enabled": true,
+                "id": "1YFT1NL",
                 "type": "Delay"
             }
         ],

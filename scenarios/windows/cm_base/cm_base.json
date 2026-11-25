@@ -26,7 +26,7 @@
         "description": "",
         "enabled": true,
         "id": "19K5WA4",
-        "name": "[background_onedrive_copy]",
+        "name": "[powershell_download]",
         "type": "Set Default",
         "val_options": "0,1",
         "value": "1"
@@ -61,6 +61,17 @@
         "type": "Set Default",
         "val_options": "0,1",
         "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Create and zip large file for disk activity",
+        "enabled": true,
+        "id": "1YFT3R8",
+        "name": "[large_file_operations]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
     },
     {
         "children": [],
@@ -150,7 +161,7 @@
                     {
                         "children": [],
                         "delay": "0.0",
-                        "description": "Clean Up and Create Large Files",
+                        "description": "Clean Up and Create Ondrive Directory",
                         "enabled": true,
                         "file_name": [
                             "code_1CYAE3L.py"
@@ -163,7 +174,7 @@
                 "enabled": true,
                 "eval_method": "==",
                 "id": "1CYAAKV",
-                "left_term": "[background_onedrive_copy]",
+                "left_term": "[powershell_download]",
                 "right_term": "1",
                 "type": "If"
             },
@@ -172,6 +183,35 @@
                 "description": "",
                 "enabled": true,
                 "id": "1CYAAKW",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Upload large file creation script",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1YFT7EC.py"
+                        ],
+                        "id": "1YFT7EC",
+                        "type": "Code"
+                    }
+                ],
+                "description": "Upload large file creation script",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1YFTEJ5",
+                "left_term": "[large_file_operations]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1YFTEJ6",
                 "type": "End If"
             },
             {
@@ -203,24 +243,13 @@
                         ],
                         "id": "19K4MXK",
                         "type": "Code"
-                    },
-                    {
-                        "children": [],
-                        "delay": "0.0",
-                        "description": "Upload Large Files",
-                        "enabled": true,
-                        "file_name": [
-                            "code_1CYAENL.py"
-                        ],
-                        "id": "1CYAENL",
-                        "type": "Code"
                     }
                 ],
                 "description": "",
                 "enabled": true,
                 "eval_method": "==",
                 "id": "19K5HEY",
-                "left_term": "[background_onedrive_copy]",
+                "left_term": "[powershell_download]",
                 "right_term": "1",
                 "type": "If"
             },
@@ -229,6 +258,35 @@
                 "description": "",
                 "enabled": true,
                 "id": "19K5HF0",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Create large files and zip",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1YFTFCK.py"
+                        ],
+                        "id": "1YFTFCK",
+                        "type": "Code"
+                    }
+                ],
+                "description": "Create 3 files of 1.5 GB and zip",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1YFT6K8",
+                "left_term": "[large_file_operations]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1YFT6KA",
                 "type": "End If"
             },
             {
@@ -328,7 +386,7 @@
                     {
                         "children": [],
                         "delay": "0.0",
-                        "description": "Kill Onedrive Upload",
+                        "description": "Delete Onedrive Directory",
                         "enabled": true,
                         "file_name": [
                             "code_19K5L2R.py"
@@ -341,7 +399,7 @@
                 "enabled": true,
                 "eval_method": "==",
                 "id": "19K5J8C",
-                "left_term": "[background_onedrive_copy]",
+                "left_term": "[powershell_download]",
                 "right_term": "1",
                 "type": "If"
             },
@@ -368,6 +426,35 @@
                 "id": "19K5ENF",
                 "include_path": "scenarios\\windows\\_library\\web\\web_kill",
                 "type": "Include"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Cleanup large files, zip and creation script",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1YFTRC4.py"
+                        ],
+                        "id": "1YFTRC4",
+                        "type": "Code"
+                    }
+                ],
+                "description": "Large files and script clean up",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1YFTPYT",
+                "left_term": "[large_file_operations]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1YFTPYU",
+                "type": "End If"
             },
             {
                 "children": [
