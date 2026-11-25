@@ -10,4 +10,6 @@ def run():
     return
 
 def run_user_only():
+    import_run_user_only('scenarios\\windows\\_library\\misc\\taskmanager_launch')
+    import_run_user_only('scenarios\\windows\\_library\\misc\\terminate_app')
     return

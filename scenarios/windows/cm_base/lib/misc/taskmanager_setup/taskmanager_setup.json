@@ -11,13 +11,56 @@
     },
     {
         "children": [],
-        "delay": "0.0",
-        "description": "Resize taskmager to half the screen width and move to left",
+        "delay": "0",
+        "description": "",
         "enabled": true,
-        "file_name": [
-            "code_1YJ3R0H.py"
-        ],
-        "id": "1YJ3R0H",
-        "type": "Code"
+        "id": "1YJ89NR",
+        "include_path": "scenarios\\windows\\_library\\misc\\taskmanager_launch",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Pin to left (Win+left)",
+        "enabled": true,
+        "id": "1YJ8E98",
+        "text": "\ue03d\ue012",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "",
+        "enabled": true,
+        "id": "1YJ8RFN",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Exit app selection window (Esc)",
+        "enabled": true,
+        "id": "1YJ8FXR",
+        "text": "\ue00c",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "",
+        "enabled": true,
+        "id": "1YJ8RM7",
+        "type": "Delay"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YJ8HJ1",
+        "include_path": "scenarios\\windows\\_library\\misc\\terminate_app",
+        "type": "Include"
     }
 ]
