@@ -1,0 +1,222 @@
+[
+    {
+        "author": "jewilder",
+        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "children": [],
+        "create_date": "2025-02-28",
+        "description": "Outlook compose email and attach file",
+        "enabled": true,
+        "id": "UN67LF",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "V2N136",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Compose new mail",
+        "enabled": true,
+        "id": "UPWATJ",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "New mail",
+        "enabled": true,
+        "file_name": [
+            "image_UPN7JH.png"
+        ],
+        "h": "0.181",
+        "id": "UPN7JH",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.241",
+        "x": "0.001",
+        "y": "0.000"
+    },
+    {
+        "capture_id": "UPN7JH",
+        "children": [],
+        "delay": "2",
+        "description": "New mail",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_UPN82L.png"
+        ],
+        "id": "UPWH0P",
+        "primary": true,
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Recipient",
+        "enabled": true,
+        "id": "UPWJXU",
+        "text": "bogus@outlook.com",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "TAB-TAB",
+        "enabled": true,
+        "id": "V3VHFE",
+        "text": "\ue004\ue004",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "1.5",
+        "description": "Subject",
+        "enabled": true,
+        "id": "UPWKA6",
+        "text": "doc\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "8",
+        "description": "Body",
+        "enabled": true,
+        "id": "UPWLPC",
+        "text": "Please\ue00dreview\ue00dthe\ue00dattached\ue00ddoc.\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Attach document",
+        "enabled": true,
+        "id": "UPWMY5",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "ALT-nafb",
+        "enabled": true,
+        "id": "UPWPJW",
+        "text": "\ue00a\ue00anafb",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "8",
+        "description": "asample.pptx",
+        "enabled": true,
+        "id": "UPWXL9",
+        "text": "c:\\abl_docs\\asample.pptx\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Discard draft",
+        "enabled": true,
+        "id": "UPX1WJ",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "Trash icon",
+        "enabled": true,
+        "file_name": [
+            "image_UPW6NN.png"
+        ],
+        "h": "0.172",
+        "id": "UPW6NN",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.105",
+        "x": "0.894",
+        "y": "0.043"
+    },
+    {
+        "capture_id": "UPW6NN",
+        "children": [],
+        "delay": "2",
+        "description": "Click trash icon",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_UPYE3T.png"
+        ],
+        "id": "UPYE3T",
+        "primary": true,
+        "type": "Click",
+        "x": "0.338",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "1",
+        "description": "OK button",
+        "enabled": true,
+        "file_name": [
+            "image_UPW7WV.png"
+        ],
+        "h": "0.160",
+        "id": "UPW7WV",
+        "recapture": true,
+        "type": "Capture",
+        "w": "0.140",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "capture_id": "UPW7WV",
+        "children": [],
+        "delay": "2",
+        "description": "OK button",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_UPXNMA.png"
+        ],
+        "id": "UPX2CW",
+        "primary": true,
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "V2N15P",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_outlook_attach_asample"
+            }
+        ],
+        "type": "Include"
+    }
+]
