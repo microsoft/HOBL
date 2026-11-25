@@ -72,6 +72,40 @@
     },
     {
         "children": [],
+        "delay": "0.5",
+        "description": "Select Slide ",
+        "enabled": true,
+        "file_name": [
+            "image_1YJP9TU.png"
+        ],
+        "h": "0.242",
+        "id": "1YJP9TU",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.187",
+        "x": "0.268",
+        "y": "0.314"
+    },
+    {
+        "capture_id": "1YJP9TU",
+        "children": [],
+        "delay": "2",
+        "description": "Slide Content",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1YJPA97.png"
+        ],
+        "id": "1YJPA97",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
+    },
+    {
+        "children": [],
         "delay": "5",
         "description": "Paste the previously copied content into the new slide (Ctrl+V)",
         "enabled": true,
