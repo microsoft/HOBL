@@ -41,7 +41,7 @@
     },
     {
         "children": [],
-        "delay": "4",
+        "delay": "5",
         "description": "Open the attachment file picker (Alt+N, A, F, B)",
         "enabled": true,
         "id": "PONAFT01",

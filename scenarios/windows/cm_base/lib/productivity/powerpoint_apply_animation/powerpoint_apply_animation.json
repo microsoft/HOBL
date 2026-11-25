@@ -37,7 +37,7 @@
     },
     {
         "children": [],
-        "delay": "2.5",
+        "delay": "5",
         "description": "Select a slide object (F6 five times, then Tab)",
         "enabled": true,
         "id": "PPR1T01",
@@ -47,7 +47,7 @@
     },
     {
         "children": [],
-        "delay": "0.5",
+        "delay": "2",
         "description": "Animations Tab",
         "enabled": true,
         "file_name": [
@@ -89,7 +89,7 @@
     },
     {
         "children": [],
-        "delay": "2",
+        "delay": "4",
         "description": "Activate Animations KeyTips and expand the animation gallery (Alt+A, S)",
         "enabled": true,
         "id": "PPR1T04",
@@ -115,7 +115,7 @@
     },
     {
         "children": [],
-        "delay": "4",
+        "delay": "5",
         "description": "Apply Fly In from the animation gallery (Home, Down, Right twice, Enter)",
         "enabled": true,
         "id": "PPR1T04B",
