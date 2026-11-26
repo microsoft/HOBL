@@ -31,10 +31,10 @@
     {
         "children": [],
         "delay": "6",
-        "description": "Select last two paragraph",
+        "description": "Select last paragraph",
         "enabled": true,
         "id": "PSECST19",
-        "text": "\ue009\ue008\ue013\ue013",
+        "text": "\ue009\ue008\ue013",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
