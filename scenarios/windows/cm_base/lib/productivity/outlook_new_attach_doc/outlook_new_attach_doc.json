@@ -104,7 +104,7 @@
     },
     {
         "children": [],
-        "delay": "8",
+        "delay": "12",
         "description": "Enter the OneDrive Word path and attach the file (Enter)",
         "enabled": true,
         "id": "PONDOC02",

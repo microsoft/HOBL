@@ -90,19 +90,19 @@
         "capture_id": "1YJP9TU",
         "children": [],
         "delay": "2",
-        "description": "Slide Content",
+        "description": "Slide Component",
         "enabled": true,
         "exception_on": "No match",
         "file_name": [
-            "image_1YJPA97.png"
+            "image_1YKXNJF.png"
         ],
-        "id": "1YJPA97",
+        "id": "1YKXNJF",
         "match_threshold": "",
         "primary": true,
         "scale": "",
         "type": "Click",
-        "x": "0.500",
-        "y": "0.500"
+        "x": "0.912",
+        "y": "0.418"
     },
     {
         "children": [],
