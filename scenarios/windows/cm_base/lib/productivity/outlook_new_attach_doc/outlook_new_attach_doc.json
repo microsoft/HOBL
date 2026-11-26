@@ -108,7 +108,7 @@
         "description": "Enter the OneDrive Word path and attach the file (Enter)",
         "enabled": true,
         "id": "PONDOC02",
-        "text": "[userprofile]\\onedrive\\abl_docs\\test_long_doc.docx\ue007",
+        "text": "[userprofile]\\onedrive\\abl_docs\\Test-Scrolling-3d.docx\ue007",
         "type": "Type",
         "typing_delay": "400"
     },
