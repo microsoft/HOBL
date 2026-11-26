@@ -112,7 +112,7 @@
         "id": "PPR3T03",
         "text": "[userprofile]\\OneDrive\\abl_docs\\sample.pdf\ue007",
         "type": "Type",
-        "typing_delay": "[typing_delay]"
+        "typing_delay": "400"
     },
     {
         "children": [],

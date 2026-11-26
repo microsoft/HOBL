@@ -110,7 +110,7 @@
         "id": "PONDOC02",
         "text": "[userprofile]\\onedrive\\abl_docs\\test_long_doc.docx\ue007",
         "type": "Type",
-        "typing_delay": "[typing_delay]"
+        "typing_delay": "400"
     },
     {
         "children": [],
