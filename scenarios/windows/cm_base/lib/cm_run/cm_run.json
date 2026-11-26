@@ -933,13 +933,18 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7VK8V",
-        "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
+        "id": "1YKJ4A2",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\misc\\file_explorer_search",
         "params": [
             {
                 "name": "[file_name]",
                 "val_options": "",
                 "value": "FamilyBudget.xlsx"
+            },
+            {
+                "name": "[search_timeout]",
+                "val_options": "5,10,15",
+                "value": "10"
             }
         ],
         "type": "Include"
@@ -1252,13 +1257,18 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1ULETYU",
-        "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
+        "id": "1YKJEJX",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\misc\\file_explorer_search",
         "params": [
             {
                 "name": "[file_name]",
                 "val_options": "",
                 "value": "test_long_doc.docx"
+            },
+            {
+                "name": "[search_timeout]",
+                "val_options": "5,10,15",
+                "value": "10"
             }
         ],
         "type": "Include"
@@ -1478,13 +1488,18 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1U7VNP0",
-        "include_path": "scenarios\\windows\\_library\\misc\\file_explorer_search",
+        "id": "1YKJ5RX",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\misc\\file_explorer_search",
         "params": [
             {
                 "name": "[file_name]",
                 "val_options": "",
                 "value": "Report"
+            },
+            {
+                "name": "[search_timeout]",
+                "val_options": "5,10,15",
+                "value": "5"
             }
         ],
         "type": "Include"
@@ -1496,6 +1511,23 @@
         "enabled": true,
         "id": "1ULF89M",
         "include_path": "scenarios\\windows\\_library\\misc\\terminate_app",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "R2 Powerpoint revisit",
+        "enabled": true,
+        "id": "1YKJAUU",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U8X2UH",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\powerpoint_add_image_and_save",
         "type": "Include"
     },
     {
@@ -1548,23 +1580,6 @@
         "enabled": true,
         "id": "1Y2PL8N",
         "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\excel_format_table_and_vlookup",
-        "type": "Include"
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "R2 Powerpoint Revisit",
-        "enabled": true,
-        "id": "1T7TUE6",
-        "type": "Comment"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": true,
-        "id": "1U8X2UH",
-        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\powerpoint_add_image_and_save",
         "type": "Include"
     },
     {
