@@ -17,8 +17,8 @@ class OutlookNewAttachPptExcel(core.app_scenario.Scenario):
     Steps:
 
     1. Switch to the New Outlook window.
-    2. Attach asample.pptx using the reusable attachment flow.
-    3. Attach FamilyBudget.xlsx using the same flow.
+    2. Attach asample.pptx from OneDrive.
+    3. Attach FamilyBudgetSmall.xlsx from OneDrive.
     4. Discard the draft.
     '''
     # Set default parameters:

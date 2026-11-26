@@ -4,7 +4,7 @@
         "capture_device": "",
         "children": [],
         "create_date": "2026-08-29",
-        "description": "Compose an email, insert a picture, and attach a Word document in New Outlook",
+        "description": "Compose an email and attach a Word document in New Outlook",
         "enabled": true,
         "id": "PONR3I00",
         "type": "Information"
@@ -77,38 +77,10 @@
     {
         "children": [],
         "delay": "10",
-        "description": "Type the email body referencing the Manarola picture and attached Word document",
+        "description": "Type the email body",
         "enabled": true,
         "id": "PONR3T04",
-        "text": "Hi,\n\nPlease\ue00dreview\ue00dthe\ue00dattached\ue00dWord\ue00ddocument,\ue00dtest_long_doc.docx,\ue00dfor\ue00dthe\ue00dManarola\ue00dtrip.\ue00dI've\ue00dincluded\ue00da\ue00dpicture\ue00dof\ue00dManarola\ue00dbelow\ue00dfor\ue00dreference.\n\nLet\ue00dme\ue00dknow\ue00dif\ue00dyou\ue00dhave\ue00dany\ue00dquestions\ue00dor\ue00dsuggested\ue00dchanges.\n\nThanks!\n\n",
-        "type": "Type",
-        "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "0.0",
-        "description": "Insert the Manarola picture into the email body",
-        "enabled": true,
-        "id": "PONR3C03",
-        "type": "Comment"
-    },
-    {
-        "children": [],
-        "delay": "4",
-        "description": "Open the picture file picker (Alt, then N, P, C)",
-        "enabled": true,
-        "id": "PONR3T05",
-        "text": "\ue00a\ue00anpc",
-        "type": "Type",
-        "typing_delay": "400"
-    },
-    {
-        "children": [],
-        "delay": "6.5",
-        "description": "Insert Manarola2.png from c:\\abl_docs into the email body (Enter)",
-        "enabled": true,
-        "id": "PONR3T06",
-        "text": "c:\\abl_docs\\Manarola2.png\ue007",
+        "text": "Hi,\n\nPlease\ue00dreview\ue00dthe\ue00dattached\ue00dWord\ue00ddocument,\ue00dtest_long_doc.docx,\ue00dfor\ue00dthe\ue00dManarola\ue00dtrip.\n\nLet\ue00dme\ue00dknow\ue00dif\ue00dyou\ue00dhave\ue00dany\ue00dquestions\ue00dor\ue00dsuggested\ue00dchanges.\n\nThanks!\n\n",
         "type": "Type",
         "typing_delay": "[typing_delay]"
     },
@@ -122,24 +94,23 @@
     },
     {
         "children": [],
-        "delay": "0",
-        "description": "Attach test_long_doc.docx using the reusable New Outlook attachment flow",
+        "delay": "8",
+        "description": "Open the attachment file picker for the Word document (Alt+N, A, F, B)",
         "enabled": true,
         "id": "PONR3I03",
-        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_file",
-        "params": [
-            {
-                "name": "[file_source]",
-                "val_options": "OneDrive,Local",
-                "value": "OneDrive"
-            },
-            {
-                "name": "[file_path]",
-                "val_options": "",
-                "value": "abl_docs\\test_long_doc.docx"
-            }
-        ],
-        "type": "Include"
+        "text": "\ue00a\ue00anafb",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "8",
+        "description": "Enter the OneDrive Word path and attach the file (Enter)",
+        "enabled": true,
+        "id": "PONDOC02",
+        "text": "[userprofile]\\onedrive\\abl_docs\\test_long_doc.docx\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
     },
     {
         "children": [],

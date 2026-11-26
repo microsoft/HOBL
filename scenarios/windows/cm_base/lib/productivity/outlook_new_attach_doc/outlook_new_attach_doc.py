@@ -9,18 +9,17 @@ from . import default_params
 
 class OutlookNewAttachDoc(core.app_scenario.Scenario):
     '''
-    Compose an email with a picture and Word attachment in New Outlook.
+    Compose an email with Word attachment in New Outlook.
 
-    Requires Manarola2.png and test_long_doc.docx in the user's OneDrive
+    Requires test_long_doc.docx in the user's OneDrive
     abl_docs folder. The draft is discarded without sending.
 
     Steps:
 
     1. Open New Outlook and create a new email draft.
     2. Enter the recipient, subject, and body for the Manarola trip.
-    3. Insert Manarola2.png into the email body.
-    4. Attach test_long_doc.docx using the reusable attachment flow.
-    5. Discard the draft.
+    3. Attach test_long_doc.docx from OneDrive.
+    4. Discard the draft.
     '''
     # Set default parameters:
     default_params.run()

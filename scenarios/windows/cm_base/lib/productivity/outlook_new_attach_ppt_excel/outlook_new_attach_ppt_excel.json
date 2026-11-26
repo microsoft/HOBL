@@ -28,24 +28,23 @@
     },
     {
         "children": [],
-        "delay": "0",
-        "description": "Attach the PowerPoint presentation",
+        "delay": "8",
+        "description": "Open the attachment file picker for the PowerPoint presentation (Alt+N, A, F, B)",
         "enabled": true,
         "id": "1TX8HXX",
-        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_file",
-        "params": [
-            {
-                "name": "[file_source]",
-                "val_options": "OneDrive,Local",
-                "value": "OneDrive"
-            },
-            {
-                "name": "[file_path]",
-                "val_options": "",
-                "value": "abl_docs\\asample.pptx"
-            }
-        ],
-        "type": "Include"
+        "text": "\ue00a\ue00anafb",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "8",
+        "description": "Enter the OneDrive PowerPoint path and attach the file (Enter)",
+        "enabled": true,
+        "id": "PONPPT02",
+        "text": "[userprofile]\\onedrive\\abl_docs\\asample.pptx\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
     },
     {
         "children": [],
@@ -57,24 +56,57 @@
     },
     {
         "children": [],
-        "delay": "0",
-        "description": "Attach the Excel workbook",
+        "delay": "8",
+        "description": "Open the attachment file picker for the Excel workbook (Alt+N, A, F, B)",
         "enabled": true,
         "id": "1TX8J1E",
-        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_file",
-        "params": [
-            {
-                "name": "[file_source]",
-                "val_options": "OneDrive,Local",
-                "value": "OneDrive"
-            },
-            {
-                "name": "[file_path]",
-                "val_options": "",
-                "value": "abl_docs\\FamilyBudgetSmall.xlsx"
-            }
+        "text": "\ue00a\ue00anafb",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "8",
+        "description": "Enter the OneDrive Excel path and attach the file (Enter)",
+        "enabled": true,
+        "id": "PONXLS02",
+        "text": "[userprofile]\\onedrive\\abl_docs\\FamilyBudgetSmall.xlsx\ue007",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "5",
+        "description": "Popup for large file attachment",
+        "enabled": true,
+        "file_name": [
+            "image_1YKHM26.png"
         ],
-        "type": "Include"
+        "h": "0.228",
+        "id": "1YKHM26",
+        "recapture": false,
+        "type": "Capture",
+        "w": "0.213",
+        "x": "0.212",
+        "y": "0.440"
+    },
+    {
+        "capture_id": "1YKHM26",
+        "children": [],
+        "delay": "5",
+        "description": "Attach as a copy",
+        "enabled": true,
+        "exception_on": "No match",
+        "file_name": [
+            "image_1YKHNU4.png"
+        ],
+        "id": "1YKHNU4",
+        "match_threshold": "",
+        "primary": true,
+        "scale": "",
+        "type": "Click",
+        "x": "0.500",
+        "y": "0.500"
     },
     {
         "children": [],
