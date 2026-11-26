@@ -4,7 +4,7 @@
         "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
         "children": [],
         "create_date": "2025-02-28",
-        "description": "Compose an email, paste a captured snippet, open the discard dialog, and cancel it in New Outlook",
+        "description": "Compose an email, paste a captured snippet, and discard the draft in New Outlook",
         "enabled": true,
         "id": "UN67LF",
         "type": "Information"
@@ -93,7 +93,7 @@
                 "description": "Type shortened email body",
                 "enabled": true,
                 "id": "UPTF4S",
-                "text": "Please\ue00dreview\ue00dthe\ue00dSuper\ue00dBowl\ue00dXLVIII\ue00dsearch\ue00dresults\ue00dbelow.\n\nAttachments:\ue00dsample.pptx\ue00dand\ue00dFamilyBudget.xlsx.\n\n",
+                "text": "Please\ue00dreview\ue00dthe\ue00dGoogle\ue00dsearch\ue00dscreenshot\ue00dfor\ue00dSuper\ue00dBowl\ue00dXLVIII\ue00dbelow.\n\n",
                 "type": "Type",
                 "typing_delay": "[typing_delay]"
             }
@@ -114,7 +114,7 @@
                 "description": "Type full email body",
                 "enabled": true,
                 "id": "UPTF4X",
-                "text": "Hi,\n\nI'm\ue00dsharing\ue00dthe\ue00dGoogle\ue00dsearch\ue00dresults\ue00dfor\ue00dSuper\ue00dBowl\ue00dXLVIII.\ue00dThe\ue00dscreenshot\ue00dbelow\ue00dcaptures\ue00dthe\ue00dsearch\ue00dpage\ue00dfor\ue00dreference.\n\n\ue009b\ue009Attachments:\ue009b\ue009\ue00dsample.pptx\ue00dand\ue00dFamilyBudget.xlsx\ue00dare\ue00dincluded\ue00dfor\ue00dreview.\ue00dPlease\ue00dcheck\ue00dthe\ue00dpresentation\ue00dand\ue00dspreadsheet\ue00dand\ue00dlet\ue00dme\ue00dknow\ue00dif\ue00dany\ue00dupdates\ue00dare\ue00dneeded.\n\nPlease\ue00dalso\ue00dlet\ue00dme\ue00dknow\ue00dif\ue00dyou\ue00dwould\ue00dlike\ue00dmore\ue00dinformation\ue00dabout\ue00dthe\ue00dgame\ue00dor\ue00dany\ue00dadditional\ue00dsearch\ue00dresults.\n\nThanks\ue00dfor\ue00dtaking\ue00da\ue00dlook.\n\n\ue009b\ue009Search\ue00dresults:\ue009b\ue009\n\n",
+                "text": "Hi,\n\nI'm\ue00dsharing\ue00da\ue00dscreenshot\ue00dof\ue00dthe\ue00dGoogle\ue00dsearch\ue00dresults\ue00dfor\ue00dSuper\ue00dBowl\ue00dXLVIII.\ue00dThe\ue00dimage\ue00dbelow\ue00dcaptures\ue00dthe\ue00dsearch\ue00dpage\ue00dfor\ue00dreference.\n\nPlease\ue00dreview\ue00dthe\ue00dscreenshot\ue00dand\ue00dlet\ue00dme\ue00dknow\ue00dif\ue00dthere\ue00dis\ue00da\ue00dparticular\ue00dresult\ue00dyou\ue00dwould\ue00dlike\ue00dto\ue00dexplore.\ue00dI\ue00dcan\ue00drun\ue00da\ue00dmore\ue00dfocused\ue00dsearch\ue00dif\ue00dyou\ue00dneed\ue00dadditional\ue00ddetails\ue00dabout\ue00dthe\ue00dgame.\n\nThanks\ue00dfor\ue00dtaking\ue00da\ue00dlook.\n\n\ue009b\ue009Google\ue00dsearch\ue00dscreenshot:\ue009b\ue009\n\n",
                 "type": "Type",
                 "typing_delay": "[typing_delay]"
             }
@@ -152,30 +152,19 @@
     {
         "children": [],
         "delay": "0.0",
-        "description": "Open and cancel the discard confirmation dialog",
+        "description": "Discard the email draft",
         "enabled": true,
         "id": "UPW52H",
         "type": "Comment"
     },
     {
         "children": [],
-        "delay": "2",
-        "description": "Open the discard confirmation dialog (Escape)",
+        "delay": "0",
+        "description": "Discard the open email draft in New Outlook",
         "enabled": true,
-        "id": "1LEHH46",
-        "text": "\ue00c",
-        "type": "Type",
-        "typing_delay": "400"
-    },
-    {
-        "children": [],
-        "delay": "2",
-        "description": "Cancel the discard confirmation dialog (Escape)",
-        "enabled": true,
-        "id": "1TVCU51",
-        "text": "\ue00c",
-        "type": "Type",
-        "typing_delay": "400"
+        "id": "PONCEI02",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_discard_email",
+        "type": "Include"
     },
     {
         "children": [],

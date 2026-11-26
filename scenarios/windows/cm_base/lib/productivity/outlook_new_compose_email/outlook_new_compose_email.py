@@ -7,11 +7,11 @@ from . import default_params
 
 class OutlookNewComposeEmail(core.app_scenario.Scenario):
     '''
-    Compose an email and paste a captured image in New Outlook.
+    Compose an email, paste a captured image, and discard the draft in New Outlook.
 
     Requires the captured screenshot on the clipboard. The short_typing
-    parameter selects the shortened or full body. This library leaves the
-    draft open and does not attach files or send the email.
+    parameter selects the shortened or full body. This library discards the
+    draft and does not attach files or send the email.
 
     Steps:
 
@@ -19,7 +19,7 @@ class OutlookNewComposeEmail(core.app_scenario.Scenario):
     2. Enter the recipient and Super Bowl XLVIII subject.
     3. Type the selected email body.
     4. Paste the existing clipboard content into the body.
-    5. Open the discard confirmation dialog and cancel it.
+    5. Discard the draft using the reusable discard-email flow.
     '''
     # Set default parameters:
     default_params.run()

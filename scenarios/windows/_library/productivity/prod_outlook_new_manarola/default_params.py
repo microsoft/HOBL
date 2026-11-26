@@ -7,6 +7,7 @@ from utilities.open_source.modules import import_run_user_only
 def run():
     Params.setCalculated('scenario_section', __package__.split('.')[-1])
     run_user_only()
+    Params.setDefault('prod_outlook_new_manarola', 'discard_draft', '1', desc='Discard the draft after composing (1); leave it open (0)', valOptions=['0', '1'])
     return
 
 def run_user_only():

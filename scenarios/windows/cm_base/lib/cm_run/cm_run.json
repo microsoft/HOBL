@@ -1192,6 +1192,39 @@
     {
         "children": [],
         "delay": "0.0",
+        "description": "R1 Outlook Revisit",
+        "enabled": true,
+        "id": "1YK9RRA",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YK9T28",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_switchto",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1YK9T77",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_manarola",
+        "params": [
+            {
+                "name": "[discard_draft]",
+                "val_options": "0,1",
+                "value": "0"
+            }
+        ],
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
         "description": "R1 FileExplorer Revisit",
         "enabled": true,
         "id": "1T7TKKM",

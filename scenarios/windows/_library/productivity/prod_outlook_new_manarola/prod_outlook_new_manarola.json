@@ -11,6 +11,17 @@
     },
     {
         "children": [],
+        "delay": "0.0",
+        "description": "Discard the draft after composing (1); leave it open (0)",
+        "enabled": true,
+        "id": "PONMD001",
+        "name": "[discard_draft]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [],
         "delay": "0",
         "description": "",
         "enabled": true,
@@ -127,76 +138,94 @@
         "typing_delay": "[typing_delay]"
     },
     {
-        "children": [],
-        "delay": "0.0",
-        "description": "Discard draft",
+        "children": [
+            {
+                "children": [],
+                "delay": "0.0",
+                "description": "Discard draft",
+                "enabled": true,
+                "id": "UPW52H",
+                "type": "Comment"
+            },
+            {
+                "children": [],
+                "delay": "1",
+                "description": "Trash icon",
+                "enabled": true,
+                "file_name": [
+                    "image_UPW6NN.png"
+                ],
+                "h": "0.172",
+                "id": "UPW6NN",
+                "recapture": false,
+                "type": "Capture",
+                "w": "0.105",
+                "x": "0.894",
+                "y": "0.043"
+            },
+            {
+                "capture_id": "UPW6NN",
+                "children": [],
+                "delay": "2",
+                "description": "Trash icon",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_UPYE3T.png"
+                ],
+                "id": "UPW5EL",
+                "primary": true,
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            },
+            {
+                "children": [],
+                "delay": "1",
+                "description": "OK button",
+                "enabled": true,
+                "file_name": [
+                    "image_UPW7WV.png"
+                ],
+                "h": "0.160",
+                "id": "UPW7WV",
+                "recapture": true,
+                "type": "Capture",
+                "w": "0.140",
+                "x": "0.500",
+                "y": "0.500"
+            },
+            {
+                "capture_id": "UPW7WV",
+                "children": [],
+                "delay": "2",
+                "description": "OK button",
+                "enabled": true,
+                "exception_on": "No match",
+                "file_name": [
+                    "image_UPXNMA.png"
+                ],
+                "id": "UPXNMA",
+                "primary": true,
+                "type": "Click",
+                "x": "0.500",
+                "y": "0.500"
+            }
+        ],
+        "description": "Discard the draft only when requested",
         "enabled": true,
-        "id": "UPW52H",
-        "type": "Comment"
+        "eval_method": "==",
+        "id": "PONMD002",
+        "left_term": "[discard_draft]",
+        "right_term": "1",
+        "type": "If"
     },
     {
         "children": [],
-        "delay": "1",
-        "description": "Trash icon",
+        "description": "End optional draft discard",
         "enabled": true,
-        "file_name": [
-            "image_UPW6NN.png"
-        ],
-        "h": "0.172",
-        "id": "UPW6NN",
-        "recapture": false,
-        "type": "Capture",
-        "w": "0.105",
-        "x": "0.894",
-        "y": "0.043"
-    },
-    {
-        "capture_id": "UPW6NN",
-        "children": [],
-        "delay": "2",
-        "description": "Trash icon",
-        "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_UPYE3T.png"
-        ],
-        "id": "UPW5EL",
-        "primary": true,
-        "type": "Click",
-        "x": "0.500",
-        "y": "0.500"
-    },
-    {
-        "children": [],
-        "delay": "1",
-        "description": "OK button",
-        "enabled": true,
-        "file_name": [
-            "image_UPW7WV.png"
-        ],
-        "h": "0.160",
-        "id": "UPW7WV",
-        "recapture": true,
-        "type": "Capture",
-        "w": "0.140",
-        "x": "0.500",
-        "y": "0.500"
-    },
-    {
-        "capture_id": "UPW7WV",
-        "children": [],
-        "delay": "2",
-        "description": "OK button",
-        "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_UPXNMA.png"
-        ],
-        "id": "UPXNMA",
-        "primary": true,
-        "type": "Click",
-        "x": "0.500",
-        "y": "0.500"
+        "id": "PONMD003",
+        "type": "End If"
     },
     {
         "children": [],
