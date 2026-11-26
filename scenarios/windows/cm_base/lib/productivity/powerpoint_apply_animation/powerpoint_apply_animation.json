@@ -115,7 +115,7 @@
     },
     {
         "children": [],
-        "delay": "5",
+        "delay": "10",
         "description": "Apply Fly In from the animation gallery (Home, Down, Right twice, Enter)",
         "enabled": true,
         "id": "PPR1T04B",
@@ -133,7 +133,7 @@
     },
     {
         "children": [],
-        "delay": "0",
+        "delay": "5",
         "description": "",
         "enabled": true,
         "id": "1VE3NE1",
