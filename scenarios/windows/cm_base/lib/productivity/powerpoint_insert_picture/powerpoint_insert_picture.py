@@ -1,0 +1,64 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+import os
+
+import core.app_scenario
+from . import default_params
+
+
+class PowerpointInsertPicture(core.app_scenario.Scenario):
+    '''
+    Inserts a configured picture into the current PowerPoint slide.
+
+    Uses the image_path parameter to locate a picture relative to OneDrive.
+
+    Steps:
+
+    1. Open Insert, Pictures, and This Device.
+    2. Resolve the picture path using the platform-specific OneDrive location.
+    3. Select the file and insert it into the current slide.
+    '''
+    # Set default parameters:
+    default_params.run()
+
+    actions = None
+
+    def setUp(self):
+        # Load actions JSON.
+        actions_json = os.path.join(os.path.dirname(__file__), "powerpoint_insert_picture.json")
+        self.actions = self.load_action_json(actions_json)
+
+        # Execute Setup actions, if they exist
+        setup_action = self._find_next_type("Setup", json=self.actions)
+        if setup_action is not None:
+            self.run_actions(setup_action["children"])
+
+        # Call base class setUp() to dump config, call tool callbacks, and start measurement
+        core.app_scenario.Scenario.setUp(self)
+
+    def runTest(self):
+        # Execute Run Test actions, if they exist
+        runtest_action = self._find_next_type("Run Test", json=self.actions)
+        if runtest_action is not None:
+            self.run_actions(runtest_action["children"])
+            return
+
+        # If no "Run Test", "Setup", or "Teardown" specified, then just execute the whole list
+        setup_action = self._find_next_type("Setup", json=self.actions)
+        teardown_action = self._find_next_type("Teardown", json=self.actions)
+        if runtest_action is None and setup_action is None and teardown_action is None:
+            self.run_actions(self.actions)
+
+    def tearDown(self):
+        # Call base class tearDown() to stop measurement, copy back data from DUT, and call tool callbacks
+        core.app_scenario.Scenario.tearDown(self)
+
+        # Execute Teardown actions, if they exist
+        teardown_action = self._find_next_type("Teardown", json=self.actions)
+        if teardown_action is not None:
+            self.run_actions(teardown_action["children"])
+
+    def kill(self):
+        # In case of scenario failure or termination, kill any applications left open here:
+        return

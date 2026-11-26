@@ -1,0 +1,145 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "",
+        "children": [],
+        "create_date": "2026-08-29",
+        "description": "Compose an email and attach a Word document in New Outlook",
+        "enabled": true,
+        "id": "PONR3I00",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Begin recording the New Outlook compose, picture insertion, and attachment phase",
+        "enabled": true,
+        "id": "PONR3I01",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "3",
+        "description": "Open New Outlook",
+        "enabled": true,
+        "id": "PONR2I01",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_open",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Compose a new email message",
+        "enabled": true,
+        "id": "PONR3C01",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Open a new email compose form in New Outlook",
+        "enabled": true,
+        "id": "PONR3I02",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_open_compose",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Type the recipient email address",
+        "enabled": true,
+        "id": "PONR3T01",
+        "text": "bogus@outlook.com",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1.5",
+        "description": "Move focus from the recipient field to the subject field (Tab twice)",
+        "enabled": true,
+        "id": "PONR3T02",
+        "text": "\ue004\ue004",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Type the email subject",
+        "enabled": true,
+        "id": "PONR3T03",
+        "text": "Manarola\ue00dtrip\ue00d-\ue00dimage\ue00dand\ue00ddocument\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "10",
+        "description": "Type the email body",
+        "enabled": true,
+        "id": "PONR3T04",
+        "text": "Hi,\n\nPlease\ue00dreview\ue00dthe\ue00dattached\ue00dWord\ue00ddocument,\ue00dtest_long_doc.docx,\ue00dfor\ue00dthe\ue00dManarola\ue00dtrip.\n\nLet\ue00dme\ue00dknow\ue00dif\ue00dyou\ue00dhave\ue00dany\ue00dquestions\ue00dor\ue00dsuggested\ue00dchanges.\n\nThanks!\n\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Attach the Word document to the open email draft",
+        "enabled": true,
+        "id": "PONR3C02",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "8",
+        "description": "Open the attachment file picker for the Word document (Alt+N, A, F, B)",
+        "enabled": true,
+        "id": "PONR3I03",
+        "text": "\ue00a\ue00anafb",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "12",
+        "description": "Enter the OneDrive Word path and attach the file (Enter)",
+        "enabled": true,
+        "id": "PONDOC02",
+        "text": "[userprofile]\\onedrive\\abl_docs\\Test-Scrolling-3d.docx\ue007",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Discard the open email draft",
+        "enabled": true,
+        "id": "PONR3I05",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_discard_email",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "End recording the New Outlook compose, picture insertion, and attachment phase",
+        "enabled": true,
+        "id": "PONR3I04",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_outlook"
+            }
+        ],
+        "type": "Include"
+    }
+]

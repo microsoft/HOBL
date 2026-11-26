@@ -23,7 +23,7 @@ def run_user_only():
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_setup')
     import_run_user_only('scenarios\\windows\\_library\\Teams\\teams_teardown')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable')
-    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\diagnostics_enable')
+    import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\perf_setup')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\timers_setup')
     import_run_user_only('scenarios\\windows\\_library\\enterprise_collab\\timers_teardown')
     import_run_user_only('scenarios\\windows\\_library\\misc\\click_file_explorer')

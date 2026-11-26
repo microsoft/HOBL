@@ -41,8 +41,15 @@
         "delay": "0",
         "description": "",
         "enabled": true,
-        "id": "1YHUAYJ",
+        "id": "1YKEXJK",
         "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_manarola",
+        "params": [
+            {
+                "name": "[discard_draft]",
+                "val_options": "0,1",
+                "value": "1"
+            }
+        ],
         "type": "Include"
     },
     {

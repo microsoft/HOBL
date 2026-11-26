@@ -1,0 +1,22 @@
+[
+    {
+        "author": "dasashu",
+        "capture_device": "HP Ominbook X",
+        "children": [],
+        "create_date": "2026-08-26",
+        "description": "Terminate App",
+        "enabled": true,
+        "id": "1TY5AAX",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "2",
+        "description": "Terminate (Alt+F4)",
+        "enabled": true,
+        "id": "1TY5AEU",
+        "text": "\ue00a\ue034",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    }
+]

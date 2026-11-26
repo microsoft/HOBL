@@ -1,10 +1,10 @@
 [
     {
         "author": "dasashutosh",
-        "capture_device": "",
+        "capture_device": "HP Omnibook X",
         "children": [],
         "create_date": "2026-03-19",
-        "description": "perf teardown",
+        "description": "Delete Sideload PT XML file, uncheck diagnostics operation and restart diagtrack",
         "enabled": true,
         "id": "1HX83YY",
         "type": "Information"
@@ -19,15 +19,6 @@
         ],
         "id": "1HX84KW",
         "type": "Code"
-    },
-    {
-        "children": [],
-        "delay": "0",
-        "description": "",
-        "enabled": false,
-        "id": "1HX852F",
-        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\diagnostics_disable",
-        "type": "Include"
     },
     {
         "children": [],

@@ -1,0 +1,528 @@
+[
+    {
+        "author": "dasashutosh",
+        "capture_device": "HP Omnibook X",
+        "children": [],
+        "create_date": "2026-10-02",
+        "description": "Web, FileExplorer, Snipping Tool, Taskmanager, Teams and Productivity App revisitation scenario",
+        "enabled": true,
+        "id": "19K3NWN",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "19K5VX0",
+        "name": "[background_teams]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "19K5WA4",
+        "name": "[powershell_download]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "19K7X90",
+        "name": "[web_replay_run]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "19K7XML",
+        "name": "[phase_reporting]",
+        "type": "Set",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1EN17N6",
+        "name": "[perf_run]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Create and zip large file for disk activity",
+        "enabled": true,
+        "id": "1YFT3R8",
+        "name": "[large_file_operations]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "1"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "",
+        "enabled": true,
+        "id": "1RMA581",
+        "name": "[teams:collect_MSTeams_Logs]",
+        "type": "Set",
+        "value": "0"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "1Y6UURK",
+                        "include_path": "scenarios\\windows\\_library\\enterprise_collab\\perf_setup",
+                        "params": [
+                            {
+                                "name": "[perftrack_manifest]",
+                                "val_options": "EnterpriseCollaborator,ConsumerMutitasker",
+                                "value": "ConsumerMutitasker"
+                            }
+                        ],
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1EN189V",
+                "left_term": "[perf_run]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1EN189W",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "19V8920",
+                        "name": "[teams:number_of_bots]",
+                        "type": "Set",
+                        "value": "4"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0",
+                        "description": "",
+                        "enabled": true,
+                        "id": "19K4CEU",
+                        "include_path": "scenarios\\windows\\_library\\Teams\\teams_setup",
+                        "type": "Include"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "19K41HR",
+                "left_term": "[background_teams]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "19K41HT",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Clean Up and Create Ondrive Directory",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1CYAE3L.py"
+                        ],
+                        "id": "1CYAE3L",
+                        "type": "Code"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1CYAAKV",
+                "left_term": "[powershell_download]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1CYAAKW",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Upload large file creation script",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1YFT7EC.py"
+                        ],
+                        "id": "1YFT7EC",
+                        "type": "Code"
+                    }
+                ],
+                "description": "Upload large file creation script",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1YFTEJ5",
+                "left_term": "[large_file_operations]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1YFTEJ6",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1YJ4EP6",
+                "include_path": "scenarios\\windows\\cm_base\\lib\\misc\\taskmanager_setup",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1N9WNHN",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_setup",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "19K3TWR",
+        "type": "Setup"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Powershell Download",
+                        "enabled": true,
+                        "file_name": [
+                            "code_19K4MXK.py"
+                        ],
+                        "id": "19K4MXK",
+                        "type": "Code"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "19K5HEY",
+                "left_term": "[powershell_download]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "19K5HF0",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Create large files and zip",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1YFTFCK.py"
+                        ],
+                        "id": "1YFTFCK",
+                        "type": "Code"
+                    }
+                ],
+                "description": "Create 3 files of 1.5 GB and zip",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1YFT6K8",
+                "left_term": "[large_file_operations]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1YFT6KA",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "10",
+                "description": "",
+                "enabled": true,
+                "id": "1A4X1TN",
+                "type": "Delay"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1A4W5AL",
+                "include_path": "scenarios\\windows\\_library\\web\\web_setup",
+                "params": [
+                    {
+                        "name": "[disable_delay]",
+                        "val_options": "0,1",
+                        "value": "1"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1XX8YUN",
+                "include_path": "scenarios\\windows\\cm_base\\lib\\cm_run",
+                "params": [
+                    {
+                        "name": "[load_only]",
+                        "val_options": "0,1",
+                        "value": "0"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1JP44RV",
+                "include_path": "scenarios\\windows\\_library\\web\\web_check",
+                "params": [
+                    {
+                        "name": "[youtube_duration]",
+                        "val_options": "",
+                        "value": "90"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "2",
+                "description": "",
+                "enabled": true,
+                "id": "1YEY6H5",
+                "include_path": "scenarios\\windows\\_library\\web\\web_switchto",
+                "type": "Include"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "19K59KV",
+                "include_path": "scenarios\\windows\\_library\\web\\web_close_tabs",
+                "params": [
+                    {
+                        "name": "[num_tabs_to_close]",
+                        "val_options": "",
+                        "value": "[web:tabs]"
+                    }
+                ],
+                "type": "Include"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Kill Powershell Download",
+                        "enabled": true,
+                        "file_name": [
+                            "code_19K5K7L.py"
+                        ],
+                        "id": "19K5K7L",
+                        "type": "Code"
+                    },
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Delete Onedrive Directory",
+                        "enabled": true,
+                        "file_name": [
+                            "code_19K5L2R.py"
+                        ],
+                        "id": "19K5L2R",
+                        "type": "Code"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "19K5J8C",
+                "left_term": "[powershell_download]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "19K5J8E",
+                "type": "End If"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "19K42E3",
+        "type": "Run Test"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "19K5ENF",
+                "include_path": "scenarios\\windows\\_library\\web\\web_kill",
+                "type": "Include"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "delay": "0.0",
+                        "description": "Cleanup large files, zip and creation script",
+                        "enabled": true,
+                        "file_name": [
+                            "code_1YFTRC4.py"
+                        ],
+                        "id": "1YFTRC4",
+                        "type": "Code"
+                    }
+                ],
+                "description": "Large files and script clean up",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "1YFTPYT",
+                "left_term": "[large_file_operations]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "1YFTPYU",
+                "type": "End If"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "delay": "0",
+                                "description": "",
+                                "enabled": true,
+                                "id": "1X53MK1",
+                                "include_path": "scenarios\\windows\\_library\\Teams\\teams_collect_logs",
+                                "type": "Include"
+                            }
+                        ],
+                        "description": "",
+                        "enabled": true,
+                        "eval_method": "==",
+                        "id": "1X53LYN",
+                        "left_term": "[teams:collect_MSTeams_Logs]",
+                        "right_term": "1",
+                        "type": "If"
+                    },
+                    {
+                        "children": [],
+                        "description": "",
+                        "enabled": true,
+                        "id": "1X53LYP",
+                        "type": "End If"
+                    }
+                ],
+                "description": "",
+                "enabled": true,
+                "eval_method": "==",
+                "id": "19L6E7K",
+                "left_term": "[background_teams]",
+                "right_term": "1",
+                "type": "If"
+            },
+            {
+                "children": [],
+                "description": "",
+                "enabled": true,
+                "id": "19L6E7L",
+                "type": "End If"
+            },
+            {
+                "children": [],
+                "delay": "0",
+                "description": "",
+                "enabled": true,
+                "id": "1T80E8A",
+                "include_path": "scenarios\\windows\\_library\\productivity\\prod_kill",
+                "type": "Include"
+            }
+        ],
+        "description": "",
+        "enabled": true,
+        "id": "19K42JX",
+        "type": "Teardown"
+    }
+]

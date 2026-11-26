@@ -1,0 +1,190 @@
+[
+    {
+        "author": "aadityaaren",
+        "capture_device": "Surface Laptop 7 15in, light theme, 150% scaling",
+        "children": [],
+        "create_date": "2025-02-28",
+        "description": "Compose an email, paste a captured snippet, and discard the draft in New Outlook",
+        "enabled": true,
+        "id": "UN67LF",
+        "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Begin recording the New Outlook compose phase",
+        "enabled": true,
+        "id": "V2N136",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_begin",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "",
+        "enabled": true,
+        "id": "1U6NJ6F",
+        "include_path": "scenarios\\windows\\_library\\productivity\\prod_outlook_new_open",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Use the shortened email body when enabled",
+        "enabled": true,
+        "id": "PSECST00",
+        "name": "[short_typing]",
+        "type": "Set Default",
+        "val_options": "0,1",
+        "value": "0"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Open a new email compose form",
+        "enabled": true,
+        "id": "UPWC04",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Open a new email compose form in New Outlook",
+        "enabled": true,
+        "id": "1TP314P",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_open_compose",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Type recipient email address",
+        "enabled": true,
+        "id": "UPNEN8",
+        "text": "bogus@outlook.com",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "1.5",
+        "description": "Move focus from recipient to subject (Tab twice)",
+        "enabled": true,
+        "id": "V3V5XK",
+        "text": "\ue004\ue004",
+        "type": "Type",
+        "typing_delay": "400"
+    },
+    {
+        "children": [],
+        "delay": "4",
+        "description": "Type email subject",
+        "enabled": true,
+        "id": "UPNME6",
+        "text": "Super\ue00dBowl\ue00dXLVIII\ue00d-\ue00dsearch\ue00dresults\n",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "15",
+                "description": "Type shortened email body",
+                "enabled": true,
+                "id": "UPTF4S",
+                "text": "Please\ue00dreview\ue00dthe\ue00dGoogle\ue00dsearch\ue00dscreenshot\ue00dfor\ue00dSuper\ue00dBowl\ue00dXLVIII\ue00dbelow.\n\n",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Type the shortened email body when short typing is enabled",
+        "enabled": true,
+        "eval_method": "==",
+        "id": "PSECST01",
+        "left_term": "[short_typing]",
+        "right_term": "1",
+        "type": "If"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "delay": "122",
+                "description": "Type full email body",
+                "enabled": true,
+                "id": "UPTF4X",
+                "text": "Hi,\n\nI'm\ue00dsharing\ue00da\ue00dscreenshot\ue00dof\ue00dthe\ue00dGoogle\ue00dsearch\ue00dresults\ue00dfor\ue00dSuper\ue00dBowl\ue00dXLVIII.\ue00dThe\ue00dimage\ue00dbelow\ue00dcaptures\ue00dthe\ue00dsearch\ue00dpage\ue00dfor\ue00dreference.\n\nPlease\ue00dreview\ue00dthe\ue00dscreenshot\ue00dand\ue00dlet\ue00dme\ue00dknow\ue00dif\ue00dthere\ue00dis\ue00da\ue00dparticular\ue00dresult\ue00dyou\ue00dwould\ue00dlike\ue00dto\ue00dexplore.\ue00dI\ue00dcan\ue00drun\ue00da\ue00dmore\ue00dfocused\ue00dsearch\ue00dif\ue00dyou\ue00dneed\ue00dadditional\ue00ddetails\ue00dabout\ue00dthe\ue00dgame.\n\nThanks\ue00dfor\ue00dtaking\ue00da\ue00dlook.\n\n\ue009b\ue009Google\ue00dsearch\ue00dscreenshot:\ue009b\ue009\n\n",
+                "type": "Type",
+                "typing_delay": "[typing_delay]"
+            }
+        ],
+        "description": "Type the full email body when short typing is disabled",
+        "enabled": true,
+        "id": "PSECST02",
+        "type": "Else"
+    },
+    {
+        "children": [],
+        "description": "Complete the email body selection",
+        "enabled": true,
+        "id": "PSECST03",
+        "type": "End If"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Paste the captured snippet into the email body",
+        "enabled": true,
+        "id": "UPW24R",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "6.5",
+        "description": "Paste captured snippet (Ctrl+V)",
+        "enabled": true,
+        "id": "UPVYR4",
+        "text": "\ue009v",
+        "type": "Type",
+        "typing_delay": "[typing_delay]"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Discard the email draft",
+        "enabled": true,
+        "id": "UPW52H",
+        "type": "Comment"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "Discard the open email draft in New Outlook",
+        "enabled": true,
+        "id": "PONCEI02",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_discard_email",
+        "type": "Include"
+    },
+    {
+        "children": [],
+        "delay": "0",
+        "description": "End recording the New Outlook compose phase",
+        "enabled": true,
+        "id": "V2N15P",
+        "include_path": "scenarios\\windows\\_library\\misc\\recording_phase_end",
+        "params": [
+            {
+                "name": "[phase_category]",
+                "val_options": "",
+                "value": "prod"
+            },
+            {
+                "name": "[phase_name]",
+                "val_options": "",
+                "value": "run_outlook"
+            }
+        ],
+        "type": "Include"
+    }
+]

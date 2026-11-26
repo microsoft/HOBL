@@ -1,13 +1,24 @@
 [
     {
         "author": "dasashutosh",
-        "capture_device": "",
+        "capture_device": "HP Omnibook X",
         "children": [],
         "create_date": "2026-03-19",
-        "description": "",
+        "description": "Sideloads Perftrack events, enables diagnostics and restarts diagtrack service",
         "enabled": true,
         "id": "1HX80CA",
         "type": "Information"
+    },
+    {
+        "children": [],
+        "delay": "0.0",
+        "description": "Perftrack Manifest File Selecter",
+        "enabled": true,
+        "id": "1Y6URFV",
+        "name": "[perftrack_manifest]",
+        "type": "Set Default",
+        "val_options": "EnterpriseCollaborator,ConsumerMutitasker",
+        "value": "EnterpriseCollaborator"
     },
     {
         "children": [],
