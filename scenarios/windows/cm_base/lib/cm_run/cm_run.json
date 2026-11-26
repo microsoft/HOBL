@@ -1596,7 +1596,7 @@
         "description": "",
         "enabled": true,
         "id": "1U8X6CL",
-        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_ppt_excel",
+        "include_path": "scenarios\\windows\\cm_base\\lib\\productivity\\outlook_new_attach_ppt_doc",
         "type": "Include"
     },
     {

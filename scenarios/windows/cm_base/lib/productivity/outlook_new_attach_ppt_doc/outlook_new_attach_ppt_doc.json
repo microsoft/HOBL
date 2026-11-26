@@ -4,7 +4,7 @@
         "capture_device": "",
         "children": [],
         "create_date": "2026-08-25",
-        "description": "Attach a PowerPoint presentation and an Excel workbook to an open email draft in New Outlook",
+        "description": "Attach a PowerPoint presentation and a Word document to an open email draft in New Outlook",
         "enabled": true,
         "id": "1TWNFXM",
         "type": "Information"
@@ -49,7 +49,7 @@
     {
         "children": [],
         "delay": "0.0",
-        "description": "Attach the Excel workbook to the open email draft",
+        "description": "Attach the Word document to the open email draft",
         "enabled": true,
         "id": "PONR2C02",
         "type": "Comment"
@@ -57,7 +57,7 @@
     {
         "children": [],
         "delay": "8",
-        "description": "Open the attachment file picker for the Excel workbook (Alt+N, A, F, B)",
+        "description": "Open the attachment file picker for the Word document (Alt+N, A, F, B)",
         "enabled": true,
         "id": "1TX8J1E",
         "text": "\ue00a\ue00anafb",
@@ -67,46 +67,12 @@
     {
         "children": [],
         "delay": "8",
-        "description": "Enter the OneDrive Excel path and attach the file (Enter)",
+        "description": "Enter the OneDrive Word document path and attach the file (Enter)",
         "enabled": true,
         "id": "PONXLS02",
-        "text": "[userprofile]\\onedrive\\abl_docs\\FamilyBudgetSmall.xlsx\ue007",
+        "text": "[userprofile]\\onedrive\\abl_docs\\Test-Scrolling-3d.docx\ue007",
         "type": "Type",
         "typing_delay": "[typing_delay]"
-    },
-    {
-        "children": [],
-        "delay": "5",
-        "description": "Popup for large file attachment",
-        "enabled": true,
-        "file_name": [
-            "image_1YKHM26.png"
-        ],
-        "h": "0.228",
-        "id": "1YKHM26",
-        "recapture": false,
-        "type": "Capture",
-        "w": "0.213",
-        "x": "0.212",
-        "y": "0.440"
-    },
-    {
-        "capture_id": "1YKHM26",
-        "children": [],
-        "delay": "5",
-        "description": "Attach as a copy",
-        "enabled": true,
-        "exception_on": "No match",
-        "file_name": [
-            "image_1YKHNU4.png"
-        ],
-        "id": "1YKHNU4",
-        "match_threshold": "",
-        "primary": true,
-        "scale": "",
-        "type": "Click",
-        "x": "0.500",
-        "y": "0.500"
     },
     {
         "children": [],

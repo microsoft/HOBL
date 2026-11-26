@@ -7,9 +7,9 @@ import logging
 import os
 from . import default_params
 
-class OutlookNewAttachPptExcel(core.app_scenario.Scenario):
+class OutlookNewAttachPptDoc(core.app_scenario.Scenario):
     '''
-    Attach a presentation and workbook, then discard the draft in New Outlook.
+    Attach a presentation and Word document, then discard the draft in New Outlook.
 
     Requires an existing email draft and the prepared files in the user's
     OneDrive abl_docs folder. No email is sent.
@@ -18,7 +18,7 @@ class OutlookNewAttachPptExcel(core.app_scenario.Scenario):
 
     1. Switch to the New Outlook window.
     2. Attach asample.pptx from OneDrive.
-    3. Attach FamilyBudgetSmall.xlsx from OneDrive.
+    3. Attach Test-Scrolling-3d.docx from OneDrive.
     4. Discard the draft.
     '''
     # Set default parameters:
@@ -28,7 +28,7 @@ class OutlookNewAttachPptExcel(core.app_scenario.Scenario):
 
     def setUp(self):
         # Load actions JSON.
-        actions_json = os.path.join(os.path.dirname(__file__), "outlook_new_attach_ppt_excel.json")
+        actions_json = os.path.join(os.path.dirname(__file__), "outlook_new_attach_ppt_doc.json")
         self.actions = self.load_action_json(actions_json)
 
         # Execute Setup actions, if they exist
